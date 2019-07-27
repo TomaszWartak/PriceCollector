@@ -1,10 +1,12 @@
-package com.dev4lazy.pricecollector.model.entities;
+package com.dev4lazy.pricecollector.model.db;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import com.dev4lazy.pricecollector.model.entities.Company;
 
 import java.util.List;
 
