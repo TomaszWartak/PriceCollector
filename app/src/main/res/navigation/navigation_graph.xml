@@ -9,7 +9,7 @@
         android:id="@+id/startScreenFragment"
         android:name="com.dev4lazy.pricecollector.view.StartScreenFragment"
         android:label="start_screen_fragment"
-        tools:layout="@layout/start_screen_fragment" >
+        tools:layout="@layout/start_screen_fragment">
         <action
             android:id="@+id/action_startScreenFragment_to_logingFragment"
             app:destination="@id/logingFragment" />

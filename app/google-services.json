@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "364230880091",
+    "firebase_url": "https://price-collector-c1410.firebaseio.com",
+    "project_id": "price-collector-c1410",
+    "storage_bucket": "price-collector-c1410.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364230880091:android:c7cc00f591509a3a",
+        "android_client_info": {
+          "package_name": "com.dev4lazy.pricecollector"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "364230880091-cqqkbfpv6vha7ak879t6tcf27flcbqfl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dev4lazy.pricecollector",
+            "certificate_hash": "e719de0ff364926ce43f9c6cf06f30f1cf7579f0"
+          }
+        },
+        {
+          "client_id": "364230880091-205o35375adq6jbqkgsjsbim3412tpac.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvdf3UYDIpoz661gOHn6FPBcPdt42x0LY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "364230880091-205o35375adq6jbqkgsjsbim3412tpac.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

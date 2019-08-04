@@ -1,13 +1,14 @@
 package com.dev4lazy.pricecollector.model.logic;
 
-public class AuthenticationServices {
-    private static final AuthenticationServices ourInstance = new AuthenticationServices();
+// todo raczej do usunięcia
+public class AuthenticationServices2 {
+    private static final AuthenticationServices2 ourInstance = new AuthenticationServices2();
 
-    public static AuthenticationServices getInstance() {
+    public static AuthenticationServices2 getInstance() {
         return ourInstance;
     }
 
-    private AuthenticationServices() {
+    private AuthenticationServices2() {
     }
 
     public void setUserLogin(String userLogin) {

@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">PriceCollector</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="test_start_screen_label">START SCREEN</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="test_loging_fragment_label">LOGGING FRAGMENT</string>
+    <string name="test_main_fragment_label">MAIN FRAGMENT</string>
+    <string name="login_button_caption">Log in</string>
 </resources>
