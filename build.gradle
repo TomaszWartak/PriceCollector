@@ -12,14 +12,13 @@ buildscript {
 
         classpath 'com.android.tools.build:gradle:3.4.2'
 
-        // na potrzeby SafArgs
+        // na potrzeby SafeArgs
         def nav_version = "2.1.0-beta02"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
 
         // na potrzeby Firebase
         classpath 'com.google.gms:google-services:4.3.0'
-        // todo to jest na potrzeby testowego generowania tokenów, więc chyba nie potrzebne w wersji produkcyjnej
-        // classpath 'com.google.firebase:firebase-admin:5.5.0'
+
     }
 }
 

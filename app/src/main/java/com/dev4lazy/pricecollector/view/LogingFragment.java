@@ -12,7 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.logic.CustomTokenFirebaseAuthenticationServices;
+import com.dev4lazy.pricecollector.model.logic.CustomTokenFirebaseAuthServices;
+import com.dev4lazy.pricecollector.model.logic.MockCustomTokenAuthServices;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,22 +22,23 @@ public class LogingFragment extends Fragment {
 
     // todo ViewModel...
 
-    private CustomTokenFirebaseAuthenticationServices authenticationServices = null;
+    // Logowanie/wylogowanie - Firebase
+    private CustomTokenFirebaseAuthServices firebaseAuthServices = null;
+
+    // Logowanie/wylogowanie - własny serwer logowania
+    private MockCustomTokenAuthServices customTokenAuthService = null;
 
     public LogingFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        authenticationServices = CustomTokenFirebaseAuthenticationServices.getInstance();
-        authenticationServices.setActivity(getActivity());
-        authenticationServices.bindToMockAuthService(); // todo czy na pewno w onCreate
-        CustomTokenFirebaseAuthenticationServices.MockAuthServiceBroadcastReceiver ockAuthServiceBroadcastReceiver =
-                new
-    }
+        firebaseAuthServices = CustomTokenFirebaseAuthServices.getInstance();
+        customTokenAuthService = new MockCustomTokenAuthServices();
+        customTokenAuthService.bindToMockAuthService();
+     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,33 +54,22 @@ public class LogingFragment extends Fragment {
         view.findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // todo test
-                /*
-                final ActivityManager activityManager = (android.app.ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-                final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
-                String serviceName = null;
-                for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
-                    serviceName = runningServiceInfo.service.getClassName();
-                }
-                */
-                /**/
-                 //FirebaseUser firebaseUser = authenticationServices.getCurrentFirebaseUser();
-                 authenticationServices.signInCustomAuthServer("nowak_j", "qwerty");
-                 authenticationServices.signInFirebase();
-                 //firebaseUser = authenticationServices.getCurrentFirebaseUser();
-                 authenticationServices.signOut();
-                 /**/
+                // todo test logowanie do mocka
+                customTokenAuthService.signInCustomAuthServer("nowak_j", "qwerty");
+                firebaseAuthServices.setCustomToken(customTokenAuthService.getCustomToken());
+                firebaseAuthServices.signInFirebase();
+                 //firebaseUser = firebaseAuthServices.getCurrentFirebaseUser();
+                //firebaseAuthServices.signOutFromFirebase();
+                //customTokenAuthService.signOutCustomAuthServer();
             }
         });
-
         return view;
     }
-
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         // todo czy na pewno w onCreate?
-        authenticationServices.unbindFromMockAuthService();
+        customTokenAuthService.signOutCustomAuthServer();
     }
 }

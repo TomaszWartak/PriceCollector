@@ -6,19 +6,19 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 @Entity(
-    tableName = "companies", // w bazie zdalnej nie ma takiej tabeli
+    tableName = "ean_codes", // w bazie zdalnej nie ma takiej tabeli
     foreignKeys = @ForeignKey(
-        entity = Country.class,
+        entity = Article.class,
         parentColumns = "id",
-        childColumns = "country_id"
+        childColumns = "article_id"
     )
 )
-public class Company {
+public class EanCode {
+
     @PrimaryKey(autoGenerate = true)
     public int id;
-    // todo?? czy jest taka tabela w bazie zdalnej
     public int remote_id; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
-    public String name;
-    @ColumnInfo(name = "country_id")
-    public int countryId;
+    public String value;
+    @ColumnInfo(name = "article_id")
+    public int articleId;
 }

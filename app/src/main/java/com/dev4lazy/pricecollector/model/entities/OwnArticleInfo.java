@@ -1,0 +1,66 @@
+package com.dev4lazy.pricecollector.model.entities;
+
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+
+@Entity(
+    tableName = "own_articles_infos",  // w bazie zdalnej nie ma takiej tabeli - zob. [dbo].[DCT_Article]
+    foreignKeys = {
+        @ForeignKey(
+            entity = Article.class,
+            parentColumns = "id",
+            childColumns = "article_id"
+        ),
+        @ForeignKey(
+            entity = Sector.class,
+            parentColumns = "id",
+            childColumns = "sector_id"
+        ),
+        @ForeignKey(
+            entity = Department.class,
+            parentColumns = "id",
+            childColumns = "department_id"
+        ),
+        @ForeignKey(
+            entity = Family.class,
+            parentColumns = "id",
+            childColumns = "family_id"
+        ),
+        @ForeignKey(
+            entity = Module.class,
+            parentColumns = "id",
+            childColumns = "module_id"
+        ),
+        @ForeignKey(
+            entity = UOProject.class,
+            parentColumns = "id",
+            childColumns = "uo_project_id"
+        )
+    }
+)
+public class OwnArticleInfo {
+    public int id;
+    public int remote_id; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
+    @ColumnInfo(name = "article_id")
+    public int articleId;
+    public String ownCode; // kod casto
+    public int sapCode;
+    public int magentoCode;
+    public double refPrice;
+    public double storePrice;
+    public double storeMarginPercent;
+    @ColumnInfo(name = "sector_id")
+    public int sectorId;
+    @ColumnInfo(name = "market_id")
+    public int marketId;
+    @ColumnInfo(name = "department_id")
+    public int departmentId;
+    @ColumnInfo(name = "family_id")
+    public int familyId;
+    @ColumnInfo(name = "module_id")
+    public int moduleId;
+    @ColumnInfo(name = "uo_project_id")
+    public int uoProjectId;
+}

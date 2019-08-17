@@ -1,5 +1,6 @@
 package com.dev4lazy.pricecollector.model.db;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -18,18 +19,21 @@ public interface CountryDao {
     @Update
     void update(Country country);
 
+    /* Żadnego usuwania danych... */
     @Delete
     void delete(Country country);
 
     @Query("DELETE FROM countries")
     void deleteAll();
+    /**/
+
+    @Query("SELECT * from countries ORDER BY name ASC")
+    LiveData<List<Country>> getAllCountries();
 
     @Query("SELECT * from countries WHERE id= :id")
-    List<Country>findCountryById(String id);
+    LiveData<List<Country>>findCountryById(String id);
 
     //todo findCountryByName like
 
-    @Query("SELECT * from countries ORDER BY name ASC")
-    List<Country> getAllCountries();
 
 }
