@@ -12,8 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.logic.CustomTokenFirebaseAuthServices;
-import com.dev4lazy.pricecollector.model.logic.MockCustomTokenAuthServices;
+//import com.dev4lazy.pricecollector.model.logic.FirebaseAuthServices;
+import com.dev4lazy.pricecollector.model.logic.MockCustomTokenOwnAuthServices;
+import com.dev4lazy.pricecollector.model.logic.OwnServerAuthServices;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,10 +24,11 @@ public class LogingFragment extends Fragment {
     // todo ViewModel...
 
     // Logowanie/wylogowanie - Firebase
-    private CustomTokenFirebaseAuthServices firebaseAuthServices = null;
+    //private CustomTokenFirebaseAuthServices firebaseAuthServices = null;
+    // todo private FirebaseAuthServices firebaseAuthServices = null;
 
     // Logowanie/wylogowanie - własny serwer logowania
-    private MockCustomTokenAuthServices customTokenAuthService = null;
+    private OwnServerAuthServices customTokenAuthService = null;
 
     public LogingFragment() {
         // Required empty public constructor
@@ -35,9 +37,8 @@ public class LogingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firebaseAuthServices = CustomTokenFirebaseAuthServices.getInstance();
-        customTokenAuthService = new MockCustomTokenAuthServices();
-        customTokenAuthService.bindToMockAuthService();
+        // todo firebaseAuthServices = CustomTokenFirebaseAuthServices.getInstance();
+        customTokenAuthService = new MockCustomTokenOwnAuthServices();
      }
 
     @Override
@@ -55,9 +56,11 @@ public class LogingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // todo test logowanie do mocka
-                customTokenAuthService.signInCustomAuthServer("nowak_j", "qwerty");
-                firebaseAuthServices.setCustomToken(customTokenAuthService.getCustomToken());
-                firebaseAuthServices.signInFirebase();
+                customTokenAuthService.addCredential("USER_ID", "nowak_j" );
+                customTokenAuthService.addCredential("USER_PASSWORD", "qwerty");
+                customTokenAuthService.signInOwnServer();
+                // todo firebaseAuthServices.addCredential("TOKEN", customTokenAuthService.getCustomToken());
+                // todo firebaseAuthServices.signInFirebase();
                  //firebaseUser = firebaseAuthServices.getCurrentFirebaseUser();
                 //firebaseAuthServices.signOutFromFirebase();
                 //customTokenAuthService.signOutCustomAuthServer();
@@ -69,7 +72,11 @@ public class LogingFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // todo czy na pewno w onCreate?
-        customTokenAuthService.signOutCustomAuthServer();
+        // todo
+        //  1. czy na pewno w onDestroy?
+        //  2. czyli co? Jak fragment zostanie zamknięty, to nastąpi wylogowanie?
+        // Ad 2 to chyba dla mocka na Servisie tak powinno tylko byc...
+        // można to dać w AppHandle przy zamknięciu?
+        customTokenAuthService.signOutFromOwnServer();
     }
 }

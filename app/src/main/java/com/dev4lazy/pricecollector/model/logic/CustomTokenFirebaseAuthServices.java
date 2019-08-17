@@ -7,33 +7,33 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 /*
-singleton do autentykacji na podstawie wasnego id użytkownika i hasla
+Singleton do autentykacji na podstawie własnego id użytkownika i hasla.
+Przed wywołaniem smetody ignInFirebase() należy ustawić wartość tokena
+w wywołaniu addCredential("TOKEN", tokenString.
  */
-public class CustomTokenFirebaseAuthServices {
+public class CustomTokenFirebaseAuthServices implements FirebaseAuthServices {
 
     private static final String TAG = "CustomTokenFirebaseAuthServices";
 
     private static final CustomTokenFirebaseAuthServices ourInstance = new CustomTokenFirebaseAuthServices();
 
-    private FirebaseAuth firebaseAuthServices;
-
     private String customToken = null;
 
     private CustomTokenFirebaseAuthServices() {
-        firebaseAuthServices = FirebaseAuth.getInstance();
     }
 
     public static CustomTokenFirebaseAuthServices getInstance() { return ourInstance; }
 
-    public void setCustomToken(String customToken) {
+    /*public void setCustomToken(String customToken) {
         this.customToken = customToken;
     }
-
+*/
+    @Override
     public void signInFirebase() {
+        customToken = getCredential("TOKEN");
         if (customToken!=null) {
             firebaseAuthServices.signInWithCustomToken(customToken)
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -57,15 +57,10 @@ public class CustomTokenFirebaseAuthServices {
         }
     }
 
+    @Override
     public void signOutFromFirebase() {
         firebaseAuthServices.signOut();
         customToken = null;
     }
-
-    public FirebaseUser getCurrentFirebaseUser() {
-        //todo - to powinno być wołane przy inicjalizacji aktywności - When initializing your Activity, check to see if the user is currently signed in.
-        return firebaseAuthServices.getCurrentUser();
-    }
-
 
 }

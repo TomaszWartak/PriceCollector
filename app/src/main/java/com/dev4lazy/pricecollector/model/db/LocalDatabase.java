@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.entities.Article;
@@ -22,6 +23,8 @@ import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.model.entities.UOProject;
+import com.dev4lazy.pricecollector.model.utils.DateConverter;
+import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 
 @Database(
     version = 1,
@@ -40,8 +43,13 @@ import com.dev4lazy.pricecollector.model.entities.UOProject;
         Sector.class,
         Store.class,
         UOProject.class
-    }
+    },
+    exportSchema = false
 )
+@TypeConverters({
+        DateConverter.class,
+        StoreStructureTypeConverter.class
+})
 public abstract class LocalDatabase extends RoomDatabase {
 
     private final static String DATABASE_NAME = "price_collector_local_database";

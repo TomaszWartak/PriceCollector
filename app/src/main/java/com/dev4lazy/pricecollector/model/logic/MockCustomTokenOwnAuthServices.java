@@ -1,6 +1,5 @@
 package com.dev4lazy.pricecollector.model.logic;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -19,7 +17,11 @@ import com.dev4lazy.pricecollector.utils.AppHandle;
 
 import java.util.List;
 
-public class MockCustomTokenAuthServices {
+public class MockCustomTokenOwnAuthServices implements OwnServerAuthServices{
+
+    // Logowanie/wylogowanie - Firebase
+    //private CustomTokenFirebaseAuthServices firebaseAuthServices = null;
+    private FirebaseAuthServices firebaseAuthServices = CustomTokenFirebaseAuthServices.getInstance();
 
     // Token Firebase zwracany przez własny serwer logowania, na podstawie klucza prywatnego Firebase
     private String customToken = null;
@@ -53,8 +55,15 @@ public class MockCustomTokenAuthServices {
     // odbiornik danych z serwisu, udającego własny serwer logowania
     private MockAuthServiceBroadcastReceiver mockAuthServiceBroadcastReceiver = null;
 
+    public MockCustomTokenOwnAuthServices() {
+        bindToMockAuthService();
+    }
+
     // wysyła dane logowania do własnego serwera logowania
-    public void signInCustomAuthServer(String userId, String userPassword) /*throws FileNotFoundException */ {
+    @Override
+    public void signInOwnServer() /*todo throws FileNotFoundException */ {
+        String userId = getCredential("USER_ID");
+        String userPassword = getCredential("USER_PASSWORD");
         // todo !!!
         // na potrzeby mockowania serwera jeśli w haśle jest "x" lub "X" to serwer odrzuca
         if (userPassword.contains("x") || (userPassword.contains("X"))) {
@@ -77,7 +86,8 @@ public class MockCustomTokenAuthServices {
     }
 
     // wylogowuje użytkownika z własnego serwera logowania
-    public void signOutCustomAuthServer() {
+    @Override
+    public void signOutFromOwnServer() {
         unbindFromMockAuthService();
     }
 
@@ -86,7 +96,7 @@ public class MockCustomTokenAuthServices {
         return customToken;
     }
 
-    public void bindToMockAuthService() {
+    private void bindToMockAuthService() {
         Intent intent = new Intent();
         intent.setClassName(
                 "com.dev4lazy.pricecollectormockauth",
@@ -94,7 +104,7 @@ public class MockCustomTokenAuthServices {
         boolean result = AppHandle.getAppHandle().bindService(intent, myConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public void unbindFromMockAuthService() {
+    private void unbindFromMockAuthService() {
         AppHandle.getAppHandle().unbindService(myConnection);
     }
 
@@ -110,18 +120,20 @@ public class MockCustomTokenAuthServices {
         return false;
     }
 
-    public class MockAuthServiceBroadcastReceiver extends BroadcastReceiver {
+    private class MockAuthServiceBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("DATA_FROM_MOCAUTH_READY"))
+            if (intent.getAction().equals("DATA_FROM_MOCKAUTH_READY")) {
                 customToken = intent.getStringExtra("TOKEN");
+                firebaseAuthServices.addCredential("TOKEN", customToken );
+                firebaseAuthServices.signInFirebase();            }
         }
     }
 
     private void registerMockAuthServiceBroadcastReceiver() {
         mockAuthServiceBroadcastReceiver = new MockAuthServiceBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("DATA_FROM_MOCAUTH_READY");
+        intentFilter.addAction("DATA_FROM_MOCKAUTH_READY");
         AppHandle.getAppHandle().registerReceiver(mockAuthServiceBroadcastReceiver, intentFilter);
     }
 

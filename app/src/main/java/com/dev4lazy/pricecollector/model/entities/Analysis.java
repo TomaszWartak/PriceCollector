@@ -17,8 +17,8 @@ public class Analysis {
     @PrimaryKey(autoGenerate = true)
     public int id;
     @ColumnInfo(name = "creation_date")
-    private Date creationDate;
+    public Date creationDate;
     @ColumnInfo(name = "due_date")
-    private Date dueDate;
+    public Date dueDate;
 
 }

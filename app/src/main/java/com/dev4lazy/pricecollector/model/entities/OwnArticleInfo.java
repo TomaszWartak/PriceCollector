@@ -4,45 +4,32 @@ package com.dev4lazy.pricecollector.model.entities;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 @Entity(
     tableName = "own_articles_infos",  // w bazie zdalnej nie ma takiej tabeli - zob. [dbo].[DCT_Article]
     foreignKeys = {
-        @ForeignKey(
-            entity = Article.class,
-            parentColumns = "id",
-            childColumns = "article_id"
-        ),
-        @ForeignKey(
-            entity = Sector.class,
-            parentColumns = "id",
-            childColumns = "sector_id"
-        ),
-        @ForeignKey(
-            entity = Department.class,
-            parentColumns = "id",
-            childColumns = "department_id"
-        ),
-        @ForeignKey(
-            entity = Family.class,
-            parentColumns = "id",
-            childColumns = "family_id"
-        ),
-        @ForeignKey(
-            entity = Module.class,
-            parentColumns = "id",
-            childColumns = "module_id"
-        ),
-        @ForeignKey(
-            entity = UOProject.class,
-            parentColumns = "id",
-            childColumns = "uo_project_id"
-        )
+        @ForeignKey( entity = Article.class, parentColumns = "id", childColumns = "article_id" ),
+        @ForeignKey( entity = Sector.class, parentColumns = "id", childColumns = "sector_id" ),
+        @ForeignKey( entity = Department.class, parentColumns = "id", childColumns = "department_id" ),
+        @ForeignKey( entity = Family.class, parentColumns = "id", childColumns = "family_id" ),
+        @ForeignKey( entity = Module.class, parentColumns = "id", childColumns = "module_id" ),
+        @ForeignKey( entity = UOProject.class, parentColumns = "id", childColumns = "uo_project_id" )
+    },
+    indices = {
+        @Index( value = "article_id" ),
+        @Index( value = "sector_id" ),
+        @Index( value = "department_id" ),
+        @Index( value = "family_id" ),
+        @Index( value = "module_id" ),
+        @Index( value = "uo_project_id" )
     }
 )
 public class OwnArticleInfo {
+    @PrimaryKey(autoGenerate = true)
     public int id;
-    public int remote_id; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
+    public int remoteId; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
     @ColumnInfo(name = "article_id")
     public int articleId;
     public String ownCode; // kod casto

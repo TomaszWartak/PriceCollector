@@ -3,15 +3,21 @@ package com.dev4lazy.pricecollector.model.entities;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(
     tableName = "ean_codes", // w bazie zdalnej nie ma takiej tabeli
-    foreignKeys = @ForeignKey(
-        entity = Article.class,
-        parentColumns = "id",
-        childColumns = "article_id"
-    )
+    foreignKeys = {
+        @ForeignKey(
+            entity = Article.class,
+            parentColumns = "id",
+            childColumns = "article_id"
+        )
+    },
+    indices = {
+        @Index(value = "article_id")
+    }
 )
 public class EanCode {
 

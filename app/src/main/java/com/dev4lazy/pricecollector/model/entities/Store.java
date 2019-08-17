@@ -3,6 +3,7 @@ package com.dev4lazy.pricecollector.model.entities;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(
@@ -17,13 +18,16 @@ import androidx.room.PrimaryKey;
         entity = Company.class,
         parentColumns = "id",
         childColumns = "company_id"
-    )
+    ),
+    indices = {
+        @Index(value = "company_id")
+    }
 )
 public class Store {
     @PrimaryKey(autoGenerate = true)
     public int id;
     // todo ?? czy w bazie zdalnej jest taka tabela - zob entity OwnStore
-    public int remote_id; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
+    public int remoteId; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
     @ColumnInfo(name = "company_id")
     public int companyId;
     public String city;
