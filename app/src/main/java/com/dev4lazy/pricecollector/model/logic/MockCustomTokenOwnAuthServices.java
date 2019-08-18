@@ -17,20 +17,24 @@ import com.dev4lazy.pricecollector.utils.AppHandle;
 
 import java.util.List;
 
-public class MockCustomTokenOwnAuthServices implements OwnServerAuthServices{
+public class MockCustomTokenOwnAuthServices /* todo implements MockCustomTokenOwnAuthServices.OnReceiveCallback */{
 
-    // Logowanie/wylogowanie - Firebase
-    //private CustomTokenFirebaseAuthServices firebaseAuthServices = null;
-    private FirebaseAuthServices firebaseAuthServices = CustomTokenFirebaseAuthServices.getInstance();
+// ----------------------------------------------------------
+// callback do obsługi onReceive() odbiornika
+    private OnReceiveCallback onReceiveCallback = null;
 
+// ----------------------------------------------------------
+// obsługa Firebase
     // Token Firebase zwracany przez własny serwer logowania, na podstawie klucza prywatnego Firebase
     private String customToken = null;
 
+// ----------------------------------------------------------
+// Obsługa usługi udającej serwer logowania i oddającej token
     // messenger do wysyłania danych do serwisu, udającego własny serwer logowania
     private Messenger mockAuthService = null;
 
     // true, jeśli udało się podłączy do serwisu, udającego własny serwer logowania
-    private boolean isBoundToMockAuthService = false;
+    private boolean boundToMockAuthService = false;
 
     // połączenie z serwisem, udającym własny serwer logowania
     private ServiceConnection myConnection = new ServiceConnection() {
@@ -39,7 +43,7 @@ public class MockCustomTokenOwnAuthServices implements OwnServerAuthServices{
                 ComponentName className,
                 IBinder service) {
             mockAuthService = new Messenger(service);
-            isBoundToMockAuthService = true;
+            setBoundToMockAuthService(true);
             registerMockAuthServiceBroadcastReceiver();
         }
 
@@ -47,56 +51,23 @@ public class MockCustomTokenOwnAuthServices implements OwnServerAuthServices{
         public void onServiceDisconnected(
                 ComponentName className) {
             mockAuthService = null;
-            isBoundToMockAuthService = false;
+            setBoundToMockAuthService(false);
             unregisterMockAuthServiceBroadcastReceiver();
         }
     };
 
+    public void setBoundToMockAuthService(Boolean bound) {
+        boundToMockAuthService = bound;
+    }
+
+    public Boolean isBoundToMockAuthService() {
+        return boundToMockAuthService;
+    }
+
     // odbiornik danych z serwisu, udającego własny serwer logowania
     private MockAuthServiceBroadcastReceiver mockAuthServiceBroadcastReceiver = null;
 
-    public MockCustomTokenOwnAuthServices() {
-        bindToMockAuthService();
-    }
-
-    // wysyła dane logowania do własnego serwera logowania
-    @Override
-    public void signInOwnServer() /*todo throws FileNotFoundException */ {
-        String userId = getCredential("USER_ID");
-        String userPassword = getCredential("USER_PASSWORD");
-        // todo !!!
-        // na potrzeby mockowania serwera jeśli w haśle jest "x" lub "X" to serwer odrzuca
-        if (userPassword.contains("x") || (userPassword.contains("X"))) {
-            customToken = null;
-            return;
-        }
-        if (!isBoundToMockAuthService)
-            return;
-        Message msg = Message.obtain();
-        Bundle bundle = new Bundle();
-        bundle.putString("userId", userId);
-        bundle.putString("password", userPassword);
-        msg.setData(bundle);
-        try {
-            mockAuthService.send(msg);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        //todo czy token jest case sensitive, tzn czy dla nowak_j i NOWAK_J będzie taki sam?
-    }
-
-    // wylogowuje użytkownika z własnego serwera logowania
-    @Override
-    public void signOutFromOwnServer() {
-        unbindFromMockAuthService();
-    }
-
-    // zwraca token Firebase uzyskany z własnego serwera logowania
-    public String getCustomToken() {
-        return customToken;
-    }
-
-    private void bindToMockAuthService() {
+    public void bindToMockAuthService() {
         Intent intent = new Intent();
         intent.setClassName(
                 "com.dev4lazy.pricecollectormockauth",
@@ -104,7 +75,7 @@ public class MockCustomTokenOwnAuthServices implements OwnServerAuthServices{
         boolean result = AppHandle.getAppHandle().bindService(intent, myConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private void unbindFromMockAuthService() {
+    public void unbindFromMockAuthService() {
         AppHandle.getAppHandle().unbindService(myConnection);
     }
 
@@ -120,13 +91,23 @@ public class MockCustomTokenOwnAuthServices implements OwnServerAuthServices{
         return false;
     }
 
+    public void sendDataToService(Bundle bundle) {
+        Message msg = Message.obtain();
+        msg.setData(bundle);
+        try {
+            mockAuthService.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     private class MockAuthServiceBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("DATA_FROM_MOCKAUTH_READY")) {
                 customToken = intent.getStringExtra("TOKEN");
-                firebaseAuthServices.addCredential("TOKEN", customToken );
-                firebaseAuthServices.signInFirebase();            }
+                onReceiveCallback.callIfDataReceived(customToken);
+            }
         }
     }
 
@@ -140,4 +121,15 @@ public class MockCustomTokenOwnAuthServices implements OwnServerAuthServices{
     private void unregisterMockAuthServiceBroadcastReceiver() {
         AppHandle.getAppHandle().unregisterReceiver(mockAuthServiceBroadcastReceiver);
     }
+
+// ----------------------------------------------------------
+// callback do obsługi onReceive() odbiornika
+    interface OnReceiveCallback {
+        void callIfDataReceived(String token);
+    }
+
+    void setOnReceiveCallback( OnReceiveCallback onReceiveCallback) {
+        this.onReceiveCallback = onReceiveCallback;
+    }
+
 }

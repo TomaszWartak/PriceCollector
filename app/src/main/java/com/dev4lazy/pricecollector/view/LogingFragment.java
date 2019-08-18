@@ -12,23 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev4lazy.pricecollector.R;
-//import com.dev4lazy.pricecollector.model.logic.FirebaseAuthServices;
-import com.dev4lazy.pricecollector.model.logic.MockCustomTokenOwnAuthServices;
-import com.dev4lazy.pricecollector.model.logic.OwnServerAuthServices;
+//import com.dev4lazy.pricecollector.model.logic.FirebaseAuthSupport;
+import com.dev4lazy.pricecollector.model.logic.AuthSupport;
+import com.dev4lazy.pricecollector.model.logic.MockCustomTokenOwnAuthSupport;
+//mport com.dev4lazy.pricecollector.model.logic.OwnServerAuthServices;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LogingFragment extends Fragment {
+public class LogingFragment extends Fragment implements AuthSupport.LoginCallback {
 
     // todo ViewModel...
 
-    // Logowanie/wylogowanie - Firebase
-    //private CustomTokenFirebaseAuthServices firebaseAuthServices = null;
-    // todo private FirebaseAuthServices firebaseAuthServices = null;
-
-    // Logowanie/wylogowanie - własny serwer logowania
-    private OwnServerAuthServices customTokenAuthService = null;
+    // obsługa logowania
+    private AuthSupport authService = null;
 
     public LogingFragment() {
         // Required empty public constructor
@@ -37,33 +34,25 @@ public class LogingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // todo firebaseAuthServices = CustomTokenFirebaseAuthServices.getInstance();
-        customTokenAuthService = new MockCustomTokenOwnAuthServices();
-     }
+        authService = new MockCustomTokenOwnAuthSupport();
+    }
+
+    void signIn() {
+        authService.addCredential("USER_ID", "nowak_j" );
+        authService.addCredential("USER_PASSWORD", "qwerty");
+        ((MockCustomTokenOwnAuthSupport) authService).setLoginCallbackService(this);
+        authService.signIn();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.loging_fragment, container, false);
-        view.findViewById(R.id.loging_fragment_framelayout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_logingFragment_to_mainFragment);
-            }
-        });
         view.findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // todo test logowanie do mocka
-                customTokenAuthService.addCredential("USER_ID", "nowak_j" );
-                customTokenAuthService.addCredential("USER_PASSWORD", "qwerty");
-                customTokenAuthService.signInOwnServer();
-                // todo firebaseAuthServices.addCredential("TOKEN", customTokenAuthService.getCustomToken());
-                // todo firebaseAuthServices.signInFirebase();
-                 //firebaseUser = firebaseAuthServices.getCurrentFirebaseUser();
-                //firebaseAuthServices.signOutFromFirebase();
-                //customTokenAuthService.signOutCustomAuthServer();
+                signIn();
             }
         });
         return view;
@@ -77,6 +66,25 @@ public class LogingFragment extends Fragment {
         //  2. czyli co? Jak fragment zostanie zamknięty, to nastąpi wylogowanie?
         // Ad 2 to chyba dla mocka na Servisie tak powinno tylko byc...
         // można to dać w AppHandle przy zamknięciu?
-        customTokenAuthService.signOutFromOwnServer();
+        authService.signOut();
+    }
+
+// ----------------------------------------------------------
+// Implementacja metod interfejsu calbaków logowania AuthSupport.LoginCallback
+// Obsługa callbacków logowania
+    @Override
+    public void setLoginCallbackService(AuthSupport.LoginCallback loginCallback) {
+        // Ponieważ LOginFragment jest ostatnim (pierwszym?) ogniwem w wywołaniu callbacków obsługi
+        // logowania, to nie trzeba tutaj nic robić.
+    }
+
+    @Override
+    public void callIfSucessful() {
+        Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_mainFragment);
+    }
+
+    @Override
+    public void callIfUnsucessful() {
+            // todo kumnuikat jakiś :-)
     }
 }
