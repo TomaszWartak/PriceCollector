@@ -1,5 +1,7 @@
 package com.dev4lazy.pricecollector.model.logic;
 
+import com.dev4lazy.pricecollector.model.entities.Analysis;
+
 /*
 
 AnalysisDataUpdater.
@@ -10,16 +12,88 @@ Służy do aktualizacji danych związanych z analizą konkurencji.
  */
 public class AnalysisDataUpdater {
 
+//----------------------------------------------------------------
+// Obsługa singletona
+    private static final String TAG = "AnalysisDataUpdater";
+
+    private static final AnalysisDataUpdater instance = new AnalysisDataUpdater();
+
+    public static AnalysisDataUpdater getInstance() { return instance; }
+
+//----------------------------------------------------------------
+// Obsługa danych podstawowoych analizy
+
+    // true, jesli na serwerze jest nowa analiza do wykonania, czyli trzeba ją pobrać
+    private boolean newAnalysisReadyToDownload = false;
+
+    /*
+    Sprawdza, czy na serwerze danych jest nowa analiza do wykonania.
+    Efekt uboczny: Ustawia wartość newAnalysisReadyToDownload na true, jesli są.
+     */
+    public void checkNewAnalysisToDownload() {
+        // todo
+    }
+
+    public boolean isNewAnalysisDataReadyToDownlad() {
+        return newAnalysisDataReadyToDownlad;
+    }
+
+    // dane podstawowe analizy
+    private Analysis analysisBasicData = null;
+
+    /*
+    Pobiera dane podstawowe analizy (daty itd)
+    Efekt uboczny: Ustawia wartość analysisBasicData
+     */
+    public void downloadAnalysisBasicData() {
+        // todo
+    }
+
+    /*
+    Oddaje dane podstawowe analizy
+     */
+    public Analysis getAnalysisBasicData() {
+        return analysisBasicData;
+    }
+
+    /*
+    Zapisuje dane podstawowe analizy analysisBasicData w bazie lokalnej
+     */
+    public void saveAnalysisBasicData() {
+        // todo
+    }
+
+    /*
+    Odczytuje dane podstawowe analizy z bazy lokalnej
+    Efekt uboczny: Ustawia wartość analysisBasicData
+     */
+    public void readAnalysisBasicData() {
+        // todo
+    }
+
+    // zwraca true jeśli aktualna analiza jest już zakończona
+    public boolean isAnalysisFinished() {
+        return analysisBasicData.finished;
+    }
+
+    // zwraca true jeśli aktualna analiza nie jest zakończona
+    public boolean isAnalysisNotFinished() {
+        return !isAnalysisFinished();
+    }
+
+//----------------------------------------------------------------
+// Obsługa danych szczegółowych analizy
+
     // todo - jak sprawdzić na serwerze danych, czy są dane do aktualizacji, bez pobierania tych danych?
     // Chyba tylko jeśli na serwerze będzie dana informująca o tym
     // W innym przypadku trzeba chyba pobrać dane...
 
-    // True - jeśli na serwerze danych są dane do pobrania.
+    // true - jeśli na serwerze danych są dane do pobrania.
     private boolean newAnalysisDataReadyToDownlad = false;
 
     /*
     Sprawdza, czy na serwerze danych są dane do pobrania.
-    Efekt uboczny: Ustawia wartość newAnalisisDataReadyToDownlad na true, jesli są;
+    Efekt uboczny: Ustawia wartość newAnalisisDataReadyToDownlad na true, jesli są.
      */
     public void checkNewAnalysisDataToDownload() {
         //todo !!
@@ -28,6 +102,7 @@ public class AnalysisDataUpdater {
         // Jeśli są nowsze dane - ustawienie wartości newAnalisisDataReadyToDownlad
         // Jeśli jest nowe badanie,to trzeba zawiesić info na ekranie głównym
         // Podobnie jeśli zostanie pobrana informacjae badanie jest zakończone
+        // ustawienie newAnalysisDataReadyToDownlad
     }
 
     public boolean areNewAnalysisDataReadyToDownlad() {
@@ -44,14 +119,14 @@ public class AnalysisDataUpdater {
     todo i zrywa połączenie. Dobrze byłoby jakoś kontrolować, co zostało zaktualizowane i odtworzyć mniej więcej od miejsca przerwania
     todo !!! Zbyt odbiegasz od realiów. W istniejącej bazie nie ma mechnizmu pamięatnia daty aktualizacji każdej danej
      */
-    public void DownloadNewAnalysisData() {
+    public void downloadAnalysisNewData() {
 
     }
 
     /*
     Pobiera wszsykie dane (refresh - reload), bez względu na to czy były już pobrane, czy nie
      */
-    public void DownloadAllAnalysisData() {
+    public void downloadAnalysisAllData() {
 
     }
 
@@ -61,7 +136,7 @@ public class AnalysisDataUpdater {
     todo Może nie on-line, bo trzeba się zastanowić, jak ma być nowa cena
     todo ! powinien podpowiadać nową cenę i sygnalizować odchylenie od ceny konurenta - lista wadliwych cen...
      */
-    public void UploadAnalysisData() {
+    public void uploadAnalysisAllData() {
 
     }
 }

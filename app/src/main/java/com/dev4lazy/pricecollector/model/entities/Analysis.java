@@ -20,5 +20,6 @@ public class Analysis {
     public Date creationDate;
     @ColumnInfo(name = "due_date")
     public Date dueDate;
+    public Boolean finished;
 
 }

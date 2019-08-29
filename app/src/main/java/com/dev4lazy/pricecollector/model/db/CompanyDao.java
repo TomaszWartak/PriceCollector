@@ -15,13 +15,13 @@ import java.util.List;
 public interface CompanyDao {
 
     @Insert
-    void insert(Company user);
+    void insert(Company company);
 
     @Update
-    void update(Company user);
+    void update(Company company);
 
     @Delete
-    void delete(Company user);
+    void delete(Company company);
 
     @Query("DELETE FROM companies")
     void deleteAll();

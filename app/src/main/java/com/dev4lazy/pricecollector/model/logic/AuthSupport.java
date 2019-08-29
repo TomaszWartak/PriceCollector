@@ -7,7 +7,8 @@ import java.util.TreeMap;
 
 public interface AuthSupport {
 
-    // Obsługa danych uwierzytelniających na zasadzie klucz-wartość,
+//-----------------------------------------------------------------------
+// Obsługa danych uwierzytelniających na zasadzie klucz-wartość,
     // Np. dla logowania po identyfikatorze i haśle:
     // klucz = "USER_ID", wartość = "nowak_j"
     // klucz = "USER_PASSWORD", wartość = "xyz"
@@ -23,19 +24,21 @@ public interface AuthSupport {
     default String getCredential(String key) {
         return credentials.get(key);
     }
-    //-----------------------------------------------------------------------
+
+//-----------------------------------------------------------------------
+// Metody związane z procesowaniem logowania
 
     // Ma podjąć próbę zalogowania na podstawie wcześniej ustawionych danych uwierzytelniających
-    //
     void signIn();
 
     void signOut();
-
 
     void setLoggedIn(Boolean loggedIn);
 
     boolean isLoggedIn();
 
+//-----------------------------------------------------------------------
+// Obsługa callbacku do obsługi rezultatu logowania
     LoginCallback getLoginCallback();
 
     interface LoginCallback {

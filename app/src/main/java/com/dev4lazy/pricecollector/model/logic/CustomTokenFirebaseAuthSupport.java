@@ -14,11 +14,11 @@ Singleton do autentykacji na podstawie własnego id użytkownika i hasla.
 Przed wywołaniem smetody ignInFirebase() należy ustawić wartość tokena
 w wywołaniu addCredential("TOKEN", tokenString.
  */
-public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, FirebaseAuthSupport.LoginCallback {
+public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, AuthSupport.LoginCallback {
 
     private static final String TAG = "CustomTokenFirebaseAuthSupport";
 
-    private static final CustomTokenFirebaseAuthSupport ourInstance = new CustomTokenFirebaseAuthSupport();
+    private static final CustomTokenFirebaseAuthSupport instance = new CustomTokenFirebaseAuthSupport();
 
     private AuthSupport.LoginCallback loginCallbackService = null;
 
@@ -29,12 +29,8 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Fire
     private CustomTokenFirebaseAuthSupport() {
     }
 
-    public static CustomTokenFirebaseAuthSupport getInstance() { return ourInstance; }
+    public static CustomTokenFirebaseAuthSupport getInstance() { return instance; }
 
-    /*public void setCustomToken(String customToken) {
-        this.customToken = customToken;
-    }
-*/
     @Override
     public void signIn() {
         customToken = getCredential("TOKEN");

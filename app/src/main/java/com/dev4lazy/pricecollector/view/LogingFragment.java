@@ -37,13 +37,6 @@ public class LogingFragment extends Fragment implements AuthSupport.LoginCallbac
         authService = new MockCustomTokenOwnAuthSupport();
     }
 
-    void signIn() {
-        authService.addCredential("USER_ID", "nowak_j" );
-        authService.addCredential("USER_PASSWORD", "qwerty");
-        ((MockCustomTokenOwnAuthSupport) authService).setLoginCallbackService(this);
-        authService.signIn();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,6 +49,13 @@ public class LogingFragment extends Fragment implements AuthSupport.LoginCallbac
             }
         });
         return view;
+    }
+
+    void signIn() {
+        authService.addCredential("USER_ID", "nowak_j" );
+        authService.addCredential("USER_PASSWORD", "qwerty");
+        ((MockCustomTokenOwnAuthSupport) authService).setLoginCallbackService(this);
+        authService.signIn();
     }
 
     @Override

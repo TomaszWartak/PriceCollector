@@ -101,6 +101,8 @@ public class MockCustomTokenOwnAuthServices /* todo implements MockCustomTokenOw
         }
     }
 
+// ----------------------------------------------------------
+// obsługa odbiornika
     private class MockAuthServiceBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
