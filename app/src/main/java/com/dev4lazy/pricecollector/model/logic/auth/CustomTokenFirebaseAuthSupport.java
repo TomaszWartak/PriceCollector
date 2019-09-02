@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.model.logic;
+package com.dev4lazy.pricecollector.model.logic.auth;
 
 import android.util.Log;
 

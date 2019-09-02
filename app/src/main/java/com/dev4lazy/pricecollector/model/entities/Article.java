@@ -27,4 +27,37 @@ public class Article {
     public String name;
     public String description;
     // todo ??? picture;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getRemote_id() {
+        return remote_id;
+    }
+
+    public void setRemote_id(int remote_id) {
+        this.remote_id = remote_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

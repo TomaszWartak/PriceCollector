@@ -1,21 +1,6 @@
-package com.dev4lazy.pricecollector.model.logic;
+package com.dev4lazy.pricecollector.model.logic.auth;
 
-import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
-
-import com.dev4lazy.pricecollector.utils.AppHandle;
-
-import java.util.List;
 
 /*
 Klasa obsługująca logowanie na podstawie identyfikatora użytkownika i hasła, z wykorzystaniem tokena Firebase.
@@ -28,7 +13,7 @@ wołanych w klasie obsługującej logowanie Firebase (implementującej interfejs
  */
 public class MockCustomTokenOwnAuthSupport
         implements
-            AuthSupport,
+        AuthSupport,
             AuthSupport.LoginCallback,
             MockCustomTokenOwnAuthServices.OnReceiveCallback {
 

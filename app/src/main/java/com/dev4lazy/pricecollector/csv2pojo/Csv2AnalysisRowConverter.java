@@ -1,5 +1,7 @@
 package com.dev4lazy.pricecollector.csv2pojo;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 // todo test:
@@ -17,11 +19,9 @@ public class Csv2AnalysisRowConverter {
 
     private ArrayList<AnalysisRow> analysisRowList;
 
-    private ProgressIndicator progressIndicator;
-
-    public Csv2AnalysisRowConverter(String csvFileName, ProgressIndicator progressIndicator) {
+    public Csv2AnalysisRowConverter(String csvFileName, Context context) {
         csvReader.openReader( csvFileName );
-        analysisRowRepository = AppHandle.getAppHandle().getRepository();
+        analysisRowRepository = AnalysisRowRepository.getInstance(AnalyzesDatabase.getInstance(context));
         // todo test
         //Integer rowsCount = analysisRowRepository.getAnalysisRowsCount().getValue();
         analysisRowRepository.askAnalysisRowsCount(1);
@@ -33,7 +33,6 @@ public class Csv2AnalysisRowConverter {
         //todo może jakiś warunek, że jak błędy to nie działamy dalej...
         // ? globalne zmienne do błędów
         analysisRowList = new ArrayList<>();
-        this.progressIndicator = progressIndicator;
     }
 
     public void closeFiles() {
@@ -91,11 +90,9 @@ public class Csv2AnalysisRowConverter {
     }
 
     public void insertAllAnalysisRows() {
-        progressIndicator.showProgressBar();
         for (AnalysisRow analysisRow : getAnalysisRowList()) {
             insertAnalysisRow(analysisRow);
         }
-        progressIndicator.hideProgressBar();
     }
 
     public ArrayList<AnalysisRow> getAnalysisRowList() {

@@ -27,4 +27,36 @@ public class EanCode {
     public String value;
     @ColumnInfo(name = "article_id")
     public int articleId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getRemote_id() {
+        return remote_id;
+    }
+
+    public void setRemote_id(int remote_id) {
+        this.remote_id = remote_id;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public int getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
+    }
 }

@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.model.logic;
+package com.dev4lazy.pricecollector.model.logic.auth;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -72,16 +72,16 @@ public class MockCustomTokenOwnAuthServices /* todo implements MockCustomTokenOw
         intent.setClassName(
                 "com.dev4lazy.pricecollectormockauth",
                 "com.dev4lazy.pricecollectormockauth.MockAuthService");
-        boolean result = AppHandle.getAppHandle().bindService(intent, myConnection, Context.BIND_AUTO_CREATE);
+        boolean result = AppHandle.getHandle().bindService(intent, myConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void unbindFromMockAuthService() {
-        AppHandle.getAppHandle().unbindService(myConnection);
+        AppHandle.getHandle().unbindService(myConnection);
     }
 
     // todo to raczej do wywalenia
     public boolean isServiceRunning(String serviceClassName){
-        final ActivityManager activityManager = (ActivityManager) AppHandle.getAppHandle().getSystemService(Context.ACTIVITY_SERVICE);
+        final ActivityManager activityManager = (ActivityManager) AppHandle.getHandle().getSystemService(Context.ACTIVITY_SERVICE);
         final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
         for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
             if (runningServiceInfo.service.getClassName().equals(serviceClassName)){
@@ -117,11 +117,11 @@ public class MockCustomTokenOwnAuthServices /* todo implements MockCustomTokenOw
         mockAuthServiceBroadcastReceiver = new MockAuthServiceBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("DATA_FROM_MOCKAUTH_READY");
-        AppHandle.getAppHandle().registerReceiver(mockAuthServiceBroadcastReceiver, intentFilter);
+        AppHandle.getHandle().registerReceiver(mockAuthServiceBroadcastReceiver, intentFilter);
     }
 
     private void unregisterMockAuthServiceBroadcastReceiver() {
-        AppHandle.getAppHandle().unregisterReceiver(mockAuthServiceBroadcastReceiver);
+        AppHandle.getHandle().unregisterReceiver(mockAuthServiceBroadcastReceiver);
     }
 
 // ----------------------------------------------------------

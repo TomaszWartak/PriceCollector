@@ -28,6 +28,7 @@ public class StartScreenFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.start_screen_fragment, container, false);
+        // todo lambda
         view.findViewById(R.id.start_screen_framelayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

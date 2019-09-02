@@ -16,16 +16,25 @@
     </fragment>
     <fragment
         android:id="@+id/logingFragment"
-        android:name="com.dev4lazy.pricecollector.view.LogingFragment"
+        android:name="com.dev4lazy.pricecollector.view.LoginFragment"
         android:label="loging_fragment"
-        tools:layout="@layout/loging_fragment" >
+        tools:layout="@layout/login_fragment1" >
         <action
             android:id="@+id/action_logingFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.dev4lazy.pricecollector.view.MainFragment"
+        android:name="com.dev4lazy.pricecollector.view.MainScreenFragment"
         android:label="main_fragment"
-        tools:layout="@layout/main_fragment" />
+        tools:layout="@layout/main_screen_fragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_analysisRowFragment"
+            app:destination="@id/analysisRowFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/analysisRowFragment"
+        android:name="com.dev4lazy.pricecollector.csv2pojo_recycler.AnalysisRowFragment"
+        android:label="test_analysis_row_fragment"
+        tools:layout="@layout/test_analysis_row_fragment" />
 </navigation>

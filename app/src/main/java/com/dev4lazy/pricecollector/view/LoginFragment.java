@@ -12,62 +12,75 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev4lazy.pricecollector.R;
-//import com.dev4lazy.pricecollector.model.logic.FirebaseAuthSupport;
-import com.dev4lazy.pricecollector.model.logic.AuthSupport;
-import com.dev4lazy.pricecollector.model.logic.MockCustomTokenOwnAuthSupport;
+//import com.dev4lazy.pricecollector.model.logic.auth.FirebaseAuthSupport;
+import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
+import com.dev4lazy.pricecollector.model.logic.auth.MockCustomTokenOwnAuthSupport;
+import com.dev4lazy.pricecollector.utils.AppHandle;
 //mport com.dev4lazy.pricecollector.model.logic.OwnServerAuthServices;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LogingFragment extends Fragment implements AuthSupport.LoginCallback {
+public class LoginFragment extends Fragment implements AuthSupport.LoginCallback {
 
     // todo ViewModel...
 
     // obsługa logowania
-    private AuthSupport authService = null;
+    private AuthSupport authSupport = null;
 
-    public LogingFragment() {
+    public LoginFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        authService = new MockCustomTokenOwnAuthSupport();
+        //authSupport = new MockCustomTokenOwnAuthSupport();
+        authSupport = AppHandle.getHandle().getAuthSupport();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.loging_fragment, container, false);
+        View view = inflater.inflate(R.layout.login_fragment, container, false);
+        view.findViewById(R.id.login_button).setOnClickListener((View v) -> {
+            signIn();
+        });
+        /* todo usuń?
         view.findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
             }
         });
+         */
         return view;
     }
 
     void signIn() {
-        authService.addCredential("USER_ID", "nowak_j" );
-        authService.addCredential("USER_PASSWORD", "qwerty");
-        ((MockCustomTokenOwnAuthSupport) authService).setLoginCallbackService(this);
-        authService.signIn();
+        authSupport.addCredential("USER_ID", "nowak_j" );
+        authSupport.addCredential("USER_PASSWORD", "qwerty");
+        w interfejsie AuthSupport spróbuj przeniesc setLoginCallback() z LoginCallback do AuthSupport
+        Wtedy nie będzie potrzebne rzutowanie, jak niżej
+        ((MockCustomTokenOwnAuthSupport) authSupport).setLoginCallbackService(this);
+        authSupport.signIn();
     }
 
+    // todo zakomentowałem, bo wylogowywyało przy obrocie ekranu
+    /*
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // todo
+        // todo !!!!!
         //  1. czy na pewno w onDestroy?
         //  2. czyli co? Jak fragment zostanie zamknięty, to nastąpi wylogowanie?
+        //  niestety tak - przy obrocie wylogowuje...
         // Ad 2 to chyba dla mocka na Servisie tak powinno tylko byc...
         // można to dać w AppHandle przy zamknięciu?
-        authService.signOut();
+        authSupport.signOut();
     }
+    */
 
 // ----------------------------------------------------------
 // Implementacja metod interfejsu calbaków logowania AuthSupport.LoginCallback

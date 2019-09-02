@@ -50,4 +50,124 @@ public class OwnArticleInfo {
     public int moduleId;
     @ColumnInfo(name = "uo_project_id")
     public int uoProjectId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getRemoteId() {
+        return remoteId;
+    }
+
+    public void setRemoteId(int remoteId) {
+        this.remoteId = remoteId;
+    }
+
+    public int getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
+    }
+
+    public String getOwnCode() {
+        return ownCode;
+    }
+
+    public void setOwnCode(String ownCode) {
+        this.ownCode = ownCode;
+    }
+
+    public int getSapCode() {
+        return sapCode;
+    }
+
+    public void setSapCode(int sapCode) {
+        this.sapCode = sapCode;
+    }
+
+    public int getMagentoCode() {
+        return magentoCode;
+    }
+
+    public void setMagentoCode(int magentoCode) {
+        this.magentoCode = magentoCode;
+    }
+
+    public double getRefPrice() {
+        return refPrice;
+    }
+
+    public void setRefPrice(double refPrice) {
+        this.refPrice = refPrice;
+    }
+
+    public double getStorePrice() {
+        return storePrice;
+    }
+
+    public void setStorePrice(double storePrice) {
+        this.storePrice = storePrice;
+    }
+
+    public double getStoreMarginPercent() {
+        return storeMarginPercent;
+    }
+
+    public void setStoreMarginPercent(double storeMarginPercent) {
+        this.storeMarginPercent = storeMarginPercent;
+    }
+
+    public int getSectorId() {
+        return sectorId;
+    }
+
+    public void setSectorId(int sectorId) {
+        this.sectorId = sectorId;
+    }
+
+    public int getMarketId() {
+        return marketId;
+    }
+
+    public void setMarketId(int marketId) {
+        this.marketId = marketId;
+    }
+
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public int getFamilyId() {
+        return familyId;
+    }
+
+    public void setFamilyId(int familyId) {
+        this.familyId = familyId;
+    }
+
+    public int getModuleId() {
+        return moduleId;
+    }
+
+    public void setModuleId(int moduleId) {
+        this.moduleId = moduleId;
+    }
+
+    public int getUoProjectId() {
+        return uoProjectId;
+    }
+
+    public void setUoProjectId(int uoProjectId) {
+        this.uoProjectId = uoProjectId;
+    }
 }

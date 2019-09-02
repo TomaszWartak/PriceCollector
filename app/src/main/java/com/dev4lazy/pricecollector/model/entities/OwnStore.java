@@ -19,4 +19,28 @@ public class OwnStore extends Store {
     public String ownNumber;
     public String sapOwnNumber;
     public StoreStructureType structureType;
+
+    public String getOwnNumber() {
+        return ownNumber;
+    }
+
+    public void setOwnNumber(String ownNumber) {
+        this.ownNumber = ownNumber;
+    }
+
+    public String getSapOwnNumber() {
+        return sapOwnNumber;
+    }
+
+    public void setSapOwnNumber(String sapOwnNumber) {
+        this.sapOwnNumber = sapOwnNumber;
+    }
+
+    public StoreStructureType getStructureType() {
+        return structureType;
+    }
+
+    public void setStructureType(StoreStructureType structureType) {
+        this.structureType = structureType;
+    }
 }

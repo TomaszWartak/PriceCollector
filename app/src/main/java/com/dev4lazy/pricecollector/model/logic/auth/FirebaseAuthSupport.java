@@ -1,5 +1,6 @@
-package com.dev4lazy.pricecollector.model.logic;
+package com.dev4lazy.pricecollector.model.logic.auth;
 
+import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

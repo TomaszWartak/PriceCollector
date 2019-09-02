@@ -16,4 +16,27 @@ public class Sector {
     public int remote_id; // klucz głowny w bazie zdalnej
     public String name;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getRemote_id() {
+        return remote_id;
+    }
+
+    public void setRemote_id(int remote_id) {
+        this.remote_id = remote_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
