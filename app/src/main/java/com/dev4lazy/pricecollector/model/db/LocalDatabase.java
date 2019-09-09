@@ -58,7 +58,7 @@ public abstract class LocalDatabase extends RoomDatabase {
     public abstract AnalysisDao analysisDao();
     public abstract ArticleDao articleDao();
     public abstract CompanyDao companyDao();
-    public abstract CountryDao countryDao();
+    public abstract CountryDao2 countryDao(); // todo !!!! 22222
     public abstract DepartmentDao departmentDao();
     public abstract EanCodeDao eanCodeDao();
     public abstract FamilyDao familyDao();

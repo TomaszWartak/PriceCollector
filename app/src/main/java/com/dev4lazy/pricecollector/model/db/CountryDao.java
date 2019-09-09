@@ -33,7 +33,7 @@ public interface CountryDao {
     @Query("SELECT * from countries WHERE id= :id")
     LiveData<List<Country>>findCountryById(String id);
 
-    //todo findCountryByName like
+    //todo findByNameLD like
 
 
 }

@@ -21,10 +21,9 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
     private static final CustomTokenFirebaseAuthSupport instance = new CustomTokenFirebaseAuthSupport();
 
     private AuthSupport.LoginCallback loginCallbackService = null;
+    private Boolean loggedIn = false;
 
     private String customToken = null;
-
-    private Boolean loggedIn = false;
 
     private CustomTokenFirebaseAuthSupport() {
     }
@@ -83,6 +82,11 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
     }
 
     @Override
+    public LoginCallback getLoginCallback() {
+        return loginCallbackService;
+    }
+
+    @Override
     public void callIfSucessful() {
         loginCallbackService.callIfSucessful();
     }
@@ -92,8 +96,5 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
         loginCallbackService.callIfUnsucessful();
     }
 
-    @Override
-    public LoginCallback getLoginCallback() {
-        return loginCallbackService;
-    }
+
 }

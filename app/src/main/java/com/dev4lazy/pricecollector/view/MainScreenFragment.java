@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
+import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.MainViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -59,7 +60,7 @@ public class MainScreenFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
                 // Handle the back button event
-                new MaterialAlertDialogBuilder(getContext(), R.style.AlertDialogStyle)
+                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
                         .setTitle("")
                         .setMessage(R.string.question_close_app)
                         .setPositiveButton(getActivity().getString(R.string.caption_ok), new LogOffListener() )
@@ -71,6 +72,8 @@ public class MainScreenFragment extends Fragment {
 
         // todo sprawdzenie, co jest w preferencjach i odtworzenie na ekranie
         getPreferencesInfo();
+        // todo incjalizacja repozytoriów
+        AppHandle.getHandle().getRepository().getLocalDataRepository().initializeLocalDatabase();
         // todo jeśli analiza jest w trakcie - możliwość kontynuacji
         // todo sprawdzenie czy na serwerze zdalnym jest nowa analiza - wyświetlenie
         getNewAnalysisInfo();
@@ -83,7 +86,7 @@ public class MainScreenFragment extends Fragment {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             // todo tutaj zapisanie preferences, bazy danych itp...
-
+            AppHandle.getHandle().getAuthSupport().signOut();
             getActivity().finishAndRemoveTask();
             System.exit(0);
         }
@@ -96,25 +99,6 @@ public class MainScreenFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
-
-    /*
-    @Override
-    public boolean handleOnBackPressed() {
-        //Do your job here
-        //use next line if you just need navigate up
-        //NavHostFragment.findNavController(this).navigateUp();
-        //Log.e(getClass().getSimpleName(), "handleOnBackPressed");
-        return true;
-    }
-    */
-
-    /*
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        getActivity().remove.removeOnBackPressedCallback(this);
-    }
-    */
 
     //todo test
     private void openTestAnalyzesList() {

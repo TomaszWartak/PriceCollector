@@ -14,27 +14,30 @@ wołanych w klasie obsługującej logowanie Firebase (implementującej interfejs
 public class MockCustomTokenOwnAuthSupport
         implements
         AuthSupport,
-            AuthSupport.LoginCallback,
-            MockCustomTokenOwnAuthServices.OnReceiveCallback {
+        AuthSupport.LoginCallback,
+        MockCustomTokenOwnAuthServices.OnReceiveCallback {
 
 // ----------------------------------------------------------
 // Wykorzystywane w implementacji metod interfejsu logowania AuthSupport
     private Boolean loggedIn = false;
-    private LoginCallback loginCallbackService = null;
+    LoginCallback loginCallbackService = null;
 
-// ----------------------------------------------------------
+    // ----------------------------------------------------------
 // Obsługa usługi udającej serwer logowania
-    private MockCustomTokenOwnAuthServices mockCustomTokenOwnAuthServices = new MockCustomTokenOwnAuthServices();
+    private MockCustomTokenOwnAuthServices mockCustomTokenOwnAuthServices;
 
 // ----------------------------------------------------------
 // obsługa Firebase
-    private FirebaseAuthSupport firebaseAuthServices = CustomTokenFirebaseAuthSupport.getInstance();
+    private FirebaseAuthSupport firebaseAuthServices;
 
 // ----------------------------------------------------------
 // konstruktor :-)
     public MockCustomTokenOwnAuthSupport() {
+        mockCustomTokenOwnAuthServices = new MockCustomTokenOwnAuthServices();
         mockCustomTokenOwnAuthServices.bindToMockAuthService();
         mockCustomTokenOwnAuthServices.setOnReceiveCallback(this);
+        firebaseAuthServices = CustomTokenFirebaseAuthSupport.getInstance();
+        firebaseAuthServices.setLoginCallbackService(this);
     }
 
 // ----------------------------------------------------------
@@ -65,6 +68,7 @@ public class MockCustomTokenOwnAuthSupport
     // wylogowuje użytkownika z własnego serwera logowania
     @Override
     public void signOut() {
+        firebaseAuthServices.signOut();
         mockCustomTokenOwnAuthServices.unbindFromMockAuthService();
     }
 
@@ -87,6 +91,11 @@ public class MockCustomTokenOwnAuthSupport
     }
 
     @Override
+    public LoginCallback getLoginCallback() {
+        return loginCallbackService;
+    }
+
+    @Override
     public void callIfSucessful() {
         setLoggedIn(true);
         loginCallbackService.callIfSucessful();
@@ -98,19 +107,13 @@ public class MockCustomTokenOwnAuthSupport
         loginCallbackService.callIfUnsucessful();
     }
 
-    @Override
-    public LoginCallback getLoginCallback() {
-        return loginCallbackService;
-    }
-
-// ----------------------------------------------------------
+ // ----------------------------------------------------------
 // Implementacja metody interfejsu calbaku odbioru danych z mocka serwera logowania
 // MockCustomTokenOwnAuthServices.OnReceiveCallback
 
     @Override
     public void callIfDataReceived(String token) {
         firebaseAuthServices.addCredential("TOKEN", token );
-        firebaseAuthServices.setLoginCallbackService(this);
         firebaseAuthServices.signIn();
     }
 

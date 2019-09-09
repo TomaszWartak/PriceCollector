@@ -42,7 +42,7 @@ public interface AnalysisRowDao {
     @Query("SELECT * from analysis_rows WHERE id= :id")
     LiveData<List<AnalysisRow>> findAnalysisRowById(String id);
 
-    //todo findByName like
+    //todo findByNameLD like
     @RawQuery(observedEntities = AnalysisRow.class)
     LiveData<List<AnalysisRow>> getAnalysisRowsViaQuery(SupportSQLiteQuery query) ;
 }

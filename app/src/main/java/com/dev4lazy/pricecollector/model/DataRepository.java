@@ -4,8 +4,14 @@ public class DataRepository {
 
     private static DataRepository instance = new DataRepository();
 
+    private LocalDataRepository localDataRepository = null;
+
+    private RemoteDataRepository remoteDataRepository = null;
+
     private DataRepository() {
         // todo incializajca repozytoriów
+        localDataRepository = LocalDataRepository.getInstance();
+        remoteDataRepository = RemoteDataRepository.getInstance();
     }
 
     public static DataRepository getInstance() {
@@ -19,4 +25,11 @@ public class DataRepository {
         return instance;
     }
 
+    public LocalDataRepository getLocalDataRepository() {
+        return localDataRepository;
+    }
+
+    public RemoteDataRepository getRemoteDataRepository() {
+        return remoteDataRepository;
+    }
 }

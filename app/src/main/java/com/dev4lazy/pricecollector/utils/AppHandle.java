@@ -3,6 +3,7 @@ package com.dev4lazy.pricecollector.utils;
 import android.app.Application;
 
 import com.dev4lazy.pricecollector.model.DataRepository;
+import com.dev4lazy.pricecollector.model.db.LocalDatabase;
 import com.dev4lazy.pricecollector.model.logic.auth.AppAuthSupport;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 
@@ -17,7 +18,6 @@ public class AppHandle extends Application{
     }
 
     public static AppHandle getHandle() {
-
         return appHandle;
     }
 
@@ -25,8 +25,12 @@ public class AppHandle extends Application{
         return AppAuthSupport.getInstance().getSupport();
     }
 
+    public LocalDatabase getLocalDatabase() { return LocalDatabase.getInstance(getApplicationContext());}
+
     public DataRepository getRepository() {
         return DataRepository.getInstance();
     }
+
+    public UserPreferences getPreferences() { return UserPreferences.getInstance(); }
 
 }
