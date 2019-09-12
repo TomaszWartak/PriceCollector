@@ -23,12 +23,12 @@ import androidx.room.PrimaryKey;
 )
 public class Company {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    private int id;
     // todo?? czy jest taka tabela w bazie zdalnej
-    public int remoteId; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
-    public String name;
+    private int remoteId; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
+    private String name;
     @ColumnInfo(name = "country_id")
-    public int countryId;
+    private int countryId;
 
     public int getId() {
         return id;

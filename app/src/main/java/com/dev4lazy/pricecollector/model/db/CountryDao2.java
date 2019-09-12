@@ -24,17 +24,21 @@ public interface CountryDao2 extends _Dao<Country>{
     @Query("SELECT * from countries ORDER BY name ASC")
     LiveData<List<Country>> getAll();
 
+    /*
     @Override
     @Query("SELECT * from countries WHERE id= :id")
     LiveData<List<Country>> findByIdLD(int id);
+    */
 
     @Override
     @Query("SELECT * from countries WHERE id= :id")
     List<Country> findById(int id);
 
+    /*
     // todo zrób Override analogicznie
     @Query("SELECT * from countries WHERE name= :name")
     LiveData<List<Country>> findByNameLD(String name);
+    */
 
     @Query("SELECT * from countries WHERE name= :name")
     List<Country> findByName(String name);

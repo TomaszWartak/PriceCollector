@@ -10,9 +10,13 @@ import androidx.sqlite.db.SimpleSQLiteQuery;
 import com.dev4lazy.pricecollector.model.db.CompanyDao;
 import com.dev4lazy.pricecollector.model.db.CountryDao2;
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
+import com.dev4lazy.pricecollector.model.db.OwnStoreDao;
+import com.dev4lazy.pricecollector.model.db.StoreDao;
 import com.dev4lazy.pricecollector.model.db._Dao;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
+import com.dev4lazy.pricecollector.model.entities.OwnStore;
+import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 import java.util.List;
@@ -21,12 +25,9 @@ public class LocalDataRepository {
 
     private static LocalDataRepository instance = new LocalDataRepository();
 
-    private LocalDataRepository() {
-        // todo dodaj sprawdzenie, czy baza jest zainicjowana
-        // todo jesli nie incializajca bazy
-        // todo bo przy powrocie z przegladania remote database powtórnie jest baza inicjowana
-        initializeLocalDatabase();
-    }
+//-----------------------------------------------------------------------
+// OwnStore
+private OwnStoreDao ownStoreDao = AppHandle.getHandle().getLocalDatabase().ownStoreDao();
 
     public static LocalDataRepository getInstance() {
         if (instance == null) {
@@ -38,157 +39,12 @@ public class LocalDataRepository {
         }
         return instance;
     }
-
+    private Data<OwnStore> ownStores = new Data<>(ownStoreDao);
+//-----------------------------------------------------------------------
+// Store
+private StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
+    private Data<Store> stores = new Data<>(storeDao);
 //-----------------------------------------------------------------------------------
-// clearDatabase
-    public void clearDatabase() {
-        new ClearDatabaseAsyncTask(AppHandle.getHandle().getLocalDatabase()).execute();
-    }
-
-    private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
-        private LocalDatabase assyncTaskAnalyzesDatabase;
-
-        ClearDatabaseAsyncTask(LocalDatabase database) {
-            assyncTaskAnalyzesDatabase = database;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            assyncTaskAnalyzesDatabase.clearAllTables();
-            return null;
-        }
-    }
-
-//-----------------------------------------------------------------------------------
-// inicjalizacja bazy lokalnej
-    public void initializeLocalDatabase() {
-        // todo usuń czyszczenie bazy
-        clearDatabase();
-        // todo inicjalizacj bazy zrob w oddzielnym obiekcie
-        startInitialisationChain();
-    }
-
-    private void startInitialisationChain() {
-        initalizeCountries();
-    }
-
-    // todo usuń private boolean firstCall = true;
-
-    boolean firstCall = true; //todo zmień nazwę
-    private void initalizeCountries() {
-        // todo odczyt kraju z preferencji
-        Country ownCountry = new Country();
-        ownCountry.setName(AppHandle.getHandle().getPreferences().getCountryName());
-        ownCountry.setEnglishName(AppHandle.getHandle().getPreferences().getCountryEnglishName());
-
-        // Ustanowienie obserwatora dla rezulatu dopisania kraju własnego
-        // todo test
-
-        Observer<Long> insertingResultObserver = new Observer<Long>() {
-            @Override
-            public void onChanged(Long ownCountryId) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
-                if (firstCall) {
-                    firstCall = false;
-                    ownCountryInsertResult.removeObserver(this); // this = observer...
-                    if (ownCountryId!=-1) {
-                        insertOwnComapny(ownCountryId);
-                    }
-                } /*else {
-                    notFirstCall = true;
-                } */
-                // todo removeObserver()
-            }
-        };
-        ownCountryInsertResult.observeForever(insertingResultObserver);
-
-        // Dodanie kraju własnego
-        // todo robisz to przez Thread, może wróć do AsyncTask?
-        insertCountryAsync(ownCountry);
-    }
-
-
-    /*
-    Nie kasuj... Tu masz przykład jak odczytać dane z bazy
-
-    private MutableLiveData<List<Country>> getCountryByNameResult = new MutableLiveData<>();
-
-    private addOwnComapny() {
-
-         String countryName = AppHandle.getHandle().getPreferences().getCountryName();
-
-        // Ustanowienie obserwatora dla pobrania dancyh kraju własnego z bazy. Jest potrzebne jego id do wpisania do danych sieci
-        Observer<List<Country>> observer = new Observer<List<Country>>() {
-            @Override
-            public void onChanged(List<Country> countriesList) {
-                // todo? czy to sprawdzenie jest potrzebne?
-                if (AppHandle.getHandle().getLocalDatabase().isDatabaseCreated().getValue() != null) {
-                    Country country = countriesList.get(0);
-                    Company company = new Company();
-                    company.setCountryId(country.getId());
-                    // todo odczyt danych z "inicjalizatora" (tablice z danymi do inicjalizacji danych) - > sieć własna
-                    company.setName("Castorama");
-                    // todo dodanie Castorama
-                    // todo dodanie pozostałych sieci
-                    // todo wywołanie initializeStores()
-                }
-                // to chyba automatycznie jest przy MediatorLiveData mObservableCountries.removeObserver(observer);
-                getCountryByNameResult.removeObserver(this); // this = observer...
-            }
-        };
-        getCountryByNameResult.observeForever(observer);
-
-        // Wywołanie zapytania o dane kraju własnego
-        // todo robisz to przez Thread, może wróć do AsyncTask?
-        getCountryByNameAsync(countryName);
-   }
-   */
-
-    boolean firstCall2 = true; //todo zmień nazwę
-
-    private void insertOwnComapny(Long ownCountryId) {
-        Company ownCompany = new Company();
-        ownCompany.setCountryId(ownCountryId.intValue());
-        // todo odczyt danych z "inicjalizatora" (tablice z danymi do inicjalizacji danych) - > sieć własna
-        ownCompany.setName("Castorama");
-        // todo dodanie sieci własnej
-        // todo na potrzeby testu - z observerem; bezt testu po prostu dodanie
-        MutableLiveData<Long> companyInsertResult1 = new MutableLiveData<>();
-        Observer<Long> insertingResultObserver = new Observer<Long>() {
-            @Override
-            public void onChanged(Long ownCompanyId) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
-                if (firstCall2) {
-                    firstCall2 = false;
-                    if (ownCompanyId!=null) {
-                        if (ownCompanyId!=-1) {
-                        }
-                    }
-                }
-                companyInsertResult1.removeObserver(this); // this = observer...
-            }
-        };
-        companyInsertResult1.observeForever(insertingResultObserver);
-
-        // Dodanie kraju własnego
-        // todo robisz to przez Thread, może wróć do AsyncTask?
-        insertAsyncCompany( ownCompany, companyInsertResult1 );
-
-        // todo dodanie pozostałych sieci
-        insertOtherComapnies(ownCountryId);
-
-        // todo wywołanie initializeStores()
-    }
-
-    private void insertOtherComapnies(Long ownCountryId) {
-        // Pobranie "kraju własnego", w celu ustawienia wartości "w sieci własnej"
-        // todo odczyt danych z "inicjalizatora" (tablice z danymi do inicjalizacji danych)
-        // todo być może część danych z inicjalizatora powinna trafić do preferencji przy pierwszym uruchomieniu
-        // todo cd. a tutuaj już pobranie z preferencji
-        String countryName = AppHandle.getHandle().getPreferences().getCountryName();
-    }
 
 
     //**********************************************************************
@@ -232,21 +88,32 @@ public class LocalDataRepository {
 
     private Data<Company> companies = new Data<>(companyDao);
 
-    public void insertCompany( Company company ) {
-        companies.insertData(company);
+    private LocalDataRepository() {
+
+    }
+    
+//-----------------------------------------------------------------------------------
+// clearDatabaseAsync
+    public void clearDatabase(AfterDatabaseClearedCallback callback) {
+        new ClearDatabaseAsyncTask(
+                AppHandle.getHandle().getLocalDatabase(),
+                callback
+        ).execute();
     }
 
-    public void insertAsyncCompany( Company company, MutableLiveData<Long> result ) {
+    public void insertCompany( Company company, MutableLiveData<Long> result ) {
         companies.insertData(company,result);
     }
-    public void updateCompany( Company company ) {
-        companies.updateData(company);
+
+    public void updateCompany( Company company, MutableLiveData<Integer> result  ) {
+        companies.updateData(company, result);
     }
 
-    public void deleteCompany( Company company ) {
-        companies.deleteData(company);
+    public void deleteCompany( Company company, MutableLiveData<Integer> result   ) {
+        companies.deleteData(company, result);
     }
 
+    /* usuń ?
     public LiveData<List<Company>> getCompanyByIdLD(int companyId) {
         return companyDao.findByIdLD(companyId);
     }
@@ -254,10 +121,7 @@ public class LocalDataRepository {
     public LiveData<List<Company>> getCompanyByNameLD(String companyName) {
         return companyDao.findByNameLD(companyName);
     }
-
-    public List<Company> getCompanyByName(String companyName) {
-        return companyDao.findByName(companyName);
-    }
+    */
 
     public LiveData<List<Company>> getAllCompaniesLD() {
         return companyDao.getAll();
@@ -282,17 +146,31 @@ public class LocalDataRepository {
 
     private Data<Country> countries = new Data<>(countryDao2);
 
-    public void updateCountry( Country country ) {
-        countries.updateData(country);
+    public void getCompanyById( int id, MutableLiveData<List<Company>> result) {
+        companies.findDataById( id, result);
     }
 
-    public void deleteCountry( Country country ) {
-        countries.deleteData(country);
+    public void getCompanyByName( String companyName, MutableLiveData<List<Company>> result ) {
+        companies.findDataByName(companyName, result);
     }
 
+    public void insertCountry( Country country ) {
+        countries.insertData(country);
+    }
+
+    public void insertCountry(Country country, MutableLiveData<Long> result ) {
+        countries.insertData(country,result);
+    }
+
+    public void updateCountry( Country country, MutableLiveData<Integer> result  ) {
+        countries.updateData(country,result);
+    }
+
+    /*
     public LiveData<List<Country>> getCountryByIdLD(int countryId) {
         return countryDao2.findByIdLD(countryId);
     }
+    */
 
     public LiveData<List<Country>> getCountryByNameLD(String countryName) {
         return countryDao2.findByNameLD(countryName);
@@ -313,45 +191,6 @@ public class LocalDataRepository {
         return countryDao2.getAll();
     }
 
-    //**********************************************************************
-
-    private MutableLiveData<Long> ownCountryInsertResult = new MutableLiveData<>();
-
-    private MutableLiveData<List<Country>> getCountryByNameResult = new MutableLiveData<>();
-
-    private void insertCountry(Country country) {
-        insertCountryAsync(country);
-    }
-
-    private  void insertCountryAsync(Country country) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ownCountryInsertResult.postValue(countryDao2.insert(country));
-                    // todo usuń? ownCountryInsertResult.postValue(1);
-                } catch (Exception e) {
-                    ownCountryInsertResult.postValue(-1L);
-                }
-            }
-        }).start();
-    }
-
-    private void getCountryByNameAsync(String countryName) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    getCountryByNameResult.postValue(getCountryByName(countryName));
-                } catch (Exception e) {
-                    getCountryByNameResult.postValue(null);
-                }
-            }
-        }).start();
-    }
-
 //-----------------------------------------------------------------------
 // Department
 
@@ -370,15 +209,116 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // OwnArticleInfo
 
-//-----------------------------------------------------------------------
-// OwnStore
+    public void deleteCountry( Country country, MutableLiveData<Integer> result  ) {
+        countries.deleteData(country,result);
+    }
 
+    public void getCountryById( int id, MutableLiveData<List<Country>> result) {
+        countries.findDataById( id, result);
+    }
+
+    public void insertOwnStore(OwnStore ownStore, MutableLiveData<Long> result ) {
+        ownStores.insertData(ownStore,result);
+    }
+
+    public void updateOwnStore( OwnStore ownStore, MutableLiveData<Integer> result  ) {
+        ownStores.updateData(ownStore,result);
+    }
+
+    public void deleteOwnStore( OwnStore ownStore, MutableLiveData<Integer> result  ) {
+        ownStores.deleteData(ownStore,result);
+    }
+
+    public void getOwnStoreById( int id, MutableLiveData<List<OwnStore>> result) {
+        ownStores.findDataById( id, result);
+    }
+
+    public void getOwnStoreByName( String ownStoreName, MutableLiveData<List<OwnStore>> result ) {
+        ownStores.findDataByName(ownStoreName, result);
+    }
+
+    /* todo czy to jest potrzebne?
+    public LiveData<List<OwnStore>> getOwnStoreByIdLD(int ownStoreId) {
+        return ownStoreDao.findByIdLD(ownStoreId);
+    }
+
+    public LiveData<List<OwnStore>> getOwnStoreByNameLD(String ownStoreName) {
+        return ownStoreDao.findByNameLD(ownStoreName);
+    }
+    */
+
+    public LiveData<List<OwnStore>> getAllOwnStoresLD() {
+        return ownStoreDao.getAll();
+    }
+
+    public LiveData<List<OwnStore>> getFilteredOwnStoresLD(String filter) {
+        if ((filter!=null) && (!filter.isEmpty())) {
+            return ownStoreDao.getViaQuery(new SimpleSQLiteQuery(filter));
+        }
+        return ownStoreDao.getAll();
+    }
+    
 //-----------------------------------------------------------------------
 // Sector
 
-//-----------------------------------------------------------------------
-// Store
+    public void insertStore(Store store, MutableLiveData<Long> result ) {
+        stores.insertData(store,result);
+    }
 
+    public void updateStore( Store store, MutableLiveData<Integer> result  ) {
+        stores.updateData(store,result);
+    }
+
+    public void deleteStore( Store store, MutableLiveData<Integer> result  ) {
+        stores.deleteData(store,result);
+    }
+
+    public void getStoreById( int id, MutableLiveData<List<Store>> result) {
+        stores.findDataById( id, result);
+    }
+
+    public void getStoreByName( String storeName, MutableLiveData<List<Store>> result ) {
+        stores.findDataByName(storeName, result);
+    }
+
+    public LiveData<List<Store>> getAllStoresLD() {
+        return storeDao.getAll();
+    }
+
+    public LiveData<List<Store>> getFilteredStoresLD(String filter) {
+        if ((filter!=null) && (!filter.isEmpty())) {
+            return storeDao.getViaQuery(new SimpleSQLiteQuery(filter));
+        }
+        return storeDao.getAll();
+    }
+
+    public interface AfterDatabaseClearedCallback {
+        void call();
+    }
+
+    private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
+        private LocalDatabase assyncTaskAnalyzesDatabase;
+        private AfterDatabaseClearedCallback afterDatabaseClearedCallback;
+
+        ClearDatabaseAsyncTask(LocalDatabase database, AfterDatabaseClearedCallback callback) {
+            assyncTaskAnalyzesDatabase = database;
+            afterDatabaseClearedCallback = callback;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            assyncTaskAnalyzesDatabase.clearAllTables();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (afterDatabaseClearedCallback!=null) {
+                afterDatabaseClearedCallback.call();
+            }
+        }
+    }
 
 //-----------------------------------------------------------------------
 // UOProject

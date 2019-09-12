@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
+import com.dev4lazy.pricecollector.model.utils.DataInitializer;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.MainViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -43,7 +44,6 @@ public class MainScreenFragment extends Fragment {
         // todo tutaj zainicjoawanie wykorzystywanych później obiektów
     }
 
-   // todo  tuaj wyjście backspace powinno wylogowywać (po dialgu czy na pewno)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -72,8 +72,11 @@ public class MainScreenFragment extends Fragment {
 
         // todo sprawdzenie, co jest w preferencjach i odtworzenie na ekranie
         getPreferencesInfo();
-        // todo incjalizacja repozytoriów
-        AppHandle.getHandle().getRepository().getLocalDataRepository().initializeLocalDatabase();
+        // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
+        // todo dodaj sprawdzenie, czy baza jest zainicjowana
+        // todo jesli nie incializajca bazy
+        // todo bo przy powrocie z przegladania remote database powtórnie jest baza inicjowana
+        DataInitializer.getInstance().initializeLocalDatabase();
         // todo jeśli analiza jest w trakcie - możliwość kontynuacji
         // todo sprawdzenie czy na serwerze zdalnym jest nowa analiza - wyświetlenie
         getNewAnalysisInfo();

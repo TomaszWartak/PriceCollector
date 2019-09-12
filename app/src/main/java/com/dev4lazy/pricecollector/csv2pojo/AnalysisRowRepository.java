@@ -48,7 +48,7 @@ public class AnalysisRowRepository {
     }
 
 //-----------------------------------------------------------------------------------
-// clearDatabase
+// clearDatabaseAsync
     public void clearDatabase() {
         new ClearDatabaseAsyncTask(analyzesDatabase).execute();
     }

@@ -14,25 +14,24 @@ import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import java.util.List;
 
 @Dao
-public interface OwnStoreDao {
-    @Insert
-    void insert( OwnStore ownStore );
+public interface OwnStoreDao extends _Dao<OwnStore> {
 
-    @Update
-    void update( OwnStore ownStore );
-
-    @Delete
-    void delete( OwnStore ownStore );
-
+    @Override
     @Query("DELETE FROM own_stores")
-    void deleteAll();
+    int deleteAll();
 
-    @Query("SELECT * FROM own_stores WHERE id= :id")
-    LiveData<List<OwnStore>> findOwnStoreById(String id);
-
-    @Query("SELECT * FROM own_stores")
-    LiveData<List<OwnStore>> getAllOwnStores();
+    @Override
+    @Query("SELECT * from own_stores ORDER BY name ASC")
+    LiveData<List<OwnStore>> getAll();
 
     @RawQuery(observedEntities = OwnStore.class)
-    LiveData<List<OwnStore>> getOwnStoresViaQuery( SupportSQLiteQuery query );
+    LiveData<List<OwnStore>> getViaQuery(SupportSQLiteQuery query);
+
+    @Override
+    @Query("SELECT * from own_stores WHERE id= :id")
+    List<OwnStore> findById(int id);
+
+    @Query("SELECT * from own_stores WHERE name= :name")
+    List<OwnStore> findByName(String name);
+
 }

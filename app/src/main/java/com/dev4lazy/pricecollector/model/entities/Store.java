@@ -30,6 +30,7 @@ public class Store {
     public int remoteId; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
     @ColumnInfo(name = "company_id")
     public int companyId;
+    public String name;
     public String city;
     public String street;
     public String zipCode;
@@ -56,6 +57,14 @@ public class Store {
 
     public void setCompanyId(int companyId) {
         this.companyId = companyId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCity() {

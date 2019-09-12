@@ -8,6 +8,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.entities.Article;
@@ -27,7 +29,7 @@ import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 
 @Database(
-    version = 1,
+    version = 2,
     entities = {
         Analysis.class,
         Article.class,
@@ -72,6 +74,14 @@ public abstract class LocalDatabase extends RoomDatabase {
 
     private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
 
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE stores ADD COLUMN name TEXT");
+            database.execSQL("ALTER TABLE own_stores ADD COLUMN name TEXT");
+        }
+    };
+
     public static LocalDatabase getInstance(final Context context) {
         if (instance == null) {
             synchronized (LocalDatabase.class) {
@@ -79,7 +89,8 @@ public abstract class LocalDatabase extends RoomDatabase {
                     instance = Room.databaseBuilder(context.getApplicationContext(),
                             LocalDatabase.class, DATABASE_NAME )
                             //.addCallback(roomDatabaseCallback)
-                            //.addMigrations(MIGRATION_1_2)
+                            //.fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
+                            .addMigrations(MIGRATION_1_2)
                             .build();
                     instance.updateDatabaseCreated(context.getApplicationContext());
                 }
