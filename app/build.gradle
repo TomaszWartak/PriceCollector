@@ -37,14 +37,23 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Android X
-    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    // 2019-09-12 https://developer.android.com/jetpack/androidx/releases/appcompat
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    // https://developer.android.com/jetpack/androidx/releases/legacy
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    // https://developer.android.com/jetpack/androidx/releases/constraintlayout
     implementation 'androidx.cardview:cardview:1.0.0'
+    // https://developer.android.com/jetpack/androidx/releases/cardview
     implementation "androidx.recyclerview:recyclerview:1.0.0"
+    // https://developer.android.com/jetpack/androidx/releases/recyclerview
+    implementation "androidx.preference:preference:1.1.0"
+    // 2019-09-12 https://developer.android.com/jetpack/androidx/releases/preference
+
 
     // Material Design
     implementation 'com.google.android.material:material:1.1.0-alpha09'
+    // https://dl.google.com/dl/android/maven2/index.html
 
     // Testy
     testImplementation 'junit:junit:4.13-beta-3'
@@ -56,20 +65,20 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:18.1.0'
     //implementation 'com.google.firebase:firebase-admin:6.9.0' // todo na potrzeby testowago generowania tokenów
 
-    // Room https://developer.android.com/jetpack/androidx/releases/room#declaring_dependencies
-    def room_version = '2.2.0-alpha01' // last stable version
+    // Room 2019-09-12 https://developer.android.com/jetpack/androidx/releases/room
+    def room_version = '2.2.0-rc01'
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
-    // Navigation https://developer.android.com/jetpack/androidx/releases/navigation#declaring_dependencies
-    def nav_version = "2.1.0-beta02"
+    // Navigation https://developer.android.com/jetpack/androidx/releases/navigation
+    def nav_version = "2.1.0"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
-    // Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    // Lifecycle 2019-09-12 https://developer.android.com/jetpack/androidx/releases/lifecycle
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 
-    // Paging
+    // Paging 2019-09-12 https://developer.android.com/jetpack/androidx/releases/paging
     implementation "android.arch.paging:runtime:2.1.0"
 
     // Współdzielona biblioteka z definicją danych lokalnych

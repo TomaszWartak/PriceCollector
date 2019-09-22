@@ -18,7 +18,7 @@ public class AnalysisRowViewModel extends AndroidViewModel {
 
     public AnalysisRowViewModel(Application application) {
         super(application);
-        DataSource.Factory<Integer, AnalysisRow>  factory = AnalyzesDatabase.getInstance(AppHandle.getHandle()).analysisRowDao().getAllAnalysisRowsPaged();
+        DataSource.Factory<Integer, AnalysisRow>  factory = AnalyzesDatabase.getInstance().analysisRowDao().getAllAnalysisRowsPaged();
         LivePagedListBuilder<Integer, AnalysisRow> pagedListBuilder = new LivePagedListBuilder<Integer, AnalysisRow>(factory, 50);
         analysisRowsLiveData = pagedListBuilder.build();
     }

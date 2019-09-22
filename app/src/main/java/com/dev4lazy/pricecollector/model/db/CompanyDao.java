@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.model.db;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -10,6 +11,7 @@ import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.entities.Company;
+import com.dev4lazy.pricecollector.model.entities.Country;
 
 import java.util.List;
 
@@ -28,23 +30,15 @@ public interface CompanyDao extends _Dao<Company>{
     @RawQuery(observedEntities = Company.class)
     LiveData<List<Company>> getViaQuery(SupportSQLiteQuery query);
 
-    /* todo usuń?
-    @Override
-    @Query("SELECT * from companies WHERE id= :id")
-    LiveData<List<Company>> findByIdLD(int id);
-    */
-
     @Override
     @Query("SELECT * from companies WHERE id= :id")
     List<Company> findById(int id);
 
-    /* todo usuń?
-    @Query("SELECT * from companies WHERE name= :name")
-    LiveData<List<Company>> findByNameLD(String name);
-    */
-
+    @Override
     @Query("SELECT * from companies WHERE name= :name")
     List<Company> findByName(String name);
 
+    @Query("SELECT * from companies ORDER BY name ASC")
+    DataSource.Factory<Integer, Company> getAllCompaniesPaged();
 
 }

@@ -10,10 +10,12 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dev4lazy.pricecollector.R;
 //import com.dev4lazy.pricecollector.model.logic.auth.FirebaseAuthSupport;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
+import com.dev4lazy.pricecollector.model.utils.DataInitializer;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 //mport com.dev4lazy.pricecollector.model.logic.OwnServerAuthServices;
 
@@ -58,11 +60,20 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
 
     @Override
     public void callIfSucessful() {
+        // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
+        if (!AppHandle.getHandle().getPrefs().getLocalDatabaseInitialized()) {
+            DataInitializer.getInstance().initializeLocalDatabase();
+        }
         Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_mainFragment);
     }
 
     @Override
     public void callIfUnsucessful() {
             // todo kumnuikat jakiś :-)
+        Toast.makeText(
+                getContext(),
+                "coś nie bangla...",
+                Toast.LENGTH_SHORT).show();
+
     }
 }

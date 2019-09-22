@@ -19,9 +19,9 @@ public class Csv2AnalysisRowConverter {
 
     private ArrayList<AnalysisRow> analysisRowList;
 
-    public Csv2AnalysisRowConverter(String csvFileName, Context context) {
+    public Csv2AnalysisRowConverter(String csvFileName) {
         csvReader.openReader( csvFileName );
-        analysisRowRepository = AnalysisRowRepository.getInstance(AnalyzesDatabase.getInstance(context));
+        analysisRowRepository = AnalysisRowRepository.getInstance(AnalyzesDatabase.getInstance());
         // todo test
         //Integer rowsCount = analysisRowRepository.getAnalysisRowsCount().getValue();
         analysisRowRepository.askAnalysisRowsCount(1);

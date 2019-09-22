@@ -11,9 +11,10 @@
         android:label="start_screen_fragment"
         tools:layout="@layout/start_screen_fragment">
         <action
-            android:id="@+id/action_startScreenFragment_to_logingFragment"
-            app:destination="@id/logingFragment" />
+            android:id="@+id/action_startScreenFragment_to_setUpPreferncesFragment"
+            app:destination="@id/setUpPreferncesFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/logingFragment"
         android:name="com.dev4lazy.pricecollector.view.LoginFragment"
@@ -23,6 +24,7 @@
             android:id="@+id/action_logingFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.dev4lazy.pricecollector.view.MainScreenFragment"
@@ -31,10 +33,67 @@
         <action
             android:id="@+id/action_mainFragment_to_analysisRowFragment"
             app:destination="@id/analysisRowFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_testActionsFragment"
+            app:destination="@id/testActionsFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/analysisRowFragment"
         android:name="com.dev4lazy.pricecollector.csv2pojo_recycler.AnalysisRowFragment"
         android:label="test_analysis_row_fragment"
         tools:layout="@layout/test_analysis_row_fragment" />
+    <fragment
+        android:id="@+id/setUpPreferncesFragment"
+        android:name="com.dev4lazy.pricecollector.view.SetUpPreferencesFragment"
+        android:label="fragment_set_up_prefernces"
+        tools:layout="@layout/set_up_preferences_fragment" >
+        <action
+            android:id="@+id/action_setUpPreferncesFragment_to_logingFragment"
+            app:destination="@id/logingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/otherStoresListFragment"
+        android:name="com.dev4lazy.pricecollector.view.OtherStoresListFragment"
+        android:label="other_stores_list_fragment"
+        tools:layout="@layout/other_stores_list_fragment" />
+
+    <fragment
+        android:id="@+id/ownStoresListFragment"
+        android:name="com.dev4lazy.pricecollector.view.OwnStoresListFragment"
+        android:label="own_stores_list_fragment"
+        tools:layout="@layout/own_stores_list_fragment" />
+
+    <fragment
+        android:id="@+id/companiesListFragment"
+        android:name="com.dev4lazy.pricecollector.view.CompaniesListFragment"
+        android:label="comapnies_list_fragment"
+        tools:layout="@layout/comapnies_list_fragment" />
+
+    <fragment
+        android:id="@+id/countriesListFragment"
+        android:name="com.dev4lazy.pricecollector.view.CountriesListFragment"
+        android:label="countries_list_fragment"
+        tools:layout="@layout/countries_list_fragment" />
+
+    <fragment
+        android:id="@+id/testActionsFragment"
+        android:name="com.dev4lazy.pricecollector.view.TestActionsFragment"
+        android:label="test_actions_fragment"
+        tools:layout="@layout/test_actions_fragment">
+        <action
+            android:id="@+id/action_testActionsFragment_to_otherStoresListFragment"
+            app:destination="@id/otherStoresListFragment" />
+        <action
+            android:id="@+id/action_testActionsFragment_to_ownStoresListFragment"
+            app:destination="@id/ownStoresListFragment" />
+        <action
+            android:id="@+id/action_testActionsFragment_to_companiesListFragment"
+            app:destination="@id/companiesListFragment" />
+        <action
+            android:id="@+id/action_testActionsFragment_to_countriesListFragment"
+            app:destination="@id/countriesListFragment" />
+    </fragment>
+
 </navigation>

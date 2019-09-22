@@ -13,6 +13,15 @@ import com.dev4lazy.pricecollector.utils.AppHandle;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dev4lazy.pricecollector.utils.AppPreferences.BRICOMAN_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPANIES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.COUNTRIES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.DATA_NOT_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.LM_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_COMPETITORS_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.OBI_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.OWN_STORES_INITIALIZED;
+
 // Klasa używana do inicjalizacji danych aplikacji, po pierwszym logowaniu
 public class DataInitializer {
 
@@ -30,19 +39,20 @@ public class DataInitializer {
     private List<Store> lmStores = null;
     private List<Store> bricomanStores = null;
     private List<Store> localCompetitorStores = null;
-    private boolean firstCallCountries = true; //todo zmień nazwę
-    private boolean isFirstCallOwnStores = true;
-    private boolean isFirstCallObiStores = true;
-    private boolean isFirstCallLMStores = true;
+
+    private boolean firstCallCountries = true;
+    private boolean firstCallCompanies = true;
+    private boolean firstCallOwnStores = true;
+    private boolean firstCallObiStores = true;
+    private boolean firstCallLMStores = true;
+    private boolean firstCallBricomanStores = true;
+    private boolean firstCallLocalCompetitorStores = true;
 
 // ---------------------------------------------------------------------------
 // Przygotowanie danych
-    private boolean isFirstCallBricomanStores = true;
-    private boolean isFirstCallLocalCompetitorStores = true;
 
-    private DataInitializer() {
 
-    }
+    private DataInitializer() {    }
 
     public static DataInitializer getInstance() {
         if (instance == null) {
@@ -58,8 +68,36 @@ public class DataInitializer {
     public void initializeLocalDatabase() {
         // todo !!!! to jest wołane także przy powrocie z przeglądania artykułow
         // todo usuń czyszczenie bazy
-        AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(new StartCallback());
+        // AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(new StartCallback());
+        // todo normalnie ma być jn.
+        checkAndSetIfNotInitialized();
+        // todo !!!!!!!! zrób etapy inicjalizacji... do zpaisania w preferencjach
+        // todo na końcu "initailisationChain wpiez do preferencji że baza zainicjowana
     }
+
+    public void ClearLocalDatabase() {
+        AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(null);
+        // todo to niżej przeniósłbym do AppSettings - czyli warstwę wyżej
+        //  inicjalizacja bazy lokalnej -> setLocalDatabaseNotInitialized()
+        AppHandle.getHandle().getPrefs().setLocalDatabaseInitialized(false);
+        AppHandle.getHandle().getPrefs().setInitialisationStage(DATA_NOT_INITIALIZED);
+    }
+
+    private void initialize() {
+        prepareData();
+        startInitialisationChain();
+    }
+
+    private void prepareCountries() {
+        countries = new ArrayList<>();
+        Country country = new Country();
+        country.setName("Polska");
+        country.setEnglishName("Poland");
+        countries.add(country);
+    }
+
+// ---------------------------------------------------------------------------
+// Przygotowanie danych
 
     private void prepareData() {
         prepareCountries();
@@ -71,17 +109,9 @@ public class DataInitializer {
         prepareLocalCompetitorStores();
     }
 
-    private void prepareCountries() {
-        countries = new ArrayList<>();
-        Country country = new Country();
-        country.setName("Poland");
-        country.setEnglishName("Poland");
-        countries.add(country);
-    }
-
     private void prepareCompanies() {
         companies = new ArrayList<>();
-        // Nie zmieniaj kolsjności, bo niżej ma to znaczenie :-)
+        // Nie zmieniaj kolejności, bo niżej ma to znaczenie :-)
         Company company = new Company();
         company.setName("Castorama");
         companies.add(company);
@@ -106,10 +136,7 @@ public class DataInitializer {
         companies.add(company);
         */ }
 
-// ---------------------------------------------------------------------------
-// gettery danych (lokalne :-P) todo? czy prywatne gettery mają sens?
-
-    private void prepareOwnStores() {
+   private void prepareOwnStores() {
         ownStores = new ArrayList<>();
         OwnStore ownStore = new OwnStore();
         ownStore.setName("Castorama Rybnik");
@@ -138,6 +165,44 @@ public class DataInitializer {
         ownStore.setSapOwnNumber("????");
         ownStore.setStructureType(StoreStructureType.BY_DEPARTMENTS);
         ownStores.add(ownStore);
+    }
+
+// ---------------------------------------------------------------------------
+// Metoda sprawdzająca, czy baza danych jest zainicjowana. Jeśli nie jest - inicjalizuje bazę.
+    private void checkAndSetIfNotInitialized() {
+        int initalisationStage = AppHandle.getHandle().getPrefs().getInitialisationStage();
+        switch (initalisationStage) {
+            case DATA_NOT_INITIALIZED:
+                initialize();
+                break;
+            case COUNTRIES_INITIALIZED:
+                prepareData();
+                initializeCompanies();
+                break;
+            case COMPANIES_INITIALIZED:
+                prepareData();
+                initializeOwnStores();
+                break;
+            case OWN_STORES_INITIALIZED:
+                prepareData();
+                initializeObiStores();
+                break;
+            case OBI_STORES_INITIALIZED:
+                prepareData();
+                initializeLMStores();
+                break;
+            case LM_STORES_INITIALIZED:
+                prepareData();
+                initializeBricomanStores();
+                break;
+            case BRICOMAN_STORES_INITIALIZED:
+                prepareData();
+                initializeLocalCompetitorStores();
+                break;
+            case LOCAL_COMPETITORS_STORES_INITIALIZED:
+                // inicjalizacja była kompletna
+                break;
+        }
     }
 
     private void prepareObiStores() {
@@ -182,6 +247,9 @@ public class DataInitializer {
         localCompetitorStores.add(otherStore);
     }
 
+// ---------------------------------------------------------------------------
+// gettery danych (lokalne :-P) todo? czy prywatne gettery mają sens?
+
     private List<Country> getCountries() {
         return countries;
     }
@@ -190,14 +258,9 @@ public class DataInitializer {
         return companies;
     }
 
-// ---------------------------------------------------------------------------
-// Zapis danych
-
     private List<OwnStore> getOwnStores() {
         return ownStores;
     }
-
-    // todo usuń private boolean firstCallCountries = true;
 
     private List<Store> getObiStores() {
         return obiStores;
@@ -215,17 +278,13 @@ public class DataInitializer {
         return localCompetitorStores;
     }
 
-    private void startInitialisationChain() {
-        initalizeCountries();
-    }
-
     private void initalizeCountries() {
         // todo odczyt kraju z preferencji
         // todo tu zamotka jest... Z preferencji, czy z DataInitializera?
         /*
         Country ownCountry = new Country();
-        ownCountry.setName(AppHandle.getHandle().getPreferences().getCountryName());
-        ownCountry.setEnglishName(AppHandle.getHandle().getPreferences().getCountryEnglishName());
+        ownCountry.setName(AppHandle.getHandle().getPrefs().getCountryName());
+        ownCountry.setEnglishName(AppHandle.getHandle().getPrefs().getEnglishCountryName());
          */
         Country ownCountry = getCountries().get(0);
 
@@ -241,7 +300,8 @@ public class DataInitializer {
                     ownCountryInsertResult.removeObserver(this); // this = observer...
                     if (ownCountryId!=-1) {
                         //insertOwnCompany(ownCountryId);
-                        initializeCompanies(ownCountryId);
+                        AppHandle.getHandle().getPrefs().setInitialisationStage(COUNTRIES_INITIALIZED);
+                        initializeCompanies();
                     }
                 }
             }
@@ -252,12 +312,35 @@ public class DataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().insertCountry(ownCountry,ownCountryInsertResult);
     }
 
-    private void initializeCompanies(Long ownCountryId) {
-        for (Company company : getCompanies() ) {
-            company.setCountryId(ownCountryId.intValue());
-            AppHandle.getHandle().getRepository().getLocalDataRepository().insertCompany( company, null );
-        }
-        initializeOwnStores();
+// ---------------------------------------------------------------------------
+// Zapis danych
+
+    private void startInitialisationChain() {
+        initalizeCountries();
+    }
+
+    private void initializeCompanies() {
+        MutableLiveData<List<Country>> result = new MutableLiveData<>();
+        Observer<List<Country>> resultObserver = new Observer<List<Country>>() {
+            @Override
+            public void onChanged(List<Country> countriesList) {
+                if (firstCallCompanies) {
+                    firstCallCompanies = false;
+                    result.removeObserver(this); // this = observer...
+                    if ((countriesList!=null)&&(!countriesList.isEmpty())){
+                        Country country = countriesList.get(0);
+                        for (Company company : getCompanies() ) {
+                            company.setCountryId(country.getId());
+                            AppHandle.getHandle().getRepository().getLocalDataRepository().insertCompany( company, null );
+                        }
+                        AppHandle.getHandle().getPrefs().setInitialisationStage(COMPANIES_INITIALIZED);
+                        initializeOwnStores();}
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        String ownCountryName = AppHandle.getHandle().getPrefs().getCountryName();
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCountryByName(ownCountryName,result);
     }
 
     private void initializeOwnStores() {
@@ -267,21 +350,22 @@ public class DataInitializer {
             public void onChanged(List<Company> companiesList) {
                 // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
                 // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
-                if (isFirstCallOwnStores) {
-                    isFirstCallOwnStores = false;
+                if (firstCallOwnStores) {
+                    firstCallOwnStores = false;
                     result.removeObserver(this); // this = observer...
                     if (companiesList!=null) {
                         for (OwnStore store : getOwnStores() ) {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertOwnStore( store, null );
                         }
+                        AppHandle.getHandle().getPrefs().setInitialisationStage(OWN_STORES_INITIALIZED);
                         initializeObiStores();                    }
                 }
             }
         };
         result.observeForever(resultObserver);
         Company ownCompany = getCompanies().get(0);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().getCompanyByName(ownCompany.getName(),result);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(ownCompany.getName(),result);
     }
 
     private void initializeObiStores() {
@@ -289,21 +373,22 @@ public class DataInitializer {
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
             public void onChanged(List<Company> companiesList) {
-                if (isFirstCallObiStores) {
-                    isFirstCallObiStores = false;
+                if (firstCallObiStores) {
+                    firstCallObiStores = false;
                     result.removeObserver(this); // this = observer...
                     if (companiesList!=null) {
                         for (Store store : getObiStores() ) {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
+                        AppHandle.getHandle().getPrefs().setInitialisationStage(OBI_STORES_INITIALIZED);
                         initializeLMStores();                    }
                 }
             }
         };
         result.observeForever(resultObserver);
         Company obiCompany = getCompanies().get(1);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().getCompanyByName(obiCompany.getName(),result);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(obiCompany.getName(),result);
     }
 
     private void initializeLMStores() {
@@ -311,21 +396,22 @@ public class DataInitializer {
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
             public void onChanged(List<Company> companiesList) {
-                if (isFirstCallLMStores) {
-                    isFirstCallLMStores = false;
+                if (firstCallLMStores) {
+                    firstCallLMStores = false;
                     result.removeObserver(this); // this = observer...
                     if (companiesList!=null) {
                         for (Store store : getLMStores() ) {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
+                        AppHandle.getHandle().getPrefs().setInitialisationStage(LM_STORES_INITIALIZED);
                         initializeBricomanStores();                    }
                 }
             }
         };
         result.observeForever(resultObserver);
         Company lmCompany = getCompanies().get(2);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().getCompanyByName(lmCompany.getName(),result);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(lmCompany.getName(),result);
     }
 
     private void initializeBricomanStores() {
@@ -333,21 +419,22 @@ public class DataInitializer {
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
             public void onChanged(List<Company> companiesList) {
-                if (isFirstCallBricomanStores) {
-                    isFirstCallBricomanStores = false;
+                if (firstCallBricomanStores) {
+                    firstCallBricomanStores = false;
                     result.removeObserver(this); // this = observer...
                     if (companiesList!=null) {
                         for (Store store : getBricomanStores() ) {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
+                        AppHandle.getHandle().getPrefs().setInitialisationStage(BRICOMAN_STORES_INITIALIZED);
                         initializeLocalCompetitorStores();                    }
                 }
             }
         };
         result.observeForever(resultObserver);
         Company bricomanCompany = getCompanies().get(3);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().getCompanyByName(bricomanCompany.getName(),result);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(bricomanCompany.getName(),result);
     }
 
     private void initializeLocalCompetitorStores() {
@@ -355,28 +442,29 @@ public class DataInitializer {
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
             public void onChanged(List<Company> companiesList) {
-                if (isFirstCallLocalCompetitorStores) {
-                    isFirstCallLocalCompetitorStores = false;
+                if (firstCallLocalCompetitorStores) {
+                    firstCallLocalCompetitorStores = false;
                     result.removeObserver(this); // this = observer...
                     if (companiesList != null) {
                         for (Store store : getLocalCompetitorStores()) {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore(store, null);
                         }
+                        AppHandle.getHandle().getPrefs().setInitialisationStage(LOCAL_COMPETITORS_STORES_INITIALIZED);
+                        AppHandle.getHandle().getPrefs().setLocalDatabaseInitialized(true);
                     }
                 }
             }
         };
         result.observeForever(resultObserver);
         Company localCompetitorCompany = getCompanies().get(4);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().getCompanyByName(localCompetitorCompany.getName(),result);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
     }
 
     private class StartCallback implements LocalDataRepository.AfterDatabaseClearedCallback {
         @Override
         public void call() {
-            prepareData();
-            startInitialisationChain();
+            initialize();
         }
     }
 }

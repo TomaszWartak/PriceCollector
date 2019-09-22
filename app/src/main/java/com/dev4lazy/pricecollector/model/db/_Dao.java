@@ -30,10 +30,6 @@ public interface _Dao<D> {
 
     LiveData<List<D>> getAll();
 
-    /* todo usuń?
-    LiveData<List<D>> findByIdLD(int id);
-    */
-
     List<D> findById(int id);
 
     List<D> findByName(String name);

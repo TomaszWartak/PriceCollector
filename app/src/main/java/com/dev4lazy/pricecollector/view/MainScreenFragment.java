@@ -1,7 +1,6 @@
 package com.dev4lazy.pricecollector.view;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AlertDialog;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -19,10 +18,10 @@ import android.view.ViewGroup;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
-import com.dev4lazy.pricecollector.model.utils.DataInitializer;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.MainViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
 
@@ -34,6 +33,10 @@ public class MainScreenFragment extends Fragment {
 
     private View viewAnalysisiItem;
 
+
+    // todo to usunąć, bo służy tylko do wygenerowania mocka bazy remote
+    // private Converter converter;
+
     public static MainScreenFragment newInstance() {
         return new MainScreenFragment();
     }
@@ -41,7 +44,7 @@ public class MainScreenFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // todo tutaj zainicjoawanie wykorzystywanych później obiektów
+        // todo tutaj zainicjoawanie wykorzystywanych później obiektów tej klasy
     }
 
     @Nullable
@@ -49,13 +52,41 @@ public class MainScreenFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_screen_fragment, container, false);
+
+        setOnBackPressedCalback();
+
+        setAnalysisItem(inflater, view);
+
+        // todo test
+        view.findViewById(R.id.main_screen_fragment_layout).setOnClickListener((View v) ->{
+            Navigation.findNavController(view).navigate(R.id.action_mainFragment_to_testActionsFragment);
+        });
+
+        // todo sprawdzenie, co jest w preferencjach i odtworzenie na ekranie
+        getPreferencesInfo(); // todo ????
+
+        // todo jeśli analiza jest w trakcie - możliwość kontynuacji
+        // todo sprawdzenie czy na serwerze zdalnym jest nowa analiza - wyświetlenie
+        getNewAnalysisInfo();
+
+        // todo incializacja menu, czy szuflady?
+        return view;
+    }
+
+    private void setAnalysisItem(@NonNull LayoutInflater inflater, View view) {
         viewAnalysisiItem = inflater.inflate(R.layout.test_analysis_item,null);
-        viewAnalysisiItem.setOnClickListener((View v) -> {
+        ((ViewGroup) view).addView(viewAnalysisiItem);
+        view.findViewById(R.id.card_view_constraint_layout).setOnClickListener((View v) -> {
             openTestAnalyzesList();
         });
-        ((ViewGroup) view).addView(viewAnalysisiItem);
+    }
 
-        // todo wpisz do OneNote
+    //todo test
+    private void openTestAnalyzesList() {
+        Navigation.findNavController(getView()).navigate(R.id.action_mainFragment_to_analysisRowFragment);
+    }
+
+    private void  setOnBackPressedCalback() {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
@@ -69,27 +100,13 @@ public class MainScreenFragment extends Fragment {
             }
         };
         getActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-
-        // todo sprawdzenie, co jest w preferencjach i odtworzenie na ekranie
-        getPreferencesInfo();
-        // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
-        // todo dodaj sprawdzenie, czy baza jest zainicjowana
-        // todo jesli nie incializajca bazy
-        // todo bo przy powrocie z przegladania remote database powtórnie jest baza inicjowana
-        DataInitializer.getInstance().initializeLocalDatabase();
-        // todo jeśli analiza jest w trakcie - możliwość kontynuacji
-        // todo sprawdzenie czy na serwerze zdalnym jest nowa analiza - wyświetlenie
-        getNewAnalysisInfo();
-        // todo incializacja menu, czy szuflady?
-        return view;
     }
 
     private class LogOffListener implements DialogInterface.OnClickListener {
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            // todo tutaj zapisanie preferences, bazy danych itp...
-            AppHandle.getHandle().getAuthSupport().signOut();
+            AppHandle.getHandle().shutDown();
             getActivity().finishAndRemoveTask();
             System.exit(0);
         }
@@ -102,11 +119,6 @@ public class MainScreenFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
-
-    //todo test
-    private void openTestAnalyzesList() {
-        Navigation.findNavController(getView()).navigate(R.id.action_mainFragment_to_analysisRowFragment);
-    }
 
     private void getPreferencesInfo() {
         //todo

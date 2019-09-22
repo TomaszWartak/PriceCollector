@@ -57,18 +57,6 @@ public class Data<D> {
         new UpdateAsyncTask(dao, resultLD).execute(data);
     }
 
-    public void deleteData(D data, MutableLiveData<Integer> resultLD) {
-            new DeleteAsyncTask(dao, resultLD).execute(data);
-    }
-
-    public void findDataById(Integer id, MutableLiveData<List<D>> resultLD) {
-        new findDataByIdAsyncTask(dao, resultLD).execute(id);
-    }
-
-    public void findDataByName(String name, MutableLiveData<List<D>> resultLD) {
-        new findDataByNameAsyncTask(dao, resultLD).execute(name);
-    }
-
     private class UpdateAsyncTask extends AsyncTask<D,Void,Integer> {
 
         private _Dao dao;
@@ -92,6 +80,10 @@ public class Data<D> {
                 resultLD.postValue(result);
             }
         }
+    }
+
+    public void deleteData(D data, MutableLiveData<Integer> resultLD) {
+            new DeleteAsyncTask(dao, resultLD).execute(data);
     }
 
     private class DeleteAsyncTask extends AsyncTask<D,Void,Integer> {
@@ -119,6 +111,10 @@ public class Data<D> {
         }
     }
 
+    public void findDataById(Integer id, MutableLiveData<List<D>> resultLD) {
+        new findDataByIdAsyncTask(dao, resultLD).execute(id);
+    }
+
     private class findDataByIdAsyncTask extends AsyncTask< Integer,Void,List<D> >{
 
         private _Dao dao;
@@ -143,7 +139,11 @@ public class Data<D> {
         }
     }
 
-    private class findDataByNameAsyncTask extends AsyncTask<String,Void,List<D>>{
+    public void findDataByName(String name, MutableLiveData<List<D>> resultLD) {
+        new findDataByNameAsyncTask(dao, resultLD).execute(name);
+    }
+
+     private class findDataByNameAsyncTask extends AsyncTask<String,Void,List<D>>{
 
         private _Dao dao;
         private MutableLiveData<List<D> > resultLD;

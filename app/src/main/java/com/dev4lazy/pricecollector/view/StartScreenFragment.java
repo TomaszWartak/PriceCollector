@@ -9,7 +9,6 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.dev4lazy.pricecollector.R;
 
@@ -29,10 +28,10 @@ public class StartScreenFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.start_screen_fragment, container, false);
         // todo lambda
-        view.findViewById(R.id.start_screen_framelayout).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.start_screen_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_startScreenFragment_to_logingFragment);
+                Navigation.findNavController(view).navigate(R.id.action_startScreenFragment_to_setUpPreferncesFragment);
             }
         });
         return view;

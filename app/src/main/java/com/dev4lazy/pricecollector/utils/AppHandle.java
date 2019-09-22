@@ -17,8 +17,12 @@ public class AppHandle extends Application{
         appHandle = this;
     }
 
-    public static AppHandle getHandle() {
-        return appHandle;
+    public static AppHandle getHandle() { return appHandle; }
+
+    public void shutDown() {
+        // todo tutaj zapisanie preferences, bazy danych itp...
+        getPrefs().commit();
+        getAuthSupport().signOut();
     }
 
     public AuthSupport getAuthSupport() {
@@ -27,10 +31,8 @@ public class AppHandle extends Application{
 
     public LocalDatabase getLocalDatabase() { return LocalDatabase.getInstance(getApplicationContext());}
 
-    public DataRepository getRepository() {
-        return DataRepository.getInstance();
-    }
+    public DataRepository getRepository() { return DataRepository.getInstance(); }
 
-    public UserPreferences getPreferences() { return UserPreferences.getInstance(); }
+    public AppPreferences getPrefs() { return AppPreferences.getInstance(); }
 
 }

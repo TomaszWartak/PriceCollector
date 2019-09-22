@@ -90,4 +90,12 @@ public class Store {
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Store)) return false;
+        Store that = (Store) o;
+        return id == that.id;
+    }
 }

@@ -27,6 +27,7 @@ public class CsvReader {
             // todo end test
             FileReader fileReader = new FileReader(directory + File.separator + csvFileName);
             reader = new BufferedReader(fileReader);
+            // todo !!!! ta obsługa wyjątków to żenada... musisz coś lepszego wymyślić
         } catch (FileNotFoundException ex0) {
             ex0.printStackTrace();
         } catch (IOException ex1) {

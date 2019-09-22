@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.model.db;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Dao
 public interface StoreDao extends _Dao<Store> {
+
     @Override
     @Query("DELETE FROM stores")
     int deleteAll();
@@ -32,4 +34,8 @@ public interface StoreDao extends _Dao<Store> {
 
     @Query("SELECT * from stores WHERE name= :name")
     List<Store> findByName(String name);
+
+    @Query("SELECT * from stores ORDER BY name ASC")
+    DataSource.Factory<Integer, Store> getAllStoresPaged();
+
 }

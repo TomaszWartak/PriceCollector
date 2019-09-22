@@ -8,6 +8,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.dev4lazy.pricecollector.utils.AppHandle;
+
 @Database(
         version = 1,
         entities = {
@@ -24,16 +26,18 @@ public abstract class AnalyzesDatabase extends RoomDatabase {
 
     private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
 
-    public static AnalyzesDatabase getInstance(final Context context) {
+    public static AnalyzesDatabase getInstance() {
         if (instance == null) {
+            Context context = AppHandle.getHandle().getApplicationContext();
             synchronized (AnalyzesDatabase.class) {
                 if (instance == null) {
-                    instance = Room.databaseBuilder(context.getApplicationContext(),
+                    instance = Room.databaseBuilder(
+                            context,
                             AnalyzesDatabase.class, DATABASE_NAME )
                             //.addCallback(roomDatabaseCallback)
                             //.addMigrations(MIGRATION_1_2)
                             .build();
-                    instance.updateDatabaseCreated(context.getApplicationContext());
+                    instance.updateDatabaseCreated(context);
                 }
             }
         }

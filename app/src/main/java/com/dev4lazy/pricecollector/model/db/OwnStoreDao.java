@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.model.db;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -10,6 +11,7 @@ import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
+import com.dev4lazy.pricecollector.model.entities.Store;
 
 import java.util.List;
 
@@ -33,5 +35,8 @@ public interface OwnStoreDao extends _Dao<OwnStore> {
 
     @Query("SELECT * from own_stores WHERE name= :name")
     List<OwnStore> findByName(String name);
+
+    @Query("SELECT * from own_stores ORDER BY name ASC")
+    DataSource.Factory<Integer, OwnStore> getAllOwnStoresPaged();
 
 }

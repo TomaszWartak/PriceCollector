@@ -12,6 +12,7 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.dev4lazy.pricecollector.model.entities.Analysis;
+import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Article;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
@@ -31,6 +32,7 @@ import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 @Database(
     version = 2,
     entities = {
+        AnalysisCompetitorSlot.class,
         Analysis.class,
         Article.class,
         Company.class,
@@ -57,10 +59,14 @@ public abstract class LocalDatabase extends RoomDatabase {
     private final static String DATABASE_NAME = "price_collector_local_database";
     private static volatile LocalDatabase instance;
 
+    // Dane pomocnicze
+    public abstract AnalysisCompetitorSlotDao analysisCompetitorSlotDao();
+
+    // Dane odpowiadające danym bazy zdalnej
     public abstract AnalysisDao analysisDao();
     public abstract ArticleDao articleDao();
     public abstract CompanyDao companyDao();
-    public abstract CountryDao2 countryDao(); // todo !!!! 22222
+    public abstract CountryDao countryDao(); // todo !!!! 22222
     public abstract DepartmentDao departmentDao();
     public abstract EanCodeDao eanCodeDao();
     public abstract FamilyDao familyDao();
