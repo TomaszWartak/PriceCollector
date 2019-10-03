@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.RawQuery;
 import androidx.room.Update;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.entities.Country;
@@ -17,7 +18,7 @@ import java.util.List;
 @Dao
 public interface _Dao<D> {
 
-    @Insert//(onConflict = OnConflictStrategy.IGNORE) // todo ??
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     Long insert(D data);
 
     @Update
@@ -28,10 +29,15 @@ public interface _Dao<D> {
 
     int deleteAll();
 
-    LiveData<List<D>> getAll();
+    List<D> getAll();
+
+    LiveData<List<D>> getAllLiveData();
 
     List<D> findById(int id);
 
     List<D> findByName(String name);
+
+    @RawQuery
+    List<D> getViaQuery(SimpleSQLiteQuery query);
 
 }

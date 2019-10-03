@@ -27,7 +27,7 @@ public class SetUpPreferencesFragment extends Fragment {
         // todo !!!! na potrzeby testu zresteowanie preferencji
         // AppHandle.getHandle().getPrefs().clear();
         //todo sprawdzenie w preferencjach jaki język i ustawienie, jeśli inny niż w telefonie
-        AppHandle.getHandle().getPrefs().setUp();
+        AppHandle.getHandle().getSettings().setUp();
     }
 
     @Override

@@ -24,7 +24,11 @@ public interface OwnStoreDao extends _Dao<OwnStore> {
 
     @Override
     @Query("SELECT * from own_stores ORDER BY name ASC")
-    LiveData<List<OwnStore>> getAll();
+    List<OwnStore> getAll();
+
+    @Override
+    @Query("SELECT * from own_stores ORDER BY name ASC")
+    LiveData<List<OwnStore>> getAllLiveData();
 
     @RawQuery(observedEntities = OwnStore.class)
     LiveData<List<OwnStore>> getViaQuery(SupportSQLiteQuery query);
@@ -33,6 +37,7 @@ public interface OwnStoreDao extends _Dao<OwnStore> {
     @Query("SELECT * from own_stores WHERE id= :id")
     List<OwnStore> findById(int id);
 
+    @Override
     @Query("SELECT * from own_stores WHERE name= :name")
     List<OwnStore> findByName(String name);
 

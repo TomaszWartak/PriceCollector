@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.dev4lazy.pricecollector.model.LocalDataRepository;
+import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
@@ -15,8 +16,9 @@ import java.util.List;
 
 import static com.dev4lazy.pricecollector.utils.AppPreferences.BRICOMAN_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPANIES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPETITORS_SLOTS_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COUNTRIES_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.DATA_NOT_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_DATA_NOT_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.LM_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_COMPETITORS_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.OBI_STORES_INITIALIZED;
@@ -24,6 +26,21 @@ import static com.dev4lazy.pricecollector.utils.AppPreferences.OWN_STORES_INITIA
 
 // Klasa używana do inicjalizacji danych aplikacji, po pierwszym logowaniu
 public class DataInitializer {
+
+    /*
+    public final String CASTORAMA_NAME = "Castorama";
+    public final String LEROY_MERLIN_NAME = "Leroy Merlin";
+    public final String OBI_NAME = "OBI";
+    public final String BRICOMAN_NAME = "BRICOMAN";
+    public final String LOCAL_COMPETITOR_NAME = "Konkurent lokalny";
+    */
+
+    public final String[] COMPANIES_NAMES = {"Castorama", "Leroy Merlin", "OBI", "BRICOMAN", "Konkurent lokalny"};
+    private final int CASTORAMA_INDEX = 0;
+    private final int LEROY_MERLIN_INDEX = 1;
+    private final int OBI_INDEX = 2;
+    private final int BRICOMAN_INDEX = 3;
+    private final int LOCAL_COMPETITOR_INDEX = 4;
 
     private static DataInitializer instance = new DataInitializer();
     // Kraje
@@ -47,6 +64,11 @@ public class DataInitializer {
     private boolean firstCallLMStores = true;
     private boolean firstCallBricomanStores = true;
     private boolean firstCallLocalCompetitorStores = true;
+    private boolean firstCallCompetitorsSlotsNr1 = true;
+    private boolean firstCallCompetitorsSlotsNr2 = true;
+    private boolean firstCallCompetitorsSlotsNr3 = true;
+    private boolean firstCallCompetitorsSlotsNr4 = true;
+    private boolean firstCallCompetitorsSlotsNr5 = true;
 
 // ---------------------------------------------------------------------------
 // Przygotowanie danych
@@ -65,6 +87,14 @@ public class DataInitializer {
         return instance;
     }
 
+    public void ClearLocalDatabase() {
+        AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(null);
+        // todo to niżej przeniósłbym do AppSettings - czyli warstwę wyżej
+        //  inicjalizacja bazy lokalnej -> setLocalDatabaseNotInitialized()
+        AppHandle.getHandle().getPrefs().setLocalDatabaseInitialized(false);
+        AppHandle.getHandle().getPrefs().setInitialisationStage(LOCAL_DATA_NOT_INITIALIZED);
+    }
+
     public void initializeLocalDatabase() {
         // todo !!!! to jest wołane także przy powrocie z przeglądania artykułow
         // todo usuń czyszczenie bazy
@@ -75,17 +105,66 @@ public class DataInitializer {
         // todo na końcu "initailisationChain wpiez do preferencji że baza zainicjowana
     }
 
-    public void ClearLocalDatabase() {
-        AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(null);
-        // todo to niżej przeniósłbym do AppSettings - czyli warstwę wyżej
-        //  inicjalizacja bazy lokalnej -> setLocalDatabaseNotInitialized()
-        AppHandle.getHandle().getPrefs().setLocalDatabaseInitialized(false);
-        AppHandle.getHandle().getPrefs().setInitialisationStage(DATA_NOT_INITIALIZED);
+// ---------------------------------------------------------------------------
+// Metoda sprawdzająca, czy baza danych jest zainicjowana. Jeśli nie jest - inicjalizuje bazę.
+    private void checkAndSetIfNotInitialized() {
+        int initalisationStage = AppHandle.getHandle().getPrefs().getInitialisationStage();
+        switch (initalisationStage) {
+            case LOCAL_DATA_NOT_INITIALIZED:
+                initialize();
+                break;
+            case COUNTRIES_INITIALIZED:
+                prepareData();
+                initializeCompanies();
+                break;
+            case COMPANIES_INITIALIZED:
+                prepareData();
+                initializeOwnStores();
+                break;
+            case OWN_STORES_INITIALIZED:
+                prepareData();
+                initializeObiStores();
+                break;
+            case OBI_STORES_INITIALIZED:
+                prepareData();
+                initializeLMStores();
+                break;
+            case LM_STORES_INITIALIZED:
+                prepareData();
+                initializeBricomanStores();
+                break;
+            case BRICOMAN_STORES_INITIALIZED:
+                prepareData();
+                initializeLocalCompetitorStores();
+                break;
+            case LOCAL_COMPETITORS_STORES_INITIALIZED:
+                prepareData();
+                initializeCompetitorSlotNr1();
+                break;
+            case COMPETITORS_SLOTS_INITIALIZED:
+                // inicjalizacja była kompletna
+                break;
+        }
     }
 
+// ---------------------------------------------------------------------------
+//  proceduta inicjalizacji
     private void initialize() {
         prepareData();
         startInitialisationChain();
+    }
+
+// ---------------------------------------------------------------------------
+// Przygotowanie danych
+    private void prepareData() {
+        prepareCountries();
+        prepareCompanies();
+        prepareOwnStores();
+        prepareObiStores();
+        prepareLeroyMerlinStores();
+        prepareBricomanStores();
+        prepareLocalCompetitorStores();
+        prepareCompetitorSlots();
     }
 
     private void prepareCountries() {
@@ -96,36 +175,23 @@ public class DataInitializer {
         countries.add(country);
     }
 
-// ---------------------------------------------------------------------------
-// Przygotowanie danych
-
-    private void prepareData() {
-        prepareCountries();
-        prepareCompanies();
-        prepareOwnStores();
-        prepareObiStores();
-        prepareLeroyMerlinStores();
-        prepareBricomanStores();
-        prepareLocalCompetitorStores();
-    }
-
     private void prepareCompanies() {
         companies = new ArrayList<>();
         // Nie zmieniaj kolejności, bo niżej ma to znaczenie :-)
         Company company = new Company();
-        company.setName("Castorama");
+        company.setName(COMPANIES_NAMES[CASTORAMA_INDEX]);
         companies.add(company);
         company = new Company();
-        company.setName("OBI");
+        company.setName(COMPANIES_NAMES[LEROY_MERLIN_INDEX]);
         companies.add(company);
         company = new Company();
-        company.setName("Leroy Merlin");
+        company.setName(COMPANIES_NAMES[OBI_INDEX]);
         companies.add(company);
         company = new Company();
-        company.setName("BRICOMAN");
+        company.setName(COMPANIES_NAMES[BRICOMAN_INDEX]);
         companies.add(company);
         company = new Company();
-        company.setName("Konkurent lokalny");
+        company.setName(COMPANIES_NAMES[LOCAL_COMPETITOR_INDEX]);
         companies.add(company);
            /*
         company.setName("BRICO MARCHE");
@@ -165,44 +231,6 @@ public class DataInitializer {
         ownStore.setSapOwnNumber("????");
         ownStore.setStructureType(StoreStructureType.BY_DEPARTMENTS);
         ownStores.add(ownStore);
-    }
-
-// ---------------------------------------------------------------------------
-// Metoda sprawdzająca, czy baza danych jest zainicjowana. Jeśli nie jest - inicjalizuje bazę.
-    private void checkAndSetIfNotInitialized() {
-        int initalisationStage = AppHandle.getHandle().getPrefs().getInitialisationStage();
-        switch (initalisationStage) {
-            case DATA_NOT_INITIALIZED:
-                initialize();
-                break;
-            case COUNTRIES_INITIALIZED:
-                prepareData();
-                initializeCompanies();
-                break;
-            case COMPANIES_INITIALIZED:
-                prepareData();
-                initializeOwnStores();
-                break;
-            case OWN_STORES_INITIALIZED:
-                prepareData();
-                initializeObiStores();
-                break;
-            case OBI_STORES_INITIALIZED:
-                prepareData();
-                initializeLMStores();
-                break;
-            case LM_STORES_INITIALIZED:
-                prepareData();
-                initializeBricomanStores();
-                break;
-            case BRICOMAN_STORES_INITIALIZED:
-                prepareData();
-                initializeLocalCompetitorStores();
-                break;
-            case LOCAL_COMPETITORS_STORES_INITIALIZED:
-                // inicjalizacja była kompletna
-                break;
-        }
     }
 
     private void prepareObiStores() {
@@ -247,6 +275,51 @@ public class DataInitializer {
         localCompetitorStores.add(otherStore);
     }
 
+    private void prepareCompetitorSlots() {
+        /* todo?
+        AnalysisCompetitorSlot slot = new AnalysisCompetitorSlot();
+        slot.setSlotNr(1);
+        slot.setCompanyId(1);
+        slot.setOtherStoreId(1);
+        AnalysisCompetitorSlotFullInfo slotFullInfo = new AnalysisCompetitorSlotFullInfo(slot);
+        slotFullInfo.setCompetitorCompanyName("OBI");
+        slotFullInfo.setCompetitorStoreName("OBI Rybnik");
+        analysisCompetitorSlotFullInfos.add(slotFullInfo);
+        slot = new AnalysisCompetitorSlot();
+        slot.setSlotNr(2);
+        slot.setCompanyId(2);
+        slot.setOtherStoreId(-1);
+        slotFullInfo = new AnalysisCompetitorSlotFullInfo(slot);
+        slotFullInfo.setCompetitorCompanyName("LM");
+        slotFullInfo.setCompetitorStoreName("");
+        analysisCompetitorSlotFullInfos.add(slotFullInfo);
+        slot = new AnalysisCompetitorSlot();
+        slot.setSlotNr(3);
+        slot.setCompanyId(3);
+        slot.setOtherStoreId(-1);
+        slotFullInfo = new AnalysisCompetitorSlotFullInfo(slot);
+        slotFullInfo.setCompetitorCompanyName("BRICOMAN");
+        slotFullInfo.setCompetitorStoreName("");
+        analysisCompetitorSlotFullInfos.add(slotFullInfo);
+        slot = new AnalysisCompetitorSlot();
+        slot.setSlotNr(4);
+        slot.setCompanyId(4);
+        slot.setOtherStoreId(4);
+        slotFullInfo = new AnalysisCompetitorSlotFullInfo(slot);
+        slotFullInfo.setCompetitorCompanyName("Konkurent lokalny 1");
+        slotFullInfo.setCompetitorStoreName("DyWyTa, Rybnik");
+        analysisCompetitorSlotFullInfos.add(slotFullInfo);
+        slot = new AnalysisCompetitorSlot();
+        slot.setSlotNr(5);
+        slot.setCompanyId(-1);
+        slot.setOtherStoreId(-1);
+        slotFullInfo = new AnalysisCompetitorSlotFullInfo(slot);
+        slotFullInfo.setCompetitorCompanyName("");
+        slotFullInfo.setCompetitorStoreName("");
+        analysisCompetitorSlotFullInfos.add(slotFullInfo);
+
+         */
+    }
 // ---------------------------------------------------------------------------
 // gettery danych (lokalne :-P) todo? czy prywatne gettery mają sens?
 
@@ -276,6 +349,13 @@ public class DataInitializer {
     
     private List<Store> getLocalCompetitorStores() {
         return localCompetitorStores;
+    }
+
+// ---------------------------------------------------------------------------
+// Zapis danych
+
+    private void startInitialisationChain() {
+        initalizeCountries();
     }
 
     private void initalizeCountries() {
@@ -310,13 +390,6 @@ public class DataInitializer {
 
         // Dodanie kraju własnego
         AppHandle.getHandle().getRepository().getLocalDataRepository().insertCountry(ownCountry,ownCountryInsertResult);
-    }
-
-// ---------------------------------------------------------------------------
-// Zapis danych
-
-    private void startInitialisationChain() {
-        initalizeCountries();
     }
 
     private void initializeCompanies() {
@@ -359,36 +432,13 @@ public class DataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertOwnStore( store, null );
                         }
                         AppHandle.getHandle().getPrefs().setInitialisationStage(OWN_STORES_INITIALIZED);
-                        initializeObiStores();                    }
-                }
-            }
-        };
-        result.observeForever(resultObserver);
-        Company ownCompany = getCompanies().get(0);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(ownCompany.getName(),result);
-    }
-
-    private void initializeObiStores() {
-        MutableLiveData<List<Company>> result = new MutableLiveData<>();
-        Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
-            @Override
-            public void onChanged(List<Company> companiesList) {
-                if (firstCallObiStores) {
-                    firstCallObiStores = false;
-                    result.removeObserver(this); // this = observer...
-                    if (companiesList!=null) {
-                        for (Store store : getObiStores() ) {
-                            store.setCompanyId(companiesList.get(0).getId());
-                            AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
-                        }
-                        AppHandle.getHandle().getPrefs().setInitialisationStage(OBI_STORES_INITIALIZED);
                         initializeLMStores();                    }
                 }
             }
         };
         result.observeForever(resultObserver);
-        Company obiCompany = getCompanies().get(1);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(obiCompany.getName(),result);
+        Company ownCompany = getCompanies().get(CASTORAMA_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(ownCompany.getName(),result);
     }
 
     private void initializeLMStores() {
@@ -405,13 +455,38 @@ public class DataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
                         AppHandle.getHandle().getPrefs().setInitialisationStage(LM_STORES_INITIALIZED);
-                        initializeBricomanStores();                    }
+                        initializeObiStores();
+                    }
                 }
             }
         };
         result.observeForever(resultObserver);
-        Company lmCompany = getCompanies().get(2);
+        Company lmCompany = getCompanies().get(LEROY_MERLIN_INDEX);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(lmCompany.getName(),result);
+    }
+
+    private void initializeObiStores() {
+        MutableLiveData<List<Company>> result = new MutableLiveData<>();
+        Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
+            @Override
+            public void onChanged(List<Company> companiesList) {
+                if (firstCallObiStores) {
+                    firstCallObiStores = false;
+                    result.removeObserver(this); // this = observer...
+                    if (companiesList!=null) {
+                        for (Store store : getObiStores() ) {
+                            store.setCompanyId(companiesList.get(0).getId());
+                            AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
+                        }
+                        AppHandle.getHandle().getPrefs().setInitialisationStage(OBI_STORES_INITIALIZED);
+                        initializeBricomanStores();
+                    }
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        Company obiCompany = getCompanies().get(OBI_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(obiCompany.getName(),result);
     }
 
     private void initializeBricomanStores() {
@@ -428,12 +503,13 @@ public class DataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
                         AppHandle.getHandle().getPrefs().setInitialisationStage(BRICOMAN_STORES_INITIALIZED);
-                        initializeLocalCompetitorStores();                    }
+                        initializeLocalCompetitorStores();
+                    }
                 }
             }
         };
         result.observeForever(resultObserver);
-        Company bricomanCompany = getCompanies().get(3);
+        Company bricomanCompany = getCompanies().get(BRICOMAN_INDEX);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(bricomanCompany.getName(),result);
     }
 
@@ -451,13 +527,143 @@ public class DataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore(store, null);
                         }
                         AppHandle.getHandle().getPrefs().setInitialisationStage(LOCAL_COMPETITORS_STORES_INITIALIZED);
-                        AppHandle.getHandle().getPrefs().setLocalDatabaseInitialized(true);
+                        initializeCompetitorSlotNr1();
                     }
                 }
             }
         };
         result.observeForever(resultObserver);
-        Company localCompetitorCompany = getCompanies().get(4);
+        Company localCompetitorCompany = getCompanies().get(LOCAL_COMPETITOR_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+    }
+
+    // Slot nr 1 = LM
+    private void initializeCompetitorSlotNr1() {
+        MutableLiveData<List<Company>> result = new MutableLiveData<>();
+        Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
+            @Override
+            public void onChanged(List<Company> companiesList) {
+                if (firstCallCompetitorsSlotsNr1) {
+                    firstCallCompetitorsSlotsNr1 = false;
+                    result.removeObserver(this); // this = observer...
+                    if (companiesList != null) {
+                        AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
+                        analysisCompetitorSlot.setSlotNr(1);
+                        analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
+                        analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
+                        analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
+                        AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
+                        initializeCompetitorSlotNr2();
+                    }
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        Company localCompetitorCompany = getCompanies().get(LEROY_MERLIN_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+    }
+
+    // Slot nr 2 = OBI
+    private void initializeCompetitorSlotNr2() {
+        MutableLiveData<List<Company>> result = new MutableLiveData<>();
+        Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
+            @Override
+            public void onChanged(List<Company> companiesList) {
+                if (firstCallCompetitorsSlotsNr2) {
+                    firstCallCompetitorsSlotsNr2 = false;
+                    result.removeObserver(this); // this = observer...
+                    if (companiesList != null) {
+                        AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
+                        analysisCompetitorSlot.setSlotNr(2);
+                        analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
+                        analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
+                        analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
+                        AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
+                        initializeCompetitorSlotNr3();
+                    }
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        Company localCompetitorCompany = getCompanies().get(OBI_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+    }
+
+    // Slot nr 3 = BRICOMAN
+    private void initializeCompetitorSlotNr3() {
+        MutableLiveData<List<Company>> result = new MutableLiveData<>();
+        Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
+            @Override
+            public void onChanged(List<Company> companiesList) {
+                if (firstCallCompetitorsSlotsNr3) {
+                    firstCallCompetitorsSlotsNr3 = false;
+                    result.removeObserver(this); // this = observer...
+                    if (companiesList != null) {
+                        AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
+                        analysisCompetitorSlot.setSlotNr(3);
+                        analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
+                        analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
+                        analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
+                        AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
+                        initializeCompetitorSlotNr4();
+                    }
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        Company localCompetitorCompany = getCompanies().get(BRICOMAN_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+    }
+
+    // Slot nr 4 = Konkurent lokalny 1
+    private void initializeCompetitorSlotNr4() {
+        MutableLiveData<List<Company>> result = new MutableLiveData<>();
+        Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
+            @Override
+            public void onChanged(List<Company> companiesList) {
+                if (firstCallCompetitorsSlotsNr4) {
+                    firstCallCompetitorsSlotsNr4 = false;
+                    result.removeObserver(this); // this = observer...
+                    if (companiesList != null) {
+                        AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
+                        analysisCompetitorSlot.setSlotNr(4);
+                        analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
+                        analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
+                        analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
+                        AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
+                        initializeCompetitorSlotNr5();
+                    }
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        Company localCompetitorCompany = getCompanies().get(LOCAL_COMPETITOR_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+    }
+
+    // Slot nr 5 = Konkurent lokalny 2
+    private void initializeCompetitorSlotNr5() {
+        MutableLiveData<List<Company>> result = new MutableLiveData<>();
+        Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
+            @Override
+            public void onChanged(List<Company> companiesList) {
+                if (firstCallCompetitorsSlotsNr5) {
+                    firstCallCompetitorsSlotsNr5 = false;
+                    result.removeObserver(this); // this = observer...
+                    if (companiesList != null) {
+                        AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
+                        analysisCompetitorSlot.setSlotNr(5);
+                        analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
+                        analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
+                        analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
+                        AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
+                        AppHandle.getHandle().getSettings().setLocalDatabaseInitialized();
+                    }
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        Company localCompetitorCompany = getCompanies().get(LOCAL_COMPETITOR_INDEX);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
     }
 

@@ -18,18 +18,6 @@
             tools:context=".view.TestActionsFragment">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_countries"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="Kraje"
-                app:layout_constraintBottom_toTopOf="@+id/button_own_stores"
-                app:layout_constraintEnd_toStartOf="@+id/button_companies"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_own_stores"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
@@ -64,34 +52,61 @@
                 app:layout_constraintTop_toTopOf="@+id/button_countries" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_clear_local"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorWarning"
+                android:text="Czyść local"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/button_clear_remote"
+                app:layout_constraintTop_toTopOf="@+id/button_clear_remote" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_load_remote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginBottom="16dp"
                 android:text="Twórz remote"
                 app:layout_constraintBottom_toTopOf="@+id/button_countries"
-                app:layout_constraintEnd_toStartOf="@+id/button_clear_local"
+                app:layout_constraintEnd_toStartOf="@+id/button_create_local"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_clear_local"
+                android:id="@+id/button_create_local"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Czyść local"
+                android:text="Twórz local"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/button_load_remote"
                 app:layout_constraintTop_toTopOf="@+id/button_load_remote" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_countries"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Kraje"
+                app:layout_constraintBottom_toTopOf="@+id/button_own_stores"
+                app:layout_constraintEnd_toStartOf="@+id/button_companies"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_clear_remote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginBottom="20dp"
                 android:text="Czyść remote"
+                android:backgroundTint="@color/colorWarning"
                 app:layout_constraintBottom_toTopOf="@+id/button_load_remote"
+                app:layout_constraintEnd_toStartOf="@+id/button_clear_local"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

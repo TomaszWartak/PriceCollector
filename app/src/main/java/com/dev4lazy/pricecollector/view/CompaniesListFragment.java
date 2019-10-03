@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Company;
-import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.viewmodel.CompanyListViewModel;
-import com.dev4lazy.pricecollector.viewmodel.OwnStoreListViewModel;
 
 public class CompaniesListFragment extends Fragment {
 
@@ -33,7 +31,7 @@ public class CompaniesListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.comapnies_list_fragment, container, false);
+        View view = inflater.inflate(R.layout.companies_list_fragment, container, false);
         return view;
     }
 
@@ -54,7 +52,7 @@ public class CompaniesListFragment extends Fragment {
     }
 
     private void subscribeRecycler() {
-        viewModel.getCompanysLiveData().observe(this, new Observer<PagedList<Company>>() {
+        viewModel.getCompaniesLiveData().observe(this, new Observer<PagedList<Company>>() {
             @Override
             public void onChanged(PagedList<Company> storesList) {
                 if (!storesList.isEmpty()) {

@@ -31,18 +31,13 @@
         android:label="main_fragment"
         tools:layout="@layout/main_screen_fragment" >
         <action
-            android:id="@+id/action_mainFragment_to_analysisRowFragment"
-            app:destination="@id/analysisRowFragment" />
-        <action
             android:id="@+id/action_mainFragment_to_testActionsFragment"
             app:destination="@id/testActionsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_analysisCompetitorsFragment"
+            app:destination="@id/analysisCompetitorsFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/analysisRowFragment"
-        android:name="com.dev4lazy.pricecollector.csv2pojo_recycler.AnalysisRowFragment"
-        android:label="test_analysis_row_fragment"
-        tools:layout="@layout/test_analysis_row_fragment" />
     <fragment
         android:id="@+id/setUpPreferncesFragment"
         android:name="com.dev4lazy.pricecollector.view.SetUpPreferencesFragment"
@@ -69,7 +64,7 @@
         android:id="@+id/companiesListFragment"
         android:name="com.dev4lazy.pricecollector.view.CompaniesListFragment"
         android:label="comapnies_list_fragment"
-        tools:layout="@layout/comapnies_list_fragment" />
+        tools:layout="@layout/companies_list_fragment" />
 
     <fragment
         android:id="@+id/countriesListFragment"
@@ -95,5 +90,10 @@
             android:id="@+id/action_testActionsFragment_to_countriesListFragment"
             app:destination="@id/countriesListFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/analysisCompetitorsFragment"
+        android:name="com.dev4lazy.pricecollector.view.AnalysisCompetitorsFragment"
+        android:label="analysis_competitors_fragment"
+        tools:layout="@layout/analysis_competitors_fragment" />
 
 </navigation>

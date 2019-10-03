@@ -4,13 +4,14 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.sqlite.db.SimpleSQLiteQuery;
 
+import com.dev4lazy.pricecollector.model.db.AnalysisCompetitorSlotDao;
 import com.dev4lazy.pricecollector.model.db.CompanyDao;
 import com.dev4lazy.pricecollector.model.db.CountryDao;
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
 import com.dev4lazy.pricecollector.model.db.OwnStoreDao;
 import com.dev4lazy.pricecollector.model.db.StoreDao;
+import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
@@ -23,9 +24,7 @@ public class LocalDataRepository {
 
     private static LocalDataRepository instance = new LocalDataRepository();
 
-//-----------------------------------------------------------------------
-// Country
-    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+    private AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
 
     public static LocalDataRepository getInstance() {
         if (instance == null) {
@@ -37,14 +36,52 @@ public class LocalDataRepository {
         }
         return instance;
     }
+    private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
+    //-----------------------------------------------------------------------
+// Country
+    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
     private Data<Country> countries = new Data<>(countryDao);
+
+
+
+//-----------------------------------------------------------------------
+// Analysis
+
+//-----------------------------------------------------------------------
+// AnalysisCompetitorSlot
 //-----------------------------------------------------------------------
 // OwnStore
     private OwnStoreDao ownStoreDao = AppHandle.getHandle().getLocalDatabase().ownStoreDao();
     private Data<OwnStore> ownStores = new Data<>(ownStoreDao);
 //-----------------------------------------------------------------------
-// Analysis
+// Store
+    private StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
+    private Data<Store> stores = new Data<>(storeDao);
 
+    private LocalDataRepository() {
+
+    }
+
+//-----------------------------------------------------------------------------------
+// clearDatabaseAsync
+    public void clearDatabase(AfterDatabaseClearedCallback callback) {
+        new ClearDatabaseAsyncTask(
+                AppHandle.getHandle().getLocalDatabase(),
+                callback
+        ).execute();
+    }
+
+    public void insertAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Long> result ) {
+        slots.insertData(analysisCompetitorSlot,result);
+    }
+
+    public void updateAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Integer> result  ) {
+        slots.updateData(analysisCompetitorSlot, result);
+    }
+
+    public void deleteAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Integer> result   ) {
+        slots.deleteData(analysisCompetitorSlot, result);
+    }
 //-----------------------------------------------------------------------
 // Article
 
@@ -65,43 +102,41 @@ public class LocalDataRepository {
     public void deleteCompany( Company company, MutableLiveData<Integer> result   ) {
         companies.deleteData(company, result);
     }
-    //-----------------------------------------------------------------------
-// Store
-    private StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
-    private Data<Store> stores = new Data<>(storeDao);
 
-    /* usuń ?
-    public LiveData<List<Company>> getCompanyByIdLD(int companyId) {
-        return companyDao.findByIdLD(companyId);
+    public LiveData<List<AnalysisCompetitorSlot>> getAllSlotsLD() {
+        return analysisCompetitorSlotDao.getAllLiveData();
     }
 
-    public LiveData<List<Company>> getCompanyByNameLD(String companyName) {
-        return companyDao.findByNameLD(companyName);
+    /* todo ?
+    public LiveData<List<Company>> getFilteredCompaniesLD(String filter) {
+        if ((filter!=null) && (!filter.isEmpty())) {
+            return companyDao.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
+        }
+        return companyDao.getAllLiveData();
     }
     */
 
+    public void findAnalysisCompetitorSlotById(int id, MutableLiveData<List<AnalysisCompetitorSlot>> result) {
+        slots.findDataById( id, result);
+    }
+
+    public void findAnalysisCompetitorSlotByName(String analysisCompetitorSlotName, MutableLiveData<List<AnalysisCompetitorSlot>> result ) {
+        slots.findDataByName(analysisCompetitorSlotName, result);
+    }
+
+    public void getAllAnalysisCompetitorSlotsSortedBySlotNr(MutableLiveData<List<AnalysisCompetitorSlot>> result) {
+        slots.getViaQuery(
+                "SELECT * from competitor_slots ORDER BY slot_nr ASC",
+                result );
+        /* todo
+        AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao().getViaQueryLiveData(
+                new SimpleSQLiteQuery("SELECT * from competitor_slots ORDER BY slot_nr ASC")
+        );
+        */
+    }
+
     public LiveData<List<Company>> getAllCompaniesLD() {
-        return companyDao.getAll();
-    }
-
-    public LiveData<List<Company>> getFilteredCompaniesLD(String filter) {
-        if ((filter!=null) && (!filter.isEmpty())) {
-            return companyDao.getViaQuery(new SimpleSQLiteQuery(filter));
-        }
-        return companyDao.getAll();
-    }    
-
-    private LocalDataRepository() {
-
-    }
-
-//-----------------------------------------------------------------------------------
-// clearDatabaseAsync
-    public void clearDatabase(AfterDatabaseClearedCallback callback) {
-        new ClearDatabaseAsyncTask(
-                AppHandle.getHandle().getLocalDatabase(),
-                callback
-        ).execute();
+        return companyDao.getAllLiveData();
     }
 
     public void insertCountry(Country country, MutableLiveData<Long> result ) {
@@ -110,14 +145,6 @@ public class LocalDataRepository {
 
     public void updateCountry( Country country, MutableLiveData<Integer> result  ) {
         countries.updateData(country,result);
-    }
-
-    public void findCompanyById(int id, MutableLiveData<List<Company>> result) {
-        companies.findDataById( id, result);
-    }
-
-    public void findCompanyByName(String companyName, MutableLiveData<List<Company>> result ) {
-        companies.findDataByName(companyName, result);
     }
 
     public void deleteCountry( Country country, MutableLiveData<Integer> result  ) {
@@ -143,6 +170,19 @@ public class LocalDataRepository {
         countries.findDataByName(countryName, result);
     }
 
+    public void findCompanyById(int id, MutableLiveData<List<Company>> result) {
+        companies.findDataById( id, result);
+    }
+
+    /*
+    public LiveData<List<Country>> getFilteredCountriesLD(String filter) {
+        if ((filter!=null) && (!filter.isEmpty())) {
+            return countries.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
+        }
+        return countryDao.getAllLiveData();
+    }
+    */
+
 //-----------------------------------------------------------------------
 // Department
 
@@ -161,19 +201,14 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // OwnArticleInfo
 
-//-----------------------------------------------------------------------
-// Sector
-
-   public LiveData<List<Country>> getAllCountriesLD() {
-        return countryDao.getAll();
+    public void findCompanyByName(String companyName, MutableLiveData<List<Company>> result ) {
+        companies.findDataByName(companyName, result);
     }
 
-    public LiveData<List<Country>> getFilteredCountriesLD(String filter) {
-        if ((filter!=null) && (!filter.isEmpty())) {
-            return countryDao.getViaQuery(new SimpleSQLiteQuery(filter));
-        }
-        return countryDao.getAll();
+    public LiveData<List<Country>> getAllCountriesLD() {
+        return countryDao.getAllLiveData();
     }
+
 
     public void insertOwnStore(OwnStore ownStore, MutableLiveData<Long> result ) {
         ownStores.insertData(ownStore,result);
@@ -206,18 +241,39 @@ public class LocalDataRepository {
     */
 
     public LiveData<List<OwnStore>> getAllOwnStoresLD() {
-        return ownStoreDao.getAll();
+        return ownStoreDao.getAllLiveData();
     }
 
+    /*
     public LiveData<List<OwnStore>> getFilteredOwnStoresLD(String filter) {
         if ((filter!=null) && (!filter.isEmpty())) {
-            return ownStoreDao.getViaQuery(new SimpleSQLiteQuery(filter));
+            return ownStoreDao.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
         }
-        return ownStoreDao.getAll();
+        return ownStoreDao.getAllLiveData();
+    }
+    */
+
+    /* usuń ?
+    public LiveData<List<Company>> getCompanyByIdLD(int companyId) {
+        return companyDao.findByIdLD(companyId);
     }
 
+    public LiveData<List<Company>> getCompanyByNameLD(String companyName) {
+        return companyDao.findByNameLD(companyName);
+    }
+    */
     public void findStoreById(int id, MutableLiveData<List<Store>> result) {
         stores.findDataById( id, result);
+    }
+
+    public void getAllStores( MutableLiveData<List<Store>> result ) {
+        stores.getAllData( result );
+    }
+
+    public void getStoresForCompany( int companyId, MutableLiveData<List<Store>> result ) {
+        stores.getViaQuery(
+            "SELECT * from stores WHERE company_id="+companyId+" ORDER BY name ASC",
+            result );
     }
 
     public void findStoreByName(String storeName, MutableLiveData<List<Store>> result ) {
@@ -234,6 +290,10 @@ public class LocalDataRepository {
 
     public void deleteStore( Store store, MutableLiveData<Integer> result  ) {
         stores.deleteData(store,result);
+    }
+
+    public LiveData<List<Store>> getAllStoresLD() {
+        return storeDao.getAllLiveData();
     }
 
     public interface AfterDatabaseClearedCallback {
@@ -264,16 +324,17 @@ public class LocalDataRepository {
         }
     }
 
-    public LiveData<List<Store>> getAllStoresLD() {
-        return storeDao.getAll();
-    }
-
+    /*
     public LiveData<List<Store>> getFilteredStoresLD(String filter) {
         if ((filter!=null) && (!filter.isEmpty())) {
-            return storeDao.getViaQuery(new SimpleSQLiteQuery(filter));
+            return storeDao.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
         }
-        return storeDao.getAll();
+        return storeDao.getAllLiveData();
     }
+    */
+
+//-----------------------------------------------------------------------
+// Sector
 
 //-----------------------------------------------------------------------
 // UOProject

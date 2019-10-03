@@ -52,7 +52,7 @@ public class OtherStoresListFragment extends Fragment {
     private void recyclerSetup() {
         storeAdapter = new StoreAdapter(new StoreDiffCallback());
         recyclerView = getView().findViewById(R.id.other_stores_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo? getContext()
         // todo recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
         recyclerView.setAdapter(storeAdapter);
     }

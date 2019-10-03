@@ -26,7 +26,7 @@ public class CompanyListViewModel extends AndroidViewModel {
         companiesLiveData = pagedListBuilder.build();
     }
 
-    public LiveData<PagedList<Company>> getCompanysLiveData() {
+    public LiveData<PagedList<Company>> getCompaniesLiveData() {
         return companiesLiveData;
     }
 }

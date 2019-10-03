@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/priceAnalysisMenuItem"
+        android:title="@string/price_analysis" />
+    <item
+        android:id="@+id/driveToCompetitorStoreMenuItem"
+        android:title="@string/drive_to_competitor_store"/>
+    <item
+        android:id="@+id/chooseCompetitorStoreMenuItem"
+        android:title="@string/choose_competitor_store"/>
+    <item
+        android:id="@+id/detachCompetitorStoreMenuItem"
+        android:title="@string/detach_competitor_store"/>
+</menu>

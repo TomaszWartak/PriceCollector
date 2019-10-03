@@ -28,7 +28,12 @@
     <string name="label_analysis_finish_date">Data wykonania: </string>
     <string name="label_analysis_confirmation_date">Data zamknięcia: </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- for analysis competitor slot -->
+    <string name="choose_competitor_store">Wybierz sklep konkurenta</string>
+    <string name="add_competitor_store">Dodaj sklep konkurenta</string>
+    <string name="price_analysis">Kontrola cen</string>
+    <string name="drive_to_competitor_store">Prowadź do sklepu konkurenta</string>
+    <string name="detach_competitor_store">Odłącz sklep konkurenta</string>
+    <string name="attach_competitor_store">Przyłącz sklep konkurenta</string>
 
 </resources>

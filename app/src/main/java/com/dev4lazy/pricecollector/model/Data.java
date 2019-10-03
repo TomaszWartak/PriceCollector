@@ -3,6 +3,8 @@ package com.dev4lazy.pricecollector.model;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.sqlite.db.SimpleSQLiteQuery;
+import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.db._Dao;
 
@@ -111,6 +113,14 @@ public class Data<D> {
         }
     }
 
+    public void getAllData( MutableLiveData<List<D>> resultLD ) {
+        new getAllDataAsyncTask(dao, resultLD).execute();
+    }
+
+    public void getViaQuery(String query, MutableLiveData<List<D>> resultLD) {
+        new getViaQueryAsyncTask(dao, resultLD).execute(query);
+    }
+    
     public void findDataById(Integer id, MutableLiveData<List<D>> resultLD) {
         new findDataByIdAsyncTask(dao, resultLD).execute(id);
     }
@@ -167,30 +177,52 @@ public class Data<D> {
         }
     }
 
-    /*
-    private class InsertAsyncTask3 extends AsyncTask<D,Void,Long> {
+    private class getAllDataAsyncTask extends AsyncTask< Void,Void,List<D> >{
 
         private _Dao dao;
-        private MutableLiveData<Long> resultLD;
+        private MutableLiveData<List<D> > resultLD;
 
-        InsertAsyncTask3(_Dao dao, MutableLiveData<Long> resultLD ) {
+        getAllDataAsyncTask(_Dao dao, MutableLiveData<List<D> > resultLD ) {
             this.dao = dao;
             this.resultLD = resultLD;
         }
 
         @Override
-        protected Long doInBackground ( D ...params){
-            Long id = dao.insert(params[0]);
-            return id;
+        protected List<D> doInBackground ( Void ...params){
+            return dao.getAll();
         }
 
         @Override
-        protected void onPostExecute(Long result) {
+        protected void onPostExecute(List<D>  result) {
             super.onPostExecute(result);
             if (resultLD!=null) {
                 resultLD.postValue(result);
             }
         }
     }
- */
+
+    private class getViaQueryAsyncTask extends AsyncTask<String,Void,List<D>>{
+
+        private _Dao dao;
+        private MutableLiveData<List<D> > resultLD;
+
+        getViaQueryAsyncTask(_Dao dao, MutableLiveData<List<D>> resultLD ) {
+            this.dao = dao;
+            this.resultLD = resultLD;
+        }
+
+        @Override
+        protected List<D> doInBackground ( String ...params){
+            return dao.getViaQuery(new SimpleSQLiteQuery(params[0]));
+        }
+
+        @Override
+        protected void onPostExecute(List<D> result) {
+            super.onPostExecute(result);
+            if (resultLD!=null) {
+                resultLD.postValue(result);
+            }
+        }
+    }
+
 }

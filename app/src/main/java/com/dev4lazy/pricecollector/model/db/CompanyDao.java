@@ -25,7 +25,11 @@ public interface CompanyDao extends _Dao<Company>{
 
     @Override
     @Query("SELECT * from companies ORDER BY name ASC")
-    LiveData<List<Company>> getAll();
+    List<Company> getAll();
+
+    @Override
+    @Query("SELECT * from companies ORDER BY name ASC")
+    LiveData<List<Company>> getAllLiveData();
 
     @RawQuery(observedEntities = Company.class)
     LiveData<List<Company>> getViaQuery(SupportSQLiteQuery query);

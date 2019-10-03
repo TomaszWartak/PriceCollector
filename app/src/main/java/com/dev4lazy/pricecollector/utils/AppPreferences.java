@@ -4,14 +4,16 @@ import android.content.SharedPreferences;
 
 public class AppPreferences {
 
-    public static final int DATA_NOT_INITIALIZED = 0;
+    public static final int LOCAL_DATA_NOT_INITIALIZED = 0;
     public static final int COUNTRIES_INITIALIZED = 1;
     public static final int COMPANIES_INITIALIZED = 2;
     public static final int OWN_STORES_INITIALIZED = 3;
-    public static final int OBI_STORES_INITIALIZED = 4;
-    public static final int LM_STORES_INITIALIZED = 5;
+    public static final int LM_STORES_INITIALIZED = 4;
+    public static final int OBI_STORES_INITIALIZED = 5;
     public static final int BRICOMAN_STORES_INITIALIZED = 6;
     public static final int LOCAL_COMPETITORS_STORES_INITIALIZED = 7;
+    public static final int COMPETITORS_SLOTS_INITIALIZED = 8;
+    public static final int LOCAL_DATA_INITIALIZED = COMPETITORS_SLOTS_INITIALIZED;
 
 // Ustawienia językowe -------------------------------------------------------------------------
     private static AppPreferences instance = new AppPreferences();
@@ -100,7 +102,7 @@ public class AppPreferences {
     }
 
     public int getInitialisationStage() {
-        return prefs.getInt(INITIALISATION_STAGE_KEY, DATA_NOT_INITIALIZED);
+        return prefs.getInt(INITIALISATION_STAGE_KEY, LOCAL_DATA_NOT_INITIALIZED);
     }
 
     public void setInitialisationStage(int value) {

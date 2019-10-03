@@ -2,11 +2,13 @@ package com.dev4lazy.pricecollector.model.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "competitor_slots" )
 public class AnalysisCompetitorSlot {
-
+    @Ignore
+    public static final int NONE = -1;
     @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name = "slot_nr")
@@ -15,6 +17,10 @@ public class AnalysisCompetitorSlot {
     private int companyId;
     @ColumnInfo(name = "other_store_id")
     private int otherStoreId;
+    @ColumnInfo(name = "company_name")
+    private String companyName;
+    @ColumnInfo(name = "other_store_name")
+    private String storeName;
 
     public int getId() {
         return id;
@@ -46,5 +52,21 @@ public class AnalysisCompetitorSlot {
 
     public void setOtherStoreId(int otherStoreId) {
         this.otherStoreId = otherStoreId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 }

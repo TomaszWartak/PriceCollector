@@ -83,7 +83,7 @@ public class MainScreenFragment extends Fragment {
 
     //todo test
     private void openTestAnalyzesList() {
-        Navigation.findNavController(getView()).navigate(R.id.action_mainFragment_to_analysisRowFragment);
+        Navigation.findNavController(getView()).navigate(R.id.action_mainFragment_to_analysisCompetitorsFragment);
     }
 
     private void  setOnBackPressedCalback() {

@@ -23,15 +23,20 @@ public interface StoreDao extends _Dao<Store> {
 
     @Override
     @Query("SELECT * from stores ORDER BY name ASC")
-    LiveData<List<Store>> getAll();
+    List<Store> getAll();
+
+    @Override
+    @Query("SELECT * from stores ORDER BY name ASC")
+    LiveData<List<Store>> getAllLiveData();
 
     @RawQuery(observedEntities = Store.class)
-    LiveData<List<Store>> getViaQuery(SupportSQLiteQuery query);
+    LiveData<List<Store>> getViaQueryLiveData(SupportSQLiteQuery query);
 
     @Override
     @Query("SELECT * from stores WHERE id= :id")
     List<Store> findById(int id);
 
+    @Override
     @Query("SELECT * from stores WHERE name= :name")
     List<Store> findByName(String name);
 

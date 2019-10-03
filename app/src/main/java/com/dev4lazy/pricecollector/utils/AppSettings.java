@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.utils;
 
-import static com.dev4lazy.pricecollector.utils.AppPreferences.DATA_NOT_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_DATA_NOT_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_DATA_INITIALIZED;
 
 public class AppSettings {
 
@@ -39,9 +40,14 @@ public class AppSettings {
         appPreferences.setLanguage("polski");
     }
 
+    public void setLocalDatabaseInitialized() {
+        appPreferences.setLocalDatabaseInitialized(true);
+        appPreferences.setInitialisationStage(LOCAL_DATA_INITIALIZED);
+    }
+
     private void setLocalDatabaseNotInitialized() {
         appPreferences.setLocalDatabaseInitialized(false);
-        appPreferences.setInitialisationStage(DATA_NOT_INITIALIZED);
+        appPreferences.setInitialisationStage(LOCAL_DATA_NOT_INITIALIZED);
     }
 
     private void setAnalysisCompetitorsScreen() {

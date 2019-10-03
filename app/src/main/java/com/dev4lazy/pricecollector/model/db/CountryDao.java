@@ -23,7 +23,11 @@ public interface CountryDao extends _Dao<Country>{
 
     @Override
     @Query("SELECT * from countries ORDER BY name ASC")
-    LiveData<List<Country>> getAll();
+    List<Country> getAll();
+
+    @Override
+    @Query("SELECT * from countries ORDER BY name ASC")
+    LiveData<List<Country>> getAllLiveData();
 
     @RawQuery(observedEntities = Country.class)
     LiveData<List<Country>> getViaQuery(SupportSQLiteQuery query);

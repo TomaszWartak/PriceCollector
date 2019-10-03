@@ -50,6 +50,9 @@ public class TestActionsFragment extends Fragment {
         view.findViewById(R.id.button_clear_remote).setOnClickListener((View v) -> {
             AnalysisRowRepository.getInstance(AnalyzesDatabase.getInstance()).clearDatabase();
         });
+        view.findViewById(R.id.button_create_local).setOnClickListener((View v) -> {
+            DataInitializer.getInstance().initializeLocalDatabase();
+        });
         view.findViewById(R.id.button_clear_local).setOnClickListener((View v) -> {
             DataInitializer.getInstance().ClearLocalDatabase();
         });

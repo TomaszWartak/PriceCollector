@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 
 
 public class PermissionsUtils {
-    private Fragment hostFragment = null;
+    private Fragment hostFragment;
 
     /* todo usuń Konstruktor dla użycia onRequestPermissionsResult w aktywności
     // public PermissionsUtils(Activity activity) {

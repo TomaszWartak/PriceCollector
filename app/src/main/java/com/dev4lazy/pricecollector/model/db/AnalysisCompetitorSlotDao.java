@@ -24,14 +24,22 @@ public interface AnalysisCompetitorSlotDao extends _Dao<AnalysisCompetitorSlot> 
 
     @Override
     @Query("SELECT * from competitor_slots ORDER BY slot_nr ASC")
-    LiveData<List<AnalysisCompetitorSlot>> getAll();
+    List<AnalysisCompetitorSlot> getAll();
+
+    @Override
+    @Query("SELECT * from competitor_slots ORDER BY slot_nr ASC")
+    LiveData<List<AnalysisCompetitorSlot>> getAllLiveData();
 
     @RawQuery(observedEntities = AnalysisCompetitorSlot.class)
-    LiveData<List<AnalysisCompetitorSlot>> getViaQuery(SupportSQLiteQuery query);
+    List<AnalysisCompetitorSlot> getViaQuery(SupportSQLiteQuery query);
 
     @Override
     @Query("SELECT * from competitor_slots WHERE id= :id")
     List<AnalysisCompetitorSlot> findById(int id);
+
+    @Override
+    @Query("SELECT * from competitor_slots WHERE id= :name") // todo no nie wiem...
+    List<AnalysisCompetitorSlot> findByName(String name);
 
     @Query("SELECT * from competitor_slots ORDER BY slot_nr ASC")
     DataSource.Factory<Integer, AnalysisCompetitorSlot> getAllSlotsPaged();
