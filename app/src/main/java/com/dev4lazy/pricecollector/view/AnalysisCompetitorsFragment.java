@@ -44,8 +44,8 @@ public class AnalysisCompetitorsFragment extends Fragment {
     }
 
     private void setupListView(View view) {
-        ArrayList<CompetitorSlotFullData> dummyList = new ArrayList<>();
-        AnalysisCompetitorsAdapter adapter = new AnalysisCompetitorsAdapter( getContext(), dummyList );
+        ArrayList<CompetitorSlotFullData> emptyList = new ArrayList<>();
+        AnalysisCompetitorsAdapter adapter = new AnalysisCompetitorsAdapter( getContext(),this, emptyList );
         ListView listViewCompetitorsSlots = view.findViewById( R.id.analysis_competitors_listview );
         listViewCompetitorsSlots.setAdapter( adapter );
         fillAnalysisCompetitorSlots( adapter );

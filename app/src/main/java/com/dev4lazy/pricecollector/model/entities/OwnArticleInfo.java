@@ -28,28 +28,28 @@ import androidx.room.PrimaryKey;
 )
 public class OwnArticleInfo {
     @PrimaryKey(autoGenerate = true)
-    public int id;
-    public int remoteId; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
+    private int id;
+    private int remoteId; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
     @ColumnInfo(name = "article_id")
-    public int articleId;
-    public String ownCode; // kod casto
-    public int sapCode;
-    public int magentoCode;
-    public double refPrice;
-    public double storePrice;
-    public double storeMarginPercent;
+    private int articleId;
+    private String ownCode; // kod casto
+    private int sapCode;
+    private int magentoCode;
+    private double refPrice;
+    private double storePrice;
+    private double storeMarginPercent;
     @ColumnInfo(name = "sector_id")
-    public int sectorId;
+    private int sectorId;
     @ColumnInfo(name = "market_id")
-    public int marketId;
+    private int marketId;
     @ColumnInfo(name = "department_id")
-    public int departmentId;
+    private int departmentId;
     @ColumnInfo(name = "family_id")
-    public int familyId;
+    private int familyId;
     @ColumnInfo(name = "module_id")
-    public int moduleId;
+    private int moduleId;
     @ColumnInfo(name = "uo_project_id")
-    public int uoProjectId;
+    private int uoProjectId;
 
     public int getId() {
         return id;

@@ -15,8 +15,6 @@ import com.dev4lazy.pricecollector.csv2pojo.AnalysisRow;
 
 public class AnalysisRowAdapter extends PagedListAdapter<AnalysisRow, AnalysisRowAdapter.AnalysisRowViewHolder> {
 
-    private Context context; // todo po chuj?
-
     private AnalysisRowDiffCalback analysisRowDiffCalback = null;
 
     public AnalysisRowAdapter( AnalysisRowDiffCalback analysisRowDiffCalback){

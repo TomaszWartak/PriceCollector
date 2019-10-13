@@ -14,8 +14,9 @@ import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity /*implements NavigationView.OnNavigationItemSelectedListener*/{
 
-    //private AppBarConfiguration appBarConfiguration;
+    // todo ? private AppBarConfiguration appBarConfiguration;
 
+    // todo ?
     public Toolbar toolbar;
 
     public DrawerLayout drawerLayout;

@@ -94,6 +94,24 @@
         android:id="@+id/analysisCompetitorsFragment"
         android:name="com.dev4lazy.pricecollector.view.AnalysisCompetitorsFragment"
         android:label="analysis_competitors_fragment"
-        tools:layout="@layout/analysis_competitors_fragment" />
+        tools:layout="@layout/analysis_competitors_fragment" >
+        <action
+            android:id="@+id/action_analysisCompetitorsFragment_to_addStoreDialogFragment"
+            app:destination="@id/addStoreDialogFragment" />
+        <action
+            android:id="@+id/action_analysisCompetitorsFragment_to_analysisFragment"
+            app:destination="@id/analysisFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/addStoreDialogFragment"
+        android:name="com.dev4lazy.pricecollector.view.AddStoreDialogFragment"
+        android:label="AddStoreDialogFragment"
+        tools:layout="@layout/add_store_fragment" />
+    <fragment
+        android:id="@+id/analysisFragment"
+        android:name="com.dev4lazy.pricecollector.view.AnalysisFragment"
+        android:label="analysis_fragment"
+        tools:layout="@layout/analysis_fragment" />
+    />
 
 </navigation>

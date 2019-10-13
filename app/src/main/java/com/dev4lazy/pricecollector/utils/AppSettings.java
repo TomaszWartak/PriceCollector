@@ -1,5 +1,7 @@
 package com.dev4lazy.pricecollector.utils;
 
+import com.dev4lazy.pricecollector.model.logic.User;
+
 import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_DATA_NOT_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_DATA_INITIALIZED;
 
@@ -8,6 +10,8 @@ public class AppSettings {
     private static AppSettings instance = new AppSettings();
 
     private static AppPreferences appPreferences = AppHandle.getHandle().getPrefs();
+
+    private User user;
 
     public static AppSettings getInstance() {
         if (instance == null) {
@@ -52,6 +56,14 @@ public class AppSettings {
 
     private void setAnalysisCompetitorsScreen() {
         appPreferences.setMaxAnalysisCompetitorsNumber(appPreferences.MAX_ANALYSIS_COMPETITORS_NUMBER);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

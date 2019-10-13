@@ -9,11 +9,13 @@ public class CompetitorSlotFullData {
 
     private AnalysisCompetitorSlot slot;
     private ArrayList<Store> competitorStores;
-    private int state;
+    private int state; //todo?
 
+    /*
     CompetitorSlotFullData() {
         // na potrzeby dodawania dummy
     }
+    */
 
     CompetitorSlotFullData(AnalysisCompetitorSlot slot) {
         this.slot = slot;

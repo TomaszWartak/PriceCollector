@@ -9,4 +9,6 @@
     <dimen name="analysis_competitor_slot_height">48dp</dimen>
     <dimen name="analysis_competitor_slot_minwidth">48dp</dimen>
 
+    <dimen name="fields_padding">8dp</dimen>
+
 </resources>

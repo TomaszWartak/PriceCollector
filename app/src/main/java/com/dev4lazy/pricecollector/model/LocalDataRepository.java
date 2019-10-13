@@ -24,7 +24,11 @@ public class LocalDataRepository {
 
     private static LocalDataRepository instance = new LocalDataRepository();
 
+
+//-----------------------------------------------------------------------
+// AnalysisCompetitorSlot
     private AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
+
 
     public static LocalDataRepository getInstance() {
         if (instance == null) {
@@ -36,31 +40,6 @@ public class LocalDataRepository {
         }
         return instance;
     }
-    private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
-    //-----------------------------------------------------------------------
-// Country
-    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
-    private Data<Country> countries = new Data<>(countryDao);
-
-
-
-//-----------------------------------------------------------------------
-// Analysis
-
-//-----------------------------------------------------------------------
-// AnalysisCompetitorSlot
-//-----------------------------------------------------------------------
-// OwnStore
-    private OwnStoreDao ownStoreDao = AppHandle.getHandle().getLocalDatabase().ownStoreDao();
-    private Data<OwnStore> ownStores = new Data<>(ownStoreDao);
-//-----------------------------------------------------------------------
-// Store
-    private StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
-    private Data<Store> stores = new Data<>(storeDao);
-
-    private LocalDataRepository() {
-
-    }
 
 //-----------------------------------------------------------------------------------
 // clearDatabaseAsync
@@ -70,6 +49,17 @@ public class LocalDataRepository {
                 callback
         ).execute();
     }
+    private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
+    //-----------------------------------------------------------------------
+// Company
+    private CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
+
+//-----------------------------------------------------------------------
+// Analysis
+//-----------------------------------------------------------------------
+// Country
+    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+    private Data<Country> countries = new Data<>(countryDao);
 
     public void insertAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Long> result ) {
         slots.insertData(analysisCompetitorSlot,result);
@@ -83,11 +73,20 @@ public class LocalDataRepository {
         slots.deleteData(analysisCompetitorSlot, result);
     }
 //-----------------------------------------------------------------------
-// Article
+// OwnStore
+    private OwnStoreDao ownStoreDao = AppHandle.getHandle().getLocalDatabase().ownStoreDao();
+    private Data<OwnStore> ownStores = new Data<>(ownStoreDao);
+//-----------------------------------------------------------------------
+// Store
+    private StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
+    private Data<Store> stores = new Data<>(storeDao);
 
 //-----------------------------------------------------------------------
-// Company
-    private CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
+// Article
+
+    private LocalDataRepository() {
+
+    }
 
     private Data<Company> companies = new Data<>(companyDao);
 
@@ -103,25 +102,17 @@ public class LocalDataRepository {
         companies.deleteData(company, result);
     }
 
-    public LiveData<List<AnalysisCompetitorSlot>> getAllSlotsLD() {
-        return analysisCompetitorSlotDao.getAllLiveData();
-    }
-
-    /* todo ?
-    public LiveData<List<Company>> getFilteredCompaniesLD(String filter) {
-        if ((filter!=null) && (!filter.isEmpty())) {
-            return companyDao.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
-        }
-        return companyDao.getAllLiveData();
-    }
-    */
-
     public void findAnalysisCompetitorSlotById(int id, MutableLiveData<List<AnalysisCompetitorSlot>> result) {
         slots.findDataById( id, result);
     }
 
     public void findAnalysisCompetitorSlotByName(String analysisCompetitorSlotName, MutableLiveData<List<AnalysisCompetitorSlot>> result ) {
         slots.findDataByName(analysisCompetitorSlotName, result);
+    }
+
+
+    public LiveData<List<Company>> getAllCompaniesLD() {
+        return companyDao.getAllLiveData();
     }
 
     public void getAllAnalysisCompetitorSlotsSortedBySlotNr(MutableLiveData<List<AnalysisCompetitorSlot>> result) {
@@ -135,9 +126,10 @@ public class LocalDataRepository {
         */
     }
 
-    public LiveData<List<Company>> getAllCompaniesLD() {
-        return companyDao.getAllLiveData();
+    public LiveData<List<AnalysisCompetitorSlot>> getAllSlotsLD() {
+        return analysisCompetitorSlotDao.getAllLiveData();
     }
+
 
     public void insertCountry(Country country, MutableLiveData<Long> result ) {
         countries.insertData(country,result);
@@ -170,9 +162,18 @@ public class LocalDataRepository {
         countries.findDataByName(countryName, result);
     }
 
+    /* todo ?
+    public LiveData<List<Company>> getFilteredCompaniesLD(String filter) {
+        if ((filter!=null) && (!filter.isEmpty())) {
+            return companyDao.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
+        }
+        return companyDao.getAllLiveData();
+    }
+    */
     public void findCompanyById(int id, MutableLiveData<List<Company>> result) {
         companies.findDataById( id, result);
     }
+
 
     /*
     public LiveData<List<Country>> getFilteredCountriesLD(String filter) {
@@ -208,7 +209,6 @@ public class LocalDataRepository {
     public LiveData<List<Country>> getAllCountriesLD() {
         return countryDao.getAllLiveData();
     }
-
 
     public void insertOwnStore(OwnStore ownStore, MutableLiveData<Long> result ) {
         ownStores.insertData(ownStore,result);
@@ -262,6 +262,37 @@ public class LocalDataRepository {
         return companyDao.findByNameLD(companyName);
     }
     */
+
+
+    public interface AfterDatabaseClearedCallback {
+        void call();
+    }
+
+    private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
+        private LocalDatabase assyncTaskAnalyzesDatabase;
+        private AfterDatabaseClearedCallback afterDatabaseClearedCallback;
+
+        ClearDatabaseAsyncTask(LocalDatabase database, AfterDatabaseClearedCallback callback) {
+            assyncTaskAnalyzesDatabase = database;
+            afterDatabaseClearedCallback = callback;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            assyncTaskAnalyzesDatabase.clearAllTables();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (afterDatabaseClearedCallback!=null) {
+                afterDatabaseClearedCallback.call();
+            }
+        }
+    }
+
+
     public void findStoreById(int id, MutableLiveData<List<Store>> result) {
         stores.findDataById( id, result);
     }
@@ -296,33 +327,6 @@ public class LocalDataRepository {
         return storeDao.getAllLiveData();
     }
 
-    public interface AfterDatabaseClearedCallback {
-        void call();
-    }
-
-    private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
-        private LocalDatabase assyncTaskAnalyzesDatabase;
-        private AfterDatabaseClearedCallback afterDatabaseClearedCallback;
-
-        ClearDatabaseAsyncTask(LocalDatabase database, AfterDatabaseClearedCallback callback) {
-            assyncTaskAnalyzesDatabase = database;
-            afterDatabaseClearedCallback = callback;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            assyncTaskAnalyzesDatabase.clearAllTables();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (afterDatabaseClearedCallback!=null) {
-                afterDatabaseClearedCallback.call();
-            }
-        }
-    }
 
     /*
     public LiveData<List<Store>> getFilteredStoresLD(String filter) {

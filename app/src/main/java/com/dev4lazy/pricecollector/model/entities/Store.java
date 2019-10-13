@@ -35,6 +35,26 @@ public class Store {
     public String street;
     public String zipCode;
 
+    /* Konstruktor kopiujący. Ale po co?
+    Store(Store store) {
+        this.id = store.id;
+        this.remoteId = store.remoteId;
+        this.companyId = store.companyId;
+        if ( store.name!=null ) {
+            this.name = new String( store.name );
+        }
+        if ( store.city!=null ) {
+            this.city = new String( store.city );
+        }
+        if ( store.street!=null ) {
+            this.street = new String(store.street);
+        }
+        if ( store.zipCode!=null ) {
+            this.zipCode = new String( store.zipCode );
+        }
+    }
+    */
+
     public int getId() {
         return id;
     }
@@ -96,6 +116,21 @@ public class Store {
         if (this == o) return true;
         if (!(o instanceof Store)) return false;
         Store that = (Store) o;
-        return id == that.id;
+        if (id != that.id) {
+            return false;
+        } else if (remoteId != that.remoteId) {
+            return false;
+        } else if (companyId != that.companyId) {
+            return false;
+        } else if (!name.equals(that.name)) {
+            return false;
+        } else if (!city.equals(that.city)) {
+            return false;
+        } else if (!street.equals(that.street)) {
+            return false;
+        } else if (!zipCode.equals(that.zipCode)) {
+            return false;
+        }
+        return true;
     }
 }

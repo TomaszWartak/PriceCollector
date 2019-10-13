@@ -36,4 +36,23 @@
     <string name="detach_competitor_store">Odłącz sklep konkurenta</string>
     <string name="attach_competitor_store">Przyłącz sklep konkurenta</string>
 
+    <!-- for adding competitor store dialog -->
+    <string name="competitor">Konkurent</string>
+    <string name="store_name">Nazwa sklepu</string>
+    <string name="store_street">Ulica</string>
+    <string name="store_city">Miejscowość</string>
+    <string name="store_zipcode">Kod pocztowy</string>
+    <string name="choose_competitor">Wybierz konkrenta</string>
+    <string name="store_name_null">nazwa konkurenta = null</string>
+    <string name="enter_store_name">Podaj nazwę sklepu konkurenta</string>
+    <string name="city_null">miejscowość = null</string>
+    <string name="enter_city_name">Podaj miejscowość</string>
+    <string name="street_null">ulica = null</string>
+    <string name="enter_street_name">Podaj ulicę</string>
+    <string name="zipcode_null">kod pocztowy = null</string>
+    <string name="enter_zipcode">Podaj kod pocztowy</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
