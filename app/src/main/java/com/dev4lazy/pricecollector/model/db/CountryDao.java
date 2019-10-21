@@ -18,6 +18,10 @@ import java.util.List;
 public interface CountryDao extends _Dao<Country>{
 
     @Override
+    @Query("SELECT COUNT(*) FROM countries")
+    Integer getNumberOf();
+
+    @Override
     @Query("DELETE FROM countries")
     int deleteAll();
 

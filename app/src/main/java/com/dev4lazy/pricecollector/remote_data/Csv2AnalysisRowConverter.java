@@ -1,6 +1,6 @@
-package com.dev4lazy.pricecollector.csv2pojo;
+package com.dev4lazy.pricecollector.remote_data;
 
-import android.content.Context;
+import com.dev4lazy.pricecollector.model.RemoteDataRepository;
 
 import java.util.ArrayList;
 
@@ -10,33 +10,29 @@ import java.util.ArrayList;
 //  - co jeśli będą śmieci w pliku
 public class Csv2AnalysisRowConverter {
 
-    private CsvReader csvReader = new CsvReader();
+    private final String analysisRowsFileName = "dane-test1000.csv";
+
+    private CsvReader analysisRowCsvReader = new CsvReader();
+
     private CsvDecoder csvDecoder = new CsvDecoder();
 
-    private AnalysisRowRepository analysisRowRepository;
+    private RemoteDataRepository remoteDataRepository;
 
     private ArrayList<String> fieldNamesList; //todo z tego coś nie bardzo korzystasz...
 
-    private ArrayList<AnalysisRow> analysisRowList;
+    private ArrayList<RemoteAnalysisRow> remoteAnalysisRowList;
 
-    public Csv2AnalysisRowConverter(String csvFileName) {
-        csvReader.openReader( csvFileName );
-        analysisRowRepository = AnalysisRowRepository.getInstance(AnalyzesDatabase.getInstance());
-        // todo test
-        //Integer rowsCount = analysisRowRepository.getAnalysisRowsCount().getValue();
-        analysisRowRepository.askAnalysisRowsCount(1);
-        analysisRowRepository.clearDatabase();
-        // todo test
-        //rowsCount = analysisRowRepository.getAnalysisRowsCount().getValue();
-        analysisRowRepository.askAnalysisRowsCount(2);
-        //todo może jakiś warunek, że jak błędy to nie działamy dalej...
+    public Csv2AnalysisRowConverter() {
+        analysisRowCsvReader.openReader( analysisRowsFileName );
+        remoteDataRepository = RemoteDataRepository.getInstance();
+        remoteDataRepository.askAnalysisRowsCount(1);
         //todo może jakiś warunek, że jak błędy to nie działamy dalej...
         // ? globalne zmienne do błędów
-        analysisRowList = new ArrayList<>();
+        remoteAnalysisRowList = new ArrayList<>();
     }
 
     public void closeFiles() {
-        csvReader.closeReader();
+        analysisRowCsvReader.closeReader();
     }
 
     private void createFieldList() {
@@ -58,21 +54,21 @@ public class Csv2AnalysisRowConverter {
     public void makeAnalisisRowList() {
         ArrayList<String> values;
         // "pusty odczyt" - wiersz nagłówków
-        String csvLine = csvReader.readCsvLine();
-        AnalysisRow analysisRow;
-        while ((csvLine=csvReader.readCsvLine())!=null) {
+        String csvLine = analysisRowCsvReader.readCsvLine();
+        RemoteAnalysisRow remoteAnalysisRow;
+        while ((csvLine= analysisRowCsvReader.readCsvLine())!=null) {
             values = csvDecoder.getValuesFromCsvLine(csvLine);
-            analysisRow = makeAnalisisRow(values);
-            analysisRowList.add(analysisRow);
+            remoteAnalysisRow = makeAnalisisRow(values);
+            remoteAnalysisRowList.add(remoteAnalysisRow);
         }
     }
 
-    public AnalysisRow makeAnalisisRow(ArrayList<String> values ) {
+    public RemoteAnalysisRow makeAnalisisRow(ArrayList<String> values ) {
         // todo musibyć sprawdzanie typu po konwersji, bo mogą przyjść śmieci w pliku i appka się wysypie...
         // todo co jeśli będzie mniej danych
         // todo może zamiast warości 0..11 użyj stałych...
         // todo zastanów się co, jeśli zmieni się format dancyh na serwerze analizy konkurencji
-        AnalysisRow analysisRow = new AnalysisRow.AnalysisRowBuilder()
+        RemoteAnalysisRow remoteAnalysisRow = new RemoteAnalysisRow.AnalysisRowBuilder()
                 .store( csvDecoder.getIntegerOrNullFromString( values.get(0)) )
                 .articleCode( csvDecoder.getIntegerOrNullFromString( values.get(1)) )
                 .articleName( values.get(2) )
@@ -86,21 +82,21 @@ public class Csv2AnalysisRowConverter {
                 .articleLocalCompetitor1Price( csvDecoder.getDoubleOrNullFromString(values.get(10)) )
                 .articleLocalCompetitor2Price( csvDecoder.getDoubleOrNullFromString(values.get(11)) )
                 .build();
-        return analysisRow;
+        return remoteAnalysisRow;
     }
 
     public void insertAllAnalysisRows() {
-        for (AnalysisRow analysisRow : getAnalysisRowList()) {
-            insertAnalysisRow(analysisRow);
+        for (RemoteAnalysisRow remoteAnalysisRow : getRemoteAnalysisRowList()) {
+            insertAnalysisRow(remoteAnalysisRow);
         }
     }
 
-    public ArrayList<AnalysisRow> getAnalysisRowList() {
-        return analysisRowList;
+    public ArrayList<RemoteAnalysisRow> getRemoteAnalysisRowList() {
+        return remoteAnalysisRowList;
     }
 
-    private void insertAnalysisRow( AnalysisRow analysisRow) {
-        analysisRowRepository.insertAnalysisRow(analysisRow);
+    private void insertAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
+        remoteDataRepository.insertAnalysisRow(remoteAnalysisRow);
     }
 
 }

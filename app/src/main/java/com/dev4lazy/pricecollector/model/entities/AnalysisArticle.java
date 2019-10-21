@@ -112,4 +112,12 @@ public class AnalysisArticle {
     public void setComments(String comments) {
         this.comments = comments;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AnalysisArticle)) return false;
+        AnalysisArticle that = (AnalysisArticle) o;
+        return id == that.id;
+    }
 }

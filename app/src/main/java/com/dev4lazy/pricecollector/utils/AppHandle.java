@@ -6,6 +6,7 @@ import com.dev4lazy.pricecollector.model.DataRepository;
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
 import com.dev4lazy.pricecollector.model.logic.auth.AppAuthSupport;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
+import com.dev4lazy.pricecollector.remote_data.RemoteDatabase;
 
 public class AppHandle extends Application{
 
@@ -29,7 +30,9 @@ public class AppHandle extends Application{
         return AppAuthSupport.getInstance().getSupport();
     }
 
-    public LocalDatabase getLocalDatabase() { return LocalDatabase.getInstance(getApplicationContext());}
+    public LocalDatabase getLocalDatabase() { return LocalDatabase.getInstance();}
+
+    public RemoteDatabase getRemoteDatabase() { return RemoteDatabase.getInstance();}
 
     public DataRepository getRepository() { return DataRepository.getInstance(); }
 

@@ -15,6 +15,8 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
@@ -35,7 +37,7 @@ public class MainScreenFragment extends Fragment {
 
 
     // todo to usunąć, bo służy tylko do wygenerowania mocka bazy remote
-    // private Converter converter;
+    // private RemoteDatabaseInitializer converter;
 
     public static MainScreenFragment newInstance() {
         return new MainScreenFragment();
@@ -56,6 +58,8 @@ public class MainScreenFragment extends Fragment {
         setOnBackPressedCalback();
 
         setAnalysisItem(inflater, view);
+
+        ((TextView)view.findViewById(R.id.user_login)).setText(AppHandle.getHandle().getSettings().getUser().getLogin());
 
         // todo test
         view.findViewById(R.id.main_screen_fragment_layout).setOnClickListener((View v) ->{

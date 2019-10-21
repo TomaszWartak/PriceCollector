@@ -22,12 +22,65 @@ public class Data<D> {
         this.dao = dao;
     }
 
+    public void getNumberOfData(MutableLiveData<Integer> result ) {
+        new GetNumberOfAsyncTask(dao, result).execute();
+    }
+
     public void insertData(D data ) {
         insertData(data, null );
     }
 
     public void insertData(D data, MutableLiveData<Long> result ) {
         new InsertAsyncTask(dao, result).execute(data);
+    }
+
+    public void updateData(D data, MutableLiveData<Integer> resultLD) {
+        new UpdateAsyncTask(dao, resultLD).execute(data);
+    }
+
+    public void deleteData(D data, MutableLiveData<Integer> resultLD) {
+        new DeleteAsyncTask(dao, resultLD).execute(data);
+    }
+
+    public void getAllData( MutableLiveData<List<D>> resultLD ) {
+        new getAllDataAsyncTask(dao, resultLD).execute();
+    }
+
+    public void deleteAllData( MutableLiveData<Integer> resultLD ) {
+        new deleteAllDataAsyncTask( dao, resultLD).execute();
+    }
+
+    public void getViaQuery(String query, MutableLiveData<List<D>> resultLD) {
+        new getViaQueryAsyncTask(dao, resultLD).execute(query);
+    }
+
+    public void findDataById(Integer id, MutableLiveData<List<D>> resultLD) {
+        new findDataByIdAsyncTask(dao, resultLD).execute(id);
+    }
+
+    private class GetNumberOfAsyncTask extends AsyncTask<Void,Void,Integer> {
+
+        private _Dao dao;
+        private MutableLiveData<Integer> resultLD;
+
+        GetNumberOfAsyncTask(_Dao dao, MutableLiveData<Integer> resultLD ) {
+            this.dao = dao;
+            this.resultLD = resultLD;
+        }
+
+        @Override
+        protected Integer doInBackground ( Void ...params){
+            Integer numberOf = dao.getNumberOf();
+            return numberOf;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+            if (resultLD!=null) {
+                resultLD.postValue(result);
+            }
+        }
     }
 
     private class InsertAsyncTask extends AsyncTask<D,Void,Long> {
@@ -55,10 +108,6 @@ public class Data<D> {
         }
     }
 
-    public void updateData(D data, MutableLiveData<Integer> resultLD) {
-        new UpdateAsyncTask(dao, resultLD).execute(data);
-    }
-
     private class UpdateAsyncTask extends AsyncTask<D,Void,Integer> {
 
         private _Dao dao;
@@ -84,11 +133,7 @@ public class Data<D> {
         }
     }
 
-    public void deleteData(D data, MutableLiveData<Integer> resultLD) {
-            new DeleteAsyncTask(dao, resultLD).execute(data);
-    }
-
-    private class DeleteAsyncTask extends AsyncTask<D,Void,Integer> {
+     private class DeleteAsyncTask extends AsyncTask<D,Void,Integer> {
 
         private _Dao dao;
         private MutableLiveData<Integer> resultLD;
@@ -111,18 +156,6 @@ public class Data<D> {
                 resultLD.postValue(result);
             }
         }
-    }
-
-    public void getAllData( MutableLiveData<List<D>> resultLD ) {
-        new getAllDataAsyncTask(dao, resultLD).execute();
-    }
-
-    public void getViaQuery(String query, MutableLiveData<List<D>> resultLD) {
-        new getViaQueryAsyncTask(dao, resultLD).execute(query);
-    }
-    
-    public void findDataById(Integer id, MutableLiveData<List<D>> resultLD) {
-        new findDataByIdAsyncTask(dao, resultLD).execute(id);
     }
 
     private class findDataByIdAsyncTask extends AsyncTask< Integer,Void,List<D> >{
@@ -194,6 +227,30 @@ public class Data<D> {
 
         @Override
         protected void onPostExecute(List<D>  result) {
+            super.onPostExecute(result);
+            if (resultLD!=null) {
+                resultLD.postValue(result);
+            }
+        }
+    }
+
+    private class deleteAllDataAsyncTask extends AsyncTask< Void,Void,Integer >{
+
+        private _Dao dao;
+        private MutableLiveData<Integer > resultLD;
+
+        deleteAllDataAsyncTask(_Dao dao, MutableLiveData<Integer> resultLD ) {
+            this.dao = dao;
+            this.resultLD = resultLD;
+        }
+
+        @Override
+        protected Integer doInBackground ( Void ...params){
+            return dao.deleteAll();
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
             if (resultLD!=null) {
                 resultLD.postValue(result);

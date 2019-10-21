@@ -1,8 +1,8 @@
-package com.dev4lazy.pricecollector.csv2pojo;
+package com.dev4lazy.pricecollector.remote_data;
 
 import java.util.ArrayList;
 
-import static com.dev4lazy.pricecollector.csv2pojo.CsvUtils.CSV_SEPARATOR;
+import static com.dev4lazy.pricecollector.remote_data.CsvUtils.CSV_SEPARATOR;
 
 
 public class CsvDecoder {

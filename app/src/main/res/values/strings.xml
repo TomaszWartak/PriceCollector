@@ -4,6 +4,7 @@
     <!-- wspólne -->
     <string name="caption_ok">OK</string>
     <string name="caption_cancel">Anuluj</string>
+    <string name="question_close_app">Czy chcesz zamknąć aplikację?</string>
 
     <!-- ??? -->
     <string name="departments_structure_description">struktura działowa</string>
@@ -13,7 +14,6 @@
     <string name="test_setup_preferences_fragment">PREFERENCES SCREEN</string>
     <string name="test_login_fragment_label">LOGIN FRAGMENT</string>
     <string name="test_main_fragment_label">MAIN FRAGMENT</string>
-    <string name="question_close_app">Czy chcesz zamknąć aplikację?</string>
 
     <!-- for loging screen -->
     <string name="caption_login_button">Loguj</string>
@@ -52,7 +52,39 @@
     <string name="zipcode_null">kod pocztowy = null</string>
     <string name="enter_zipcode">Podaj kod pocztowy</string>
 
+    <!-- departments -->
+    <string name="r06_department_name">Serwis</string>
+    <string name="r10_department_name">Metalowy</string>
+    <string name="r20_department_name">Narzędzia</string>
+    <string name="r30_department_name">Drewno</string>
+    <string name="r40_department_name">Pokrycia podłogowe</string>
+    <string name="r50_department_name">Sanitarny</string>
+    <string name="r60_department_name">Ogród</string>
+    <string name="r70_department_name">Dekoracje</string>
+    <string name="r80_department_name">Elektryczny</string>
+    <string name="r90_department_name">Budowalany</string>
+    <string name="r06_department_symbol">R-06</string>
+    <string name="r10_department_symbol">R-10</string>
+    <string name="r20_department_symbol">R-20</string>
+    <string name="r30_department_symbol">R-30</string>
+    <string name="r40_department_symbol">R-40</string>
+    <string name="r50_department_symbol">R-50</string>
+    <string name="r60_department_symbol">R-60</string>
+    <string name="r70_department_symbol">R-70</string>
+    <string name="r80_department_symbol">R-80</string>
+    <string name="r90_department_symbol">R-90</string>
+
+    <!-- sectors -->
+    <string name="sbud_sector_name">Budujesz</string>
+    <string name="srem_sector_name">Remontujesz</string>
+    <string name="surz_sector_name">Urządzasz</string>
+    <string name="sdek_sector_name">Dekorujesz</string>
+    <string name="sogr_sector_name">Ogród</string>
+    <string name="sok_sector_name">Obsługi Klienta</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 
 </resources>

@@ -1,32 +1,33 @@
-package com.dev4lazy.pricecollector.csv2pojo;
+package com.dev4lazy.pricecollector.remote_data;
 
 import android.Manifest;
-import android.app.Activity;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
+import com.dev4lazy.pricecollector.model.RemoteDataRepository;
 import com.dev4lazy.pricecollector.utils.PermissionsUtils;
 
-public class Converter {
-    private static final String TAG = "Converter";
+public class RemoteDatabaseInitializer {
+    private static final String TAG = "RemoteDatabaseInitializer";
 
     public static final int MY_PERMISSIONS_REQUEST_STORAGE = 0;
 
+    private Csv2EanCodeConverter csv2EanCodeConverter;
     private Csv2AnalysisRowConverter csv2AnalysisRowConverter;
 
     // todo usuń private Activity hostActivity = null;
     private Fragment hostFragment = null;
 
     /* todo usuń Konstruktor dla użycia Convertera w aktywności
-    public Converter(Activity activity) {
+    public RemoteDatabaseInitializer(Activity activity) {
         hostActivity = activity;
     }
 
      */
 
     // Konstruktor dla użycia Convertera we fragmencie
-    public Converter(Fragment fragment) {
+    public RemoteDatabaseInitializer(Fragment fragment) {
         hostFragment = fragment;
     }
 
@@ -54,11 +55,15 @@ public class Converter {
     }
 
     private void prepare() {
-        csv2AnalysisRowConverter = new Csv2AnalysisRowConverter("dane-test1000.csv");
+        RemoteDataRepository.getInstance().clearDatabase();
+        csv2AnalysisRowConverter = new Csv2AnalysisRowConverter();
+        csv2EanCodeConverter = new Csv2EanCodeConverter();
     }
 
     private void convert() {
         csv2AnalysisRowConverter.makeAnalisisRowList();
         csv2AnalysisRowConverter.insertAllAnalysisRows();
+        csv2EanCodeConverter.makeEanCodeList();
+        csv2EanCodeConverter.insertAllEanCodes();
     }
 }

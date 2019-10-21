@@ -1,15 +1,24 @@
-package com.dev4lazy.pricecollector.csv2pojo;
+package com.dev4lazy.pricecollector.remote_data;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(
-        tableName = "analysis_rows" // w bazie zdalnej nie ma takiej tabeli
+        tableName = "analysis_rows", // w bazie zdalnej nie ma takiej tabeli
+        indices = {
+            @Index(
+                name = "index_analysis_rows_articleCode",
+                value = "articleCode",
+                unique = true
+            )
+        }
 )
 // todo
 //  sprawdź dla dużej ilości wierszy (1000?) jaki wpływ na czas wyświetlenie (będzie jakieś wyświetlanie?),
 //  będzie miał dodanie indeksu po kodzie casto
-public class AnalysisRow { //[dbo].[PRC_CompetitorPrice]
+public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
 
     /*
     [SKU_Id] [int] NOT NULL,
@@ -33,7 +42,13 @@ public class AnalysisRow { //[dbo].[PRC_CompetitorPrice]
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private Integer articleCode;
+    // todo ???
+    // do migracji remote trzeba dodać:
+    // - ? tabelę artykułów - bardziej jakby OwnArticleInfo
+    // - ? Tutaj pole łączące z tabelą OwnArticleInfo
+    // Nastepnie trzeba ZROBIĆ JOINA RemoteAnalysisRow z OwnArticleInfo do wyświetlania w testowym recyclerze
+    // I wreszcie kopiowanie wszystkiego do LOcal podczas inicjacji analizy...
+    private Integer articleCode; // kod casto
     private Integer store;
     private String articleName;
     private Double articleStorePrice;
@@ -153,77 +168,77 @@ public class AnalysisRow { //[dbo].[PRC_CompetitorPrice]
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AnalysisRow)) return false;
-        AnalysisRow that = (AnalysisRow) o;
+        if (!(o instanceof RemoteAnalysisRow)) return false;
+        RemoteAnalysisRow that = (RemoteAnalysisRow) o;
         return id == that.id;
     }
 
     public static class AnalysisRowBuilder {
 
-        private AnalysisRow analysisRow = new AnalysisRow();
+        private RemoteAnalysisRow remoteAnalysisRow = new RemoteAnalysisRow();
 
         public AnalysisRowBuilder store(Integer store ){
-            analysisRow.store = store;
+            remoteAnalysisRow.store = store;
             return this;
         }
 
         public AnalysisRowBuilder articleCode(Integer articleCode ){
-            analysisRow.articleCode = articleCode;
+            remoteAnalysisRow.articleCode = articleCode;
             return this;
         }
 
         public AnalysisRowBuilder articleName(String articleName){
-            analysisRow.articleName = articleName;
+            remoteAnalysisRow.articleName = articleName;
             return this;
         }
 
         public AnalysisRowBuilder articleStorePrice(Double articleStorePrice ){
-            analysisRow.articleStorePrice = articleStorePrice;
+            remoteAnalysisRow.articleStorePrice = articleStorePrice;
             return this;
         }
 
         public AnalysisRowBuilder articleRefPrice(Double articleRefPrice ){
-            analysisRow.articleRefPrice = articleRefPrice;
+            remoteAnalysisRow.articleRefPrice = articleRefPrice;
             return this;
         }
 
         public AnalysisRowBuilder articleNewPrice(Double articleNewPrice ){
-            analysisRow.articleNewPrice = articleNewPrice;
+            remoteAnalysisRow.articleNewPrice = articleNewPrice;
             return this;
         }
 
         public AnalysisRowBuilder articleNewMarginPercent(Double articleNewMarginPercent ){
-            analysisRow.articleNewMarginPercent = articleNewMarginPercent;
+            remoteAnalysisRow.articleNewMarginPercent = articleNewMarginPercent;
             return this;
         }
 
         public AnalysisRowBuilder articleLmPrice(Double articleLmPrice ){
-            analysisRow.articleLmPrice = articleLmPrice;
+            remoteAnalysisRow.articleLmPrice = articleLmPrice;
             return this;
         }
 
         public AnalysisRowBuilder artlcleObiPrice(Double articleObiPrice ){
-            analysisRow.articleObiPrice = articleObiPrice;
+            remoteAnalysisRow.articleObiPrice = articleObiPrice;
             return this;
         }
 
         public AnalysisRowBuilder artlcleBricomanPrice(Double articleBricomanPrice ){
-            analysisRow.articleBricomanPrice = articleBricomanPrice;
+            remoteAnalysisRow.articleBricomanPrice = articleBricomanPrice;
             return this;
         }
 
         public AnalysisRowBuilder articleLocalCompetitor1Price(Double articleLocalCompetitor1Price ){
-            analysisRow.articleLocalCompetitor1Price = articleLocalCompetitor1Price;
+            remoteAnalysisRow.articleLocalCompetitor1Price = articleLocalCompetitor1Price;
             return this;
         }
 
         public AnalysisRowBuilder articleLocalCompetitor2Price(Double articleLocalCompetitor2Price ){
-            analysisRow.articleLocalCompetitor2Price = articleLocalCompetitor2Price;
+            remoteAnalysisRow.articleLocalCompetitor2Price = articleLocalCompetitor2Price;
             return this;
         }
 
-        public AnalysisRow build() {
-            return analysisRow;
+        public RemoteAnalysisRow build() {
+            return remoteAnalysisRow;
         }
     }
 }

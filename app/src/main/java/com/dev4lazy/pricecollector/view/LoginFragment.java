@@ -5,7 +5,11 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelStore;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -15,14 +19,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dev4lazy.pricecollector.R;
-//import com.dev4lazy.pricecollector.model.logic.auth.FirebaseAuthSupport;
 import com.dev4lazy.pricecollector.model.logic.User;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.model.utils.DataInitializer;
+import com.dev4lazy.pricecollector.remote_data.RemoteUser;
 import com.dev4lazy.pricecollector.utils.AppHandle;
-import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
-//mport com.dev4lazy.pricecollector.model.logic.OwnServerAuthServices;
+
+import java.util.List;
+
+import static com.dev4lazy.pricecollector.utils.AppPreferences.COUNTRIES_INITIALIZED;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,8 +54,11 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         // Inflate the layout for this fragment
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         View view = inflater.inflate(R.layout.login_fragment, container, false);
+        view.findViewById(R.id.login_fragment_layout).setOnClickListener((View v) -> {
+            Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_testActionsFragment2);
+        });
         view.findViewById(R.id.login_button).setOnClickListener((View v) -> {
-            logIn(v);
+            logIn(view);
         });
         return view;
     }
@@ -58,12 +67,14 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         EditText editTextUserLogin = view.findViewById( R.id.userlogin_edit_text);
         EditText editTextUserPassword = view.findViewById(R.id.password_edit_text);
         // todo zrób tu test jak login i hasło przeżywają bez viewmodelu i z viewmodelem
-        userViewModel.setUser(new User());
-        userViewModel.getUser().setLogin(editTextUserLogin.getText().toString());
+        User user = new User();
+        /**/user.setLogin(editTextUserLogin.getText().toString());
+        user.setLogin("nowak_j");
+        userViewModel.setUser(user);
         AuthSupport authSupport = AppHandle.getHandle().getAuthSupport();
         /**/authSupport.addCredential("USER_ID", "nowak_j" );
-        /**/authSupport.addCredential("USER_PASSWORD", "qwerty");
-        //authSupport.addCredential("USER_ID", userViewModel.getUser().getLogin() );
+        /**/authSupport.addCredential("USER_PASSWORD", "nowak");
+        //authSupport.addCredential("USER_ID", user.getLogin() );
         //authSupport.addCredential("USER_PASSWORD", editTextUserPassword.getText().toString());
         authSupport.signIn();
     }
@@ -75,22 +86,45 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
 
     @Override
     public void callIfSucessful() {
-        AppHandle.getHandle().getSettings().setUser(userViewModel.getUser());
-        userViewModel.clear();
-        // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
-        if (!AppHandle.getHandle().getPrefs().getLocalDatabaseInitialized()) {
-            DataInitializer.getInstance().initializeLocalDatabase();
-        }
-        Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_mainFragment);
+        // todo RemoteUser remoteUser = new RemoteUser();
+        // todo remoteUser.setLogin(userViewModel.getUser().getLogin());
+
+        // todo usuń Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_mainFragment);
+        MutableLiveData<List<RemoteUser>> findRemoteUserResult = new MutableLiveData<>();
+        Observer<List<RemoteUser>>findRemoteUserResultObserver = new Observer<List<RemoteUser>>() {
+            @Override
+            public void onChanged(List<RemoteUser> remoteUsers ) {
+                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
+                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
+                findRemoteUserResult.removeObserver(this); // this = observer...
+                if ( (!remoteUsers.isEmpty()) && (remoteUsers.get(0)!=null) ) {
+                    RemoteUser remoteUser = remoteUsers.get(0);
+                    AppHandle.getHandle().getSettings().setUser(new User(remoteUser));
+                    // userViewModel.clear(); todo nie ma takiej metody...
+                    // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
+                    if (!AppHandle.getHandle().getPrefs().getLocalDatabaseInitialized()) {
+                        DataInitializer.getInstance().initializeLocalDatabase();
+                    }
+                    Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_mainFragment);
+                } else {
+                    Toast.makeText(
+                        getContext(),
+                        // todo
+                            "coś nie bangla... Brak użytkowników",
+                        Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        findRemoteUserResult.observeForever(findRemoteUserResultObserver);
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().findUserByLogin(userViewModel.getUser().getLogin(), findRemoteUserResult );
     }
 
     @Override
     public void callIfUnsucessful() {
             // todo kumnuikat jakiś :-)
         Toast.makeText(
-                getContext(),
-                "coś nie bangla...",
-                Toast.LENGTH_SHORT).show();
-
+            getContext(),
+            "coś nie bangla...",
+            Toast.LENGTH_SHORT).show();
     }
 }

@@ -11,9 +11,9 @@ public class UserViewModel extends AndroidViewModel {
 
     private User user;
 
-    public UserViewModel(@NonNull Application application, User user) {
+    public UserViewModel(@NonNull Application application /*, User user*/ ) {
         super(application);
-        this.user = user;
+        /*this.user = user; */
     }
 
     public User getUser() {

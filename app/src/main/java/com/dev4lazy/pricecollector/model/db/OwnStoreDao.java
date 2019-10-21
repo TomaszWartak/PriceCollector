@@ -19,6 +19,10 @@ import java.util.List;
 public interface OwnStoreDao extends _Dao<OwnStore> {
 
     @Override
+    @Query("SELECT COUNT(*) FROM own_stores")
+    Integer getNumberOf();
+
+    @Override
     @Query("DELETE FROM own_stores")
     int deleteAll();
 

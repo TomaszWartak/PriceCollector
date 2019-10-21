@@ -18,6 +18,11 @@ import java.util.List;
 
 @Dao
 public interface AnalysisCompetitorSlotDao extends _Dao<AnalysisCompetitorSlot> {
+
+    @Override
+    @Query("SELECT COUNT(*) FROM competitor_slots")
+    Integer getNumberOf();
+
     @Override
     @Query("DELETE FROM competitor_slots")
     int deleteAll();

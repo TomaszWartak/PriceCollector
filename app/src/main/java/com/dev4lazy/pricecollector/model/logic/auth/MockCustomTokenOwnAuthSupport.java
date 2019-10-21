@@ -36,6 +36,7 @@ public class MockCustomTokenOwnAuthSupport
         mockCustomTokenOwnAuthServices = new MockCustomTokenOwnAuthServices();
         mockCustomTokenOwnAuthServices.bindToMockAuthService();
         mockCustomTokenOwnAuthServices.setOnReceiveCallback(this);
+        // todo tutaj można podmienić rodzaj autentykacji Firebase
         firebaseAuthServices = CustomTokenFirebaseAuthSupport.getInstance();
         firebaseAuthServices.setLoginCallbackService(this);
     }
@@ -45,19 +46,12 @@ public class MockCustomTokenOwnAuthSupport
 // wysyła dane logowania do własnego serwera logowania
     @Override
     public void signIn() {
-        String userId = getCredential("USER_ID");
-        String userPassword = getCredential("USER_PASSWORD");
-        // todo !!!
-        // na potrzeby mockowania serwera jeśli w haśle jest "x" lub "X" to serwer odrzuca
-        if (userPassword.contains("x") || (userPassword.contains("X"))) {
-            //todo customToken = null;
-            callIfUnsucessful();
-            return;
-        }
         if (!mockCustomTokenOwnAuthServices.isBoundToMockAuthService()) {
             callIfUnsucessful();
             return;
         }
+        String userId = getCredential("USER_ID");
+        String userPassword = getCredential("USER_PASSWORD");
         Bundle bundle = new Bundle();
         bundle.putString("userId", userId);
         bundle.putString("password", userPassword);
@@ -108,13 +102,17 @@ public class MockCustomTokenOwnAuthSupport
     }
 
  // ----------------------------------------------------------
-// Implementacja metody interfejsu calbaku odbioru danych z mocka serwera logowania
+// Implementacja metody interfejsu callbaku odbioru danych z mocka serwera logowania
 // MockCustomTokenOwnAuthServices.OnReceiveCallback
 
     @Override
-    public void callIfDataReceived(String token) {
-        firebaseAuthServices.addCredential("TOKEN", token );
-        firebaseAuthServices.signIn();
+    public void callIfDataReceived(boolean authenticated, String token) {
+        if (authenticated) {
+            firebaseAuthServices.addCredential("TOKEN", token);
+            firebaseAuthServices.signIn();
+        } else {
+            callIfUnsucessful();
+        }
     }
 
 }

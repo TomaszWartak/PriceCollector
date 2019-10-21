@@ -1,14 +1,20 @@
 package com.dev4lazy.pricecollector.model.utils;
 
+import android.content.res.Resources;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.LocalDataRepository;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.model.entities.Store;
+import com.dev4lazy.pricecollector.remote_data.RemoteDepartment;
+import com.dev4lazy.pricecollector.remote_data.RemoteSector;
+import com.dev4lazy.pricecollector.remote_data.RemoteUser;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 import java.util.ArrayList;
@@ -43,6 +49,14 @@ public class DataInitializer {
     private final int LOCAL_COMPETITOR_INDEX = 4;
 
     private static DataInitializer instance = new DataInitializer();
+
+    // Użytkownicy w mocku zdalnej bazy danych
+    private List<RemoteUser> remoteUsers = null;
+
+    private List<RemoteDepartment> remoteDepartments = null;
+
+    private List<RemoteSector> remoteSectors = null;
+
     // Kraje
     // (0) - "Kraj własny"
     private List<Country> countries = null;
@@ -87,7 +101,151 @@ public class DataInitializer {
         return instance;
     }
 
-    public void ClearLocalDatabase() {
+//--------------------------------------------------------------------------
+// Remote Database
+
+    public void clearRemoteDatabase() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().clearDatabase();
+    }
+
+    public void initializeRemoteUsers() {
+        /* niestety RemoteDatabaseInitializer może być wywołany we Fragmencie lub Aktywności,
+            więc nie mogę go tu wywołać, a co z atym idzie nie mogę zrobić
+            metody initialieRemoteDatabase()
+            new RemoteDatabaseInitializer(this).doConversion();
+         */
+        prepareRemoteUsers();
+        populateRemoteUsers();
+    }
+
+    private void prepareRemoteUsers() {
+        Resources resources = AppHandle.getHandle().getResources();
+        remoteUsers = new ArrayList<>();
+        RemoteUser remoteUser = new RemoteUser();
+        remoteUser.setLogin("nowak_j");
+        remoteUser.setName("Jacek Nowak");
+        remoteUser.setOwnStoreNumber("8033");
+        remoteUser.setDepartmentSymbol(resources.getString(R.string.r70_department_symbol));
+        remoteUser.setSectorName(resources.getString(R.string.sdek_sector_name));
+        remoteUsers.add( remoteUser );
+        remoteUser = new RemoteUser();
+        remoteUser.setLogin("rutkowski_p");
+        remoteUser.setName("Piotr Rutkowski");
+        remoteUser.setOwnStoreNumber("8007");
+        remoteUser.setDepartmentSymbol(resources.getString(R.string.r90_department_symbol));
+        remoteUser.setSectorName(resources.getString(R.string.sbud_sector_name));
+        remoteUsers.add( remoteUser );
+        remoteUser = new RemoteUser();
+        remoteUser.setLogin("sroka_p");
+        remoteUser.setName("Piotr Sroka");
+        remoteUser.setOwnStoreNumber("8015");
+        remoteUser.setDepartmentSymbol(resources.getString(R.string.r20_department_symbol));
+        remoteUser.setSectorName(resources.getString(R.string.srem_sector_name));
+        remoteUsers.add( remoteUser );
+    }
+
+    private void populateRemoteUsers() {
+        for (RemoteUser remoteUser : remoteUsers ) {
+            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertUser( remoteUser, null );
+        }
+    }
+
+    public void clearRemoteUsers() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllUsers( null );
+    }
+
+    public void prepareRemoteDepartments() {
+        Resources resources = AppHandle.getHandle().getResources();
+        remoteDepartments = new ArrayList<>();
+        RemoteDepartment remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r06_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r06_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r10_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r10_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r20_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r20_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r30_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r30_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r40_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r40_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r50_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r50_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r60_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r60_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r70_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r70_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r80_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r80_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r90_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r90_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+    }
+    
+    private void populateRemoteDepartments() {
+        for (RemoteDepartment remoteDepartment : remoteDepartments) {
+            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertDepartment( remoteDepartment, null );
+        }
+    }
+    
+    private void clearRemoteDepartments() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllDepartments( null );
+    }
+
+    public void prepareRemoteSectors() {
+        Resources resources = AppHandle.getHandle().getResources();
+        remoteSectors = new ArrayList<>();
+        RemoteSector remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.sbud_sector_name));
+        remoteSectors.add(remoteSector);
+        remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.srem_sector_name));
+        remoteSectors.add(remoteSector);
+        remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.surz_sector_name));
+        remoteSectors.add(remoteSector);
+        remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.sdek_sector_name));
+        remoteSectors.add(remoteSector);
+        remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.sogr_sector_name));
+        remoteSectors.add(remoteSector);
+        remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.sok_sector_name));
+        remoteSectors.add(remoteSector);
+    }
+
+    private void populateRemoteSectors() {
+        for (RemoteSector remoteSector : remoteSectors) {
+            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertSector( remoteSector, null );
+        }
+    }
+
+    private void clearRemoteSectors() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllSectors( null );
+    }
+
+//--------------------------------------------------------------------------
+// Local Database
+
+    public void clearLocalDatabase() {
         AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(null);
         // todo to niżej przeniósłbym do AppSettings - czyli warstwę wyżej
         //  inicjalizacja bazy lokalnej -> setLocalDatabaseNotInitialized()
@@ -111,34 +269,34 @@ public class DataInitializer {
         int initalisationStage = AppHandle.getHandle().getPrefs().getInitialisationStage();
         switch (initalisationStage) {
             case LOCAL_DATA_NOT_INITIALIZED:
-                initialize();
+                initializeLocalData();
                 break;
             case COUNTRIES_INITIALIZED:
-                prepareData();
+                prepareLocalData();
                 initializeCompanies();
                 break;
             case COMPANIES_INITIALIZED:
-                prepareData();
+                prepareLocalData();
                 initializeOwnStores();
                 break;
             case OWN_STORES_INITIALIZED:
-                prepareData();
+                prepareLocalData();
                 initializeObiStores();
                 break;
             case OBI_STORES_INITIALIZED:
-                prepareData();
+                prepareLocalData();
                 initializeLMStores();
                 break;
             case LM_STORES_INITIALIZED:
-                prepareData();
+                prepareLocalData();
                 initializeBricomanStores();
                 break;
             case BRICOMAN_STORES_INITIALIZED:
-                prepareData();
+                prepareLocalData();
                 initializeLocalCompetitorStores();
                 break;
             case LOCAL_COMPETITORS_STORES_INITIALIZED:
-                prepareData();
+                prepareLocalData();
                 initializeCompetitorSlotNr1();
                 break;
             case COMPETITORS_SLOTS_INITIALIZED:
@@ -148,15 +306,15 @@ public class DataInitializer {
     }
 
 // ---------------------------------------------------------------------------
-//  proceduta inicjalizacji
-    private void initialize() {
-        prepareData();
+//  proceduta inicjalizacji danych lokalnych
+    private void initializeLocalData() {
+        prepareLocalData();
         startInitialisationChain();
     }
 
 // ---------------------------------------------------------------------------
 // Przygotowanie danych
-    private void prepareData() {
+    private void prepareLocalData() {
         prepareCountries();
         prepareCompanies();
         prepareOwnStores();
@@ -353,6 +511,7 @@ public class DataInitializer {
 
 // ---------------------------------------------------------------------------
 // Zapis danych
+
 
     private void startInitialisationChain() {
         initalizeCountries();
@@ -670,7 +829,7 @@ public class DataInitializer {
     private class StartCallback implements LocalDataRepository.AfterDatabaseClearedCallback {
         @Override
         public void call() {
-            initialize();
+            initializeLocalData();
         }
     }
 }

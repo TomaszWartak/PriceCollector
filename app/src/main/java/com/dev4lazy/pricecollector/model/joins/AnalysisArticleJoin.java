@@ -1,26 +1,75 @@
 package com.dev4lazy.pricecollector.model.joins;
 
+import androidx.room.ColumnInfo;
+
 public class AnalysisArticleJoin {
-    private int id; // from AnalysisArticle.
+    @ColumnInfo(name = "id")
+    private int analysisArticleId; // from AnalysisArticle.
+    @ColumnInfo(name = "analysis_id")
     private int analysisId; // from AnalysisArticle.
-    private int article_Id; // from AnalysisArticle.
+    @ColumnInfo(name = "article_id")
+    private int articleId; // from AnalysisArticle.
+    @ColumnInfo(name = "article_store_price")
+    private Double articleStorePrice; // from AnalysisArticle.
+    @ColumnInfo(name = "article_ref_price")
+    private Double articleRefPrice; // from AnalysisArticle.
+    @ColumnInfo(name = "article_new_price")
+    private Double articleNewPrice; // from AnalysisArticle.
+    @ColumnInfo(name = "competitor_store_id")
     private int competitorStoreId; // from AnalysisArticle.
+    @ColumnInfo(name = "competitor_store_price")
     private Double competitorStorePrice; // from AnalysisArticle.
+    @ColumnInfo(name = "reference_article_id")
     private int referenceArticleId; // from AnalysisArticle.
     private String comments; // from AnalysisArticle.
-
-    private String articleName; // from Article.name by AnalysisArticle.article_Id
-    private String ownCode; // kod casto from OwnArticleInfo. by AnalysisArticle.article_Id
-    private String eanCode; // from OwnArticleInfo. by AnalysisArticle.article_Id
+    @ColumnInfo(name = "name")
+    private String articleName; // from Article.name by AnalysisArticle.articleId
+    private String ownCode; // kod casto from OwnArticleInfo. by AnalysisArticle.articleId
+    @ColumnInfo(name = "value")
+    private String eanCode; // from OwnArticleInfo. by AnalysisArticle.articleId
     private String referenceArticleName; // from Article. by AnalysisArticle.referenceArticleId
     private String referenceArticleEan; // from Article. by AnalysisArticle.referenceArticleId
 
-    public int getId() {
-        return id;
+    /*
+    QUERY:
+    +id,
+    analysis_id,
+    article_id,
+    competitor_store_id,
+    competitor_store_price,
+    +article_store_price,
+    +article_ref_price,
+    +article_new_price,
+    reference_article_id,
+    comments,
+    name,
+    ownCode,
+    -id,
+    -remote_id,
+    -value,
+    article_id.
+
+    Fields in com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin:
+    -analysis_articles.id,
+    analysis_id,
+    article_id,
+    competitor_store_id,
+    competitor_store_price,
+    reference_article_id,
+    comments,
+    name,
+    ownCode,
+    -eanCode,
+    -referenceArticleName,
+    -referenceArticleEan
+     */
+
+    public int getAnalysisArticleId() {
+        return analysisArticleId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAnalysisArticleId(int id) {
+        this.analysisArticleId = id;
     }
 
     public int getAnalysisId() {
@@ -31,12 +80,36 @@ public class AnalysisArticleJoin {
         this.analysisId = analysisId;
     }
 
-    public int getArticle_Id() {
-        return article_Id;
+    public int getArticleId() {
+        return articleId;
     }
 
-    public void setArticle_Id(int article_Id) {
-        this.article_Id = article_Id;
+    public void setArticleId(int article_Id) {
+        this.articleId = article_Id;
+    }
+
+    public Double getArticleStorePrice() {
+        return articleStorePrice;
+    }
+
+    public void setArticleStorePrice(Double articleStorePrice) {
+        this.articleStorePrice = articleStorePrice;
+    }
+
+    public Double getArticleRefPrice() {
+        return articleRefPrice;
+    }
+
+    public void setArticleRefPrice(Double articleRefPrice) {
+        this.articleRefPrice = articleRefPrice;
+    }
+
+    public Double getArticleNewPrice() {
+        return articleNewPrice;
+    }
+
+    public void setArticleNewPrice(Double articleNewPrice) {
+        this.articleNewPrice = articleNewPrice;
     }
 
     public int getCompetitorStoreId() {

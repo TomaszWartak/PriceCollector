@@ -12,6 +12,7 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.dev4lazy.pricecollector.model.entities.Analysis;
+import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Article;
 import com.dev4lazy.pricecollector.model.entities.Company;
@@ -28,12 +29,14 @@ import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.model.entities.UOProject;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
+import com.dev4lazy.pricecollector.utils.AppHandle;
 
 @Database(
-    version = 4,
+    version = 5,
     entities = {
         AnalysisCompetitorSlot.class,
         Analysis.class,
+        AnalysisArticle.class,
         Article.class,
         Company.class,
         Country.class,
@@ -64,8 +67,6 @@ public abstract class LocalDatabase extends RoomDatabase {
 
     // Dane odpowiadające danym bazy zdalnej
     public abstract AnalysisDao analysisDao();
-    public abstract ArticleDao articleDao();
-    public abstract CompanyDao companyDao();
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -73,6 +74,8 @@ public abstract class LocalDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE own_stores ADD COLUMN name TEXT");
         }
     };
+    public abstract ArticleDao articleDao();
+    public abstract CompanyDao companyDao();
     public abstract DepartmentDao departmentDao();
     public abstract EanCodeDao eanCodeDao();
     public abstract FamilyDao familyDao();
@@ -85,6 +88,23 @@ public abstract class LocalDatabase extends RoomDatabase {
     public abstract UOProjectDao uoProjectDao();
 
     private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS analysis_articles (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "analysis_id INTEGER, " +
+                    "article_id INTEGER, " +
+                    "competitor_store_id INTEGER, " +
+                    "competitor_store_price REAL, " +
+                    "article_store_price REAL, " +
+                    "article_ref_price REAL, " +
+                    "article_new_price REAL, " +
+                    "reference_article_id INTEGER, " +
+                    "comments TEXT  )" );
+        }
+    };
+
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -99,6 +119,7 @@ public abstract class LocalDatabase extends RoomDatabase {
                     */
         }
     };
+
     static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -107,8 +128,9 @@ public abstract class LocalDatabase extends RoomDatabase {
         }
     };
 
-    public static LocalDatabase getInstance(final Context context) {
+    public static LocalDatabase getInstance() {
         if (instance == null) {
+            Context context = AppHandle.getHandle().getApplicationContext();
             synchronized (LocalDatabase.class) {
                 if (instance == null) {
                     instance = Room.databaseBuilder(context.getApplicationContext(),
@@ -117,16 +139,21 @@ public abstract class LocalDatabase extends RoomDatabase {
                             // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to od komentuj .falback...
                             // i za komentuj .addMigrations
                             //.fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
+                            /**/
                             .addMigrations(MIGRATION_1_2)
                             .addMigrations(MIGRATION_2_3)
                             .addMigrations(MIGRATION_3_4)
+                            .addMigrations(MIGRATION_4_5)
+                            /**/
                             .build();
-                    instance.updateDatabaseCreated(context.getApplicationContext());
+                    instance.updateDatabaseCreated(context);
                 }
             }
         }
         return instance;
     }
+
+    public abstract AnalysisArticleDao analysisArticleDao();
 
     public abstract CountryDao countryDao();
 

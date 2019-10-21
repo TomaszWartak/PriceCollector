@@ -102,15 +102,9 @@ public class MockCustomTokenOwnAuthServices /* todo implements MockCustomTokenOw
     }
 
 // ----------------------------------------------------------
-// obsługa odbiornika
-    private class MockAuthServiceBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("DATA_FROM_MOCKAUTH_READY")) {
-                customToken = intent.getStringExtra("TOKEN");
-                onReceiveCallback.callIfDataReceived(customToken);
-            }
-        }
+// callback do obsługi onReceive() odbiornika
+    interface OnReceiveCallback {
+        void callIfDataReceived(boolean authenticated, String token);
     }
 
     private void registerMockAuthServiceBroadcastReceiver() {
@@ -125,9 +119,19 @@ public class MockCustomTokenOwnAuthServices /* todo implements MockCustomTokenOw
     }
 
 // ----------------------------------------------------------
-// callback do obsługi onReceive() odbiornika
-    interface OnReceiveCallback {
-        void callIfDataReceived(String token);
+// obsługa odbiornika
+    private class MockAuthServiceBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("DATA_FROM_MOCKAUTH_READY")) {
+                if (intent.getBooleanExtra("AUTHENTICATED", false )) {
+                    customToken = intent.getStringExtra("TOKEN");
+                    onReceiveCallback.callIfDataReceived(true, customToken );
+                } else {
+                    onReceiveCallback.callIfDataReceived(false,"" );
+                }
+            }
+        }
     }
 
     void setOnReceiveCallback( OnReceiveCallback onReceiveCallback) {

@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_logingFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_logingFragment_to_testActionsFragment2"
+            app:destination="@id/testActionsFragment2" />
     </fragment>
 
     <fragment
@@ -89,6 +92,9 @@
         <action
             android:id="@+id/action_testActionsFragment_to_countriesListFragment"
             app:destination="@id/countriesListFragment" />
+        <action
+            android:id="@+id/action_testActionsFragment_to_remoteAnalysisRowFragment"
+            app:destination="@id/remoteAnalysisRowFragment" />
     </fragment>
     <fragment
         android:id="@+id/analysisCompetitorsFragment"
@@ -112,6 +118,25 @@
         android:name="com.dev4lazy.pricecollector.view.AnalysisFragment"
         android:label="analysis_fragment"
         tools:layout="@layout/analysis_fragment" />
+    <fragment
+        android:id="@+id/testActionsFragment2"
+        android:name="com.dev4lazy.pricecollector.view.TestActionsFragment2"
+        android:label="test_actions_fragment2"
+        tools:layout="@layout/test_actions_fragment2" >
+        <action
+            android:id="@+id/action_testActionsFragment2_to_remoteUsersListFragment"
+            app:destination="@id/remoteUsersListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/remoteUsersListFragment"
+        android:name="com.dev4lazy.pricecollector.remote_view.RemoteUsersListFragment"
+        android:label="remote_users_list_fragment"
+        tools:layout="@layout/remote_users_list_fragment" />
+    <fragment
+        android:id="@+id/remoteAnalysisRowFragment"
+        android:name="com.dev4lazy.pricecollector.remote_view.RemoteAnalysisRowFragment"
+        android:label="test_analysis_row_fragment"
+        tools:layout="@layout/remote_analysis_row_fragment" />
     />
 
 </navigation>

@@ -20,6 +20,10 @@ import java.util.List;
 public interface CompanyDao extends _Dao<Company>{
 
     @Override
+    @Query("SELECT COUNT(*) FROM companies")
+    Integer getNumberOf();
+
+    @Override
     @Query("DELETE FROM companies")
     int deleteAll();
 

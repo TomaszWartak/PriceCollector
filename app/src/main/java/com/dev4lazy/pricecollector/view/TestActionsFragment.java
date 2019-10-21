@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.csv2pojo.AnalysisRowRepository;
-import com.dev4lazy.pricecollector.csv2pojo.AnalyzesDatabase;
-import com.dev4lazy.pricecollector.csv2pojo.Converter;
+import com.dev4lazy.pricecollector.remote_data.RemoteDatabaseInitializer;
 import com.dev4lazy.pricecollector.model.utils.DataInitializer;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
@@ -45,16 +43,21 @@ public class TestActionsFragment extends Fragment {
 
     private void setTestButtons(View view) {
         view.findViewById(R.id.button_load_remote).setOnClickListener((View v) -> {
-            new Converter(this).doConversion();
+            new RemoteDatabaseInitializer(this).doConversion();
+            DataInitializer.getInstance().initializeRemoteUsers();
         });
         view.findViewById(R.id.button_clear_remote).setOnClickListener((View v) -> {
-            AnalysisRowRepository.getInstance(AnalyzesDatabase.getInstance()).clearDatabase();
+            DataInitializer.getInstance().clearRemoteDatabase();
+            // todo usuń RemoteDataRepository.getInstance().clearDatabase();
+        });
+        view.findViewById(R.id.button_remote).setOnClickListener((View v) -> {
+            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_remoteAnalysisRowFragment);
         });
         view.findViewById(R.id.button_create_local).setOnClickListener((View v) -> {
             DataInitializer.getInstance().initializeLocalDatabase();
         });
         view.findViewById(R.id.button_clear_local).setOnClickListener((View v) -> {
-            DataInitializer.getInstance().ClearLocalDatabase();
+            DataInitializer.getInstance().clearLocalDatabase();
         });
         view.findViewById(R.id.button_countries).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_countriesListFragment);
@@ -81,8 +84,8 @@ public class TestActionsFragment extends Fragment {
             // Dostęp nadany
             switch (requestCode) {
                 // todo to usunąć, bo służy tylko do wygenerowania mocka bazy remote
-                case Converter.MY_PERMISSIONS_REQUEST_STORAGE: {
-                    new Converter(this).doConversion();
+                case RemoteDatabaseInitializer.MY_PERMISSIONS_REQUEST_STORAGE: {
+                    new RemoteDatabaseInitializer(this).doConversion();
                     break;
                 }
             }

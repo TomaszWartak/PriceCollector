@@ -18,7 +18,9 @@ import java.util.List;
 @Dao
 public interface _Dao<D> {
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    Integer getNumberOf();
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     Long insert(D data);
 
     @Update

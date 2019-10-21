@@ -18,11 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.csv2pojo.AnalysisRow;
-import com.dev4lazy.pricecollector.csv2pojo_recycler.AnalysisRowAdapter;
-import com.dev4lazy.pricecollector.csv2pojo_recycler.AnalysisRowDiffCalback;
-import com.dev4lazy.pricecollector.csv2pojo_recycler.AnalysisRowFragment;
-import com.dev4lazy.pricecollector.csv2pojo_recycler.AnalysisRowViewModel;
+import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
+import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleViewModel;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -32,9 +29,10 @@ import static android.widget.LinearLayout.VERTICAL;
 public class AnalysisFragment extends Fragment {
 
 
-    private AnalysisRowViewModel viewModel;
+    private AnalysisArticleViewModel viewModel;
     private RecyclerView recyclerView;
-    private AnalysisRowAdapter analysisRowAdapter;
+    private AnalysisArticleAdapter analysisArticleAdapter;
+
     public AnalysisFragment() {
         // Required empty public constructor
     }
@@ -52,25 +50,25 @@ public class AnalysisFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(AnalysisRowViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(AnalysisArticleViewModel.class);
         recyclerSetup();
         subscribeRecycler();
     }
 
     private void recyclerSetup() {
-        analysisRowAdapter = new AnalysisRowAdapter(new AnalysisRowDiffCalback());
+        analysisArticleAdapter = new AnalysisArticleAdapter(new AnalysisArticleDiffCalback());
         recyclerView = getView().findViewById(R.id.analysis_articles_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
-        recyclerView.setAdapter(analysisRowAdapter);
+        recyclerView.setAdapter(analysisArticleAdapter);
     }
 
     private void subscribeRecycler() {
-        viewModel.getAnalysisRowsLiveData().observe(this, new Observer<PagedList<AnalysisRow>>() {
+        viewModel.getAnalysisRowsLiveData().observe(this, new Observer<PagedList<AnalysisArticle>>() {
             @Override
-            public void onChanged(PagedList<AnalysisRow> analysisRows) {
-                if (!analysisRows.isEmpty()) {
-                    analysisRowAdapter.submitList(analysisRows);
+            public void onChanged(PagedList<AnalysisArticle> analysisArticles) {
+                if (!analysisArticles.isEmpty()) {
+                    analysisArticleAdapter.submitList(analysisArticles);
                 }
             }
         });

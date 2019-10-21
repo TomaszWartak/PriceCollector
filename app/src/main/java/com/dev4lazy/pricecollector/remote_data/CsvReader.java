@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.csv2pojo;
+package com.dev4lazy.pricecollector.remote_data;
 
 import android.os.Environment;
 
@@ -28,9 +28,12 @@ public class CsvReader {
             FileReader fileReader = new FileReader(directory + File.separator + csvFileName);
             reader = new BufferedReader(fileReader);
             // todo !!!! ta obsługa wyjątków to żenada... musisz coś lepszego wymyślić
-        } catch (FileNotFoundException ex0) {
+        } /* zakomentowałem, bo nie chciało się kompilować:
+        unreachable catch clause - thrown type FileNotFoundException has already been caught */
+        catch (FileNotFoundException ex0) {
             ex0.printStackTrace();
-        } catch (IOException ex1) {
+        } /**/
+        catch (IOException ex1) {
             ex1.printStackTrace();
             try {
                 if (reader != null) {

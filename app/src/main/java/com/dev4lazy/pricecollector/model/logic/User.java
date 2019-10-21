@@ -4,14 +4,27 @@ import com.dev4lazy.pricecollector.model.entities.Department;
 import com.dev4lazy.pricecollector.model.entities.Market;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.model.entities.Sector;
+import com.dev4lazy.pricecollector.remote_data.RemoteUser;
 
 public class User {
 
     private String login;
+    private String name;
+    private String email;
     private OwnStore ownStore;
     private Department department;
     private Market market;
     private Sector sector;
+
+    public User() {
+        login = "";
+    }
+
+    public User(RemoteUser remoteUser) {
+        login = remoteUser.getLogin();
+        name = remoteUser.getName();
+        email = remoteUser.getEmail();
+    }
 
     public String getLogin() {
         return login;
@@ -19,6 +32,22 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public OwnStore getOwnStore() {
