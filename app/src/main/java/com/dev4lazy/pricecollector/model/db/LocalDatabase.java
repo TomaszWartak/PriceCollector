@@ -60,13 +60,9 @@ import com.dev4lazy.pricecollector.utils.AppHandle;
 public abstract class LocalDatabase extends RoomDatabase {
 
     private final static String DATABASE_NAME = "price_collector_local_database";
+
     private static volatile LocalDatabase instance;
 
-    // Dane pomocnicze
-    public abstract AnalysisCompetitorSlotDao analysisCompetitorSlotDao();
-
-    // Dane odpowiadające danym bazy zdalnej
-    public abstract AnalysisDao analysisDao();
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -74,6 +70,10 @@ public abstract class LocalDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE own_stores ADD COLUMN name TEXT");
         }
     };
+
+    // Dane pomocnicze
+    public abstract AnalysisCompetitorSlotDao analysisCompetitorSlotDao();
+
     public abstract ArticleDao articleDao();
     public abstract CompanyDao companyDao();
     public abstract DepartmentDao departmentDao();
@@ -86,39 +86,37 @@ public abstract class LocalDatabase extends RoomDatabase {
     public abstract SectorDao sectorDao();
     public abstract StoreDao storeDao();
     public abstract UOProjectDao uoProjectDao();
-
-    private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
-    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS analysis_articles (" +
-                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "analysis_id INTEGER, " +
-                    "article_id INTEGER, " +
-                    "competitor_store_id INTEGER, " +
-                    "competitor_store_price REAL, " +
-                    "article_store_price REAL, " +
-                    "article_ref_price REAL, " +
-                    "article_new_price REAL, " +
-                    "reference_article_id INTEGER, " +
-                    "comments TEXT  )" );
-        }
-    };
-
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE IF NOT EXISTS competitor_slots (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "slot_nr INTEGER, " +
-                    "company_id INTEGER, " +
-                    "other_store_id INTEGER  )" );
+                    "slot_nr INTEGER NOT NULL, " +
+                    "company_id INTEGER NOT NULL, " +
+                    "other_store_id INTEGER NOT NULL )" );
                     /*
                     "other_store_id INTEGER, " +
                     "PRIMARY KEY(id))");
                     */
         }
     };
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS analysis_articles (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "analysis_id INTEGER NOT NULL, " +
+                    "article_id INTEGER NOT NULL, " +
+                    "competitor_store_id INTEGER NOT NULL, " +
+                    "competitor_store_price REAL, " +
+                    "article_store_price REAL, " +
+                    "article_ref_price REAL, " +
+                    "article_new_price REAL, " +
+                    "reference_article_id INTEGER NOT NULL, " +
+                    "comments TEXT  )" );
+        }
+    };
+    private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
 
     static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
@@ -127,6 +125,9 @@ public abstract class LocalDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE competitor_slots ADD COLUMN other_store_name TEXT");
         }
     };
+
+    // Dane odpowiadające danym bazy zdalnej
+    public abstract AnalysisDao analysisDao();
 
     public static LocalDatabase getInstance() {
         if (instance == null) {

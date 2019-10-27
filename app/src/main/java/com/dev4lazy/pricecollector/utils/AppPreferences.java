@@ -101,7 +101,7 @@ public class AppPreferences {
         prefsEditor.apply();
     }
 
-    public int getInitialisationStage() {
+    public int getLocalDatabaseInitialisationStage() {
         return prefs.getInt(INITIALISATION_STAGE_KEY, LOCAL_DATA_NOT_INITIALIZED);
     }
 

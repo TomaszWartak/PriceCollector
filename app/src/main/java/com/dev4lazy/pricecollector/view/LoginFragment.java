@@ -2,33 +2,28 @@ package com.dev4lazy.pricecollector.view;
 
 
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.lifecycle.ViewModelStore;
-import androidx.lifecycle.ViewModelStoreOwner;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
+
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.User;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
-import com.dev4lazy.pricecollector.model.utils.DataInitializer;
+import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.remote_data.RemoteUser;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
 
 import java.util.List;
-
-import static com.dev4lazy.pricecollector.utils.AppPreferences.COUNTRIES_INITIALIZED;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -103,7 +98,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
                     // userViewModel.clear(); todo nie ma takiej metody...
                     // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
                     if (!AppHandle.getHandle().getPrefs().getLocalDatabaseInitialized()) {
-                        DataInitializer.getInstance().initializeLocalDatabase();
+                        LocalDataInitializer.getInstance().initializeLocalDatabase();
                     }
                     Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_mainFragment);
                 } else {

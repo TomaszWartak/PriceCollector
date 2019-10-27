@@ -57,6 +57,6 @@ public interface RemoteAnalysisRowDao {
                 "INNER JOIN " +
                     "ean_codes ON article_id = articleCode "
     )
-    LiveData<List<RemoteAnalysisRowJoin>> getAllRemoteAnalysisRowJoin();
+    DataSource.Factory<Integer, RemoteAnalysisRowJoin> getAllRemoteAnalysisRowJoinPaged();
 
 }

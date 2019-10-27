@@ -1,6 +1,5 @@
 package com.dev4lazy.pricecollector.remote_data;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
@@ -42,14 +41,9 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    // todo ???
-    // do migracji remote trzeba dodać:
-    // - ? tabelę artykułów - bardziej jakby OwnArticleInfo
-    // - ? Tutaj pole łączące z tabelą OwnArticleInfo
-    // Nastepnie trzeba ZROBIĆ JOINA RemoteAnalysisRow z OwnArticleInfo do wyświetlania w testowym recyclerze
-    // I wreszcie kopiowanie wszystkiego do LOcal podczas inicjacji analizy...
-    private Integer articleCode; // kod casto
-    private Integer store;
+    private int analysisId;
+    private int articleCode; // kod casto
+    private int store;
     private String articleName;
     private Double articleStorePrice;
     private Double articleRefPrice;
@@ -60,6 +54,8 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
     private Double articleBricomanPrice;
     private Double articleLocalCompetitor1Price;
     private Double articleLocalCompetitor2Price;
+    private String department;
+    private String sector;
 
     public int getId() {
         return id;
@@ -165,6 +161,22 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
         this.articleLocalCompetitor2Price = articleLocalCompetitor2Price;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -234,6 +246,16 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
 
         public AnalysisRowBuilder articleLocalCompetitor2Price(Double articleLocalCompetitor2Price ){
             remoteAnalysisRow.articleLocalCompetitor2Price = articleLocalCompetitor2Price;
+            return this;
+        }
+
+        public AnalysisRowBuilder department( String department ){
+            remoteAnalysisRow.department = department;
+            return this;
+        }
+
+        public AnalysisRowBuilder sector( String sector ){
+            remoteAnalysisRow.sector = sector;
             return this;
         }
 

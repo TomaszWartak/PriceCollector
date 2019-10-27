@@ -22,10 +22,10 @@ import androidx.room.PrimaryKey;
  */
 public class Article {
     @PrimaryKey(autoGenerate = true)
-    public int id;
-    public int remote_id; // klucz głowny w bazie zdalnej
-    public String name;
-    public String description;
+    private int id;
+    private int remote_id; // klucz głowny w bazie zdalnej
+    private String name;
+    private String description;
     // todo ??? picture;
 
 

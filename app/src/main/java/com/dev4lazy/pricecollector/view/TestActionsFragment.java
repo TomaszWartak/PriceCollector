@@ -3,18 +3,17 @@ package com.dev4lazy.pricecollector.view;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.remote_data.RemoteDatabaseInitializer;
-import com.dev4lazy.pricecollector.model.utils.DataInitializer;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 /**
@@ -44,20 +43,20 @@ public class TestActionsFragment extends Fragment {
     private void setTestButtons(View view) {
         view.findViewById(R.id.button_load_remote).setOnClickListener((View v) -> {
             new RemoteDatabaseInitializer(this).doConversion();
-            DataInitializer.getInstance().initializeRemoteUsers();
+            LocalDataInitializer.getInstance().initializeRemoteUsersOnly();
         });
         view.findViewById(R.id.button_clear_remote).setOnClickListener((View v) -> {
-            DataInitializer.getInstance().clearRemoteDatabase();
+            LocalDataInitializer.getInstance().clearRemoteDatabase();
             // todo usuń RemoteDataRepository.getInstance().clearDatabase();
         });
         view.findViewById(R.id.button_remote).setOnClickListener((View v) -> {
-            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_remoteAnalysisRowFragment);
+            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_remoteAnalysisRowJoinFragment);
         });
         view.findViewById(R.id.button_create_local).setOnClickListener((View v) -> {
-            DataInitializer.getInstance().initializeLocalDatabase();
+            LocalDataInitializer.getInstance().initializeLocalDatabase();
         });
         view.findViewById(R.id.button_clear_local).setOnClickListener((View v) -> {
-            DataInitializer.getInstance().clearLocalDatabase();
+            LocalDataInitializer.getInstance().clearLocalDatabase();
         });
         view.findViewById(R.id.button_countries).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_countriesListFragment);

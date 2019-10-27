@@ -44,7 +44,7 @@ public class AnalysisArticleAdapter extends PagedListAdapter<AnalysisArticle, An
 
         public AnalysisArticleViewHolder(View view ) {
             super(view);
-            textViewArticleName = view.findViewById(R.id.remote_article_name);
+            textViewArticleName = view.findViewById(R.id.article_name);
         }
 
         protected void bind(AnalysisArticle analysisArticle) {

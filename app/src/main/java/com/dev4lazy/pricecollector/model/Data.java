@@ -4,14 +4,17 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.sqlite.db.SimpleSQLiteQuery;
-import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.db._Dao;
+import com.dev4lazy.pricecollector.view.ProgressPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Data<D> {
 
+    // TODO Data zrób, jako klasę/interfejs? abstrakcyjną, z której wywodzi się np. RoomData
+    // TODO albo bardziej może _Dao (RoomDao, ...)
     private _Dao dao;
 
     Data(_Dao dao) {
@@ -32,6 +35,11 @@ public class Data<D> {
 
     public void insertData(D data, MutableLiveData<Long> result ) {
         new InsertAsyncTask(dao, result).execute(data);
+    }
+
+    public void insertDataList(ArrayList<D> dataList, ProgressPresenter progressPresenter ) {
+        // TODO tutaj raczej PagedList...
+        new InsertListAsyncTask(dao, progressPresenter, null).execute(dataList);
     }
 
     public void updateData(D data, MutableLiveData<Integer> resultLD) {
@@ -104,6 +112,56 @@ public class Data<D> {
             super.onPostExecute(result);
             if (resultLD!=null) {
                 resultLD.postValue(result);
+            }
+        }
+    }
+
+    private class InsertListAsyncTask extends AsyncTask<ArrayList<D>,Void,Void> {
+
+        private _Dao dao;
+        private MutableLiveData<Void> resultLD;
+        private ProgressPresenter progressPresenter;
+
+
+        InsertListAsyncTask(_Dao dao, ProgressPresenter progressPresenter, MutableLiveData<Void> resultLD ) {
+            this.dao = dao;
+            this.progressPresenter = progressPresenter;
+            this.resultLD = resultLD;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (progressPresenter!=null){
+                progressPresenter.start();
+            }
+        }
+
+        @Override
+        protected Void doInBackground ( ArrayList<D> ...params){
+            for (D data : params[0]) {
+                Long id = dao.insert(data);
+                if (progressPresenter!=null){
+                    publishProgress();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            progressPresenter.stepUp();
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            if (resultLD!=null) {
+                resultLD.postValue(result);
+            }
+            if (progressPresenter!=null) {
+                progressPresenter.stop();
             }
         }
     }

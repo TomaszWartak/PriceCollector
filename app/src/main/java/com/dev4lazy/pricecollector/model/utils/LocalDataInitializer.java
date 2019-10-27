@@ -12,11 +12,13 @@ import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.model.entities.Store;
+import com.dev4lazy.pricecollector.remote_data.RemoteAnalysis;
 import com.dev4lazy.pricecollector.remote_data.RemoteDepartment;
 import com.dev4lazy.pricecollector.remote_data.RemoteSector;
 import com.dev4lazy.pricecollector.remote_data.RemoteUser;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +26,15 @@ import static com.dev4lazy.pricecollector.utils.AppPreferences.BRICOMAN_STORES_I
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPANIES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPETITORS_SLOTS_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COUNTRIES_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_DATA_NOT_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.LM_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_COMPETITORS_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_DATA_NOT_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.OBI_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.OWN_STORES_INITIALIZED;
 
-// Klasa używana do inicjalizacji danych aplikacji, po pierwszym logowaniu
-public class DataInitializer {
+// Klasa używana do inicjalizacji danych lokalnych aplikacji, po pierwszym logowaniu
+// TODO inicjalizacja tylko danych testowych, czy wszystkich?
+public class LocalDataInitializer {
 
     /*
     public final String CASTORAMA_NAME = "Castorama";
@@ -48,7 +51,7 @@ public class DataInitializer {
     private final int BRICOMAN_INDEX = 3;
     private final int LOCAL_COMPETITOR_INDEX = 4;
 
-    private static DataInitializer instance = new DataInitializer();
+    private static LocalDataInitializer instance = new LocalDataInitializer();
 
     // Użytkownicy w mocku zdalnej bazy danych
     private List<RemoteUser> remoteUsers = null;
@@ -56,6 +59,8 @@ public class DataInitializer {
     private List<RemoteDepartment> remoteDepartments = null;
 
     private List<RemoteSector> remoteSectors = null;
+
+    private RemoteAnalysis remoteAnalysis = null;
 
     // Kraje
     // (0) - "Kraj własny"
@@ -88,13 +93,13 @@ public class DataInitializer {
 // Przygotowanie danych
 
 
-    private DataInitializer() {    }
+    private LocalDataInitializer() {    }
 
-    public static DataInitializer getInstance() {
+    public static LocalDataInitializer getInstance() {
         if (instance == null) {
-            synchronized (DataInitializer.class) {
+            synchronized (LocalDataInitializer.class) {
                 if (instance == null) {
-                    instance = new DataInitializer();
+                    instance = new LocalDataInitializer();
                 }
             }
         }
@@ -108,12 +113,31 @@ public class DataInitializer {
         AppHandle.getHandle().getRepository().getRemoteDataRepository().clearDatabase();
     }
 
-    public void initializeRemoteUsers() {
-        /* niestety RemoteDatabaseInitializer może być wywołany we Fragmencie lub Aktywności,
-            więc nie mogę go tu wywołać, a co z atym idzie nie mogę zrobić
-            metody initialieRemoteDatabase()
+    public void InitializeRemoteDatabase() {
+        /* niestety RemoteDatabaseInitializer może być wywołany tylko we Fragmencie lub Aktywności,
+            więc nie mogę go tu wywołać. Jest wołany na żądanie w testowych fragmentach.
             new RemoteDatabaseInitializer(this).doConversion();
          */
+        initializeRemoteUsersOnly();
+        // todo chain remote
+    }
+
+// ---------------------------------------------------------------------------
+//  proceduta inicjalizacji danych zdalnych
+    private void initializeLocalData() {
+        prepareRemoteData();
+        startRemoteDataInitialisationChain();
+    }
+
+    private void prepareRemoteData() {
+        prepareRemoteUsers();
+        prepareRemoteDepartments();
+        prepareRemoteSectors();
+        prepareRemoteAnalysis();
+        // todo w Convererze RemoteEanCodes oddziel od RemoteAnalysisiRow po przeniesieniu permmisions do StartScreenFragment
+    }
+
+    public void initializeRemoteUsersOnly() {
         prepareRemoteUsers();
         populateRemoteUsers();
     }
@@ -152,6 +176,31 @@ public class DataInitializer {
 
     public void clearRemoteUsers() {
         AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllUsers( null );
+    }
+
+    private void prepareRemoteAnalysis() {
+        remoteAnalysis = new RemoteAnalysis();
+        try {
+            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2019-10-24") );
+        } catch (ParseException parseException) {
+
+        }
+        try {
+            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-10-31"));
+        } catch (ParseException parseException) {
+
+        }
+        remoteAnalysis.setFinished( false );
+    }
+
+    private void populateRemoteAnalysis() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().insertAnalysis( remoteAnalysis, null );
+
+    }
+
+    private void clearRemoteAnalysis() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllAnalysis( null );
+
     }
 
     public void prepareRemoteDepartments() {
@@ -258,46 +307,44 @@ public class DataInitializer {
         // todo usuń czyszczenie bazy
         // AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(new StartCallback());
         // todo normalnie ma być jn.
-        checkAndSetIfNotInitialized();
-        // todo !!!!!!!! zrób etapy inicjalizacji... do zpaisania w preferencjach
-        // todo na końcu "initailisationChain wpiez do preferencji że baza zainicjowana
+        checkAndSetIfLocaDatabaselNotInitialized();
     }
 
 // ---------------------------------------------------------------------------
 // Metoda sprawdzająca, czy baza danych jest zainicjowana. Jeśli nie jest - inicjalizuje bazę.
-    private void checkAndSetIfNotInitialized() {
-        int initalisationStage = AppHandle.getHandle().getPrefs().getInitialisationStage();
-        switch (initalisationStage) {
+    private void checkAndSetIfLocaDatabaselNotInitialized() {
+        int localDatabaseInitalisationStage = AppHandle.getHandle().getPrefs().getLocalDatabaseInitialisationStage();
+        switch (localDatabaseInitalisationStage) {
             case LOCAL_DATA_NOT_INITIALIZED:
                 initializeLocalData();
                 break;
             case COUNTRIES_INITIALIZED:
                 prepareLocalData();
-                initializeCompanies();
+                populateCompanies();
                 break;
             case COMPANIES_INITIALIZED:
                 prepareLocalData();
-                initializeOwnStores();
+                populateOwnStores();
                 break;
             case OWN_STORES_INITIALIZED:
                 prepareLocalData();
-                initializeObiStores();
+                populateObiStores();
                 break;
             case OBI_STORES_INITIALIZED:
                 prepareLocalData();
-                initializeLMStores();
+                populateLMStores();
                 break;
             case LM_STORES_INITIALIZED:
                 prepareLocalData();
-                initializeBricomanStores();
+                populateBricomanStores();
                 break;
             case BRICOMAN_STORES_INITIALIZED:
                 prepareLocalData();
-                initializeLocalCompetitorStores();
+                populateLocalCompetitorStores();
                 break;
             case LOCAL_COMPETITORS_STORES_INITIALIZED:
                 prepareLocalData();
-                initializeCompetitorSlotNr1();
+                populateCompetitorSlotNr1();
                 break;
             case COMPETITORS_SLOTS_INITIALIZED:
                 // inicjalizacja była kompletna
@@ -309,7 +356,7 @@ public class DataInitializer {
 //  proceduta inicjalizacji danych lokalnych
     private void initializeLocalData() {
         prepareLocalData();
-        startInitialisationChain();
+        startLocalDataInitialisationChain();
     }
 
 // ---------------------------------------------------------------------------
@@ -513,11 +560,11 @@ public class DataInitializer {
 // Zapis danych
 
 
-    private void startInitialisationChain() {
-        initalizeCountries();
+    private void startLocalDataInitialisationChain() {
+        populateCountries();
     }
 
-    private void initalizeCountries() {
+    private void populateCountries() {
         // todo odczyt kraju z preferencji
         // todo tu zamotka jest... Z preferencji, czy z DataInitializera?
         /*
@@ -540,7 +587,7 @@ public class DataInitializer {
                     if (ownCountryId!=-1) {
                         //insertOwnCompany(ownCountryId);
                         AppHandle.getHandle().getPrefs().setInitialisationStage(COUNTRIES_INITIALIZED);
-                        initializeCompanies();
+                        populateCompanies();
                     }
                 }
             }
@@ -551,7 +598,7 @@ public class DataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().insertCountry(ownCountry,ownCountryInsertResult);
     }
 
-    private void initializeCompanies() {
+    private void populateCompanies() {
         MutableLiveData<List<Country>> result = new MutableLiveData<>();
         Observer<List<Country>> resultObserver = new Observer<List<Country>>() {
             @Override
@@ -566,7 +613,7 @@ public class DataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertCompany( company, null );
                         }
                         AppHandle.getHandle().getPrefs().setInitialisationStage(COMPANIES_INITIALIZED);
-                        initializeOwnStores();}
+                        populateOwnStores();}
                 }
             }
         };
@@ -575,7 +622,7 @@ public class DataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCountryByName(ownCountryName,result);
     }
 
-    private void initializeOwnStores() {
+    private void populateOwnStores() {
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
@@ -591,7 +638,7 @@ public class DataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertOwnStore( store, null );
                         }
                         AppHandle.getHandle().getPrefs().setInitialisationStage(OWN_STORES_INITIALIZED);
-                        initializeLMStores();                    }
+                        populateLMStores();                    }
                 }
             }
         };
@@ -600,7 +647,7 @@ public class DataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(ownCompany.getName(),result);
     }
 
-    private void initializeLMStores() {
+    private void populateLMStores() {
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
@@ -614,7 +661,7 @@ public class DataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
                         AppHandle.getHandle().getPrefs().setInitialisationStage(LM_STORES_INITIALIZED);
-                        initializeObiStores();
+                        populateObiStores();
                     }
                 }
             }
@@ -624,7 +671,7 @@ public class DataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(lmCompany.getName(),result);
     }
 
-    private void initializeObiStores() {
+    private void populateObiStores() {
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
@@ -638,7 +685,7 @@ public class DataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
                         AppHandle.getHandle().getPrefs().setInitialisationStage(OBI_STORES_INITIALIZED);
-                        initializeBricomanStores();
+                        populateBricomanStores();
                     }
                 }
             }
@@ -648,7 +695,7 @@ public class DataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(obiCompany.getName(),result);
     }
 
-    private void initializeBricomanStores() {
+    private void populateBricomanStores() {
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
@@ -662,7 +709,7 @@ public class DataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
                         AppHandle.getHandle().getPrefs().setInitialisationStage(BRICOMAN_STORES_INITIALIZED);
-                        initializeLocalCompetitorStores();
+                        populateLocalCompetitorStores();
                     }
                 }
             }
@@ -672,7 +719,7 @@ public class DataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(bricomanCompany.getName(),result);
     }
 
-    private void initializeLocalCompetitorStores() {
+    private void populateLocalCompetitorStores() {
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
@@ -686,7 +733,7 @@ public class DataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore(store, null);
                         }
                         AppHandle.getHandle().getPrefs().setInitialisationStage(LOCAL_COMPETITORS_STORES_INITIALIZED);
-                        initializeCompetitorSlotNr1();
+                        populateCompetitorSlotNr1();
                     }
                 }
             }
@@ -697,7 +744,7 @@ public class DataInitializer {
     }
 
     // Slot nr 1 = LM
-    private void initializeCompetitorSlotNr1() {
+    private void populateCompetitorSlotNr1() {
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override

@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
+import com.dev4lazy.pricecollector.remote_data.RemoteAnalysis;
+import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisDao;
 import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRow;
 import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRowDao;
 import com.dev4lazy.pricecollector.remote_data.RemoteDatabase;
@@ -28,7 +30,10 @@ public class RemoteDataRepository {
     private static RemoteDataRepository sInstance;
     private RemoteDatabase remoteDatabase;
 
-    private RemoteAnalysisRowDao analysisRowDao;
+    private RemoteAnalysisDao remoteAnalysisDao;
+    private Data<RemoteAnalysis> analyzes = new Data<>(remoteAnalysisDao);
+
+    private RemoteAnalysisRowDao remoteAnalysisRowDao;
 
     private RemoteEanCodeDao remoteEanCodeDao = AppHandle.getHandle().getRemoteDatabase().eanCodeDao();
     private Data<RemoteEanCode> eanCodes = new Data<>(remoteEanCodeDao);
@@ -46,14 +51,14 @@ public class RemoteDataRepository {
 
     private RemoteDataRepository() {
         remoteDatabase = AppHandle.getHandle().getRemoteDatabase();
-        analysisRowDao = remoteDatabase.analysisRowDao();
+        remoteAnalysisRowDao = remoteDatabase.analysisRowDao();
         mObservableAnalysisRows = new MediatorLiveData<>();
         // todo start test
         // List<RemoteAnalysisRow> testAnalysisRows = RemoteAnalysisRowDao.getAllAnalysisRows().getValue();
         //testAnalysisRows = RemoteAnalysisRowDao.getAllAnalysisRowsList();
         // todo end test
         mObservableAnalysisRows.addSource(
-            analysisRowDao.getAllAnalysisRows(),
+            remoteAnalysisRowDao.getAllAnalysisRows(),
             new Observer<List<RemoteAnalysisRow>>() {
                 @Override
                 public void onChanged(List<RemoteAnalysisRow> remoteAnalysisRows) {
@@ -84,7 +89,7 @@ public class RemoteDataRepository {
 //-----------------------------------------------------------------------------------
 // getAnalysisRowsCount
     public LiveData<Integer> getAnalysisRowsCount() {
-        return analysisRowDao.getCountLiveData();
+        return remoteAnalysisRowDao.getCountLiveData();
     }
 
     public void askAnalysisRowsCount(int callNr) {
@@ -92,7 +97,7 @@ public class RemoteDataRepository {
     }
 
     private void getRowsCount(int callNr) {
-        new GetRowsCountAsyncTask(analysisRowDao, callNr).execute();
+        new GetRowsCountAsyncTask(remoteAnalysisRowDao, callNr).execute();
     }
 
 //-----------------------------------------------------------------------------------
@@ -103,24 +108,24 @@ public class RemoteDataRepository {
     }
 
     private void insert(RemoteAnalysisRow remoteAnalysisRow) {
-        new InsertAsyncTask(analysisRowDao).execute(remoteAnalysisRow);
+        new InsertRowAsyncTask(remoteAnalysisRowDao).execute(remoteAnalysisRow);
     }
 
 //-----------------------------------------------------------------------------------
     public void updateAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
-        analysisRowDao.update(remoteAnalysisRow);
+        remoteAnalysisRowDao.update(remoteAnalysisRow);
     }
 
     public void deleteAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
-        analysisRowDao.delete(remoteAnalysisRow);
+        remoteAnalysisRowDao.delete(remoteAnalysisRow);
     }
 
     public void deleteAllAnalysisRows() {
-        analysisRowDao.deleteAll();
+        remoteAnalysisRowDao.deleteAll();
     }
 
     public LiveData<List<RemoteAnalysisRow>> loadAnalysisRow(final int analysisRowId) {
-        return analysisRowDao.findAnalysisRowById(String.valueOf(analysisRowId));
+        return remoteAnalysisRowDao.findAnalysisRowById(String.valueOf(analysisRowId));
     }
 
     public LiveData<List<RemoteAnalysisRow>> getAnalysisRows() {
@@ -129,9 +134,18 @@ public class RemoteDataRepository {
 
     public LiveData<List<RemoteAnalysisRow>> loadAnalysisRows(String filter) {
         if ((filter!=null) && (!filter.isEmpty())) {
-            return analysisRowDao.getAnalysisRowsViaQuery(new SimpleSQLiteQuery(filter));
+            return remoteAnalysisRowDao.getAnalysisRowsViaQuery(new SimpleSQLiteQuery(filter));
         }
-        return analysisRowDao.getAllAnalysisRows();
+        return remoteAnalysisRowDao.getAllAnalysisRows();
+    }
+
+//-----------------------------------------------------------------------------------
+    public void insertAnalysis( RemoteAnalysis remoteAnalysis, MutableLiveData<Long> result ) {
+        analyzes.insertData( remoteAnalysis, result );
+    }
+
+    public void deleteAllAnalyzes(MutableLiveData<Integer> result) {
+        analyzes.deleteAllData(result);
     }
 
 //-----------------------------------------------------------------------------------
@@ -178,6 +192,13 @@ public class RemoteDataRepository {
         eanCodes.insertData( eanCode, result);
     }
 
+    public void getAllEanCodes( MutableLiveData<List<RemoteEanCode>> result ) {
+        eanCodes.getAllData( result );
+    }
+
+
+//-----------------------------------------------------------------------------------
+
     private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
         private RemoteDatabase assyncTaskAnalyzesDatabase;
 
@@ -212,10 +233,10 @@ public class RemoteDataRepository {
         }
     }
 
-    private static class InsertAsyncTask extends AsyncTask<RemoteAnalysisRow,Void,Void> {
+    private static class InsertRowAsyncTask extends AsyncTask<RemoteAnalysisRow,Void,Void> {
         private RemoteAnalysisRowDao mAssyncTaskDAO;
 
-        InsertAsyncTask(RemoteAnalysisRowDao dao) {
+        InsertRowAsyncTask(RemoteAnalysisRowDao dao) {
             mAssyncTaskDAO = dao;
         }
 

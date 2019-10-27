@@ -10,7 +10,7 @@ import java.util.ArrayList;
 //  - co jeśli będą śmieci w pliku
 public class Csv2AnalysisRowConverter {
 
-    private final String analysisRowsFileName = "dane-test1000.csv";
+    private final String analysisRowsFileName = "dane-test1000v2.csv";
 
     private CsvReader analysisRowCsvReader = new CsvReader();
 
@@ -81,6 +81,8 @@ public class Csv2AnalysisRowConverter {
                 .artlcleBricomanPrice( csvDecoder.getDoubleOrNullFromString(values.get(9)) )
                 .articleLocalCompetitor1Price( csvDecoder.getDoubleOrNullFromString(values.get(10)) )
                 .articleLocalCompetitor2Price( csvDecoder.getDoubleOrNullFromString(values.get(11)) )
+                .department( values.get(12) )
+                .sector( values.get(13) )
                 .build();
         return remoteAnalysisRow;
     }

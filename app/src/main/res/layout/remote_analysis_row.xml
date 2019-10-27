@@ -5,19 +5,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/remote_article_name"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="" />
-
-    <TextView
-        android:id="@+id/remote_article_code"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="" />
-
-    <TextView
-        android:id="@+id/remote_article_ean"
+        android:id="@+id/article_name"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:text="" />

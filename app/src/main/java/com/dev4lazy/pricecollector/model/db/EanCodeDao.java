@@ -1,12 +1,10 @@
 package com.dev4lazy.pricecollector.model.db;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.entities.EanCode;
@@ -14,25 +12,36 @@ import com.dev4lazy.pricecollector.model.entities.EanCode;
 import java.util.List;
 
 @Dao
-public interface EanCodeDao {
-    @Insert
-    void insert( EanCode eanCode );
+public interface EanCodeDao extends _Dao<EanCode>{
 
-    @Update
-    void update( EanCode eanCode );
+    @Override
+    @Query("SELECT COUNT(*) FROM ean_codes")
+    Integer getNumberOf();
 
-    @Delete
-    void delete( EanCode eanCode );
-
+    @Override
     @Query("DELETE FROM ean_codes")
-    void deleteAll();
+    int deleteAll();
 
-    @Query("SELECT * FROM ean_codes WHERE id= :id")
-    LiveData<List<EanCode>> findEanCodeById(String id);
+    @Override
+    @Query("SELECT * from ean_codes ORDER BY id ASC")
+    List<EanCode> getAll();
 
-    @Query("SELECT * FROM ean_codes")
-    LiveData<List<EanCode>> getAllEanCodes();
+    @Override
+    @Query("SELECT * from ean_codes ORDER BY id ASC")
+    LiveData<List<EanCode>> getAllLiveData();
 
     @RawQuery(observedEntities = EanCode.class)
-    LiveData<List<EanCode>> getEanCodesViaQuery( SupportSQLiteQuery query );
+    LiveData<List<EanCode>> getViaQuery(SupportSQLiteQuery query);
+
+    @Override
+    @Query("SELECT * from ean_codes WHERE id= :id")
+    List<EanCode> findById(int id);
+
+    @Override
+    @Query("SELECT * from ean_codes WHERE id= :dummy")
+    List<EanCode> findByName(String dummy);
+
+    @Query("SELECT * from ean_codes ORDER BY id ASC")
+    DataSource.Factory<Integer, EanCode> getAllEanCodesPaged();
+
 }

@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.utils.DataInitializer;
+import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.remote_data.RemoteDatabaseInitializer;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
@@ -42,13 +42,24 @@ public class TestActionsFragment2 extends Fragment {
 
     private void setTestButtons(View view) {
         view.findViewById(R.id.button_clear_remote_users).setOnClickListener((View v) -> {
-            DataInitializer.getInstance().clearRemoteUsers();
+            LocalDataInitializer.getInstance().clearRemoteUsers();
         });
         view.findViewById(R.id.button_create_remote_users).setOnClickListener((View v) -> {
-            DataInitializer.getInstance().initializeRemoteUsers();
+            LocalDataInitializer.getInstance().initializeRemoteUsersOnly();
         });
         view.findViewById(R.id.button_show_remote_users).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteUsersListFragment);
+        });
+        view.findViewById(R.id.button_create_remote2).setOnClickListener((View v) -> {
+            new RemoteDatabaseInitializer(this).doConversion();
+            LocalDataInitializer.getInstance().initializeRemoteUsersOnly();
+        });
+        view.findViewById(R.id.button_clear_remote2).setOnClickListener((View v) -> {
+            LocalDataInitializer.getInstance().clearRemoteDatabase();
+            // todo usuń RemoteDataRepository.getInstance().clearDatabase();
+        });
+        view.findViewById(R.id.button_show_remote2).setOnClickListener((View v) -> {
+            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteAnalysisRowJoinFragment);
         });
     }
 

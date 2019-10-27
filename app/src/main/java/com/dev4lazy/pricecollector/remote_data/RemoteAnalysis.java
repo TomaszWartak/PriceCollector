@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.model.entities;
+package com.dev4lazy.pricecollector.remote_data;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -13,7 +13,7 @@ import java.util.Date;
 @TypeConverters({
         DateConverter.class
 })
-public class Analysis {
+public class RemoteAnalysis {
     @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name = "creation_date")

@@ -73,7 +73,7 @@ public class AnalysisDataUpdater {
 
     // zwraca true jeśli aktualna analiza jest już zakończona
     public boolean isAnalysisFinished() {
-        return analysisBasicData.finished;
+        return analysisBasicData.isFinished();
     }
 
     // zwraca true jeśli aktualna analiza nie jest zakończona

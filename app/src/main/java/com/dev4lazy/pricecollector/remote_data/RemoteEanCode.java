@@ -6,8 +6,6 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import com.dev4lazy.pricecollector.model.entities.Article;
-
 @Entity(
     tableName = "ean_codes", // w bazie zdalnej nie ma takiej tabeli
     foreignKeys = {
@@ -25,11 +23,11 @@ import com.dev4lazy.pricecollector.model.entities.Article;
 public class RemoteEanCode {
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
-    public int remote_id; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
-    public String value;
+    private int id;
+    private int remote_id; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
+    private String value;
     @ColumnInfo(name = "article_id")
-    public int articleId; // tutaj casto, jako article_id
+    private int articleId; // tutaj casto, jako article_id
 
     public int getId() {
         return id;

@@ -97,6 +97,20 @@
                 card_view:layout_constraintStart_toEndOf="@+id/label_analysis_confirmation_date"
                 card_view:layout_constraintTop_toBottomOf="@+id/analysis_finish_date" />
 
+            <ProgressBar
+                android:id="@+id/remote_2_local_progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:max="100"
+                android:minWidth="200dp"
+                android:minHeight="50dp"
+                android:progress="1"
+                android:visibility="gone"
+                card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
+                card_view:layout_constraintTop_toBottomOf="@+id/label_analysis_confirmation_date" />
+
             <!-- guideline -->
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_analysis_item"

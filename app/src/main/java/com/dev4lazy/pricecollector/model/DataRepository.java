@@ -32,4 +32,5 @@ public class DataRepository {
     public RemoteDataRepository getRemoteDataRepository() {
         return remoteDataRepository;
     }
+
 }

@@ -17,41 +17,71 @@
             android:layout_height="match_parent"
             tools:context=".view.TestActionsFragment">
 
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_clear_remote_users"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="32dp"
                 android:backgroundTint="@color/colorWarning"
                 android:text="Czyść remote users"
-                app:layout_constraintBottom_toTopOf="@+id/button_create_remote_users"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_show_remote_users"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="188dp"
-                android:text="Pokaż remote users"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_create_remote_users"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="116dp"
-                android:layout_marginBottom="12dp"
+                android:backgroundTint="@color/design_default_color_secondary"
                 android:text="Twórz remote users"
-                app:layout_constraintBottom_toTopOf="@+id/button_show_remote_users"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_create_local"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_clear_remote_users" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_show_remote_users"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pokaż remote users"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_create_remote_users" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_clear_remote2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:backgroundTint="@color/colorWarning"
+                android:text="Czyść remote"
+                app:layout_constraintTop_toBottomOf="@+id/button_show_remote_users"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_create_remote2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:backgroundTint="@color/design_default_color_secondary"
+                android:text="Twórz remote"
+                app:layout_constraintTop_toBottomOf="@+id/button_clear_remote2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_show_remote2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pokaż Remote"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_create_remote2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

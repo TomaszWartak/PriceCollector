@@ -12,9 +12,9 @@ import androidx.room.PrimaryKey;
 public class Sector {
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
-    public int remote_id; // klucz głowny w bazie zdalnej
-    public String name;
+    private int id;
+    private int remote_id; // klucz głowny w bazie zdalnej
+    private String name;
 
     public int getId() {
         return id;

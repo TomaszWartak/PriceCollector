@@ -44,7 +44,7 @@ public class RemoteAnalysisRowAdapter extends PagedListAdapter<RemoteAnalysisRow
 
         public RemoteAnalysisRowViewHolder(View view ) {
             super(view);
-            textViewArticleName = view.findViewById(R.id.remote_article_name);
+            textViewArticleName = view.findViewById(R.id.article_name);
         }
 
         protected void bind(RemoteAnalysisRow remoteAnalysisRow) {

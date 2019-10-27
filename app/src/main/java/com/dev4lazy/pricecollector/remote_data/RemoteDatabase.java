@@ -10,12 +10,12 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.dev4lazy.pricecollector.model.RemoteDataRepository;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 @Database(
-        version = 4,
+        version = 5,
         entities = {
+                RemoteAnalysis.class,
                 RemoteAnalysisRow.class,
                 RemoteDepartment.class,
                 RemoteEanCode.class,
@@ -39,16 +39,6 @@ public abstract class RemoteDatabase extends RoomDatabase {
                     "departmentSymbol TEXT, "+
                     "sectorName TEXT, "+
                     "marketName TEXT )" );
-                    /*
-                    private int id;
-                    private String login;
-                    private String name;
-                    private String email;
-                    private String ownStoreNumber; // OwnStore.ownNumber
-                    private String departmentSymbol; // Department.symbol
-                    private String sectorName; // Sector.name
-                    private String marketName;
-                    */
         }
     };
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
@@ -56,24 +46,16 @@ public abstract class RemoteDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE IF NOT EXISTS departments (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "remote_id INTEGER, " +
+                    "remote_id INTEGER NOT NULL, " +
                     "symbol TEXT, " +
                     "name TEXT )" );
-                    /*
-                    public int remote_id; // klucz głowny w bazie zdalnej
-                    public String symbol;
-                    public String name;
-                    */
-            database.execSQL("CREATE TABLE IF NOT EXISTS sectors (" +
+             database.execSQL("CREATE TABLE IF NOT EXISTS sectors (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "remote_id INTEGER, " +
+                    "remote_id INTEGER NOT NULL, " +
                     "name TEXT )" );
-                    /*
-                    public int remote_id; // klucz głowny w bazie zdalnej
-                    public String name;
-                    */
         }
     };
+
     static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -84,23 +66,32 @@ public abstract class RemoteDatabase extends RoomDatabase {
                     "ON analysis_rows (articleCode)" );
             database.execSQL("CREATE TABLE IF NOT EXISTS ean_codes (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "remote_id INTEGER, " +
+                    "remote_id INTEGER NOT NULL, " +
                     "value TEXT, " +
-                    "article_id INTEGER, " +
+                    "article_id INTEGER NOT NULL, " +
                     "FOREIGN KEY (article_id) REFERENCES analysis_rows(articleCode) )" );
-                    /*
-                        @PrimaryKey(autoGenerate = true)
-                        public int id;
-                        public int remote_id; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
-                        public String value;
-                        @ColumnInfo(name = "article_id")
-                        public int articleId;
-                    */
-            database.execSQL("CREATE INDEX article_id " +
+             database.execSQL("CREATE INDEX index_ean_codes_article_id " +
                     "ON ean_codes (article_id)" );
 
         }
     };
+
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS analyzes (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "creation_date INTEGER NOT NULL, " +
+                    "due_date INTEGER NOT NULL, " +
+                    "finish_date INTEGER NOT NULL, " +
+                    "confirmation_date INTEGER NOT NULL, " +
+                    "finished INTEGER NOT NULL )" );
+            database.execSQL("ALTER TABLE analysis_rows ADD COLUMN analysisId INTEGER NOT NULL");
+            database.execSQL("ALTER TABLE analysis_rows ADD COLUMN department TEXT");
+            database.execSQL("ALTER TABLE analysis_rows ADD COLUMN sector TEXT");
+        }
+    };
+
     private static volatile RemoteDatabase instance;
 
     public static RemoteDatabase getInstance() {
@@ -117,6 +108,7 @@ public abstract class RemoteDatabase extends RoomDatabase {
                             .addMigrations(MIGRATION_1_2)
                             .addMigrations(MIGRATION_2_3)
                             .addMigrations(MIGRATION_3_4)
+                            .addMigrations(MIGRATION_4_5)
                             /**/
                             .build();
                     instance.updateDatabaseCreated(context);

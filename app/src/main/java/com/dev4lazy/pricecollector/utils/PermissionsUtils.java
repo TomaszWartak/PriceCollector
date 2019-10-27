@@ -3,12 +3,14 @@ package com.dev4lazy.pricecollector.utils;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 
 public class PermissionsUtils {
+
+    public static final int MY_PERMISSIONS_REQUEST = 0;
+
     private Fragment hostFragment;
 
     /* todo usuń Konstruktor dla użycia onRequestPermissionsResult w aktywności
@@ -56,11 +58,16 @@ public class PermissionsUtils {
     }
 
     public void callUserForPermission(String permission, int permisionRequest){
-            if (hostFragment!=null) {
-                hostFragment.requestPermissions(
-                        new String[]{permission},
-                        permisionRequest);
-            }
+        if (hostFragment!=null) {
+            hostFragment.requestPermissions(
+                    new String[]{permission},
+                    permisionRequest);
+        }
     }
 
+    public void callUserForPermissions( String[] permissions, int permissionRequest ) {
+        if (hostFragment!=null) {
+            hostFragment.requestPermissions( permissions, permissionRequest );
+        }
+    }
 }

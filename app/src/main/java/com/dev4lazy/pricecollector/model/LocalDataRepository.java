@@ -8,27 +8,29 @@ import androidx.lifecycle.MutableLiveData;
 import com.dev4lazy.pricecollector.model.db.AnalysisCompetitorSlotDao;
 import com.dev4lazy.pricecollector.model.db.CompanyDao;
 import com.dev4lazy.pricecollector.model.db.CountryDao;
+import com.dev4lazy.pricecollector.model.db.EanCodeDao;
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
 import com.dev4lazy.pricecollector.model.db.OwnStoreDao;
 import com.dev4lazy.pricecollector.model.db.StoreDao;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
+import com.dev4lazy.pricecollector.model.entities.EanCode;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.view.ProgressPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LocalDataRepository {
 
     private static LocalDataRepository instance = new LocalDataRepository();
 
-
 //-----------------------------------------------------------------------
 // AnalysisCompetitorSlot
     private AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
-
 
     public static LocalDataRepository getInstance() {
         if (instance == null) {
@@ -41,6 +43,20 @@ public class LocalDataRepository {
         return instance;
     }
 
+// po getInstance -----------------------------------------------------------------------
+// Analysis
+    private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
+//-----------------------------------------------------------------------
+// Company
+    private CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
+//-----------------------------------------------------------------------
+// Country
+private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+//-----------------------------------------------------------------------
+// EanCode
+    private EanCodeDao eanCodeDao = AppHandle.getHandle().getLocalDatabase().eanCodeDao();
+    private Data<EanCode> eanCodes = new Data<EanCode>(eanCodeDao);
+
 //-----------------------------------------------------------------------------------
 // clearDatabaseAsync
     public void clearDatabase(AfterDatabaseClearedCallback callback) {
@@ -49,21 +65,15 @@ public class LocalDataRepository {
                 callback
         ).execute();
     }
-    private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
-    //-----------------------------------------------------------------------
-// Company
-    private CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
 
-//-----------------------------------------------------------------------
-// Analysis
-//-----------------------------------------------------------------------
-// Country
-    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
-    private Data<Country> countries = new Data<>(countryDao);
+    private LocalDataRepository() {
+
+    }
 
     public void insertAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Long> result ) {
         slots.insertData(analysisCompetitorSlot,result);
     }
+    private Data<Country> countries = new Data<>(countryDao);
 
     public void updateAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Integer> result  ) {
         slots.updateData(analysisCompetitorSlot, result);
@@ -72,6 +82,30 @@ public class LocalDataRepository {
     public void deleteAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Integer> result   ) {
         slots.deleteData(analysisCompetitorSlot, result);
     }
+
+    public void insertCountry(Country country, MutableLiveData<Long> result ) {
+        countries.insertData(country,result);
+    }
+
+    /*
+    public LiveData<List<Country>> getCountryByIdLD(int countryId) {
+        return countryDao.findByIdLD(countryId);
+    }
+
+
+    public LiveData<List<Country>> getCountryByNameLD(String countryName) {
+        return countryDao.findByNameLD(countryName);
+    }
+    */
+
+    public void updateCountry( Country country, MutableLiveData<Integer> result  ) {
+        countries.updateData(country,result);
+    }
+
+    public void deleteCountry( Country country, MutableLiveData<Integer> result  ) {
+        countries.deleteData(country,result);
+    }
+
 //-----------------------------------------------------------------------
 // OwnStore
     private OwnStoreDao ownStoreDao = AppHandle.getHandle().getLocalDatabase().ownStoreDao();
@@ -84,9 +118,6 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Article
 
-    private LocalDataRepository() {
-
-    }
 
     private Data<Company> companies = new Data<>(companyDao);
 
@@ -130,38 +161,6 @@ public class LocalDataRepository {
         return analysisCompetitorSlotDao.getAllLiveData();
     }
 
-
-    public void insertCountry(Country country, MutableLiveData<Long> result ) {
-        countries.insertData(country,result);
-    }
-
-    public void updateCountry( Country country, MutableLiveData<Integer> result  ) {
-        countries.updateData(country,result);
-    }
-
-    public void deleteCountry( Country country, MutableLiveData<Integer> result  ) {
-        countries.deleteData(country,result);
-    }
-
-    /*
-    public LiveData<List<Country>> getCountryByIdLD(int countryId) {
-        return countryDao.findByIdLD(countryId);
-    }
-
-
-    public LiveData<List<Country>> getCountryByNameLD(String countryName) {
-        return countryDao.findByNameLD(countryName);
-    }
-    */
-
-    public void findCountryById(int id, MutableLiveData<List<Country>> result) {
-        countries.findDataById( id, result);
-    }
-
-    public void findCountryByName(String countryName, MutableLiveData<List<Country>> result) {
-        countries.findDataByName(countryName, result);
-    }
-
     /* todo ?
     public LiveData<List<Company>> getFilteredCompaniesLD(String filter) {
         if ((filter!=null) && (!filter.isEmpty())) {
@@ -187,8 +186,17 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Department
 
-//-----------------------------------------------------------------------
-// EanCode
+    public void findCountryById(int id, MutableLiveData<List<Country>> result) {
+        countries.findDataById( id, result);
+    }
+
+    public void findCountryByName(String countryName, MutableLiveData<List<Country>> result) {
+        countries.findDataByName(countryName, result);
+    }
+
+    public void insertEanCodes( ArrayList<EanCode> eanCodeList, ProgressPresenter progressPresenter) {
+        eanCodes.insertDataList( eanCodeList, progressPresenter );
+    }
 
 //-----------------------------------------------------------------------
 // Family
