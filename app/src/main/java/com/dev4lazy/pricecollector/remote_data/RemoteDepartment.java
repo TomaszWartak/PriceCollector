@@ -3,6 +3,8 @@ package com.dev4lazy.pricecollector.remote_data;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 @Entity(tableName = "departments" ) // [dbo].[DCT_Department]
 /*
     [DEP_Id] [int] NOT NULL,
@@ -47,5 +49,19 @@ public class RemoteDepartment {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RemoteDepartment)) return false;
+        RemoteDepartment that = (RemoteDepartment) o;
+        return id == that.id &&
+                name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

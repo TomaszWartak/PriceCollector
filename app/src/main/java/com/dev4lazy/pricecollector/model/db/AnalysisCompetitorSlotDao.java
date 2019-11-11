@@ -3,16 +3,11 @@ package com.dev4lazy.pricecollector.model.db;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.room.Update;
-import androidx.sqlite.db.SupportSQLiteQuery;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
-import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
-import com.dev4lazy.pricecollector.model.entities.Country;
 
 import java.util.List;
 
@@ -35,17 +30,28 @@ public interface AnalysisCompetitorSlotDao extends _Dao<AnalysisCompetitorSlot> 
     @Query("SELECT * from competitor_slots ORDER BY slot_nr ASC")
     LiveData<List<AnalysisCompetitorSlot>> getAllLiveData();
 
+    @Override
+    @Query("SELECT * from competitor_slots ORDER BY slot_nr ASC")
+    DataSource.Factory<Integer, AnalysisCompetitorSlot> getAllPaged();
+
+    @Override
     @RawQuery(observedEntities = AnalysisCompetitorSlot.class)
-    List<AnalysisCompetitorSlot> getViaQuery(SupportSQLiteQuery query);
+    List<AnalysisCompetitorSlot> getViaQuery(SimpleSQLiteQuery query);
+
+    @Override
+    @RawQuery(observedEntities = AnalysisCompetitorSlot.class)
+    LiveData<List<AnalysisCompetitorSlot>> getViaQueryLiveData(SimpleSQLiteQuery query);
 
     @Override
     @Query("SELECT * from competitor_slots WHERE id= :id")
     List<AnalysisCompetitorSlot> findById(int id);
 
     @Override
+    @Query("SELECT * FROM competitor_slots WHERE id= :id")
+    LiveData<List<AnalysisCompetitorSlot>> findByIdLiveData( int id );
+
+    @Override
     @Query("SELECT * from competitor_slots WHERE id= :name") // todo no nie wiem...
     List<AnalysisCompetitorSlot> findByName(String name);
 
-    @Query("SELECT * from competitor_slots ORDER BY slot_nr ASC")
-    DataSource.Factory<Integer, AnalysisCompetitorSlot> getAllSlotsPaged();
 }

@@ -150,7 +150,9 @@ public class Data<D> {
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            progressPresenter.stepUp();
+            if (progressPresenter!=null) {
+                progressPresenter.stepUp();
+            }
             super.onProgressUpdate(values);
         }
 
@@ -280,6 +282,7 @@ public class Data<D> {
 
         @Override
         protected List<D> doInBackground ( Void ...params){
+
             return dao.getAll();
         }
 

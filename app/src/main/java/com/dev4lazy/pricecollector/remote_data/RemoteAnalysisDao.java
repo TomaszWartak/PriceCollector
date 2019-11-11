@@ -6,7 +6,6 @@ import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.RawQuery;
 import androidx.sqlite.db.SimpleSQLiteQuery;
-import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.db._Dao;
 
@@ -24,38 +23,46 @@ public interface RemoteAnalysisDao extends _Dao<RemoteAnalysis> {
     int deleteAll();
 
     @Override
-    @Query("SELECT * from analyzes ORDER BY id ASC")
+    @Query("SELECT * FROM analyzes ORDER BY id ASC")
     List<RemoteAnalysis> getAll();
 
     @Override
-    @Query("SELECT * from analyzes ORDER BY id ASC")
+    @Query("SELECT * FROM analyzes ORDER BY id ASC")
     LiveData<List<RemoteAnalysis>> getAllLiveData();
 
-    @Query("SELECT * from analyzes ORDER BY id ASC")
-    DataSource.Factory<Integer, RemoteAnalysis> getAllRemoteAnalysissPaged();
-
-    @RawQuery(observedEntities = RemoteAnalysis.class)
-    LiveData<List<RemoteAnalysis>> getViaQueryLiveData(SupportSQLiteQuery query);
+    @Override
+    @Query("SELECT * FROM analyzes ORDER BY id ASC")
+    DataSource.Factory<Integer, RemoteAnalysis> getAllPaged();
 
     @Override
     @RawQuery(observedEntities = RemoteAnalysis.class)
     List<RemoteAnalysis> getViaQuery(SimpleSQLiteQuery query);
 
     @Override
-    @Query("SELECT * from analyzes WHERE id= :id")
+    @RawQuery(observedEntities = RemoteAnalysis.class)
+    LiveData<List<RemoteAnalysis>> getViaQueryLiveData(SimpleSQLiteQuery query);
+
+    @Override
+    @Query("SELECT * FROM analyzes WHERE id= :id")
     List<RemoteAnalysis> findById(int id);
+
+    @Override
+    @Query("SELECT * FROM analyzes WHERE id= :id")
+    LiveData<List<RemoteAnalysis>> findByIdLiveData( int id );
 
     // dummy method
     @Override
-    @Query("SELECT * from analyzes WHERE id= :name")
+    @Query("SELECT * FROM analyzes WHERE id= :name")
     List<RemoteAnalysis> findByName(String name);
 
+    /*
     // dummy method
-    @Query("SELECT * from analyzes WHERE id= :value")
+    @Query("SELECT * FROM analyzes WHERE id= :value")
     List<RemoteAnalysis> findByValue(String value);
 
     // dummy method
-    @Query("SELECT * from analyzes WHERE id= :articleId")
+    @Query("SELECT * FROM analyzes WHERE id= :articleId")
     List<RemoteAnalysis> findByArticleId(Integer articleId);
+    */
 
 }

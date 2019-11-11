@@ -3,58 +3,71 @@ package com.dev4lazy.pricecollector.remote_data;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.room.Update;
-import androidx.sqlite.db.SupportSQLiteQuery;
+import androidx.sqlite.db.SimpleSQLiteQuery;
+
+import com.dev4lazy.pricecollector.model.db._Dao;
 
 import java.util.List;
 
 @Dao
-public interface RemoteAnalysisRowDao {
+public interface RemoteAnalysisRowDao extends _Dao<RemoteAnalysisRow> {
+
+    @Override
+    @Query("SELECT COUNT(*) FROM analysis_rows")
+    Integer getNumberOf();
 
     @Query("SELECT COUNT(*) FROM analysis_rows")
-    LiveData<Integer> getCountLiveData();
+    LiveData<Integer> getNumberOfLiveData();
 
-    @Query("SELECT COUNT(*) FROM analysis_rows")
-    Integer getCountInteger();
-
-    @Insert
-    void insert(RemoteAnalysisRow remoteAnalysisRow);
-
-    @Update
-    void update(RemoteAnalysisRow remoteAnalysisRow);
-
-    @Delete
-    void delete(RemoteAnalysisRow remoteAnalysisRow);
-
+    @Override
     @Query("DELETE FROM analysis_rows")
-    void deleteAll();
+    int deleteAll();
 
+    @Override
     @Query("SELECT * from analysis_rows ORDER BY articleCode ASC")
-    LiveData<List<RemoteAnalysisRow>> getAllAnalysisRows();
+    List<RemoteAnalysisRow> getAll();
 
+    @Override
     @Query("SELECT * from analysis_rows ORDER BY articleCode ASC")
-    DataSource.Factory<Integer, RemoteAnalysisRow> getAllAnalysisRowsPaged();
+    LiveData<List<RemoteAnalysisRow>> getAllLiveData();
 
-    @Query("SELECT * from analysis_rows WHERE id= :id")
-    LiveData<List<RemoteAnalysisRow>> findAnalysisRowById(String id);
+    @Override
+    @Query("SELECT * from analysis_rows ORDER BY articleCode ASC")
+    DataSource.Factory<Integer, RemoteAnalysisRow> getAllPaged();
 
-    //todo findByNameLD like
+    @Override
     @RawQuery(observedEntities = RemoteAnalysisRow.class)
-    LiveData<List<RemoteAnalysisRow>> getAnalysisRowsViaQuery(SupportSQLiteQuery query);
+    List<RemoteAnalysisRow> getViaQuery(SimpleSQLiteQuery query);
 
+    @Override
+    @RawQuery(observedEntities = RemoteAnalysis.class)
+    LiveData<List<RemoteAnalysisRow>> getViaQueryLiveData(SimpleSQLiteQuery query);
+
+    @Override
+    @Query("SELECT * from analysis_rows WHERE id= :id")
+    List<RemoteAnalysisRow> findById(int id);
+
+    @Override
+    @Query("SELECT * from analysis_rows WHERE id= :id")
+    LiveData<List<RemoteAnalysisRow>> findByIdLiveData( int id );
+
+    // dummy method
+    @Override
+    @Query("SELECT * from analysis_rows WHERE id= :name")
+    List<RemoteAnalysisRow> findByName(String name);
+
+    // TODO raczej bym w _Dao zrobił metodę getViaQueryPaged a w reopzytorium bym włożył zapyatnie, które jest nizej
     @Query(
             "SELECT " +
                     "analysis_rows.id, " +
                     "analysis_rows.articleName, " +
                     "analysis_rows.articleCode, " +
                     "ean_codes.value " +
-                "FROM " +
+            "FROM " +
                     "analysis_rows " +
-                "INNER JOIN " +
+            "INNER JOIN " +
                     "ean_codes ON article_id = articleCode "
     )
     DataSource.Factory<Integer, RemoteAnalysisRowJoin> getAllRemoteAnalysisRowJoinPaged();

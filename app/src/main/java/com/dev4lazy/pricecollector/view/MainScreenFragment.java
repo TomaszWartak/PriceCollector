@@ -20,14 +20,20 @@ import androidx.navigation.Navigation;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.LocalDataRepository;
 import com.dev4lazy.pricecollector.model.Remote2LocalConverter;
+import com.dev4lazy.pricecollector.model.entities.Article;
+import com.dev4lazy.pricecollector.model.entities.Department;
 import com.dev4lazy.pricecollector.model.entities.EanCode;
+import com.dev4lazy.pricecollector.model.entities.OwnArticleInfo;
+import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
+import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRow;
 import com.dev4lazy.pricecollector.remote_data.RemoteEanCode;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.MainViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
@@ -54,6 +60,11 @@ public class MainScreenFragment extends Fragment {
         // todo tutaj zainicjoawanie wykorzystywanych później obiektów tej klasy
     }
 
+    private ArrayList<RemoteAnalysisRow> classScopeRemoteAnalysisRowsList;
+    private HashMap<Integer, Article> classScopeArticleMap;
+    private HashMap<String, Sector> classScopeSectorMap;
+    private HashMap<String, Department> classScopeDepartmentMap;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -62,7 +73,7 @@ public class MainScreenFragment extends Fragment {
 
         setOnBackPressedCalback();
 
-        setAnalysisItem(inflater, view);
+        setAnalysisItem( inflater, view );
 
         ((TextView)view.findViewById(R.id.user_login)).setText(AppHandle.getHandle().getSettings().getUser().getLogin());
 
@@ -87,27 +98,74 @@ public class MainScreenFragment extends Fragment {
         ((ViewGroup) view).addView(viewAnalysisiItem);
         view.findViewById(R.id.card_view_constraint_layout).setOnClickListener((View v) -> {
             // todo test
-            testCopyEanCodes();
+            testCreateAnalysisArticles();
+            // todo test
+            // testCreateEanCodes();
             // openTestAnalyzesList();
         });
     }
 
+    private void testCreateAnalysisArticles() {
+        MutableLiveData<List<RemoteAnalysisRow>> result = new MutableLiveData<>();
+        Observer<List<RemoteAnalysisRow>> resultObserver = new Observer<List<RemoteAnalysisRow>>() {
+            @Override
+            public void onChanged(List<RemoteAnalysisRow> remoteAnalysisRowsList) {
+                if ((remoteAnalysisRowsList != null)&&(!remoteAnalysisRowsList.isEmpty())) {
+                    result.removeObserver(this); // this = observer...
+
+                    Remote2LocalConverter converter = new Remote2LocalConverter();
+                    classScopeRemoteAnalysisRowsList = (ArrayList)remoteAnalysisRowsList;
+                    ArrayList<Article> articlesList = converter.getArticlesList( classScopeRemoteAnalysisRowsList );
+                    // TODO nie wiem czy ProgressPresenter działa...
+                    // albo dodanie artykułw idzie za szybko, albo coś nie jest tak
+                    // Zró jakiś delay przy dodaawaniu
+                    ProgressBar progressBar = getView().findViewById(R.id.remote_2_local_progressBar);
+                    ProgressBarPresenter progressBarPresenter = new ProgressBarPresenter( progressBar, articlesList.size()  );
+                    LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+                    localDataRepository.insertArticles( articlesList, progressBarPresenter );
+                    testGetArticles();
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllAnalysisRows(result);
+    }
+
     // todo test
-    private void testCopyEanCodes() {
-        // pobrac wiersze do skopiowania
-        // pobrac ilość wierszy do skopiowania z dlugosci listy
-        // dopisac wiersze do lacal
+    private void testGetArticles() {
+        MutableLiveData<List<Article>> result = new MutableLiveData<>();
+        Observer<List<Article>> resultObserver = new Observer<List<Article>>() {
+            @Override
+            public void onChanged(List<Article> articleList) {
+                if ((articleList != null)&&(!articleList.isEmpty())) {
+                    result.removeObserver(this); // this = observer...
+                    classScopeArticleMap = new HashMap<>();
+                    for (Article article : articleList ) {
+                        classScopeArticleMap.put( article.getRemote_id(), article );
+                    }
+                    testCreateEanCodes( articleList );
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().getAllArticles(result);
+    }
+
+    // todo test
+    private void testCreateEanCodes( List<Article> articleList ) {
         MutableLiveData<List<RemoteEanCode>> result = new MutableLiveData<>();
         Observer<List<RemoteEanCode>> resultObserver = new Observer<List<RemoteEanCode>>() {
             @Override
             public void onChanged(List<RemoteEanCode> remoteEanCodesList) {
                 if ((remoteEanCodesList != null)&&(!remoteEanCodesList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
-                    ArrayList<EanCode> eanCodeList = convertToEanCodes(remoteEanCodesList);
+                    ArrayList<EanCode> eanCodeList = convertToEanCodes( remoteEanCodesList, articleList );
+
                     ProgressBar progressBar = getView().findViewById(R.id.remote_2_local_progressBar);
                     ProgressBarPresenter progressBarPresenter = new ProgressBarPresenter( progressBar, eanCodeList.size()  );
                     LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
                     localDataRepository.insertEanCodes( eanCodeList, progressBarPresenter );
+                    testGetSectors();
                 }
             }
         };
@@ -116,7 +174,29 @@ public class MainScreenFragment extends Fragment {
 
     }
 
-    private ArrayList<EanCode> convertToEanCodes( List<RemoteEanCode> remoteEanCodesList ) {
+    private ArrayList<EanCode> convertToEanCodes( List<RemoteEanCode> remoteEanCodesList, List<Article> articleList ) {
+        //HashMap<Integer, RemoteEanCode> remoteEanCodesHashMap =
+                // remoteEanCodesList.stream().collect( Collectors.toMap(RemoteEanCode::getArticleId, Function.identity() ));
+                //remoteEanCodesList.stream().collect( Collectors.toMap( RemoteEanCode::getArticleId, b->b ));
+
+        HashMap<Integer, RemoteEanCode> remoteEanCodesHashMap = new HashMap<>();
+        for (RemoteEanCode remoteEanCode : remoteEanCodesList) {
+            remoteEanCodesHashMap.put( remoteEanCode.getArticleId(), remoteEanCode );
+        }
+        HashMap<Integer, Article> articlesHashMap = new HashMap<>();
+        for (Article article : articleList ) {
+            articlesHashMap.put( article.getRemote_id(), article );
+        }
+        Remote2LocalConverter converter = new Remote2LocalConverter();
+        return converter.getEanCodesList( remoteEanCodesHashMap, articlesHashMap );
+        /*
+        ArrayList<EanCode> getEanCodesList(
+                HashMap<Integer, RemoteEanCode> remoteEanCodesHashMap,
+                HashMap<Integer, Article> articlesHashMap )
+
+         */
+
+        /*
         ArrayList<EanCode> eanCodeList = new ArrayList<>();
         Remote2LocalConverter converter = new Remote2LocalConverter();
         for ( RemoteEanCode remoteEanCode : remoteEanCodesList ) {
@@ -126,6 +206,65 @@ public class MainScreenFragment extends Fragment {
             eanCodeList.add( eanCode );
         }
         return eanCodeList;
+
+         */
+    }
+
+    private void testGetSectors() {
+        MutableLiveData<List<Sector>> result = new MutableLiveData<>();
+        Observer<List<Sector>> resultObserver = new Observer<List<Sector>>() {
+            @Override
+            public void onChanged(List<Sector> sectorList) {
+                if ((sectorList != null)&&(!sectorList.isEmpty())) {
+                    result.removeObserver(this); // this = observer...
+                    classScopeSectorMap = new HashMap<>();
+                    for (Sector sector : sectorList ) {
+                        classScopeSectorMap.put( sector.getName(), sector );
+                    }
+                    testGetDepartments();
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().getAllSectors(result);
+    }
+    
+    private void testGetDepartments() {
+        MutableLiveData<List<Department>> result = new MutableLiveData<>();
+        Observer<List<Department>> resultObserver = new Observer<List<Department>>() {
+            @Override
+            public void onChanged(List<Department> departmentList) {
+                if ((departmentList != null)&&(!departmentList.isEmpty())) {
+                    result.removeObserver(this); // this = observer...
+                    classScopeDepartmentMap = new HashMap<>();
+                    for (Department department : departmentList ) {
+                        classScopeDepartmentMap.put( department.getSymbol(), department );
+                    }
+                    testCreateOwnArticlesInfo();
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().getAllDepartments(result);
+    }
+    
+    private void testCreateOwnArticlesInfo() {
+        Remote2LocalConverter converter = new Remote2LocalConverter();
+        OwnArticleInfo ownArticleInfo;
+        ArrayList<OwnArticleInfo> ownArticleInfoList = new ArrayList<>();
+        for (RemoteAnalysisRow remoteAnalysisRow : classScopeRemoteAnalysisRowsList) {
+            ownArticleInfo = converter.getOwnArticleInfo(
+                    remoteAnalysisRow,
+                    classScopeArticleMap.get( remoteAnalysisRow.getArticleCode() ),
+                    classScopeDepartmentMap.get( remoteAnalysisRow.getDepartment() ),
+                    classScopeSectorMap.get( remoteAnalysisRow.getSector() )
+            );
+            ownArticleInfoList.add(ownArticleInfo);
+        }
+        ProgressBar progressBar = getView().findViewById(R.id.remote_2_local_progressBar);
+        ProgressBarPresenter progressBarPresenter = new ProgressBarPresenter( progressBar, ownArticleInfoList.size() );
+        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+        localDataRepository.insertOwnArticleInfos( ownArticleInfoList, progressBarPresenter );
     }
 
     //todo test
@@ -149,13 +288,17 @@ public class MainScreenFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
+    private void finishApp() {
+        AppHandle.getHandle().shutDown();
+        getActivity().finishAndRemoveTask();
+        System.exit(0);
+    }
+
     private class LogOffListener implements DialogInterface.OnClickListener {
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            AppHandle.getHandle().shutDown();
-            getActivity().finishAndRemoveTask();
-            System.exit(0);
+            finishApp();
         }
     }
 

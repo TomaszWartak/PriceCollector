@@ -1,38 +1,56 @@
 package com.dev4lazy.pricecollector.model.db;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.room.Update;
-import androidx.sqlite.db.SupportSQLiteQuery;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.entities.Sector;
 
 import java.util.List;
 
 @Dao
-public interface SectorDao {
-    @Insert
-    void insert( Sector sector );
+public interface SectorDao extends _Dao<Sector> {
 
-    @Update
-    void update( Sector sector );
+    @Override
+    @Query("SELECT COUNT(*) FROM sectors")
+    Integer getNumberOf();
 
-    @Delete
-    void delete( Sector sector );
-
+    @Override
     @Query("DELETE FROM sectors")
-    void deleteAll();
+    int deleteAll();
 
-    @Query("SELECT * FROM sectors WHERE id= :id")
-    LiveData<List<Sector>> findSectorById(String id);
+    @Override
+    @Query("SELECT * from sectors ORDER BY name ASC")
+    List<Sector> getAll();
 
-    @Query("SELECT * FROM sectors")
-    LiveData<List<Sector>> getAllSectors();
+    @Override
+    @Query("SELECT * from sectors ORDER BY name ASC")
+    LiveData<List<Sector>> getAllLiveData();
 
+    @Override
+    @Query("SELECT * FROM sectors ORDER BY id ASC")
+    DataSource.Factory<Integer, Sector> getAllPaged();
+
+    @Override
     @RawQuery(observedEntities = Sector.class)
-    LiveData<List<Sector>> getSectorsViaQuery( SupportSQLiteQuery query );
+    List<Sector> getViaQuery(SimpleSQLiteQuery query);
+
+    @Override
+    @RawQuery(observedEntities = Sector.class)
+    LiveData<List<Sector>> getViaQueryLiveData(SimpleSQLiteQuery query);
+
+    @Override
+    @Query("SELECT * from sectors WHERE id= :id")
+    List<Sector> findById(int id);
+
+    @Override
+    @Query("SELECT * FROM sectors WHERE id= :id")
+    LiveData<List<Sector>> findByIdLiveData( int id );
+
+    @Override
+    @Query("SELECT * from sectors WHERE name= :name")
+    List<Sector> findByName(String name);
 }

@@ -19,7 +19,7 @@ public class RemoteUserListViewModel extends AndroidViewModel {
     public RemoteUserListViewModel(Application application) {
         super(application);
         RemoteUserDao remoteUserDao = AppHandle.getHandle().getRemoteDatabase().userDao();
-        DataSource.Factory<Integer, RemoteUser>  factory = remoteUserDao.getAllRemoteUsersPaged();
+        DataSource.Factory<Integer, RemoteUser>  factory = remoteUserDao.getAllPaged();
         LivePagedListBuilder<Integer, RemoteUser> pagedListBuilder = new LivePagedListBuilder<Integer, RemoteUser>(factory, 50);
         remoteUsersLiveData = pagedListBuilder.build();
     }

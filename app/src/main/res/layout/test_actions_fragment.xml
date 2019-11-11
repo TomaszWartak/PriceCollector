@@ -18,6 +18,18 @@
             tools:context=".view.TestActionsFragment">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_create_departments_in_sector"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/design_default_color_secondary"
+                android:text="Twórz DEPS in SEC"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.458"
+                app:layout_constraintStart_toEndOf="@+id/button_countries"
+                app:layout_constraintTop_toTopOf="@+id/button_remote" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_own_stores"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
@@ -39,6 +51,18 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/button_own_stores"
                 app:layout_constraintTop_toTopOf="@+id/button_own_stores" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_show_depts_in_secs"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Działy w sektorach"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toEndOf="@+id/button_own_stores"
+                app:layout_constraintTop_toBottomOf="@+id/button_other_stores" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_companies"
@@ -71,13 +95,13 @@
                 android:layout_marginBottom="24dp"
                 android:backgroundTint="@color/colorWarning"
                 android:text="Czyść remote"
-                app:layout_constraintBottom_toTopOf="@+id/button_load_remote"
+                app:layout_constraintBottom_toTopOf="@+id/button_create_remote"
                 app:layout_constraintEnd_toStartOf="@+id/button_clear_local"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_load_remote"
+                android:id="@+id/button_create_remote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -97,8 +121,8 @@
                 android:text="Twórz local"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_load_remote"
-                app:layout_constraintTop_toTopOf="@+id/button_load_remote" />
+                app:layout_constraintStart_toEndOf="@+id/button_create_remote"
+                app:layout_constraintTop_toTopOf="@+id/button_create_remote" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_clear_local"

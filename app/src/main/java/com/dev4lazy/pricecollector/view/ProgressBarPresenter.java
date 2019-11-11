@@ -82,6 +82,7 @@ public class ProgressBarPresenter implements ProgressPresenter {
     public void hide() {
         progressBar.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.GONE);
+        progressBar=null;
     }
 
     @Override

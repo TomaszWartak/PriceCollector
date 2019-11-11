@@ -1,12 +1,12 @@
 package com.dev4lazy.pricecollector.view;
 
+import android.content.Context;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
-
-import android.content.Context;
-import android.os.Bundle;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.utils.AppHandle;
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
         setupNavigation();
 
         // Inicalizacja obiektu preferencji
-        AppHandle.getHandle().getPrefs().setPrefs(getPreferences(Context.MODE_PRIVATE));
+        AppHandle.getHandle().getPrefs().setPrefs( getPreferences(Context.MODE_PRIVATE) );
     }
 
     private void setupNavigation(){
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
             int requestCode,
             String[] permissions,
             int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode,permissions, grantResults);
+        super.onRequestPermissionsResult( requestCode, permissions, grantResults );
     }
 
 }

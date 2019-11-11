@@ -97,7 +97,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
                     AppHandle.getHandle().getSettings().setUser(new User(remoteUser));
                     // userViewModel.clear(); todo nie ma takiej metody...
                     // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
-                    if (!AppHandle.getHandle().getPrefs().getLocalDatabaseInitialized()) {
+                    if (!AppHandle.getHandle().getPrefs().isLocalDatabaseInitialized()) {
                         LocalDataInitializer.getInstance().initializeLocalDatabase();
                     }
                     Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_mainFragment);

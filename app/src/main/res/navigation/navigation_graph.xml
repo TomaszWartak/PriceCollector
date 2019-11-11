@@ -13,13 +13,16 @@
         <action
             android:id="@+id/action_startScreenFragment_to_setUpPreferencesFragment"
             app:destination="@id/setUpPreferncesFragment" />
+        <action
+            android:id="@+id/action_startScreenFragment_to_alertDialogFragment"
+            app:destination="@id/alertDialogFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/logingFragment"
         android:name="com.dev4lazy.pricecollector.view.LoginFragment"
         android:label="loging_fragment"
-        tools:layout="@layout/login_fragment1" >
+        tools:layout="@layout/login_fragment" >
         <action
             android:id="@+id/action_logingFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -95,6 +98,9 @@
         <action
             android:id="@+id/action_testActionsFragment_to_remoteAnalysisRowJoinFragment"
             app:destination="@id/remoteAnalysisRowJoinFragment" />
+        <action
+            android:id="@+id/action_testActionsFragment_to_departmentInSectorsListFragment"
+            app:destination="@id/departmentInSectorsListFragment" />
     </fragment>
     <fragment
         android:id="@+id/analysisCompetitorsFragment"
@@ -129,6 +135,12 @@
         <action
             android:id="@+id/action_testActionsFragment2_to_remoteAnalysisRowJoinFragment"
             app:destination="@id/remoteAnalysisRowJoinFragment" />
+        <action
+            android:id="@+id/action_testActionsFragment2_to_remoteSectorsListFragment"
+            app:destination="@id/remoteSectorsListFragment" />
+        <action
+            android:id="@+id/action_testActionsFragment2_to_remoteDepartmentsListFragment"
+            app:destination="@id/remoteDepartmentsListFragment" />
     </fragment>
     <fragment
         android:id="@+id/remoteUsersListFragment"
@@ -140,6 +152,25 @@
         android:name="com.dev4lazy.pricecollector.remote_view.RemoteAnalysisRowJoinFragment"
         android:label="RemoteAnalysisRowJoinFragment"
         tools:layout="@layout/remote_analysis_row_fragment" />
-    />
+    <dialog
+        android:id="@+id/alertDialogFragment"
+        android:name="com.dev4lazy.pricecollector.view.AlertDialogFragment"
+        android:label="AlertDialogFragment"
+        tools:layout="@layout/alert_dialog_fragment" />
+    <fragment
+        android:id="@+id/remoteSectorsListFragment"
+        android:name="com.dev4lazy.pricecollector.remote_view.RemoteSectorsListFragment"
+        android:label="remote_sectors_list_fragment"
+        tools:layout="@layout/remote_sectors_list_fragment" />
+    <fragment
+        android:id="@+id/remoteDepartmentsListFragment"
+        android:name="com.dev4lazy.pricecollector.remote_view.RemoteDepartmentsListFragment"
+        android:label="remote_departments_list_fragment"
+        tools:layout="@layout/remote_departments_list_fragment" />
+    <fragment
+        android:id="@+id/departmentInSectorsListFragment"
+        android:name="com.dev4lazy.pricecollector.view.DepartmentInSectorsListFragment"
+        android:label="depts_in_secs_list_fragment"
+        tools:layout="@layout/depts_in_secs_list_fragment" />
 
 </navigation>

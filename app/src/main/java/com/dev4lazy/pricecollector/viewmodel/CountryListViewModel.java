@@ -8,9 +8,7 @@ import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
-import com.dev4lazy.pricecollector.model.db.CompanyDao;
 import com.dev4lazy.pricecollector.model.db.CountryDao;
-import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
@@ -21,7 +19,7 @@ public class CountryListViewModel extends AndroidViewModel {
     public CountryListViewModel(Application application) {
         super(application);
         CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
-        DataSource.Factory<Integer, Country>  factory = countryDao.getAllCountriesPaged();
+        DataSource.Factory<Integer, Country>  factory = countryDao.getAllPaged();
         LivePagedListBuilder<Integer, Country> pagedListBuilder = new LivePagedListBuilder<Integer, Country>(factory, 50);
         countriesLiveData = pagedListBuilder.build();
     }

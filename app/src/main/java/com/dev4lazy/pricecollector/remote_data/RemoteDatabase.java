@@ -81,12 +81,12 @@ public abstract class RemoteDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE IF NOT EXISTS analyzes (" +
                     "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "creation_date INTEGER NOT NULL, " +
-                    "due_date INTEGER NOT NULL, " +
-                    "finish_date INTEGER NOT NULL, " +
-                    "confirmation_date INTEGER NOT NULL, " +
-                    "finished INTEGER NOT NULL )" );
-            database.execSQL("ALTER TABLE analysis_rows ADD COLUMN analysisId INTEGER NOT NULL");
+                    "creation_date INTEGER, " +
+                    "due_date INTEGER, " +
+                    "finish_date INTEGER, " +
+                    "confirmation_date INTEGER, " +
+                    "finished INTEGER )" );
+            database.execSQL("ALTER TABLE analysis_rows ADD COLUMN analysisId INTEGER");
             database.execSQL("ALTER TABLE analysis_rows ADD COLUMN department TEXT");
             database.execSQL("ALTER TABLE analysis_rows ADD COLUMN sector TEXT");
         }
@@ -118,9 +118,11 @@ public abstract class RemoteDatabase extends RoomDatabase {
         return instance;
     }
 
-    public abstract RemoteAnalysisRowDao analysisRowDao();
-
     private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
+
+    public abstract RemoteAnalysisDao remoteAnalysisDao();
+
+    public abstract RemoteAnalysisRowDao analysisRowDao();
 
     public abstract RemoteEanCodeDao eanCodeDao();
 

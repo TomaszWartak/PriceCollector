@@ -4,6 +4,24 @@ import android.content.SharedPreferences;
 
 public class AppPreferences {
 
+// AppPreferences -----------------------------------------------------------------------------
+    private static AppPreferences instance = new AppPreferences();
+// Ustawienia językowe -------------------------------------------------------------------------
+    private final String COUNTRY_NAME_KEY = "COUNTRY_NAME";
+    private final String ENGLISH_COUNTRY_NAME_KEY = "ENGLISH_COUNTRY_NAME";
+
+// Uprawnienia aplikacji -----------------------------------------------------------------------
+// Lokalna baza danych-------------------------------------------------------------------------
+    private final String LOCAL_DATABASE_INITIALIZED_KEY = "LOCAL_DATABASE_INITIALIZED";
+// Kontrola etapów inicjalizacji
+    private final String INITIALISATION_STAGE_KEY = "INITIALISATION_STAGE";
+    private final String ANALYSIS_COMPETITORS_SLOTS_INITIALIZED_KEY = "ANALYSIS_COMPETITORS_SLOTS_INITIALIZED";
+    private final String ANALYSIS_COMPETITORS_NUMBER_KEY = "ANALYSIS_COMPETITORS_NUMBER";
+    public int MAX_ANALYSIS_COMPETITORS_NUMBER = 5; //-1 oznacza dowolną ilość
+// SharedPreferences ---------------------------------------------------------------------------
+    private SharedPreferences prefs = null;
+    private SharedPreferences.Editor prefsEditor = null;
+
     public static final int LOCAL_DATA_NOT_INITIALIZED = 0;
     public static final int COUNTRIES_INITIALIZED = 1;
     public static final int COMPANIES_INITIALIZED = 2;
@@ -14,35 +32,8 @@ public class AppPreferences {
     public static final int LOCAL_COMPETITORS_STORES_INITIALIZED = 7;
     public static final int COMPETITORS_SLOTS_INITIALIZED = 8;
     public static final int LOCAL_DATA_INITIALIZED = COMPETITORS_SLOTS_INITIALIZED;
-
-// Ustawienia językowe -------------------------------------------------------------------------
-    private static AppPreferences instance = new AppPreferences();
-// countryName
-    private final String COUNTRY_NAME_KEY = "COUNTRY_NAME";
-// englishCountryName
-    private final String ENGLISH_COUNTRY_NAME_KEY = "ENGLISH_COUNTRY_NAME";
-// Lokalna baza danych-------------------------------------------------------------------------
-// localDatabaseInitialized
-    private final String LOCAL_DATABASE_INITIALIZED_KEY = "LOCAL_DATABASE_INITIALIZED";
-// Kontrola etapów inicjalizacji
-    private final String INITIALISATION_STAGE_KEY = "INITIALISATION_STAGE";
-    private final String ANALYSIS_COMPETITORS_SLOTS_INITIALIZED_KEY = "ANALYSIS_COMPETITORS_SLOTS_INITIALIZED";
-    private final String ANALYSIS_COMPETITORS_NUMBER_KEY = "ANALYSIS_COMPETITORS_NUMBER";
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-    public int MAX_ANALYSIS_COMPETITORS_NUMBER = 5; //-1 oznacza dowolną ilość
-    private SharedPreferences prefs = null;
-    private SharedPreferences.Editor prefsEditor = null;
-// todo language
+    // todo language
     private String language;
-
-    private AppPreferences() { }
 
     public static AppPreferences getInstance() {
         if (instance == null) {
@@ -55,10 +46,8 @@ public class AppPreferences {
         return instance;
     }
 
-    public void setPrefs(SharedPreferences prefs) {
-        this.prefs = prefs;
-        prefsEditor = prefs.edit();
-    }
+// AppPreferences -----------------------------------------------------------------------------
+    private AppPreferences() { }
 
     public void commit() {
         prefsEditor.commit();
@@ -66,6 +55,31 @@ public class AppPreferences {
 
     public void clear() {
         prefsEditor.clear();
+    }
+
+// SharedPreferences ---------------------------------------------------------------------------
+    public void setPrefs( SharedPreferences prefs ) {
+        this.prefs = prefs;
+        prefsEditor = prefs.edit();
+    }
+
+// Uprawnienia aplikacji -----------------------------------------------------------------------
+    public void setFirstTimeAskingPermission( String permission, boolean isFirstTime ) {
+        prefsEditor.putBoolean( permission, isFirstTime );
+        prefsEditor.commit();
+    }
+
+    public boolean isFirstTimeAskingPermission( String permission ) {
+        return prefs.getBoolean( permission,true );
+    }
+
+    // Ustawienia językowe -------------------------------------------------------------------------
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String getCountryName() {
@@ -86,15 +100,10 @@ public class AppPreferences {
         prefsEditor.apply();
     }
 
-    public boolean getLocalDatabaseInitialized() {
+// Lokalna baza danych-------------------------------------------------------------------------
+    public boolean isLocalDatabaseInitialized() {
         return prefs.getBoolean(LOCAL_DATABASE_INITIALIZED_KEY, false);
     }
-
-// Data ostatniego pobrania danych z serwera ---------------------------------------------------
-
-// Czy od ostaniego pobrania danych zostały zmienione dane lokalne -----------------------------
-
-// Konfiguracja okna ze sklepami konukernycjnymi wybranymi do analizy --------------------------
 
     public void setLocalDatabaseInitialized(boolean value) {
         prefsEditor.putBoolean(LOCAL_DATABASE_INITIALIZED_KEY, value);
@@ -110,15 +119,22 @@ public class AppPreferences {
         prefsEditor.commit();
     }
 
+// Data ostatniego pobrania danych z serwera ---------------------------------------------------
+
+// Czy od ostaniego pobrania danych zostały zmienione dane lokalne -----------------------------
+
+// Konfiguracja okna ze sklepami konukernycjnymi wybranymi do analizy --------------------------
+
     public void setMaxAnalysisCompetitorsNumber( int value ) {
         MAX_ANALYSIS_COMPETITORS_NUMBER = value;
     }
 
+    // TODO ostatni raz, kiedy tu zaglądałem to poniższe metody (do tagu XXX) nie były używane
     public int getMaxAalysisCompetitorsNumber() {
         return MAX_ANALYSIS_COMPETITORS_NUMBER;
     }
 
-    public boolean getCompetitorsSlotsInitialized() {
+    public boolean isCompetitorsSlotsInitialized() {
         return prefs.getBoolean(ANALYSIS_COMPETITORS_SLOTS_INITIALIZED_KEY, false);
     }
 
@@ -135,5 +151,7 @@ public class AppPreferences {
         prefsEditor.putInt(ANALYSIS_COMPETITORS_NUMBER_KEY, value);
         prefsEditor.commit();
     }
+
+    // TODO [XXX]
 
 }

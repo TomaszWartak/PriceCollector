@@ -7,20 +7,24 @@ import androidx.lifecycle.Observer;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.LocalDataRepository;
+import com.dev4lazy.pricecollector.model.Remote2LocalConverter;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
+import com.dev4lazy.pricecollector.model.entities.Department;
+import com.dev4lazy.pricecollector.model.entities.DepartmentInSector;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
+import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.entities.Store;
-import com.dev4lazy.pricecollector.remote_data.RemoteAnalysis;
 import com.dev4lazy.pricecollector.remote_data.RemoteDepartment;
 import com.dev4lazy.pricecollector.remote_data.RemoteSector;
-import com.dev4lazy.pricecollector.remote_data.RemoteUser;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.dev4lazy.pricecollector.utils.AppPreferences.BRICOMAN_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPANIES_INITIALIZED;
@@ -36,14 +40,6 @@ import static com.dev4lazy.pricecollector.utils.AppPreferences.OWN_STORES_INITIA
 // TODO inicjalizacja tylko danych testowych, czy wszystkich?
 public class LocalDataInitializer {
 
-    /*
-    public final String CASTORAMA_NAME = "Castorama";
-    public final String LEROY_MERLIN_NAME = "Leroy Merlin";
-    public final String OBI_NAME = "OBI";
-    public final String BRICOMAN_NAME = "BRICOMAN";
-    public final String LOCAL_COMPETITOR_NAME = "Konkurent lokalny";
-    */
-
     public final String[] COMPANIES_NAMES = {"Castorama", "Leroy Merlin", "OBI", "BRICOMAN", "Konkurent lokalny"};
     private final int CASTORAMA_INDEX = 0;
     private final int LEROY_MERLIN_INDEX = 1;
@@ -52,15 +48,6 @@ public class LocalDataInitializer {
     private final int LOCAL_COMPETITOR_INDEX = 4;
 
     private static LocalDataInitializer instance = new LocalDataInitializer();
-
-    // Użytkownicy w mocku zdalnej bazy danych
-    private List<RemoteUser> remoteUsers = null;
-
-    private List<RemoteDepartment> remoteDepartments = null;
-
-    private List<RemoteSector> remoteSectors = null;
-
-    private RemoteAnalysis remoteAnalysis = null;
 
     // Kraje
     // (0) - "Kraj własny"
@@ -104,191 +91,6 @@ public class LocalDataInitializer {
             }
         }
         return instance;
-    }
-
-//--------------------------------------------------------------------------
-// Remote Database
-
-    public void clearRemoteDatabase() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().clearDatabase();
-    }
-
-    public void InitializeRemoteDatabase() {
-        /* niestety RemoteDatabaseInitializer może być wywołany tylko we Fragmencie lub Aktywności,
-            więc nie mogę go tu wywołać. Jest wołany na żądanie w testowych fragmentach.
-            new RemoteDatabaseInitializer(this).doConversion();
-         */
-        initializeRemoteUsersOnly();
-        // todo chain remote
-    }
-
-// ---------------------------------------------------------------------------
-//  proceduta inicjalizacji danych zdalnych
-    private void initializeLocalData() {
-        prepareRemoteData();
-        startRemoteDataInitialisationChain();
-    }
-
-    private void prepareRemoteData() {
-        prepareRemoteUsers();
-        prepareRemoteDepartments();
-        prepareRemoteSectors();
-        prepareRemoteAnalysis();
-        // todo w Convererze RemoteEanCodes oddziel od RemoteAnalysisiRow po przeniesieniu permmisions do StartScreenFragment
-    }
-
-    public void initializeRemoteUsersOnly() {
-        prepareRemoteUsers();
-        populateRemoteUsers();
-    }
-
-    private void prepareRemoteUsers() {
-        Resources resources = AppHandle.getHandle().getResources();
-        remoteUsers = new ArrayList<>();
-        RemoteUser remoteUser = new RemoteUser();
-        remoteUser.setLogin("nowak_j");
-        remoteUser.setName("Jacek Nowak");
-        remoteUser.setOwnStoreNumber("8033");
-        remoteUser.setDepartmentSymbol(resources.getString(R.string.r70_department_symbol));
-        remoteUser.setSectorName(resources.getString(R.string.sdek_sector_name));
-        remoteUsers.add( remoteUser );
-        remoteUser = new RemoteUser();
-        remoteUser.setLogin("rutkowski_p");
-        remoteUser.setName("Piotr Rutkowski");
-        remoteUser.setOwnStoreNumber("8007");
-        remoteUser.setDepartmentSymbol(resources.getString(R.string.r90_department_symbol));
-        remoteUser.setSectorName(resources.getString(R.string.sbud_sector_name));
-        remoteUsers.add( remoteUser );
-        remoteUser = new RemoteUser();
-        remoteUser.setLogin("sroka_p");
-        remoteUser.setName("Piotr Sroka");
-        remoteUser.setOwnStoreNumber("8015");
-        remoteUser.setDepartmentSymbol(resources.getString(R.string.r20_department_symbol));
-        remoteUser.setSectorName(resources.getString(R.string.srem_sector_name));
-        remoteUsers.add( remoteUser );
-    }
-
-    private void populateRemoteUsers() {
-        for (RemoteUser remoteUser : remoteUsers ) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertUser( remoteUser, null );
-        }
-    }
-
-    public void clearRemoteUsers() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllUsers( null );
-    }
-
-    private void prepareRemoteAnalysis() {
-        remoteAnalysis = new RemoteAnalysis();
-        try {
-            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2019-10-24") );
-        } catch (ParseException parseException) {
-
-        }
-        try {
-            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-10-31"));
-        } catch (ParseException parseException) {
-
-        }
-        remoteAnalysis.setFinished( false );
-    }
-
-    private void populateRemoteAnalysis() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().insertAnalysis( remoteAnalysis, null );
-
-    }
-
-    private void clearRemoteAnalysis() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllAnalysis( null );
-
-    }
-
-    public void prepareRemoteDepartments() {
-        Resources resources = AppHandle.getHandle().getResources();
-        remoteDepartments = new ArrayList<>();
-        RemoteDepartment remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r06_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r06_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r10_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r10_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r20_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r20_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r30_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r30_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r40_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r40_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r50_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r50_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r60_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r60_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r70_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r70_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r80_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r80_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r90_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r90_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-    }
-    
-    private void populateRemoteDepartments() {
-        for (RemoteDepartment remoteDepartment : remoteDepartments) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertDepartment( remoteDepartment, null );
-        }
-    }
-    
-    private void clearRemoteDepartments() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllDepartments( null );
-    }
-
-    public void prepareRemoteSectors() {
-        Resources resources = AppHandle.getHandle().getResources();
-        remoteSectors = new ArrayList<>();
-        RemoteSector remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.sbud_sector_name));
-        remoteSectors.add(remoteSector);
-        remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.srem_sector_name));
-        remoteSectors.add(remoteSector);
-        remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.surz_sector_name));
-        remoteSectors.add(remoteSector);
-        remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.sdek_sector_name));
-        remoteSectors.add(remoteSector);
-        remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.sogr_sector_name));
-        remoteSectors.add(remoteSector);
-        remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.sok_sector_name));
-        remoteSectors.add(remoteSector);
-    }
-
-    private void populateRemoteSectors() {
-        for (RemoteSector remoteSector : remoteSectors) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertSector( remoteSector, null );
-        }
-    }
-
-    private void clearRemoteSectors() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllSectors( null );
     }
 
 //--------------------------------------------------------------------------
@@ -562,6 +364,203 @@ public class LocalDataInitializer {
 
     private void startLocalDataInitialisationChain() {
         populateCountries();
+    }
+
+
+    // todo private
+    public void createDepartmentsInSector() {
+        copySectorsFromRemoteDatabase();
+    }
+
+    // todo private?
+    private void copySectorsFromRemoteDatabase() {
+        MutableLiveData<List<RemoteSector>> getAllRemoteSectorsResult = new MutableLiveData<>();
+        Observer<List<RemoteSector>> insertingResultObserver = new Observer<List<RemoteSector>>() {
+            @Override
+            public void onChanged( List<RemoteSector> remoteSectors ) {
+                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
+                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
+                    getAllRemoteSectorsResult.removeObserver(this); // this = observer...
+                    if (!remoteSectors.isEmpty()) {
+                        Remote2LocalConverter remote2LocalConverter = new Remote2LocalConverter();
+                        Sector sector;
+                        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+                        for (RemoteSector remoteSector : remoteSectors) {
+                            sector = remote2LocalConverter.getSector( remoteSector );
+                            localDataRepository.insertSector( sector, null );
+                        }
+                        copyDepartmentsFromRemoteDatabase();
+                    }
+            }
+        };
+        getAllRemoteSectorsResult.observeForever( insertingResultObserver );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllSectors(getAllRemoteSectorsResult);
+    }
+
+    private void copyDepartmentsFromRemoteDatabase() {
+        MutableLiveData<List<RemoteDepartment>> getAllRemoteDepartmentsResult = new MutableLiveData<>();
+        Observer<List<RemoteDepartment>> insertingResultObserver = new Observer<List<RemoteDepartment>>() {
+            @Override
+            public void onChanged( List<RemoteDepartment> remoteDepartments ) {
+                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
+                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
+                getAllRemoteDepartmentsResult.removeObserver(this); // this = observer...
+                if (!remoteDepartments.isEmpty()) {
+                    Remote2LocalConverter remote2LocalConverter = new Remote2LocalConverter();
+                    Department department;
+                    LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+                    for (RemoteDepartment remoteDepartment : remoteDepartments) {
+                        department = remote2LocalConverter.getDepartment( remoteDepartment );
+                        localDataRepository.insertDepartment( department, null );
+                    }
+                    prepareSectors();
+                }
+            }
+        };
+        getAllRemoteDepartmentsResult.observeForever( insertingResultObserver );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllDepartments( getAllRemoteDepartmentsResult );
+    }
+
+    private void prepareSectors() {
+        // todo no a teraz jak jesteś taki mądry, to połącz...
+        // odczyt sektorów
+        MutableLiveData<List<Sector>> getAllSectorsResult = new MutableLiveData<>();
+        Observer<List<Sector>> getAllSectorsResultObserver = new Observer<List<Sector>>() {
+            @Override
+            public void onChanged( List<Sector> sectorList ) {
+                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
+                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
+                getAllSectorsResult.removeObserver(this); // this = observer...
+                if (!sectorList.isEmpty()) {
+                    Stream< Sector > sectorStream = sectorList.stream();
+                    Map< String, Integer > sectorsMap = sectorStream.collect(
+                            Collectors.toMap( Sector::getName, Sector::getId ) );
+                    prepareDepartments( sectorsMap );
+                }
+            }
+        };
+        getAllSectorsResult.observeForever( getAllSectorsResultObserver );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().getAllSectors( getAllSectorsResult );
+    }
+
+    private void prepareDepartments( Map<String, Integer> sectorsMap ) {
+        MutableLiveData<List<Department>> getAllDepartmentsResult = new MutableLiveData<>();
+        Observer<List<Department>> getAllDepartmentsResultObserver = new Observer<List<Department>>() {
+            @Override
+            public void onChanged( List<Department> departmentList ) {
+                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
+                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
+                getAllDepartmentsResult.removeObserver(this); // this = observer...
+                if (!departmentList.isEmpty()) {
+                    Stream<Department> departmentStream = departmentList.stream();
+                    Map<String, Integer> departmentsMap = departmentStream.collect(
+                            Collectors.toMap( Department::getSymbol, Department::getId ) );
+                    populateDepartmentsInSector( sectorsMap, departmentsMap );
+                }
+            }
+        };
+        getAllDepartmentsResult.observeForever( getAllDepartmentsResultObserver );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().getAllDepartments( getAllDepartmentsResult );
+    }
+
+    private void populateDepartmentsInSector(
+            Map<String, Integer> sectorsMap,
+            Map<String, Integer> departmentsMap ) {
+        DepartmentInSector departmentInSector = new DepartmentInSector();
+        Resources resources = AppHandle.getHandle().getResources();
+        Integer sectorId;
+        Integer departmentId;
+
+        // Budujesz
+        sectorId = sectorsMap.get( resources.getString(R.string.sbud_sector_name) );
+        departmentInSector.setSectorId( sectorId );
+        departmentId = departmentsMap.get( resources.getString(R.string.r10_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r30_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r90_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+
+        // Urządzasz
+        sectorId = sectorsMap.get( resources.getString(R.string.surz_sector_name) );
+        departmentInSector.setSectorId( sectorId );
+        departmentId = departmentsMap.get( resources.getString(R.string.r30_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r40_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r50_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+
+        // Dekorujesz
+        sectorId = sectorsMap.get( resources.getString(R.string.sdek_sector_name) );
+        departmentInSector.setSectorId( sectorId );
+        departmentId = departmentsMap.get( resources.getString(R.string.r10_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r40_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r70_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r80_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+
+        // Remontujesz
+        sectorId = sectorsMap.get( resources.getString(R.string.srem_sector_name) );
+        departmentInSector.setSectorId( sectorId );
+        departmentId = departmentsMap.get( resources.getString(R.string.r10_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r20_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r50_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r80_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+        departmentId = departmentsMap.get( resources.getString(R.string.r90_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+
+        // Ogród
+        sectorId = sectorsMap.get( resources.getString(R.string.sogr_sector_name) );
+        departmentInSector.setSectorId( sectorId );
+        departmentId = departmentsMap.get( resources.getString(R.string.r60_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+
+        // Obsługi Klienta
+        sectorId = sectorsMap.get( resources.getString(R.string.sok_sector_name) );
+        departmentInSector.setSectorId( sectorId );
+        departmentId = departmentsMap.get( resources.getString(R.string.r06_department_symbol) );
+        departmentInSector.setDepartmentId( departmentId );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertDepartmentInSector( departmentInSector, null );
+
+        // Sprawdzenie
+        MutableLiveData<List<DepartmentInSector>> getAllDepartmentsInSectorsResult = new MutableLiveData<>();
+        Observer<List<DepartmentInSector>> getAllDepartmentsInSectorsResultObserver = new Observer<List<DepartmentInSector>>() {
+            @Override
+            public void onChanged( List<DepartmentInSector> departmensInSectorsList ) {
+                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
+                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
+                getAllDepartmentsInSectorsResult.removeObserver(this); // this = observer...
+                if (!departmensInSectorsList.isEmpty()) {
+                }
+            }
+        };
+        getAllDepartmentsInSectorsResult.observeForever( getAllDepartmentsInSectorsResultObserver );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().getAllDepartmentInSectors( getAllDepartmentsInSectorsResult );
+
     }
 
     private void populateCountries() {

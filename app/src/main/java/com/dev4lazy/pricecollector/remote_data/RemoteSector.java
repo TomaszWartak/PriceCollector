@@ -1,5 +1,6 @@
 package com.dev4lazy.pricecollector.remote_data;
 
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -38,5 +39,10 @@ public class RemoteSector {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return (((RemoteSector)obj).id == this.id);
     }
 }

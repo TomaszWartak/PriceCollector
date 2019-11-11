@@ -18,7 +18,11 @@ public class DateConverter {
 
     @TypeConverter
     public Long date2Long(Date date) {
-        return date.getTime();
+        long result = -1;
+        if ( date!=null) {
+            result = date.getTime();
+        }
+        return result;
     }
 
     @TypeConverter

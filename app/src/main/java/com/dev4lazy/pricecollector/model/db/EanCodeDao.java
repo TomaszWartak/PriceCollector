@@ -5,7 +5,7 @@ import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.sqlite.db.SupportSQLiteQuery;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.entities.EanCode;
 
@@ -30,18 +30,28 @@ public interface EanCodeDao extends _Dao<EanCode>{
     @Query("SELECT * from ean_codes ORDER BY id ASC")
     LiveData<List<EanCode>> getAllLiveData();
 
+    @Override
+    @Query("SELECT * FROM ean_codes ORDER BY id ASC")
+    DataSource.Factory<Integer, EanCode> getAllPaged();
+
+    @Override
     @RawQuery(observedEntities = EanCode.class)
-    LiveData<List<EanCode>> getViaQuery(SupportSQLiteQuery query);
+    List<EanCode> getViaQuery(SimpleSQLiteQuery query);
+
+    @Override
+    @RawQuery(observedEntities = EanCode.class)
+    LiveData<List<EanCode>> getViaQueryLiveData(SimpleSQLiteQuery query);
 
     @Override
     @Query("SELECT * from ean_codes WHERE id= :id")
     List<EanCode> findById(int id);
 
     @Override
+    @Query("SELECT * FROM ean_codes WHERE id= :id")
+    LiveData<List<EanCode>> findByIdLiveData( int id );
+
+    @Override
     @Query("SELECT * from ean_codes WHERE id= :dummy")
     List<EanCode> findByName(String dummy);
-
-    @Query("SELECT * from ean_codes ORDER BY id ASC")
-    DataSource.Factory<Integer, EanCode> getAllEanCodesPaged();
 
 }

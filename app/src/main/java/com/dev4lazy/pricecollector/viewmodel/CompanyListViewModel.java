@@ -9,9 +9,7 @@ import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.model.db.CompanyDao;
-import com.dev4lazy.pricecollector.model.db.StoreDao;
 import com.dev4lazy.pricecollector.model.entities.Company;
-import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 public class CompanyListViewModel extends AndroidViewModel {
@@ -21,7 +19,7 @@ public class CompanyListViewModel extends AndroidViewModel {
     public CompanyListViewModel(Application application) {
         super(application);
         CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
-        DataSource.Factory<Integer, Company>  factory = companyDao.getAllCompaniesPaged();
+        DataSource.Factory<Integer, Company>  factory = companyDao.getAllPaged();
         LivePagedListBuilder<Integer, Company> pagedListBuilder = new LivePagedListBuilder<Integer, Company>(factory, 50);
         companiesLiveData = pagedListBuilder.build();
     }

@@ -3,12 +3,9 @@ package com.dev4lazy.pricecollector.model.db;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.room.Update;
-import androidx.sqlite.db.SupportSQLiteQuery;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.entities.Country;
 
@@ -26,26 +23,35 @@ public interface CountryDao extends _Dao<Country>{
     int deleteAll();
 
     @Override
-    @Query("SELECT * from countries ORDER BY name ASC")
+    @Query("SELECT * FROM countries ORDER BY name ASC")
     List<Country> getAll();
 
     @Override
-    @Query("SELECT * from countries ORDER BY name ASC")
+    @Query("SELECT * FROM countries ORDER BY name ASC")
     LiveData<List<Country>> getAllLiveData();
 
-    @RawQuery(observedEntities = Country.class)
-    LiveData<List<Country>> getViaQuery(SupportSQLiteQuery query);
+    @Query("SELECT * FROM countries ORDER BY name ASC")
+    DataSource.Factory<Integer, Country> getAllPaged();
 
     @Override
-    @Query("SELECT * from countries WHERE id= :id")
+    @RawQuery(observedEntities = Country.class)
+    List<Country> getViaQuery(SimpleSQLiteQuery query);
+
+    @Override
+    @RawQuery(observedEntities = Country.class)
+    LiveData<List<Country>> getViaQueryLiveData(SimpleSQLiteQuery query);
+
+    @Override
+    @Query("SELECT * FROM countries WHERE id= :id")
     List<Country> findById(int id);
 
     @Override
-    @Query("SELECT * from countries WHERE name= :name")
+    @Query("SELECT * FROM countries WHERE id= :id")
+    LiveData<List<Country>> findByIdLiveData( int id );
+
+    // dummy method?
+    @Override
+    @Query("SELECT * FROM countries WHERE name= :name")
     List<Country> findByName(String name);
-
-    @Query("SELECT * from countries ORDER BY name ASC")
-    DataSource.Factory<Integer, Country> getAllCountriesPaged();
-
 
 }

@@ -19,7 +19,7 @@ public class StoreListViewModel extends AndroidViewModel {
     public StoreListViewModel(Application application) {
         super(application);
         StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
-        DataSource.Factory<Integer, Store>  factory = storeDao.getAllStoresPaged();
+        DataSource.Factory<Integer, Store>  factory = storeDao.getAllPaged();
         LivePagedListBuilder<Integer, Store> pagedListBuilder = new LivePagedListBuilder<Integer, Store>(factory, 50);
         storesLiveData = pagedListBuilder.build();
     }

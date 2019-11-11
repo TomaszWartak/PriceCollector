@@ -34,11 +34,16 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
     public void signIn() {
         customToken = getCredential("TOKEN");
         if (customToken!=null) {
+            // TODO jak zrobić oczekiwanie przez określony czas bo czasamie wygląda tak jakby się Firebase zawieszał...
             firebaseAuthServices.signInWithCustomToken(customToken)
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
                             // Sign in success, update UI with the signed-in user's information
+                            // TODO !!! wszystkie użycia LOg zrób
+                            //  if (BuildConfig.DEBUG) {
+                            //	    Log.d( TAG, ".."+var );
+                            //  }
                             Log.d(TAG, "signInFirebase:success");
                             FirebaseUser user = firebaseAuthServices.getCurrentUser();
                             setLoggedIn(true);

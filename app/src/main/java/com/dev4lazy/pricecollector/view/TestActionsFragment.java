@@ -13,7 +13,7 @@ import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
-import com.dev4lazy.pricecollector.remote_data.RemoteDatabaseInitializer;
+import com.dev4lazy.pricecollector.remote_data.RemoteDataInitializer;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 /**
@@ -41,13 +41,11 @@ public class TestActionsFragment extends Fragment {
     }
 
     private void setTestButtons(View view) {
-        view.findViewById(R.id.button_load_remote).setOnClickListener((View v) -> {
-            new RemoteDatabaseInitializer(this).doConversion();
-            LocalDataInitializer.getInstance().initializeRemoteUsersOnly();
+        view.findViewById(R.id.button_create_remote).setOnClickListener((View v) -> {
+            RemoteDataInitializer.getInstance().initializeRemoteDatabase();
         });
         view.findViewById(R.id.button_clear_remote).setOnClickListener((View v) -> {
-            LocalDataInitializer.getInstance().clearRemoteDatabase();
-            // todo usuń RemoteDataRepository.getInstance().clearDatabase();
+            RemoteDataInitializer.getInstance().clearRemoteDatabase();
         });
         view.findViewById(R.id.button_remote).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_remoteAnalysisRowJoinFragment);
@@ -57,6 +55,9 @@ public class TestActionsFragment extends Fragment {
         });
         view.findViewById(R.id.button_clear_local).setOnClickListener((View v) -> {
             LocalDataInitializer.getInstance().clearLocalDatabase();
+        });
+        view.findViewById(R.id.button_create_departments_in_sector).setOnClickListener((View v) -> {
+            LocalDataInitializer.getInstance().createDepartmentsInSector();
         });
         view.findViewById(R.id.button_countries).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_countriesListFragment);
@@ -70,6 +71,9 @@ public class TestActionsFragment extends Fragment {
         view.findViewById(R.id.button_other_stores).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_otherStoresListFragment);
         });
+        view.findViewById(R.id.button_show_depts_in_secs).setOnClickListener((View v) -> {
+            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_departmentInSectorsListFragment);
+        });
     }
 
     @Override
@@ -82,11 +86,13 @@ public class TestActionsFragment extends Fragment {
                 PackageManager.PERMISSION_GRANTED)) {
             // Dostęp nadany
             switch (requestCode) {
+                /*
                 // todo to usunąć, bo służy tylko do wygenerowania mocka bazy remote
                 case RemoteDatabaseInitializer.MY_PERMISSIONS_REQUEST_STORAGE: {
                     new RemoteDatabaseInitializer(this).doConversion();
                     break;
                 }
+                 */
             }
         } else {
             // Dostęp nie udany. Wyświetlamy Toasta

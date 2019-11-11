@@ -41,9 +41,9 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int analysisId;
-    private int articleCode; // kod casto
-    private int store;
+    private Integer analysisId;
+    private Integer articleCode; // kod casto
+    private Integer store;
     private String articleName;
     private Double articleStorePrice;
     private Double articleRefPrice;
@@ -65,11 +65,19 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
         this.id = id;
     }
 
+    public Integer getAnalysisId() {
+        return analysisId;
+    }
+
+    public void setAnalysisId( Integer analysisId) {
+        this.analysisId = analysisId;
+    }
+
     public Integer getArticleCode() {
         return articleCode;
     }
 
-    public void setArticleCode(Integer articleCode) {
+    public void setArticleCode( Integer articleCode) {
         this.articleCode = articleCode;
     }
 
@@ -188,6 +196,11 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
     public static class AnalysisRowBuilder {
 
         private RemoteAnalysisRow remoteAnalysisRow = new RemoteAnalysisRow();
+
+        public AnalysisRowBuilder analysisId( Integer id ) {
+            remoteAnalysisRow.id = id;
+            return this;
+        }
 
         public AnalysisRowBuilder store(Integer store ){
             remoteAnalysisRow.store = store;

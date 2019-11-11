@@ -2,6 +2,8 @@ package com.dev4lazy.pricecollector.view;
 
 public interface ProgressPresenter {
 
+    Object NO_PROGRESS_PRESENTER = null;
+
     void init();
 
     void init( int endValue );

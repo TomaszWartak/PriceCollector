@@ -5,7 +5,7 @@ import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.sqlite.db.SupportSQLiteQuery;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.db._Dao;
 
@@ -23,25 +23,35 @@ public interface RemoteSectorDao extends _Dao<RemoteSector> {
     int deleteAll();
 
     @Override
-    @Query("SELECT * from sectors ORDER BY name ASC")
+    @Query("SELECT * FROM sectors ORDER BY name ASC")
     List<RemoteSector> getAll();
 
     @Override
-    @Query("SELECT * from sectors ORDER BY name ASC")
+    @Query("SELECT * FROM sectors ORDER BY name ASC")
     LiveData<List<RemoteSector>> getAllLiveData();
 
-    @Query("SELECT * from sectors ORDER BY name ASC")
-    DataSource.Factory<Integer, RemoteSector> getAllRemoteSectorsPaged();
-
-    @RawQuery(observedEntities = RemoteSector.class)
-    LiveData<List<RemoteSector>> getViaQueryLiveData(SupportSQLiteQuery query);
+    @Override
+    @Query("SELECT * FROM sectors ORDER BY name ASC")
+    DataSource.Factory<Integer, RemoteSector> getAllPaged();
 
     @Override
-    @Query("SELECT * from sectors WHERE id= :id")
+    @RawQuery(observedEntities = RemoteSector.class)
+    List<RemoteSector> getViaQuery(SimpleSQLiteQuery query);
+
+    @Override
+    @RawQuery(observedEntities = RemoteSector.class)
+    LiveData<List<RemoteSector>> getViaQueryLiveData(SimpleSQLiteQuery query);
+
+    @Override
+    @Query("SELECT * FROM sectors WHERE id= :id")
     List<RemoteSector> findById(int id);
 
     @Override
-    @Query("SELECT * from sectors WHERE name= :name")
+    @Query("SELECT * FROM sectors WHERE id= :id")
+    LiveData<List<RemoteSector>> findByIdLiveData( int id );
+
+    @Override
+    @Query("SELECT * FROM sectors WHERE name= :name")
     List<RemoteSector> findByName(String name);
 
 }

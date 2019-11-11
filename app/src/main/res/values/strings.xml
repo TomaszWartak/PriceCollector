@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">PriceCollector</string>
 
+
     <!-- wspólne -->
+    <string name="not_translated">nie przetłumaczone...</string>
     <string name="caption_ok">OK</string>
     <string name="caption_cancel">Anuluj</string>
     <string name="question_close_app">Czy chcesz zamknąć aplikację?</string>
@@ -82,9 +84,20 @@
     <string name="sogr_sector_name">Ogród</string>
     <string name="sok_sector_name">Obsługi Klienta</string>
 
+    <!-- PermissionUtils - skrócone nazwy uprawnień -->
+    <string name="short_permission_name_camera">APARAT FOTOGRAFICZNY, KAMERA</string>
+    <string name="short_permission_name_internet">INTERNET</string>
+    <string name="short_permission_name_read_external_storage">PLIKI Z KARTY PAMIĘCI (SD)</string>
+
+    <!-- do dialogów dot. uprawnień (Permissions) -->
+    <string name="nedded_permissions_message_line1">Ta aplikacja potrzebuje zgody na dostęp</string>
+    <string name="nedded_permissions_message_line2">do następujących zasobów:</string>
+    <string name="nedded_permissions_message_go_to_settings">Przejdź do Ustawień i wyraź odpowiednie zgody.</string>
+    <string name="yes_i_want_to_allow_message">Tak - chcę wyrazić zgodę</string>
+    <string name="yes_i_want_to_go_to_settings">Tak - chcę przejść do Ustawień</string>
+    <string name="no_i_want_to_exit_app_message">Nie - chcę wyjść z aplikacji</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
 
 </resources>

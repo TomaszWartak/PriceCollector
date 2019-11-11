@@ -6,7 +6,6 @@ import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.RawQuery;
 import androidx.sqlite.db.SimpleSQLiteQuery;
-import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.db._Dao;
 
@@ -31,28 +30,37 @@ public interface RemoteEanCodeDao extends _Dao<RemoteEanCode> {
     @Query("SELECT * from ean_codes ORDER BY value ASC")
     LiveData<List<RemoteEanCode>> getAllLiveData();
 
+    @Override
     @Query("SELECT * from ean_codes ORDER BY value ASC")
-    DataSource.Factory<Integer, RemoteEanCode> getAllRemoteEanCodesPaged();
-
-    @RawQuery(observedEntities = RemoteEanCode.class)
-    LiveData<List<RemoteEanCode>> getViaQueryLiveData(SupportSQLiteQuery query);
+    DataSource.Factory<Integer, RemoteEanCode> getAllPaged();
 
     @Override
     @RawQuery(observedEntities = RemoteEanCode.class)
     List<RemoteEanCode> getViaQuery(SimpleSQLiteQuery query);
 
     @Override
+    @RawQuery(observedEntities = RemoteEanCode.class)
+    LiveData<List<RemoteEanCode>> getViaQueryLiveData(SimpleSQLiteQuery query);
+
+    @Override
     @Query("SELECT * from ean_codes WHERE id= :id")
     List<RemoteEanCode> findById(int id);
+
+    @Override
+    @Query("SELECT * from ean_codes WHERE id= :id")
+    LiveData<List<RemoteEanCode>> findByIdLiveData( int id );
 
     @Override
     @Query("SELECT * from ean_codes WHERE id= :name")
     List<RemoteEanCode> findByName(String name);
 
+    /* todo
     @Query("SELECT * from ean_codes WHERE value= :value")
     List<RemoteEanCode> findByValue(String value);
 
     @Query("SELECT * from ean_codes WHERE article_id= :articleId")
     List<RemoteEanCode> findByArticleId(Integer articleId);
+
+     */
 
 }

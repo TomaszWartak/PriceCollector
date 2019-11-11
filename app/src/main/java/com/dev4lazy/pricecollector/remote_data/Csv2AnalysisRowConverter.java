@@ -25,7 +25,7 @@ public class Csv2AnalysisRowConverter {
     public Csv2AnalysisRowConverter() {
         analysisRowCsvReader.openReader( analysisRowsFileName );
         remoteDataRepository = RemoteDataRepository.getInstance();
-        remoteDataRepository.askAnalysisRowsCount(1);
+        remoteDataRepository.askAnalysisRowsCount();
         //todo może jakiś warunek, że jak błędy to nie działamy dalej...
         // ? globalne zmienne do błędów
         remoteAnalysisRowList = new ArrayList<>();
@@ -51,7 +51,7 @@ public class Csv2AnalysisRowConverter {
         fieldNamesList.add("article_local_competitor2_price");
     }
 
-    public void makeAnalisisRowList() {
+    public void makeAnalisisRowList( int analisisId ) {
         ArrayList<String> values;
         // "pusty odczyt" - wiersz nagłówków
         String csvLine = analysisRowCsvReader.readCsvLine();
@@ -59,6 +59,7 @@ public class Csv2AnalysisRowConverter {
         while ((csvLine= analysisRowCsvReader.readCsvLine())!=null) {
             values = csvDecoder.getValuesFromCsvLine(csvLine);
             remoteAnalysisRow = makeAnalisisRow(values);
+            remoteAnalysisRow.setAnalysisId( analisisId );
             remoteAnalysisRowList.add(remoteAnalysisRow);
         }
     }
@@ -70,6 +71,7 @@ public class Csv2AnalysisRowConverter {
         // todo zastanów się co, jeśli zmieni się format dancyh na serwerze analizy konkurencji
         RemoteAnalysisRow remoteAnalysisRow = new RemoteAnalysisRow.AnalysisRowBuilder()
                 .store( csvDecoder.getIntegerOrNullFromString( values.get(0)) )
+                .analysisId( 0 ) // 0 - bo zostanie wpisany później
                 .articleCode( csvDecoder.getIntegerOrNullFromString( values.get(1)) )
                 .articleName( values.get(2) )
                 .articleStorePrice( csvDecoder.getDoubleOrNullFromString(values.get(3)) )

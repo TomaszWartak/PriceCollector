@@ -6,17 +6,27 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dev4lazy.pricecollector.model.db.AnalysisCompetitorSlotDao;
+import com.dev4lazy.pricecollector.model.db.ArticleDao;
 import com.dev4lazy.pricecollector.model.db.CompanyDao;
 import com.dev4lazy.pricecollector.model.db.CountryDao;
+import com.dev4lazy.pricecollector.model.db.DepartmentDao;
+import com.dev4lazy.pricecollector.model.db.DepartmentInSectorDao;
 import com.dev4lazy.pricecollector.model.db.EanCodeDao;
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
+import com.dev4lazy.pricecollector.model.db.OwnArticleInfoDao;
 import com.dev4lazy.pricecollector.model.db.OwnStoreDao;
+import com.dev4lazy.pricecollector.model.db.SectorDao;
 import com.dev4lazy.pricecollector.model.db.StoreDao;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
+import com.dev4lazy.pricecollector.model.entities.Article;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
+import com.dev4lazy.pricecollector.model.entities.Department;
+import com.dev4lazy.pricecollector.model.entities.DepartmentInSector;
 import com.dev4lazy.pricecollector.model.entities.EanCode;
+import com.dev4lazy.pricecollector.model.entities.OwnArticleInfo;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
+import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
@@ -27,10 +37,6 @@ import java.util.List;
 public class LocalDataRepository {
 
     private static LocalDataRepository instance = new LocalDataRepository();
-
-//-----------------------------------------------------------------------
-// AnalysisCompetitorSlot
-    private AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
 
     public static LocalDataRepository getInstance() {
         if (instance == null) {
@@ -43,37 +49,50 @@ public class LocalDataRepository {
         return instance;
     }
 
+    /*private LocalDataRepository() {
+
+    }
+     */
+
 // po getInstance -----------------------------------------------------------------------
+    
 // Analysis
+
+//-----------------------------------------------------------------------
+// AnalysisCompetitorSlot
+    private AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
     private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
 //-----------------------------------------------------------------------
+// Article
+    private ArticleDao articleDao = AppHandle.getHandle().getLocalDatabase().articleDao();
+    private Data<Article> articles = new Data<>(articleDao);
+    //-----------------------------------------------------------------------
 // Company
     private CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
+    private Data<Company> companies = new Data<>(companyDao);
 //-----------------------------------------------------------------------
 // Country
-private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
 //-----------------------------------------------------------------------
-// EanCode
-    private EanCodeDao eanCodeDao = AppHandle.getHandle().getLocalDatabase().eanCodeDao();
-    private Data<EanCode> eanCodes = new Data<EanCode>(eanCodeDao);
-
-//-----------------------------------------------------------------------------------
-// clearDatabaseAsync
-    public void clearDatabase(AfterDatabaseClearedCallback callback) {
-        new ClearDatabaseAsyncTask(
-                AppHandle.getHandle().getLocalDatabase(),
-                callback
-        ).execute();
-    }
-
-    private LocalDataRepository() {
-
-    }
+// Department
+    private DepartmentDao departmentDao = AppHandle.getHandle().getLocalDatabase().departmentDao();
+    private Data<Department> departments = new Data<>(departmentDao);
+//-----------------------------------------------------------------------
+// DepartmentInSector
+    private DepartmentInSectorDao departmentInSectorDao = AppHandle.getHandle().getLocalDatabase().departmentInSectorDao();
+    private Data<DepartmentInSector> departmentInSectors = new Data<>(departmentInSectorDao);
+//-----------------------------------------------------------------------
+// OwnArticleInfo
+    private OwnArticleInfoDao ownArticleInfoDao = AppHandle.getHandle().getLocalDatabase().ownArticleInfoDao();
+    private Data<OwnArticleInfo> ownArticleInfos = new Data<OwnArticleInfo>(ownArticleInfoDao);
+//-----------------------------------------------------------------------
+// Sector
+    private SectorDao sectorDao = AppHandle.getHandle().getLocalDatabase().sectorDao();
+    private Data<Sector> sectors = new Data<>(sectorDao);
 
     public void insertAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Long> result ) {
         slots.insertData(analysisCompetitorSlot,result);
     }
-    private Data<Country> countries = new Data<>(countryDao);
 
     public void updateAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Integer> result  ) {
         slots.updateData(analysisCompetitorSlot, result);
@@ -82,6 +101,45 @@ private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().country
     public void deleteAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Integer> result   ) {
         slots.deleteData(analysisCompetitorSlot, result);
     }
+
+    public void insertArticles( ArrayList<Article> articlesList, ProgressPresenter progressPresenter) {
+        articles.insertDataList( articlesList, progressPresenter );
+    }
+
+    public void getAllArticles( MutableLiveData<List<Article>> result ) {
+        articles.getAllData( result );
+    }
+
+    public void insertCompany( Company company, MutableLiveData<Long> result ) {
+        companies.insertData(company,result);
+    }
+
+    public void updateCompany( Company company, MutableLiveData<Integer> result  ) {
+        companies.updateData(company, result);
+    }
+
+    public void deleteCompany( Company company, MutableLiveData<Integer> result   ) {
+        companies.deleteData(company, result);
+    }
+
+    public void findCountryById(int id, MutableLiveData<List<Country>> result) {
+        countries.findDataById( id, result);
+    }
+
+    public void findCountryByName(String countryName, MutableLiveData<List<Country>> result) {
+        countries.findDataByName(countryName, result);
+    }
+
+//-----------------------------------------------------------------------
+// EanCode
+    private EanCodeDao eanCodeDao = AppHandle.getHandle().getLocalDatabase().eanCodeDao();
+    private Data<EanCode> eanCodes = new Data<EanCode>(eanCodeDao);
+
+    public void insertDepartment( Department department, MutableLiveData<Long> result ) {
+        departments.insertData( department, result );
+    }
+
+    private Data<Country> countries = new Data<>(countryDao);
 
     public void insertCountry(Country country, MutableLiveData<Long> result ) {
         countries.insertData(country,result);
@@ -115,23 +173,6 @@ private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().country
     private StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
     private Data<Store> stores = new Data<>(storeDao);
 
-//-----------------------------------------------------------------------
-// Article
-
-
-    private Data<Company> companies = new Data<>(companyDao);
-
-    public void insertCompany( Company company, MutableLiveData<Long> result ) {
-        companies.insertData(company,result);
-    }
-
-    public void updateCompany( Company company, MutableLiveData<Integer> result  ) {
-        companies.updateData(company, result);
-    }
-
-    public void deleteCompany( Company company, MutableLiveData<Integer> result   ) {
-        companies.deleteData(company, result);
-    }
 
     public void findAnalysisCompetitorSlotById(int id, MutableLiveData<List<AnalysisCompetitorSlot>> result) {
         slots.findDataById( id, result);
@@ -184,21 +225,6 @@ private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().country
     */
 
 //-----------------------------------------------------------------------
-// Department
-
-    public void findCountryById(int id, MutableLiveData<List<Country>> result) {
-        countries.findDataById( id, result);
-    }
-
-    public void findCountryByName(String countryName, MutableLiveData<List<Country>> result) {
-        countries.findDataByName(countryName, result);
-    }
-
-    public void insertEanCodes( ArrayList<EanCode> eanCodeList, ProgressPresenter progressPresenter) {
-        eanCodes.insertDataList( eanCodeList, progressPresenter );
-    }
-
-//-----------------------------------------------------------------------
 // Family
 
 //-----------------------------------------------------------------------
@@ -207,9 +233,18 @@ private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().country
 //-----------------------------------------------------------------------
 // Module
 
-//-----------------------------------------------------------------------
-// OwnArticleInfo
+    public void getAllDepartments( MutableLiveData<List<Department>> result ) {
+        departments.getAllData( result );
+    }
 
+    public void insertDepartmentInSector( DepartmentInSector departmentInSector, MutableLiveData<Long> result ) {
+        departmentInSectors.insertData( departmentInSector, result );
+    }
+
+    public void getAllDepartmentInSectors( MutableLiveData<List<DepartmentInSector>> result ) {
+        departmentInSectors.getAllData( result );
+    }
+    
     public void findCompanyByName(String companyName, MutableLiveData<List<Company>> result ) {
         companies.findDataByName(companyName, result);
     }
@@ -272,33 +307,6 @@ private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().country
     */
 
 
-    public interface AfterDatabaseClearedCallback {
-        void call();
-    }
-
-    private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
-        private LocalDatabase assyncTaskAnalyzesDatabase;
-        private AfterDatabaseClearedCallback afterDatabaseClearedCallback;
-
-        ClearDatabaseAsyncTask(LocalDatabase database, AfterDatabaseClearedCallback callback) {
-            assyncTaskAnalyzesDatabase = database;
-            afterDatabaseClearedCallback = callback;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            assyncTaskAnalyzesDatabase.clearAllTables();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (afterDatabaseClearedCallback!=null) {
-                afterDatabaseClearedCallback.call();
-            }
-        }
-    }
 
 
     public void findStoreById(int id, MutableLiveData<List<Store>> result) {
@@ -345,10 +353,59 @@ private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().country
     }
     */
 
-//-----------------------------------------------------------------------
-// Sector
+    public void insertEanCodes( ArrayList<EanCode> eanCodeList, ProgressPresenter progressPresenter) {
+        eanCodes.insertDataList( eanCodeList, progressPresenter );
+    }
 
+    public void insertOwnArticleInfos( ArrayList<OwnArticleInfo> ownArticleInfoList, ProgressPresenter progressPresenter) {
+        ownArticleInfos.insertDataList( ownArticleInfoList, progressPresenter );
+    }
+
+    public void insertSector(Sector sector, MutableLiveData<Long> result ) {
+        sectors.insertData(sector,result);
+    }
+
+    public void getAllSectors( MutableLiveData<List<Sector>> result ) {
+        sectors.getAllData( result );
+    }
 //-----------------------------------------------------------------------
 // UOProject
+
+//-----------------------------------------------------------------------------------
+// clearDatabaseAsync
+    public void clearDatabase(AfterDatabaseClearedCallback callback) {
+        new ClearDatabaseAsyncTask(
+                AppHandle.getHandle().getLocalDatabase(),
+                callback
+        ).execute();
+    }
+
+    public interface AfterDatabaseClearedCallback {
+        void call();
+    }
+
+    private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
+        private LocalDatabase asyncTaskAnalyzesDatabase;
+        private AfterDatabaseClearedCallback afterDatabaseClearedCallback;
+
+        ClearDatabaseAsyncTask(LocalDatabase database, AfterDatabaseClearedCallback callback) {
+            asyncTaskAnalyzesDatabase = database;
+            afterDatabaseClearedCallback = callback;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            asyncTaskAnalyzesDatabase.clearAllTables();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (afterDatabaseClearedCallback!=null) {
+                afterDatabaseClearedCallback.call();
+            }
+        }
+    }
 
 }

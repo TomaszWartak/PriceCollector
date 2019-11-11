@@ -19,7 +19,7 @@ public class OwnStoreListViewModel extends AndroidViewModel {
     public OwnStoreListViewModel(Application application) {
         super(application);
         OwnStoreDao ownStoreDao = AppHandle.getHandle().getLocalDatabase().ownStoreDao();
-        DataSource.Factory<Integer, OwnStore>  factory = ownStoreDao.getAllOwnStoresPaged();
+        DataSource.Factory<Integer, OwnStore>  factory = ownStoreDao.getAllPaged();
         LivePagedListBuilder<Integer, OwnStore> pagedListBuilder = new LivePagedListBuilder<Integer, OwnStore>(factory, 50);
         ownStoresLiveData = pagedListBuilder.build();
     }

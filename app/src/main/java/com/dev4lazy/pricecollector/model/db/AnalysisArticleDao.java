@@ -76,7 +76,7 @@ public interface AnalysisArticleDao {
                     "own_articles_infos.ownCode, " +
                     "ec1.value, " +
                     "ec2.value " +
-                    "FROM " +
+            "FROM " +
                     "analysis_articles aa1, analysis_articles aa2 " +
             "INNER JOIN " +
                     "articles a1 ON a1.id = aa1.article_id "+

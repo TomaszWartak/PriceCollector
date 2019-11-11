@@ -9,7 +9,8 @@ import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRow;
-import com.dev4lazy.pricecollector.remote_data.RemoteDatabase;
+import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRowDao;
+import com.dev4lazy.pricecollector.utils.AppHandle;
 
 public class RemoteAnalysisRowViewModel extends AndroidViewModel {
 
@@ -17,7 +18,8 @@ public class RemoteAnalysisRowViewModel extends AndroidViewModel {
 
     public RemoteAnalysisRowViewModel(Application application) {
         super(application);
-        DataSource.Factory<Integer, RemoteAnalysisRow>  factory = RemoteDatabase.getInstance().analysisRowDao().getAllAnalysisRowsPaged();
+        RemoteAnalysisRowDao analysisRowDao = AppHandle.getHandle().getRemoteDatabase().analysisRowDao();
+        DataSource.Factory<Integer, RemoteAnalysisRow>  factory = analysisRowDao.getAllPaged();
         LivePagedListBuilder<Integer, RemoteAnalysisRow> pagedListBuilder = new LivePagedListBuilder<Integer, RemoteAnalysisRow>(factory, 50);
         analysisRowsLiveData = pagedListBuilder.build();
     }

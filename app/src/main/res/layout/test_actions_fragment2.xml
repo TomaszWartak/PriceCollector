@@ -19,6 +19,48 @@
 
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_show_remote_departments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pokaż remote działy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.519"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_show_remote_sectors" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_clear_remote_sects_depts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorWarning"
+                android:text="Czyść remote sektory i działy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.513"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_show_remote2" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_show_remote_sectors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pokaż remote sektory"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.513"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_create_remote_sects_depts" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_create_remote_sects_depts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/design_default_color_secondary"
+                android:text="Twórz remote sektory i działy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.515"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_clear_remote_sects_depts" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_clear_remote_users"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
