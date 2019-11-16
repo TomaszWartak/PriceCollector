@@ -116,7 +116,7 @@ public class AnalysisCompetitorsAdapter extends ArrayAdapter<CompetitorSlotFullD
         Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_addStoreDialogFragment );
     }
 
-private void DriveToComppetitorStore() {
+    private void DriveToComppetitorStore() {
 
     }
 
@@ -191,7 +191,7 @@ private void DriveToComppetitorStore() {
         }
     }
 
-        private class SlotViewWhenNoStoreChosenOnClickListener implements View.OnClickListener {
+    private class SlotViewWhenNoStoreChosenOnClickListener implements View.OnClickListener {
 
         private CompetitorSlotFullData competitorSlotFullData;
 
@@ -204,7 +204,7 @@ private void DriveToComppetitorStore() {
             createStoresListMenu( view, competitorSlotFullData );
         }
 
-    };
+    }
 
     private void setOffSlotViewOnClickListener(View slotView ) {
         slotView.setOnClickListener(null);

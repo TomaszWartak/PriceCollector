@@ -2,7 +2,7 @@ package com.dev4lazy.pricecollector.model;
 
 public class DataRepository {
 
-    private static DataRepository instance = new DataRepository();
+    private static DataRepository instance = null;
 
     private LocalDataRepository localDataRepository = null;
 

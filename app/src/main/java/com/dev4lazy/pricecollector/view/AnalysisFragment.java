@@ -2,6 +2,9 @@ package com.dev4lazy.pricecollector.view;
 
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,13 +16,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
-import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleViewModel;
+import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
+import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -29,9 +28,11 @@ import static android.widget.LinearLayout.VERTICAL;
 public class AnalysisFragment extends Fragment {
 
 
-    private AnalysisArticleViewModel viewModel;
+    //private AnalysisArticleViewModel viewModel;
+    private AnalysisArticleJoinViewModel viewModel;
     private RecyclerView recyclerView;
-    private AnalysisArticleAdapter analysisArticleAdapter;
+    //private AnalysisArticleAdapter analysisArticleJoinAdapter;
+    private AnalysisArticleJoinAdapter analysisArticleJoinAdapter;
 
     public AnalysisFragment() {
         // Required empty public constructor
@@ -49,26 +50,28 @@ public class AnalysisFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(AnalysisArticleViewModel.class);
+        super.onActivityCreated( savedInstanceState );
+        //viewModel = ViewModelProviders.of(this).get(AnalysisArticleViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinViewModel.class);
         recyclerSetup();
         subscribeRecycler();
     }
 
     private void recyclerSetup() {
-        analysisArticleAdapter = new AnalysisArticleAdapter(new AnalysisArticleDiffCalback());
+        analysisArticleJoinAdapter = new AnalysisArticleJoinAdapter(new AnalysisArticleJoinDiffCalback());
         recyclerView = getView().findViewById(R.id.analysis_articles_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
-        recyclerView.setAdapter(analysisArticleAdapter);
+        recyclerView.setAdapter(analysisArticleJoinAdapter);
     }
 
     private void subscribeRecycler() {
-        viewModel.getAnalysisRowsLiveData().observe(this, new Observer<PagedList<AnalysisArticle>>() {
+        //viewModel.getAnalysisRowsLiveData().observe(this, new Observer<PagedList<AnalysisArticle>>() {
+        viewModel.getAnalysisArticleJoinLiveData().observe(this, new Observer<PagedList<AnalysisArticleJoin>>() {
             @Override
-            public void onChanged(PagedList<AnalysisArticle> analysisArticles) {
-                if (!analysisArticles.isEmpty()) {
-                    analysisArticleAdapter.submitList(analysisArticles);
+            public void onChanged(PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
+                if (!analysisArticlesJoins.isEmpty()) {
+                    analysisArticleJoinAdapter.submitList(analysisArticlesJoins);
                 }
             }
         });

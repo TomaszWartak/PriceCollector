@@ -19,6 +19,10 @@ public interface CountryDao extends _Dao<Country>{
     Integer getNumberOf();
 
     @Override
+    @Query("SELECT COUNT(*) FROM countries")
+    LiveData<Integer> getNumberOfLiveData();
+
+    @Override
     @Query("DELETE FROM countries")
     int deleteAll();
 

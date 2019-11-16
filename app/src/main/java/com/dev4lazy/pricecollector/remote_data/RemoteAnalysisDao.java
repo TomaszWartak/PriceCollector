@@ -19,6 +19,10 @@ public interface RemoteAnalysisDao extends _Dao<RemoteAnalysis> {
     Integer getNumberOf();
 
     @Override
+    @Query("SELECT COUNT(*) FROM analyzes")
+    LiveData<Integer> getNumberOfLiveData();
+
+    @Override
     @Query("DELETE FROM analyzes")
     int deleteAll();
 

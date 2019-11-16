@@ -6,8 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dev4lazy.pricecollector.model.db.AnalysisCompetitorSlotDao;
+import com.dev4lazy.pricecollector.model.db.AnalysisDao;
 import com.dev4lazy.pricecollector.model.db.ArticleDao;
 import com.dev4lazy.pricecollector.model.db.CompanyDao;
+import com.dev4lazy.pricecollector.model.db.CompetitorPriceDao;
 import com.dev4lazy.pricecollector.model.db.CountryDao;
 import com.dev4lazy.pricecollector.model.db.DepartmentDao;
 import com.dev4lazy.pricecollector.model.db.DepartmentInSectorDao;
@@ -17,9 +19,11 @@ import com.dev4lazy.pricecollector.model.db.OwnArticleInfoDao;
 import com.dev4lazy.pricecollector.model.db.OwnStoreDao;
 import com.dev4lazy.pricecollector.model.db.SectorDao;
 import com.dev4lazy.pricecollector.model.db.StoreDao;
+import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Article;
 import com.dev4lazy.pricecollector.model.entities.Company;
+import com.dev4lazy.pricecollector.model.entities.CompetitorPrice;
 import com.dev4lazy.pricecollector.model.entities.Country;
 import com.dev4lazy.pricecollector.model.entities.Department;
 import com.dev4lazy.pricecollector.model.entities.DepartmentInSector;
@@ -57,10 +61,38 @@ public class LocalDataRepository {
 // po getInstance -----------------------------------------------------------------------
     
 // Analysis
-
-//-----------------------------------------------------------------------
+private AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
+    private Data<Analysis> analyzes  = new Data<>( analysisDao );
+    //-----------------------------------------------------------------------
 // AnalysisCompetitorSlot
     private AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
+//-----------------------------------------------------------------------
+// CompetitorPrice
+    private CompetitorPriceDao competitorPriceDao = AppHandle.getHandle().getLocalDatabase().competitorPriceDao();
+    private Data<CompetitorPrice> competitorPrices = new Data<>( competitorPriceDao );
+    //-----------------------------------------------------------------------
+// Country
+    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+
+    public void askAnalyzesNumberOf( MutableLiveData<Integer> result ) {
+        analyzes.getNumberOfData( result );
+    }
+
+    public void insertAnalysis( Analysis analysis, MutableLiveData<Long> result ) {
+        analyzes.insertData( analysis, result );
+    }
+
+    public void insertAnalyzes ( ArrayList<Analysis> analyzesList, ProgressPresenter progressPresenter ) {
+        analyzes.insertDataList( analyzesList, progressPresenter );
+    }
+
+    public void updateAnalysis( Analysis analysis, MutableLiveData<Integer> result ) {
+        analyzes .updateData( analysis, result );
+    }
+
+    public void deleteAnalysis(Analysis analysis, MutableLiveData<Integer> result ) {
+        analyzes.deleteData( analysis, result );
+    }
     private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
 //-----------------------------------------------------------------------
 // Article
@@ -70,9 +102,50 @@ public class LocalDataRepository {
 // Company
     private CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
     private Data<Company> companies = new Data<>(companyDao);
-//-----------------------------------------------------------------------
-// Country
-    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+
+    public void deleteAllAnalyzes ( MutableLiveData<Integer> result ) {
+        analyzes.deleteAllData( result );
+    }
+
+    public void getAllAnalyzes ( MutableLiveData<List<Analysis>> result ) {
+        analyzes.getAllData( result );
+    }
+
+    public void findAnalysisById( int id, MutableLiveData<List<Analysis>> result ) {
+        analyzes.findDataById( id, result );
+    }
+
+    public void askCompetitorPricesNumberOf( MutableLiveData<Integer> result ) {
+        competitorPrices.getNumberOfData( result );
+    }
+
+    public void insertCompetitorPrice( CompetitorPrice competitorPrice, MutableLiveData<Long> result ) {
+        competitorPrices.insertData( competitorPrice, result );
+    }
+
+    public void insertCompetitorPrices(ArrayList<CompetitorPrice> competitorPricesList, ProgressPresenter progressPresenter ) {
+        competitorPrices.insertDataList( competitorPricesList, progressPresenter );
+    }
+
+    public void updateCompetitorPrice( CompetitorPrice competitorPrice, MutableLiveData<Integer> result ) {
+        competitorPrices.updateData( competitorPrice, result );
+    }
+
+    public void deleteCompetitorPrice( CompetitorPrice competitorPrice, MutableLiveData<Integer> result ) {
+        competitorPrices.deleteData( competitorPrice, result );
+    }
+
+    public void deleteAllCompetitorPrices( MutableLiveData<Integer> result ) {
+        competitorPrices.deleteAllData( result );
+    }
+
+    public void getAllCompetitorPrices( MutableLiveData<List<CompetitorPrice>> result ) {
+        competitorPrices.getAllData( result );
+    }
+
+    public void findCompetitorPriceById( int id, MutableLiveData<List<CompetitorPrice>> result ) {
+        competitorPrices.findDataById( id, result );
+    }
 //-----------------------------------------------------------------------
 // Department
     private DepartmentDao departmentDao = AppHandle.getHandle().getLocalDatabase().departmentDao();

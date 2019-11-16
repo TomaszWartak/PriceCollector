@@ -19,6 +19,10 @@ public interface ArticleDao extends _Dao<Article> {
     Integer getNumberOf();
 
     @Override
+    @Query("SELECT COUNT(*) FROM articles")
+    LiveData<Integer> getNumberOfLiveData();
+
+    @Override
     @Query("DELETE FROM articles")
     int deleteAll();
 

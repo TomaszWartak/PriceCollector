@@ -70,6 +70,10 @@ public class RemoteAnalysis {
         return finished;
     }
 
+    public Boolean isNotFinished() {
+        return !finished;
+    }
+
     public void setFinished(Boolean finished) {
         this.finished = finished;
     }

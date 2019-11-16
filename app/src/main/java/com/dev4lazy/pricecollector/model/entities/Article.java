@@ -3,6 +3,8 @@ package com.dev4lazy.pricecollector.model.entities;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 @Entity(tableName = "articles" ) // [dbo].[DCT_Article]
 /*
     [SKU_Id] [int] NOT NULL,
@@ -59,5 +61,18 @@ public class Article {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Article)) return false;
+        Article article = (Article) o;
+        return id == article.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

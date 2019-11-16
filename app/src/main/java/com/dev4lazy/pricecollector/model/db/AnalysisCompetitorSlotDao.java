@@ -19,6 +19,10 @@ public interface AnalysisCompetitorSlotDao extends _Dao<AnalysisCompetitorSlot> 
     Integer getNumberOf();
 
     @Override
+    @Query("SELECT COUNT(*) FROM competitor_slots")
+    LiveData<Integer> getNumberOfLiveData();
+
+    @Override
     @Query("DELETE FROM competitor_slots")
     int deleteAll();
 

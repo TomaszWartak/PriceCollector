@@ -1,38 +1,61 @@
 package com.dev4lazy.pricecollector.model.db;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.room.Update;
-import androidx.sqlite.db.SupportSQLiteQuery;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.entities.UOProject;
 
 import java.util.List;
 
 @Dao
-public interface UOProjectDao {
-    @Insert
-    void insert( UOProject uOProject );
+public interface UOProjectDao extends _Dao<UOProject> {
 
-    @Update
-    void update( UOProject uOProject );
+    @Override
+    @Query("SELECT COUNT(*) FROM uo_projects")
+    Integer getNumberOf ();
 
-    @Delete
-    void delete( UOProject uOProject );
+    @Override
+    @Query("SELECT COUNT(*) FROM uo_projects")
+    LiveData<Integer> getNumberOfLiveData ();
 
+    @Override
     @Query("DELETE FROM uo_projects")
-    void deleteAll();
+    int deleteAll ();
 
-    @Query("SELECT * FROM uo_projects WHERE id= :id")
-    LiveData<List<UOProject>> findUOProjectById(String id);
+    @Override
+    @Query("SELECT * from uo_projects ORDER BY id ASC")
+    List<UOProject> getAll ();
 
-    @Query("SELECT * FROM uo_projects")
-    LiveData<List<UOProject>> getAllUOProjects();
+    @Override
+    @Query("SELECT * from uo_projects ORDER BY id ASC")
+    LiveData<List<UOProject>> getAllLiveData ();
 
+    @Override
+    @Query("SELECT * FROM uo_projects ORDER BY id ASC")
+    DataSource.Factory<Integer, UOProject> getAllPaged ();
+
+    @Override
     @RawQuery(observedEntities = UOProject.class)
-    LiveData<List<UOProject>> getUOProjectsViaQuery( SupportSQLiteQuery query );
+    List<UOProject> getViaQuery (SimpleSQLiteQuery query);
+
+    @Override
+    @RawQuery(observedEntities = UOProject.class)
+    LiveData<List<UOProject>> getViaQueryLiveData (SimpleSQLiteQuery query);
+
+    @Override
+    @Query("SELECT * from uo_projects WHERE id= :id")
+    List<UOProject> findById ( int id);
+
+    @Override
+    @Query("SELECT * FROM uo_projects WHERE id= :id")
+    LiveData<List<UOProject>> findByIdLiveData ( int id);
+
+    @Override
+    @Query("SELECT * from uo_projects WHERE id= :dummy")
+    List<UOProject> findByName (String dummy);
+
 }

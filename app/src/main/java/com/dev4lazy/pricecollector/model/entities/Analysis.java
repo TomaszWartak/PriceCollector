@@ -8,6 +8,7 @@ import androidx.room.TypeConverters;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity(tableName = "analyzes" ) // w bazie zdalnej nie ma takiej tabeli
 @TypeConverters({
@@ -72,5 +73,18 @@ public class Analysis {
 
     public void setFinished(Boolean finished) {
         this.finished = finished;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Analysis)) return false;
+        Analysis analysis = (Analysis) o;
+        return id == analysis.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

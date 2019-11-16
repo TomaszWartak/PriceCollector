@@ -3,12 +3,9 @@ package com.dev4lazy.pricecollector.model.db;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.room.Update;
-import androidx.sqlite.db.SupportSQLiteQuery;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
@@ -16,33 +13,54 @@ import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import java.util.List;
 
 @Dao
-public interface AnalysisArticleDao {
-    
-    @Insert
-    void insert( AnalysisArticle analysisArticle);
-    
-    @Update
-    void update( AnalysisArticle analysisArticle);
-    
-    @Delete
-    void delete( AnalysisArticle analysisArticle);
-    
+public interface AnalysisArticleDao extends _Dao<AnalysisArticle> {
+
+    @Override
+    @Query("SELECT COUNT(*) FROM analysis_articles")
+    Integer getNumberOf();
+
+    @Override
+    @Query("SELECT COUNT(*) FROM analysis_articles")
+    LiveData<Integer> getNumberOfLiveData();
+
+    @Override
     @Query("DELETE FROM analysis_articles")
-    void deleteAll();
-    
-    @Query("SELECT * FROM analysis_articles WHERE id= :id")
-    LiveData<List<AnalysisArticle>> findAnalysisArticleById(String id);
-    
+    int deleteAll();
+
+    @Override
     @Query("SELECT * FROM analysis_articles")
-    LiveData<List<AnalysisArticle>> getAllAnalysisArticles();
+    List<AnalysisArticle> getAll();
 
+    @Override
+    @Query("SELECT * FROM analysis_articles")
+    LiveData<List<AnalysisArticle>> getAllLiveData();
+
+    @Override
     @Query("SELECT * from analysis_articles ORDER BY article_id ASC")
-    DataSource.Factory<Integer, AnalysisArticle> getAllAnalysisArticlesPaged();
+    DataSource.Factory<Integer, AnalysisArticle> getAllPaged();
 
+    @Override
     @RawQuery(observedEntities = AnalysisArticle.class)
-    LiveData<List<AnalysisArticle>> getAnalysisArticlesViaQuery(SupportSQLiteQuery query );
+    List<AnalysisArticle> getViaQuery( SimpleSQLiteQuery query );
 
-    // TODO !!!! najpierw skopiuj remote RemoteAnalysisRow do local analysis_article
+    @Override
+    @RawQuery(observedEntities = AnalysisArticle.class)
+    LiveData<List<AnalysisArticle>> getViaQueryLiveData( SimpleSQLiteQuery query );
+
+    @Override
+    @Query("SELECT * FROM analysis_articles WHERE id= :id")
+    List<AnalysisArticle> findById( int id) ;
+
+    @Override
+    @Query("SELECT * FROM analysis_articles WHERE id= :id")
+    LiveData<List<AnalysisArticle>> findByIdLiveData( int id) ;
+
+    // dummy method?
+    @Override
+    @Query("SELECT * FROM analysis_articles WHERE id= :name")
+    List<AnalysisArticle> findByName(String name);
+
+// TODO !!!! najpierw skopiuj remote RemoteAnalysisRow do local analysis_article
 
     @Query(
             /*
@@ -90,7 +108,8 @@ public interface AnalysisArticleDao {
                     "ean_codes ec2 ON ec2.article_id = aa2.reference_article_id "
 
     )
-    LiveData<List<AnalysisArticleJoin>> getAllAnalysisArticlesJoin();
+    DataSource.Factory<Integer, AnalysisArticleJoin>  getAllAnalysisArticlesJoin();
+
 
     /* TODO
     private int id; // from AnalysisArticle.

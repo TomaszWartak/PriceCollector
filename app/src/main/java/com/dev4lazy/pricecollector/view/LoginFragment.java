@@ -63,9 +63,9 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         EditText editTextUserPassword = view.findViewById(R.id.password_edit_text);
         // todo zrób tu test jak login i hasło przeżywają bez viewmodelu i z viewmodelem
         User user = new User();
-        /**/user.setLogin(editTextUserLogin.getText().toString());
+        /**/user.setLogin( editTextUserLogin.getText().toString() );
         user.setLogin("nowak_j");
-        userViewModel.setUser(user);
+        userViewModel.setUser( user );
         AuthSupport authSupport = AppHandle.getHandle().getAuthSupport();
         /**/authSupport.addCredential("USER_ID", "nowak_j" );
         /**/authSupport.addCredential("USER_PASSWORD", "nowak");
@@ -84,7 +84,6 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         // todo RemoteUser remoteUser = new RemoteUser();
         // todo remoteUser.setLogin(userViewModel.getUser().getLogin());
 
-        // todo usuń Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_mainFragment);
         MutableLiveData<List<RemoteUser>> findRemoteUserResult = new MutableLiveData<>();
         Observer<List<RemoteUser>>findRemoteUserResultObserver = new Observer<List<RemoteUser>>() {
             @Override
@@ -94,7 +93,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
                 findRemoteUserResult.removeObserver(this); // this = observer...
                 if ( (!remoteUsers.isEmpty()) && (remoteUsers.get(0)!=null) ) {
                     RemoteUser remoteUser = remoteUsers.get(0);
-                    AppHandle.getHandle().getSettings().setUser(new User(remoteUser));
+                    AppHandle.getHandle().getSettings().setUser( new User( remoteUser ) );
                     // userViewModel.clear(); todo nie ma takiej metody...
                     // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
                     if (!AppHandle.getHandle().getPrefs().isLocalDatabaseInitialized()) {

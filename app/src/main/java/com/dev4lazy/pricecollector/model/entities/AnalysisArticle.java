@@ -18,10 +18,12 @@ public class AnalysisArticle {
     private int analysisId;
     @ColumnInfo(name = "article_id")
     private int articleId;
+    @ColumnInfo(name = "own_article_info_id")
+    private int ownArticleInfoId;
     @ColumnInfo(name = "competitor_store_id")
-    private int competitorStoreId;
+    private int competitorStoreId; // todo?? usuń z bazy bo jest CompetitorPrice
     @ColumnInfo(name = "competitor_store_price")
-    private Double competitorStorePrice;
+    private Double competitorStorePrice; // todo?? usuń z bazy bo jest CompetitorPrice
     @ColumnInfo(name = "article_store_price")
     private Double articleStorePrice;
     @ColumnInfo(name = "article_ref_price")
@@ -29,7 +31,7 @@ public class AnalysisArticle {
     @ColumnInfo(name = "article_new_price")
     private Double articleNewPrice;
     @ColumnInfo(name = "reference_article_id")
-    private int referenceArticleId;
+    private int referenceArticleId; // todo?? usuń z bazy bo jest CompetitorPrice
 
     private String comments;
 
@@ -55,6 +57,14 @@ public class AnalysisArticle {
 
     public void setArticleId(int articleId) {
         this.articleId = articleId;
+    }
+
+    public int getOwnArticleInfoId() {
+        return ownArticleInfoId;
+    }
+
+    public void setOwnArticleInfoId(int ownArticleInfoId) {
+        this.ownArticleInfoId = ownArticleInfoId;
     }
 
     public int getCompetitorStoreId() {

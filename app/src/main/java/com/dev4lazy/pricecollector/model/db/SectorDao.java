@@ -19,6 +19,10 @@ public interface SectorDao extends _Dao<Sector> {
     Integer getNumberOf();
 
     @Override
+    @Query("SELECT COUNT(*) FROM sectors")
+    LiveData<Integer> getNumberOfLiveData ();
+
+    @Override
     @Query("DELETE FROM sectors")
     int deleteAll();
 

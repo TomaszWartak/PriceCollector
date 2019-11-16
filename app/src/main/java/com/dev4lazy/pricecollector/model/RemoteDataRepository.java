@@ -23,6 +23,7 @@ import com.dev4lazy.pricecollector.remote_data.RemoteUser;
 import com.dev4lazy.pricecollector.remote_data.RemoteUserDao;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
+import java.util.Date;
 import java.util.List;
 
 public class RemoteDataRepository {
@@ -153,6 +154,10 @@ public class RemoteDataRepository {
 
     public void deleteAllAnalyzes(MutableLiveData<Integer> result) {
         analyzes.deleteAllData(result);
+    }
+
+    public void findAnalysisNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result) {
+        analyzes.getViaQuery( "SELECT * from analyzes WHERE creation_date>='"+lastCheckDate+"'", result);
     }
 
 //-----------------------------------------------------------------------------------

@@ -2,10 +2,28 @@ package com.dev4lazy.pricecollector.view;
 
 import android.view.View;
 import android.widget.ProgressBar;
+/**
+ * Użycie:
+ * Na poziomie fragmentu lub aktywności:
+ *       new(...)
+ * W klasie, gdzie ma być użyty:
+ *       start()
+ *       stepUp()
+ *       stop()
+ *
+ * Uwagi:
+ *  - Jeśli w chwili inicjalizacji (new(...)) nie jest znana ilość danych do "przemielenia",
+ *      to, gdy wartość ta będzie znana, jeszcze przed wywołaniem start(), należy wywołać reset(...),
+ *      gdzie paramterem jest ilość danych.
+ *  - Jeśli nie ma potrzeby powoływania nowej instancji, to może być użyty wielokrotnie (bez new(...)),
+ *      gdyż, po zakończeiu działania nie nadaje null progressBarowi... Wystarczy wywołac metodę reset(...).
+ *  - Jeśli chcesz zwolnić pamięć progressBara, to wywołaj metodę kill()
+ *
+ *  Zob. użycie w Data.InsertListAsyncTask
+ */
 
 public class ProgressBarPresenter implements ProgressPresenter {
 
-    private final int startValue = 0;
     private int progressValue = 1;
     private int endValue = -1;
     private int stepValue = 0;
@@ -13,7 +31,7 @@ public class ProgressBarPresenter implements ProgressPresenter {
 
     private ProgressBar progressBar;
 
-    ProgressBarPresenter(ProgressBar progressBar, int endValue ) {
+    ProgressBarPresenter( ProgressBar progressBar, int endValue ) {
         this.progressBar = progressBar;
         if (endValue<0) {
             endValue=0;
@@ -27,24 +45,32 @@ public class ProgressBarPresenter implements ProgressPresenter {
     }
 
     @Override
-    public void init(int endValue) {
+    public void init( int endValue ) {
         if (endValue!=100) {
             stepValue = endValue / 100;
             init( endValue, stepValue );
         } else {
-            init(endValue, 1);
+            init( endValue, 1 );
         }
     }
 
     @Override
     public void init(int endValue, int stepValue) {
+        progressValue = 1;
         this.endValue = endValue;
         this.stepValue = stepValue;
     }
 
     @Override
+    public void reset( int endValue ) {
+        init( endValue );
+    }
+
+    @Override
     public void show() {
-        progressBar.setVisibility(View.VISIBLE);
+        if ( progressBarIsNotNull() ) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -55,7 +81,9 @@ public class ProgressBarPresenter implements ProgressPresenter {
 
     @Override
     public void update() {
-        progressBar.setProgress(progressValue);
+        if ( progressBarIsNotNull() ) {
+            progressBar.setProgress(progressValue);
+        }
     }
 
     @Override
@@ -80,9 +108,11 @@ public class ProgressBarPresenter implements ProgressPresenter {
 
     @Override
     public void hide() {
-        progressBar.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.GONE);
-        progressBar=null;
+        if ( progressBarIsNotNull() ) {
+            progressBar.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }
+        // todo ? progressBar=null;
     }
 
     @Override
@@ -90,4 +120,13 @@ public class ProgressBarPresenter implements ProgressPresenter {
         hide();
     }
 
+    @Override
+    public void kill() {
+        hide();
+        progressBar = null;
+    }
+
+    private boolean progressBarIsNotNull() {
+        return progressBar!=null;
+    }
 }

@@ -15,7 +15,7 @@ public interface _Dao<D> {
 
     Integer getNumberOf();
 
-    // TODO !! dodaj LiveData<Integer> getNumberOfLiveData();
+    LiveData<Integer> getNumberOfLiveData();
 
     // TODO ??? wyciąłem stąd i przeniosłem do CountryDao: @Insert(onConflict = OnConflictStrategy.IGNORE)
     // Ale wkleiłem z powrotem...

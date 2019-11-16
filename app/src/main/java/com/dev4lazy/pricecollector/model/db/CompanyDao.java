@@ -20,6 +20,10 @@ public interface CompanyDao extends _Dao<Company>{
     Integer getNumberOf();
 
     @Override
+    @Query("SELECT COUNT(*) FROM companies")
+    LiveData<Integer> getNumberOfLiveData();
+
+    @Override
     @Query("DELETE FROM companies")
     int deleteAll();
 

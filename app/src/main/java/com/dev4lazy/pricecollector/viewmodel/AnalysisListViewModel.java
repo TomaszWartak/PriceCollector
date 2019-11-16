@@ -1,0 +1,30 @@
+package com.dev4lazy.pricecollector.viewmodel;
+
+import android.app.Application;
+
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
+
+import com.dev4lazy.pricecollector.model.db.AnalysisDao;
+import com.dev4lazy.pricecollector.model.entities.Analysis;
+import com.dev4lazy.pricecollector.utils.AppHandle;
+
+public class AnalysisListViewModel extends AndroidViewModel {
+
+    private LiveData<PagedList<Analysis>> analyzesLiveData;
+
+    public AnalysisListViewModel(Application application) {
+        super(application);
+        AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
+        DataSource.Factory<Integer, Analysis>  factory = analysisDao.getAllPaged();
+        LivePagedListBuilder<Integer, Analysis> pagedListBuilder = new LivePagedListBuilder<Integer, Analysis>(factory, 50);
+        analyzesLiveData = pagedListBuilder.build();
+    }
+
+    public LiveData<PagedList<Analysis>> getAnalyzesLiveData() {
+        return analyzesLiveData;
+    }
+}

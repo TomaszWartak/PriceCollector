@@ -2,6 +2,8 @@ package com.dev4lazy.pricecollector.model.joins;
 
 import androidx.room.ColumnInfo;
 
+import java.util.Objects;
+
 public class AnalysisArticleJoin {
     @ColumnInfo(name = "id")
     private int analysisArticleId; // from AnalysisArticle.
@@ -182,5 +184,20 @@ public class AnalysisArticleJoin {
 
     public void setReferenceArticleEan(String referenceArticleEan) {
         this.referenceArticleEan = referenceArticleEan;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AnalysisArticleJoin)) return false;
+        AnalysisArticleJoin that = (AnalysisArticleJoin) o;
+        return analysisArticleId == that.analysisArticleId &&
+                analysisId == that.analysisId &&
+                articleId == that.articleId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(analysisArticleId, analysisId, articleId);
     }
 }

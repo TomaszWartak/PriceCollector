@@ -19,6 +19,10 @@ public interface DepartmentInSectorDao extends _Dao<DepartmentInSector> {
     Integer getNumberOf();
 
     @Override
+    @Query("SELECT COUNT(*) FROM departments_in_sector")
+    LiveData<Integer> getNumberOfLiveData();
+
+    @Override
     @Query("DELETE FROM departments_in_sector")
     int deleteAll();
 

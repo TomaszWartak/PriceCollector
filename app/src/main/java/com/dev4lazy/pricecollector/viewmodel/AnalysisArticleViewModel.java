@@ -17,7 +17,7 @@ public class AnalysisArticleViewModel extends AndroidViewModel {
 
     public AnalysisArticleViewModel(Application application) {
         super(application);
-        DataSource.Factory<Integer, AnalysisArticle> factory = LocalDatabase.getInstance().analysisArticleDao().getAllAnalysisArticlesPaged();
+        DataSource.Factory<Integer, AnalysisArticle> factory = LocalDatabase.getInstance().analysisArticleDao().getAllPaged();
         LivePagedListBuilder<Integer, AnalysisArticle> pagedListBuilder = new LivePagedListBuilder<Integer, AnalysisArticle>(factory, 50);
         analysisRowsLiveData = pagedListBuilder.build();
     }
@@ -25,4 +25,5 @@ public class AnalysisArticleViewModel extends AndroidViewModel {
     public LiveData<PagedList<AnalysisArticle>> getAnalysisRowsLiveData() {
         return analysisRowsLiveData;
     }
+
 }

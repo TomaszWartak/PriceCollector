@@ -16,6 +16,7 @@ import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Article;
 import com.dev4lazy.pricecollector.model.entities.Company;
+import com.dev4lazy.pricecollector.model.entities.CompetitorPrice;
 import com.dev4lazy.pricecollector.model.entities.Country;
 import com.dev4lazy.pricecollector.model.entities.Department;
 import com.dev4lazy.pricecollector.model.entities.DepartmentInSector;
@@ -33,13 +34,14 @@ import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 @Database(
-    version = 6,
+    version = 7,
     entities = {
         AnalysisCompetitorSlot.class,
         Analysis.class,
         AnalysisArticle.class,
         Article.class,
         Company.class,
+        CompetitorPrice.class,
         Country.class,
         Department.class,
         DepartmentInSector.class,
@@ -97,6 +99,26 @@ public abstract class LocalDatabase extends RoomDatabase {
     };
     public abstract ArticleDao articleDao();
     public abstract CompanyDao companyDao();
+    static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS competitors_prices (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "analysis_id INTEGER NOT NULL, " +
+                    "analysis_article_id INTEGER NOT NULL, " +
+                    "own_article_info_id INTEGER NOT NULL, " +
+                    "competitor_store_id INTEGER NOT NULL, " +
+                    "competitor_store_price INTEGER NOT NULL, " +
+                    "reference_article_id INTEGER NOT NULL, " +
+                    "FOREIGN KEY (analysis_id) REFERENCES analyzes(id), " +
+                    "FOREIGN KEY (competitor_store_id) REFERENCES stores(id) )" );
+            database.execSQL("CREATE INDEX index_competitors_prices_analysis_id " +
+                    "ON analyzes (id)" );
+            database.execSQL("CREATE INDEX index_competitors_prices_competitor_store_id " +
+                    "ON stores (id)" );
+            database.execSQL("ALTER TABLE AnalysisArticle ADD COLUMN own_article_info_id INTEGER NOT NULL");
+        }
+    };
     private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
     public abstract DepartmentDao departmentDao();
 
@@ -117,6 +139,7 @@ public abstract class LocalDatabase extends RoomDatabase {
                             .addMigrations(MIGRATION_3_4)
                             .addMigrations(MIGRATION_4_5)
                             .addMigrations(MIGRATION_5_6)
+                            .addMigrations(MIGRATION_6_7)
                             /**/
                             .build();
                     instance.updateDatabaseCreated(context);
@@ -125,20 +148,30 @@ public abstract class LocalDatabase extends RoomDatabase {
         }
         return instance;
     }
-    public abstract EanCodeDao eanCodeDao();
-    public abstract FamilyDao familyDao();
-    public abstract MarketDao marketDao();
-    public abstract ModuleDao moduleDao();
-    public abstract OwnArticleInfoDao ownArticleInfoDao();
-    public abstract OwnStoreDao ownStoreDao();
-    public abstract SectorDao sectorDao();
-    public abstract StoreDao storeDao();
-    public abstract UOProjectDao uoProjectDao();
 
-    // Dane pomocnicze
     public abstract AnalysisArticleDao analysisArticleDao();
 
     public abstract AnalysisDao analysisDao();
+
+    public abstract CompetitorPriceDao competitorPriceDao();
+
+    public abstract CountryDao countryDao();
+
+    public abstract DepartmentInSectorDao departmentInSectorDao();
+
+    public abstract EanCodeDao eanCodeDao();
+
+    public abstract FamilyDao familyDao();
+
+    public abstract MarketDao marketDao();
+
+    public abstract ModuleDao moduleDao();
+
+    public abstract OwnArticleInfoDao ownArticleInfoDao();
+
+    // Dane pomocnicze
+
+    public abstract OwnStoreDao ownStoreDao();
 
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
@@ -155,7 +188,7 @@ public abstract class LocalDatabase extends RoomDatabase {
         }
     };
 
-    public abstract CountryDao countryDao();
+    public abstract SectorDao sectorDao();
 
     static final Migration MIGRATION_4_5 = new Migration(4, 5) {
         @Override
@@ -174,7 +207,9 @@ public abstract class LocalDatabase extends RoomDatabase {
         }
     };
 
-    public abstract DepartmentInSectorDao departmentInSectorDao();
+    public abstract StoreDao storeDao();
+
+    public abstract UOProjectDao uoProjectDao();
 
     private void updateDatabaseCreated(final Context context) {
         if (context.getDatabasePath(DATABASE_NAME).exists()) {

@@ -101,6 +101,12 @@
         <action
             android:id="@+id/action_testActionsFragment_to_departmentInSectorsListFragment"
             app:destination="@id/departmentInSectorsListFragment" />
+        <action
+            android:id="@+id/action_testActionsFragment_to_articlesListFragment"
+            app:destination="@id/articlesListFragment" />
+        <action
+            android:id="@+id/action_testActionsFragment_to_testNumbersOfDataFragment"
+            app:destination="@id/testNumbersOfDataFragment" />
     </fragment>
     <fragment
         android:id="@+id/analysisCompetitorsFragment"
@@ -172,5 +178,14 @@
         android:name="com.dev4lazy.pricecollector.view.DepartmentInSectorsListFragment"
         android:label="depts_in_secs_list_fragment"
         tools:layout="@layout/depts_in_secs_list_fragment" />
+    <fragment
+        android:id="@+id/articlesListFragment"
+        android:name="com.dev4lazy.pricecollector.view.ArticlesListFragment"
+        android:label="articles_list_fragment"
+        tools:layout="@layout/articles_list_fragment" />
+    <fragment
+        android:id="@+id/testNumbersOfDataFragment"
+        android:name="com.dev4lazy.pricecollector.view.TestNumbersOfDataFragment"
+        android:label="TestNumbersOfDataFragment" />
 
 </navigation>

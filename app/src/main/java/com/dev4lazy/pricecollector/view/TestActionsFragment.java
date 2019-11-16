@@ -56,9 +56,6 @@ public class TestActionsFragment extends Fragment {
         view.findViewById(R.id.button_clear_local).setOnClickListener((View v) -> {
             LocalDataInitializer.getInstance().clearLocalDatabase();
         });
-        view.findViewById(R.id.button_create_departments_in_sector).setOnClickListener((View v) -> {
-            LocalDataInitializer.getInstance().createDepartmentsInSector();
-        });
         view.findViewById(R.id.button_countries).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_countriesListFragment);
         });
@@ -71,9 +68,19 @@ public class TestActionsFragment extends Fragment {
         view.findViewById(R.id.button_other_stores).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_otherStoresListFragment);
         });
+        // TODO zrobione => zrób ClassGenerator dla Article bo trzeba sprawdzić, czy artykuły są wygenerowane
+        // TODO jeśli tak, to to samo dla OwnArticleInfo
+        // TRZEBA wygenerować AnalysisArticle
+        view.findViewById(R.id.button_show_articles).setOnClickListener((View v) -> {
+            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_articlesListFragment);
+        });
         view.findViewById(R.id.button_show_depts_in_secs).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_departmentInSectorsListFragment);
         });
+        view.findViewById(R.id.button_show_numbers_of_data).setOnClickListener((View v) -> {
+            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_testNumbersOfDataFragment);
+        });
+
     }
 
     @Override

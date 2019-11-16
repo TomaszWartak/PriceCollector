@@ -19,6 +19,10 @@ public interface OwnStoreDao extends _Dao<OwnStore> {
     Integer getNumberOf();
 
     @Override
+    @Query("SELECT COUNT(*) FROM own_stores")
+    LiveData<Integer> getNumberOfLiveData ();
+
+    @Override
     @Query("DELETE FROM own_stores")
     int deleteAll();
 

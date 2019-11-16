@@ -31,7 +31,9 @@ public class AppPreferences {
     public static final int BRICOMAN_STORES_INITIALIZED = 6;
     public static final int LOCAL_COMPETITORS_STORES_INITIALIZED = 7;
     public static final int COMPETITORS_SLOTS_INITIALIZED = 8;
+    public static final int SECTORS_DEPARTMENTS_INITIALIZED = 9;
     public static final int LOCAL_DATA_INITIALIZED = COMPETITORS_SLOTS_INITIALIZED;
+
     // todo language
     private String language;
 

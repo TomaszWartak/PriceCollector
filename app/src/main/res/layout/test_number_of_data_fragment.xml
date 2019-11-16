@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.LoginFragment">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/login_fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:paddingTop="16dp">
+
+        <TextView
+            android:id="@+id/number_of_Analysis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Analysis : " />
+
+        <TextView
+            android:id="@+id/number_of_AnalysisArticle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Analysis : " />
+
+        <TextView
+            android:id="@+id/number_of_AnalysisArticleShortData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AnalysisArticleShortData : " />
+
+        <TextView
+            android:id="@+id/number_of_AnalysisCompetitorSlot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AnalysisCompetitorSlot : " />
+
+        <TextView
+            android:id="@+id/number_of_Article"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Article : " />
+
+        <TextView
+            android:id="@+id/number_of_Company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Company : " />
+
+        <TextView
+            android:id="@+id/number_of_CompetitorPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CompetitorPrice : " />
+
+        <TextView
+            android:id="@+id/number_of_Country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" />
+
+        <TextView
+            android:id="@+id/number_of_Department"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Country : " />
+
+        <TextView
+            android:id="@+id/number_of_DepartmentInSector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DepartmentInSector : " />
+
+        <TextView
+            android:id="@+id/number_of_EanCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EanCode : " />
+
+        <TextView
+            android:id="@+id/number_of_Family"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Family : " />
+
+        <TextView
+            android:id="@+id/number_of_Market"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Market : " />
+
+        <TextView
+            android:id="@+id/number_of_Module"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Module : " />
+
+        <TextView
+            android:id="@+id/number_of_OwnArticleInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OwnArticleInfo : " />
+
+        <TextView
+            android:id="@+id/number_of_OwnStore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OwnStore : " />
+
+        <TextView
+            android:id="@+id/number_of_Sector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sector : " />
+
+        <TextView
+            android:id="@+id/number_of_Store"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Store : " />
+
+        <TextView
+            android:id="@+id/number_of_UOProject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UOProject : " />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>

@@ -18,6 +18,30 @@
             tools:context=".view.TestActionsFragment">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_show_articles"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Artykuły"
+                app:layout_constraintBottom_toTopOf="@+id/button_show_numbers_of_data"
+                app:layout_constraintEnd_toStartOf="@+id/button_other_stores"
+                app:layout_constraintHorizontal_bias="0.486"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_show_numbers_of_data"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:text="Ilości dancyh"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_other_stores"
+                app:layout_constraintHorizontal_bias="0.471"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_create_departments_in_sector"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
@@ -34,9 +58,9 @@
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="92dp"
+                android:layout_marginBottom="16dp"
                 android:text="Nasze sklepy"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/button_show_articles"
                 app:layout_constraintEnd_toStartOf="@+id/button_other_stores"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -57,10 +81,10 @@
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:text="Działy w sektorach"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintHorizontal_bias="0.404"
                 app:layout_constraintStart_toEndOf="@+id/button_own_stores"
                 app:layout_constraintTop_toBottomOf="@+id/button_other_stores" />
 

@@ -1,37 +1,61 @@
 package com.dev4lazy.pricecollector.model.db;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
-import androidx.room.Update;
-import androidx.sqlite.db.SupportSQLiteQuery;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.entities.Analysis;
+
 import java.util.List;
 
 @Dao
-public interface AnalysisDao {
-    @Insert
-    void insert( Analysis analysis );
+public interface AnalysisDao extends _Dao<Analysis> {
 
-    @Update
-    void update( Analysis analysis );
+    @Override
+    @Query( "SELECT COUNT(*) FROM analyzes " )
+    Integer getNumberOf();
 
-    @Delete
-    void delete( Analysis analysis );
+    @Override
+    @Query("SELECT COUNT(*) FROM analyzes")
+    LiveData<Integer> getNumberOfLiveData();
 
-    @Query("DELETE FROM analyzes")
-    void deleteAll();
+    @Override
+    @Query("DELETE FROM analyzes ")
+    int deleteAll();
 
-    @Query("SELECT * FROM analyzes WHERE id= :id")
-    LiveData<List<Analysis>> findAnalysisById( String id);
+    @Override
+    @Query("SELECT * FROM analyzes  ORDER BY id ASC" )
+    List<Analysis> getAll();
 
-    @Query("SELECT * FROM analyzes")
-    LiveData<List<Analysis>> getAllAnalyzes();
+    @Override
+    @Query("SELECT * FROM analyzes  ORDER BY id ASC" )
+    LiveData<List<Analysis>> getAllLiveData();
 
+    @Override
+    @Query("SELECT * FROM analyzes  ORDER BY id ASC" )
+    DataSource.Factory<Integer, Analysis> getAllPaged();
+
+    @Override
     @RawQuery(observedEntities = Analysis.class)
-    LiveData<List<Analysis>> getAnalyzesViaQuery( SupportSQLiteQuery query );
+    List<Analysis> getViaQuery( SimpleSQLiteQuery query );
+
+    @Override
+    @RawQuery(observedEntities = Analysis.class)
+    LiveData<List<Analysis>> getViaQueryLiveData( SimpleSQLiteQuery query );
+
+    @Override
+    @Query("SELECT * FROM analyzes  WHERE id= :id")
+    List<Analysis> findById( int id );
+
+    @Override
+    @Query("SELECT * FROM analyzes  WHERE id= :id")
+    LiveData<List<Analysis>> findByIdLiveData( int id );
+
+    @Override
+    @Query("SELECT * FROM analyzes  WHERE id= :name")
+    List<Analysis> findByName( String name);
+
 }
