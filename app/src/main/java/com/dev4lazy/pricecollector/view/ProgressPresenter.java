@@ -4,7 +4,7 @@ package com.dev4lazy.pricecollector.view;
 public interface ProgressPresenter {
 
     int DATA_SIZE_UNKNOWN = -1;
-    Object NO_PROGRESS_PRESENTER = null;
+    ProgressPresenter NO_PROGRESS_PRESENTER = null;
 
     void init();
 

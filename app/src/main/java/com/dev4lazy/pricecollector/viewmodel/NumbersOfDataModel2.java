@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
 
 
-public class NumbersOfDataModel extends AndroidViewModel {
+public class NumbersOfDataModel2 extends AndroidViewModel {
 
     private LiveData<Integer> numberOfAnalysis;
     private LiveData<Integer> numberOfAnalysisArticle;
@@ -30,7 +30,7 @@ public class NumbersOfDataModel extends AndroidViewModel {
     private LiveData<Integer> numberOfStore;
     private LiveData<Integer> numberOfUOProject;
 
-    public NumbersOfDataModel(Application application) {
+    public NumbersOfDataModel2(Application application) {
         super(application);
         LocalDatabase localDatabase = LocalDatabase.getInstance();
         numberOfAnalysis = localDatabase.analysisDao().getNumberOfLiveData();

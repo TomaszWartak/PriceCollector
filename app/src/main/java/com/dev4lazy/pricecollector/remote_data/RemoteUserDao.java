@@ -19,6 +19,10 @@ public interface RemoteUserDao extends _Dao<RemoteUser> {
     Integer getNumberOf();
 
     @Override
+    @Query("SELECT COUNT(*) FROM users")
+    LiveData<Integer> getNumberOfLiveData();
+
+    @Override
     @Query("DELETE FROM users")
     int deleteAll();
 

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.remote_data.RemoteDataInitializer;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
@@ -74,6 +75,12 @@ public class TestActionsFragment2 extends Fragment {
         });
         view.findViewById(R.id.button_show_remote_departments).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteDepartmentsListFragment);
+        });
+        view.findViewById(R.id.button_clear_local2).setOnClickListener((View v) -> {
+            LocalDataInitializer.getInstance().clearLocalDatabase();
+        });
+        view.findViewById(R.id.button_show_numbers_of_data2).setOnClickListener((View v) -> {
+            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_testNumbersOfDataFragment);
         });
     }
 

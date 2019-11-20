@@ -7,26 +7,38 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.dev4lazy.pricecollector.model.utils.DateConverter;
+import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 @Database(
-        version = 5,
+        version = 6,
         entities = {
                 RemoteAnalysis.class,
                 RemoteAnalysisRow.class,
                 RemoteDepartment.class,
                 RemoteEanCode.class,
+                RemoteFamily.class,
+                RemoteMarket.class,
+                RemoteModule.class,
                 RemoteSector.class,
-                RemoteUser.class
+                RemoteUser.class,
+                RemoteUOProject.class
         },
         exportSchema = false
 )
+@TypeConverters({
+        DateConverter.class,
+        StoreStructureTypeConverter.class
+})
 public abstract class RemoteDatabase extends RoomDatabase {
 
     private final static String DATABASE_NAME = "price_collector_remote_database";
+
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -92,6 +104,24 @@ public abstract class RemoteDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS modules (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "name TEXT )" );
+            database.execSQL("CREATE TABLE IF NOT EXISTS families (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "name TEXT )" );
+            database.execSQL("CREATE TABLE IF NOT EXISTS markets (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "name TEXT )" );
+            database.execSQL("CREATE TABLE IF NOT EXISTS uo_projects (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "name TEXT )" );
+        }
+    };
+
     private static volatile RemoteDatabase instance;
 
     public static RemoteDatabase getInstance() {
@@ -109,6 +139,7 @@ public abstract class RemoteDatabase extends RoomDatabase {
                             .addMigrations(MIGRATION_2_3)
                             .addMigrations(MIGRATION_3_4)
                             .addMigrations(MIGRATION_4_5)
+                            .addMigrations(MIGRATION_5_6)
                             /**/
                             .build();
                     instance.updateDatabaseCreated(context);
@@ -126,11 +157,19 @@ public abstract class RemoteDatabase extends RoomDatabase {
 
     public abstract RemoteEanCodeDao eanCodeDao();
 
+    public abstract RemoteFamilyDao remoteFamilyDao();
+
+    public abstract RemoteMarketDao remoteMarketDao();
+
+    public abstract RemoteModuleDao remoteModuleDao();
+
     public abstract RemoteUserDao userDao();
 
     public abstract RemoteDepartmentDao departmentDao();
 
     public abstract RemoteSectorDao sectorDao();
+
+    public abstract RemoteUOProjectDao remoteUOProjectDao();
 
     private void updateDatabaseCreated(final Context context) {
         if (context.getDatabasePath(DATABASE_NAME).exists()) {

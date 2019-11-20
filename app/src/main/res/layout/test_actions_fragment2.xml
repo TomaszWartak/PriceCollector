@@ -125,6 +125,26 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_create_remote2" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_clear_local2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorWarning"
+                android:text="Czyść Local"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_show_remote_departments" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_show_numbers_of_data2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pokaż ilości danych"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_clear_local2" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>

@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view;
+package com.dev4lazy.pricecollector.model;
 
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 
@@ -9,7 +9,7 @@ public class AnalysisCompetitorSlotList {
 
     private ArrayList<CompetitorSlotFullData> fullDataSlotList;
 
-    AnalysisCompetitorSlotList(List<AnalysisCompetitorSlot> slots ) {
+    public AnalysisCompetitorSlotList(List<AnalysisCompetitorSlot> slots ) {
         fullDataSlotList = new ArrayList<>();
         for (AnalysisCompetitorSlot slot : slots) {
             fullDataSlotList.add(new CompetitorSlotFullData(slot));

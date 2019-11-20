@@ -103,7 +103,7 @@ public class MainScreenFragment extends Fragment {
         recyclerView = view.findViewById( R.id.analyzes_recycler );
         recyclerView.setLayoutManager( new LinearLayoutManager( getActivity() ) ); // todo ????
         // todo recyclerView.addItemDecoration( new DividerItemDecoration( getActivity(), VERTICAL ));
-        AnalysisAdapter analysisAdapter = new AnalysisAdapter( new AnalysisDiffCallback() );
+        analysisAdapter = new AnalysisAdapter( new AnalysisDiffCallback() );
         recyclerView.setAdapter( analysisAdapter );
     }
 
@@ -124,7 +124,7 @@ public class MainScreenFragment extends Fragment {
         view.findViewById(R.id.card_view_constraint_layout).setOnClickListener((View v) -> {
             // W pierwszej kolejności utworzenie danych artykułów, których jeszcze nie ma w lokalnej bazie dancyh,
             // a mają być analizowane.
-            updateArticlesAllData( new ProgressBarPresenter( getView().findViewById(R.id.remote_2_local_progressBar), DATA_SIZE_UNKNOWN ) );
+            updateArticlesAllData( new ProgressBarPresenter( getView().findViewById(R.id.analysis_item__progressBar), DATA_SIZE_UNKNOWN ) );
             // TODO utworzenie rekordu analizy? zob. czy to nie jest w AnalysisCompetitorsFragment
             // TODO utworzenie AnalisysArticles
             // TODO otwarcie fragmentu ze slotami - zob openTestAnalyzesList(); <- znienić nazwę?
@@ -188,6 +188,9 @@ public class MainScreenFragment extends Fragment {
     }
 
     private void getNewAnalysisInfo() {
+        /**/ //TODO TEST
+       // analysisDataUpdater.downloadAnalysisBasicData();
+        /**/
         analysisDataUpdater.checkNewAnalysisToDownload();
         if (analysisDataUpdater.isNewAnalysisDataReadyToDownlad()) {
             analysisDataUpdater.downloadAnalysisBasicData();

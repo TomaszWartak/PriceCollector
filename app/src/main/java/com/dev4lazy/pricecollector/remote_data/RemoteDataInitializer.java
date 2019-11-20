@@ -26,23 +26,22 @@ public class RemoteDataInitializer {
 
     private List<RemoteSector> remoteSectors = null;
 
+    private List<RemoteMarket> remoteMarkets = null;
+
+    private List<RemoteModule> remoteModules = null;
+
+    private List<RemoteFamily> remoteFamilies = null;
+
+    private List<RemoteUOProject> remoteUOProjects = null;
+
+
+
     private RemoteAnalysis remoteAnalysis = null;
 
     private Csv2EanCodeConverter csv2EanCodeConverter;
     private Csv2AnalysisRowConverter csv2AnalysisRowConverter;
 
     private boolean firstCallRemoteAnalysis = true;
-    private boolean firstCallCompanies = true;
-    private boolean firstCallOwnStores = true;
-    private boolean firstCallObiStores = true;
-    private boolean firstCallLMStores = true;
-    private boolean firstCallBricomanStores = true;
-    private boolean firstCallLocalCompetitorStores = true;
-    private boolean firstCallCompetitorsSlotsNr1 = true;
-    private boolean firstCallCompetitorsSlotsNr2 = true;
-    private boolean firstCallCompetitorsSlotsNr3 = true;
-    private boolean firstCallCompetitorsSlotsNr4 = true;
-    private boolean firstCallCompetitorsSlotsNr5 = true;
 
 // ---------------------------------------------------------------------------
 // Przygotowanie danych
@@ -89,6 +88,10 @@ public class RemoteDataInitializer {
         prepareRemoteDepartments();
         prepareRemoteSectors();
         prepareRemoteAnalysis();
+        prepareRemoteFamilies();
+        prepareRemoteMarkets();
+        prepareRemoteModules();
+        prepareRemoteUOProjects();
         prepareConverters();
         // todo w Convererze RemoteEanCodes oddziel od RemoteAnalysisiRow po przeniesieniu permmisions do StartScreenFragment
     }
@@ -221,10 +224,54 @@ public class RemoteDataInitializer {
         remoteSectors.add(remoteSector);
     }
 
-
     public void clearRemoteSectors() {
         AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllSectors( null );
     }
+
+    private void prepareRemoteModules(){
+        Resources resources = AppHandle.getHandle().getResources();
+        remoteModules = new ArrayList<>();
+        RemoteModule remoteModule = new RemoteModule();
+        remoteModule.setName( resources.getString(R.string.dummy_string) );
+    }
+
+    public void clearRemoteModules() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllRemoteModules( null );
+    }
+
+    private void prepareRemoteFamilies(){
+        Resources resources = AppHandle.getHandle().getResources();
+        remoteFamilies = new ArrayList<>();
+        RemoteFamily remoteFamily = new RemoteFamily();
+        remoteFamily.setName( resources.getString(R.string.dummy_string) );
+    }
+
+    public void clearRemoteFamilies() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllRemoteFamilies( null );
+    }
+
+    private void prepareRemoteMarkets(){
+        Resources resources = AppHandle.getHandle().getResources();
+        remoteMarkets = new ArrayList<>();
+        RemoteMarket remoteMarket = new RemoteMarket();
+        remoteMarket.setName( resources.getString(R.string.dummy_string) );
+    }
+
+    public void clearRemoteMarkets() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllRemoteMarkets( null );
+    }
+
+    private void prepareRemoteUOProjects(){
+        Resources resources = AppHandle.getHandle().getResources();
+        remoteUOProjects = new ArrayList<>();
+        RemoteUOProject remoteUOProject = new RemoteUOProject();
+        remoteUOProject.setName( resources.getString(R.string.dummy_string) );
+    }
+
+    public void clearRemoteUOProjects() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllRemoteUOProjects( null );
+    }
+
 
     /*
     public void initializeAnaylysisRowsAndEanCodesOnly() {
@@ -290,7 +337,11 @@ public class RemoteDataInitializer {
         // A przynajmniej tak mi się wydaje... :-)
         populateRemoteDepartments();
         populateRemoteSectors();
-        // I dupa, bo RemoteAnalysisRow.analysisId zalezy od Analysis.id
+        populateRemoteFamilies();
+        populateRemoteMarkets();
+        populateRemoteModules();
+        populateRemoteUOProjects();
+        // todo ? I dupa, bo RemoteAnalysisRow.analysisId zalezy od Analysis.id
         // Czyli populateAnaylysisRowsAndEanCodes jest wołane z populateRemoteAnalysis
         populateRemoteAnalysis();
     }
@@ -313,7 +364,33 @@ public class RemoteDataInitializer {
         }
     }
 
+    public void populateRemoteUOProjects() {
+        for (RemoteUOProject remoteUOProject : remoteUOProjects) {
+            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteUOProject( remoteUOProject, null );
+        }
+    }
+
+    public void populateRemoteFamilies() {
+        for (RemoteFamily remoteFamily : remoteFamilies) {
+            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteFamily( remoteFamily, null );
+        }
+    }
+
+    public void populateRemoteMarkets() {
+        for (RemoteMarket remoteMarket : remoteMarkets) {
+            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteMarket( remoteMarket, null );
+        }
+    }
+
+    public void populateRemoteModules() {
+        for (RemoteModule remoteModule : remoteModules) {
+            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteModule( remoteModule, null );
+        }
+    }
+    
     private void populateRemoteAnalysis() {
+       // TODO!! przy MainScreenFragment nie znajduje żadnej remote Analizy...
+       // TODO!! sprawdx czy tutaj się coś dopisuje...
         MutableLiveData<Long> analysisInsertResult = new MutableLiveData<>();
         Observer<Long> insertingResultObserver = new Observer<Long>() {
             @Override

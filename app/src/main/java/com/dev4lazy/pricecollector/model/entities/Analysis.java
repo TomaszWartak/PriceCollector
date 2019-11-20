@@ -10,7 +10,7 @@ import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import java.util.Date;
 import java.util.Objects;
 
-@Entity(tableName = "analyzes" ) // w bazie zdalnej nie ma takiej tabeli
+@Entity( tableName = "analyzes" ) // w bazie zdalnej nie ma takiej tabeli
 @TypeConverters({
         DateConverter.class
 })

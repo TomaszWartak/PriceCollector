@@ -59,7 +59,11 @@ public class Data<D> {
     }
 
     public void getViaQuery(String query, MutableLiveData<List<D>> resultLD) {
-        new getViaQueryAsyncTask(dao, resultLD).execute(query);
+        new getViaStringQueryAsyncTask(dao, resultLD).execute(query);
+    }
+
+    public void getViaQuery(SimpleSQLiteQuery query, MutableLiveData<List<D>> resultLD) {
+        new getViaQueryAsyncTask(dao, resultLD).execute( query );
     }
 
     public void findDataById(Integer id, MutableLiveData<List<D>> resultLD) {
@@ -319,7 +323,31 @@ public class Data<D> {
         }
     }
 
-    private class getViaQueryAsyncTask extends AsyncTask<String,Void,List<D>>{
+    private class getViaStringQueryAsyncTask extends AsyncTask<String,Void,List<D>>{
+
+        private _Dao dao;
+        private MutableLiveData<List<D> > resultLD;
+
+        getViaStringQueryAsyncTask(_Dao dao, MutableLiveData<List<D>> resultLD ) {
+            this.dao = dao;
+            this.resultLD = resultLD;
+        }
+
+        @Override
+        protected List<D> doInBackground ( String ...params){
+            return dao.getViaQuery(new SimpleSQLiteQuery(params[0]));
+        }
+
+        @Override
+        protected void onPostExecute(List<D> result) {
+            super.onPostExecute(result);
+            if (resultLD!=null) {
+                resultLD.postValue(result);
+            }
+        }
+    }
+
+    private class getViaQueryAsyncTask extends AsyncTask<SimpleSQLiteQuery,Void,List<D>>{
 
         private _Dao dao;
         private MutableLiveData<List<D> > resultLD;
@@ -330,8 +358,8 @@ public class Data<D> {
         }
 
         @Override
-        protected List<D> doInBackground ( String ...params){
-            return dao.getViaQuery(new SimpleSQLiteQuery(params[0]));
+        protected List<D> doInBackground ( SimpleSQLiteQuery ...params){
+            return dao.getViaQuery(params[0]);
         }
 
         @Override

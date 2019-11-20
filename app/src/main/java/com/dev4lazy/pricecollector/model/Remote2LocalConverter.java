@@ -5,14 +5,22 @@ import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
 import com.dev4lazy.pricecollector.model.entities.Article;
 import com.dev4lazy.pricecollector.model.entities.Department;
 import com.dev4lazy.pricecollector.model.entities.EanCode;
+import com.dev4lazy.pricecollector.model.entities.Family;
+import com.dev4lazy.pricecollector.model.entities.Market;
+import com.dev4lazy.pricecollector.model.entities.Module;
 import com.dev4lazy.pricecollector.model.entities.OwnArticleInfo;
 import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.entities.Store;
+import com.dev4lazy.pricecollector.model.entities.UOProject;
 import com.dev4lazy.pricecollector.remote_data.RemoteAnalysis;
 import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRow;
 import com.dev4lazy.pricecollector.remote_data.RemoteDepartment;
 import com.dev4lazy.pricecollector.remote_data.RemoteEanCode;
+import com.dev4lazy.pricecollector.remote_data.RemoteFamily;
+import com.dev4lazy.pricecollector.remote_data.RemoteMarket;
+import com.dev4lazy.pricecollector.remote_data.RemoteModule;
 import com.dev4lazy.pricecollector.remote_data.RemoteSector;
+import com.dev4lazy.pricecollector.remote_data.RemoteUOProject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,18 +69,62 @@ public class Remote2LocalConverter {
         return sector;
     }
 
+    public Family createFamily(RemoteFamily remoteFamily ) {
+        Family family = new Family();
+        family.setRemote_id( remoteFamily.getId() );
+        family.setName( remoteFamily.getName() );
+        return family;
+    }
+    
+    public Market createMarket(RemoteMarket remoteMarket ) {
+        Market market = new Market();
+        market.setRemote_id( remoteMarket.getId() );
+        market.setName( remoteMarket.getName() );
+        return market;
+    }
+
+    public Module createModule(RemoteModule remoteModule ) {
+        Module module = new Module();
+        module.setRemote_id( remoteModule.getId() );
+        module.setName( remoteModule.getName() );
+        return module;
+    }
+
+    public UOProject createUOProject(RemoteUOProject remoteUOProject ) {
+        UOProject uoProject = new UOProject();
+        uoProject.setRemote_id( remoteUOProject.getId() );
+        uoProject.setName( remoteUOProject.getName() );
+        return uoProject;
+    }
+    
     public OwnArticleInfo createOwnArticleInfo(
             RemoteAnalysisRow remoteAnalysisRow,
             Article article,
             Department department,
-            Sector sector ) {
+            Sector sector,
+            Family family,
+            Module module,
+            Market market,
+            UOProject uoProject ) {
         OwnArticleInfo ownArticleInfo = new OwnArticleInfo();
         ownArticleInfo.setArticleId( article.getId() );
         ownArticleInfo.setOwnCode( String.valueOf( remoteAnalysisRow.getArticleCode() ) );
-        ownArticleInfo.setRefPrice( remoteAnalysisRow.getArticleRefPrice() );
-        ownArticleInfo.setStorePrice( remoteAnalysisRow.getArticleStorePrice() );
+        Double articleRefPrice = remoteAnalysisRow.getArticleRefPrice();
+        if (articleRefPrice==null) {
+            articleRefPrice=0.0;
+        }
+        ownArticleInfo.setRefPrice( articleRefPrice );
+        Double articleStorePrice = remoteAnalysisRow.getArticleStorePrice();
+        if (articleStorePrice==null) {
+            articleStorePrice = articleRefPrice.doubleValue();
+        }
+        ownArticleInfo.setStorePrice( articleStorePrice );
         ownArticleInfo.setSectorId( sector.getId() );
         ownArticleInfo.setDepartmentId( department.getId() );
+        ownArticleInfo.setFamilyId( family.getId() );
+        ownArticleInfo.setMarketId( market.getId() );
+        ownArticleInfo.setModuleId( module.getId() );
+        ownArticleInfo.setUoProjectId( uoProject.getId() );
         return ownArticleInfo;
     }
 

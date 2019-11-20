@@ -72,9 +72,6 @@ public class LocalDataInitializer {
     private boolean firstCallCompetitorsSlotsNr4 = true;
     private boolean firstCallCompetitorsSlotsNr5 = true;
 
-// ---------------------------------------------------------------------------
-// Przygotowanie danych
-
 
     private LocalDataInitializer() {
         appDataFeeder = AppDataFeeder.getInstance();
@@ -90,6 +87,11 @@ public class LocalDataInitializer {
         }
         return instance;
     }
+
+// ---------------------------------------------------------------------------
+// Przygotowanie danych
+
+
 
 //--------------------------------------------------------------------------
 // Local Database
@@ -118,11 +120,10 @@ public class LocalDataInitializer {
             case LOCAL_DATA_NOT_INITIALIZED:
                 initializeLocalData();
                 break;
-            case SECTORS_DEPARTMENTS_INITIALIZED: {
+            case SECTORS_DEPARTMENTS_INITIALIZED:
                 prepareLocalData();
                 populateCountries();
                 break;
-            }
             case COUNTRIES_INITIALIZED:
                 prepareLocalData();
                 populateCompanies();
@@ -161,25 +162,36 @@ public class LocalDataInitializer {
 //  proceduta inicjalizacji danych lokalnych
     private void initializeLocalData() {
         prepareLocalData();
-        startLocalDataPopulationChain();
     }
 
 // ---------------------------------------------------------------------------
 // Przygotowanie danych
     private void prepareLocalData() {
-        prepareSectorsAndDepartments();
-        prepareCountries();
-        prepareCompanies();
-        prepareOwnStores();
-        prepareObiStores();
-        prepareLeroyMerlinStores();
-        prepareBricomanStores();
-        prepareLocalCompetitorStores();
-        prepareCompetitorSlots();
+        // TODO coś to nie działa bo w po TWÓRZ LOCAL są tylko sektory i departamenty...
+        MutableLiveData<Long> finalResult = new MutableLiveData<>();
+        Observer<Long> resultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged(Long aLong) {
+                if (aLong!=null) {
+                    finalResult.removeObserver(this);
+                    prepareCountries();
+                    prepareCompanies();
+                    prepareOwnStores();
+                    prepareObiStores();
+                    prepareLeroyMerlinStores();
+                    prepareBricomanStores();
+                    prepareLocalCompetitorStores();
+                    prepareCompetitorSlots();
+                    startLocalDataPopulationChain();
+                }
+            }
+        };
+        finalResult.observeForever(resultObserver);
+        copySectorsAndDepartmentsFromRemoteDatabase( finalResult );
     }
 
-    private void prepareSectorsAndDepartments() {
-        AnalysisDataUpdater.getInstance().copySectorsAndDepartmentsFromRemoteDatabase();
+    private void copySectorsAndDepartmentsFromRemoteDatabase( MutableLiveData<Long> finalResult ) {
+        AnalysisDataUpdater.getInstance().copySectorsAndDepartmentsFromRemoteDatabase( finalResult );
     }
 
     private void prepareCountries() {

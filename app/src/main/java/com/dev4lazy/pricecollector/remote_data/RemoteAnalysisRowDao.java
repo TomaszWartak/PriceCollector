@@ -18,6 +18,7 @@ public interface RemoteAnalysisRowDao extends _Dao<RemoteAnalysisRow> {
     @Query("SELECT COUNT(*) FROM analysis_rows")
     Integer getNumberOf();
 
+    @Override
     @Query("SELECT COUNT(*) FROM analysis_rows")
     LiveData<Integer> getNumberOfLiveData();
 

@@ -17,12 +17,22 @@ import com.dev4lazy.pricecollector.remote_data.RemoteDepartment;
 import com.dev4lazy.pricecollector.remote_data.RemoteDepartmentDao;
 import com.dev4lazy.pricecollector.remote_data.RemoteEanCode;
 import com.dev4lazy.pricecollector.remote_data.RemoteEanCodeDao;
+import com.dev4lazy.pricecollector.remote_data.RemoteFamily;
+import com.dev4lazy.pricecollector.remote_data.RemoteFamilyDao;
+import com.dev4lazy.pricecollector.remote_data.RemoteMarket;
+import com.dev4lazy.pricecollector.remote_data.RemoteMarketDao;
+import com.dev4lazy.pricecollector.remote_data.RemoteModule;
+import com.dev4lazy.pricecollector.remote_data.RemoteModuleDao;
 import com.dev4lazy.pricecollector.remote_data.RemoteSector;
 import com.dev4lazy.pricecollector.remote_data.RemoteSectorDao;
+import com.dev4lazy.pricecollector.remote_data.RemoteUOProject;
+import com.dev4lazy.pricecollector.remote_data.RemoteUOProjectDao;
 import com.dev4lazy.pricecollector.remote_data.RemoteUser;
 import com.dev4lazy.pricecollector.remote_data.RemoteUserDao;
 import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.view.ProgressPresenter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -156,9 +166,19 @@ public class RemoteDataRepository {
         analyzes.deleteAllData(result);
     }
 
+    /*
     public void findAnalysisNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result) {
-        analyzes.getViaQuery( "SELECT * from analyzes WHERE creation_date>='"+lastCheckDate+"'", result);
+        // analyzes.getViaQuery( "SELECT * from analyzes WHERE creation_date >= "+lastCheckDate+, result);
+        analyzes.getViaQuery( "SELECT * from analyzes WHERE creation_date >= "+lastCheckDate, result);
+
+        // todo?  analyzes.getViaQuery( "SELECT * from analyzes WHERE" , result);
     }
+
+     */
+
+
+//-----------------------------------------------------------------------------------
+    private RemoteFamilyDao remoteFamilyDao = AppHandle.getHandle().getRemoteDatabase().remoteFamilyDao();
 
 //-----------------------------------------------------------------------------------
     public void insertUser( RemoteUser remoteUser, MutableLiveData<Long> result) {
@@ -191,25 +211,159 @@ public class RemoteDataRepository {
         sectors.insertData( remoteSector, result);
     }
 
-    private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
-        private RemoteDatabase asyncTaskAnalyzesDatabase;
-
-        ClearDatabaseAsyncTask() {
-            asyncTaskAnalyzesDatabase = AppHandle.getHandle().getRemoteDatabase();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            asyncTaskAnalyzesDatabase.clearAllTables();
-            return null;
-        }
-    }
 
     public void deleteAllSectors(MutableLiveData<Integer> result) {
         sectors.deleteAllData(result);
     }
+    private Data<RemoteFamily> remoteFamilies = new Data<>( remoteFamilyDao );
+    private RemoteMarketDao remoteMarketDao = AppHandle.getHandle().getRemoteDatabase().remoteMarketDao();
+    private Data<RemoteMarket> remoteMarkets = new Data<>( remoteMarketDao );
+//-----------------------------------------------------------------------------------
+private RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabase().remoteModuleDao();
+    private Data<RemoteModule> remoteModules = new Data<>( remoteModuleDao );
+    private RemoteUOProjectDao remoteUOProjectDao = AppHandle.getHandle().getRemoteDatabase().remoteUOProjectDao();
+    private Data<RemoteUOProject> remoteUOProjects = new Data<>( remoteUOProjectDao );
+
+    public void findAnalysisNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result) {
+        List<Object> queryArguments = new ArrayList<>();
+        queryArguments.add( lastCheckDate.getTime() );
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT * from analyzes WHERE creation_date >= ?", queryArguments.toArray() );
+        analyzes.getViaQuery( query, result);
+    }
+
+    public void askRemoteFamiliesNumberOf( MutableLiveData<Integer> result ) {
+        remoteFamilies.getNumberOfData( result );
+    }
+
+    public void insertRemoteFamily( RemoteFamily remoteFamily, MutableLiveData<Long> result ) {
+        remoteFamilies.insertData( remoteFamily, result );
+    }
 
 //-----------------------------------------------------------------------------------
+
+    public void insertRemoteFamilies( ArrayList<RemoteFamily> remoteFamiliesList, ProgressPresenter progressPresenter ) {
+        remoteFamilies.insertDataList( remoteFamiliesList, progressPresenter );
+    }
+
+    public void updateRemoteFamily( RemoteFamily remoteFamily, MutableLiveData<Integer> result ) {
+        remoteFamilies.updateData( remoteFamily, result );
+    }
+
+    public void deleteRemoteFamily( RemoteFamily remoteFamily, MutableLiveData<Integer> result ) {
+        remoteFamilies.deleteData( remoteFamily, result );
+    }
+
+    public void deleteAllRemoteFamilies( MutableLiveData<Integer> result ) {
+        remoteFamilies.deleteAllData( result );
+    }
+
+    public void getAllRemoteFamilies( MutableLiveData<List<RemoteFamily>> result ) {
+        remoteFamilies.getAllData( result );
+    }
+
+    public void findRemoteFamilyById( int id, MutableLiveData<List<RemoteFamily>> result ) {
+        remoteFamilies.findDataById( id, result );
+    }
+
+    public void askRemoteMarketsNumberOf( MutableLiveData<Integer> result ) {
+        remoteMarkets.getNumberOfData( result );
+    }
+
+    public void insertRemoteMarket( RemoteMarket remoteMarket, MutableLiveData<Long> result ) {
+        remoteMarkets.insertData( remoteMarket, result );
+    }
+
+    public void insertRemoteMarkets( ArrayList<RemoteMarket> remoteMarketsList, ProgressPresenter progressPresenter ) {
+        remoteMarkets.insertDataList( remoteMarketsList, progressPresenter );
+    }
+
+    public void updateRemoteMarket( RemoteMarket remoteMarket, MutableLiveData<Integer> result ) {
+        remoteMarkets.updateData( remoteMarket, result );
+    }
+
+    public void deleteRemoteMarket( RemoteMarket remoteMarket, MutableLiveData<Integer> result ) {
+        remoteMarkets.deleteData( remoteMarket, result );
+    }
+
+    public void deleteAllRemoteMarkets( MutableLiveData<Integer> result ) {
+        remoteMarkets.deleteAllData( result );
+    }
+
+    public void getAllRemoteMarkets( MutableLiveData<List<RemoteMarket>> result ) {
+        remoteMarkets.getAllData( result );
+    }
+
+    public void findRemoteMarketById( int id, MutableLiveData<List<RemoteMarket>> result ) {
+        remoteMarkets.findDataById( id, result );
+    }
+
+    public void askRemoteModulesNumberOf( MutableLiveData<Integer> result ) {
+        remoteModules.getNumberOfData( result );
+    }
+
+    public void insertRemoteModule( RemoteModule remoteModule, MutableLiveData<Long> result ) {
+        remoteModules.insertData( remoteModule, result );
+    }
+
+    public void insertRemoteModules( ArrayList<RemoteModule> remoteModulesList, ProgressPresenter progressPresenter ) {
+        remoteModules.insertDataList( remoteModulesList, progressPresenter );
+    }
+
+    public void updateRemoteModule( RemoteModule remoteModule, MutableLiveData<Integer> result ) {
+        remoteModules.updateData( remoteModule, result );
+    }
+
+    public void deleteRemoteModule( RemoteModule remoteModule, MutableLiveData<Integer> result ) {
+        remoteModules.deleteData( remoteModule, result );
+    }
+
+    public void deleteAllRemoteModules( MutableLiveData<Integer> result ) {
+        remoteModules.deleteAllData( result );
+    }
+
+//-----------------------------------------------------------------------------------
+
+    public void getAllRemoteModules( MutableLiveData<List<RemoteModule>> result ) {
+        remoteModules.getAllData( result );
+    }
+
+    public void findRemoteModuleById( int id, MutableLiveData<List<RemoteModule>> result ) {
+        remoteModules.findDataById( id, result );
+    }
+
+    public void askRemoteUOProjectsNumberOf( MutableLiveData<Integer> result ) {
+        remoteUOProjects.getNumberOfData( result );
+    }
+
+    public void insertRemoteUOProject( RemoteUOProject remoteUOProject, MutableLiveData<Long> result ) {
+        remoteUOProjects.insertData( remoteUOProject, result );
+    }
+
+    public void insertRemoteUOProjects( ArrayList<RemoteUOProject> remoteUOProjectsList, ProgressPresenter progressPresenter ) {
+        remoteUOProjects.insertDataList( remoteUOProjectsList, progressPresenter );
+    }
+
+    public void updateRemoteUOProject( RemoteUOProject remoteUOProject, MutableLiveData<Integer> result ) {
+        remoteUOProjects.updateData( remoteUOProject, result );
+    }
+
+    public void deleteRemoteUOProject(RemoteUOProject remoteUOProject, MutableLiveData<Integer> result ) {
+        remoteUOProjects.deleteData( remoteUOProject, result );
+    }
+
+    public void deleteAllRemoteUOProjects( MutableLiveData<Integer> result ) {
+        remoteUOProjects.deleteAllData( result );
+    }
+
+    public void getAllRemoteUOProjects( MutableLiveData<List<RemoteUOProject>> result ) {
+        remoteUOProjects.getAllData( result );
+    }
+
+    public void findRemoteUOProjectById( int id, MutableLiveData<List<RemoteUOProject>> result ) {
+        remoteUOProjects.findDataById( id, result );
+    }
+
+    //-----------------------------------------------------------------------------------
     public void askEanCodesNumberOf(MutableLiveData<Integer> result ) {
         eanCodes.getNumberOfData(result);
     }
@@ -226,6 +380,22 @@ public class RemoteDataRepository {
         eanCodes.getAllData( result );
     }
 
+
+
+    //-----------------------------------------------------------------------------------
+    private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
+        private RemoteDatabase asyncTaskAnalyzesDatabase;
+
+        ClearDatabaseAsyncTask() {
+            asyncTaskAnalyzesDatabase = AppHandle.getHandle().getRemoteDatabase();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            asyncTaskAnalyzesDatabase.clearAllTables();
+            return null;
+        }
+    }
 
 //-----------------------------------------------------------------------------------
 

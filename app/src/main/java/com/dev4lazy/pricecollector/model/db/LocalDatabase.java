@@ -74,6 +74,22 @@ public abstract class LocalDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE own_stores ADD COLUMN name TEXT");
         }
     };
+
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS competitor_slots (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "slot_nr INTEGER NOT NULL, " +
+                    "company_id INTEGER NOT NULL, " +
+                    "other_store_id INTEGER NOT NULL )" );
+                    /*
+                    "other_store_id INTEGER, " +
+                    "PRIMARY KEY(id))");
+                    */
+        }
+    };
+
     static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -81,7 +97,24 @@ public abstract class LocalDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE competitor_slots ADD COLUMN other_store_name TEXT");
         }
     };
-    public abstract AnalysisCompetitorSlotDao analysisCompetitorSlotDao();
+
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS analysis_articles (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "analysis_id INTEGER NOT NULL, " +
+                    "article_id INTEGER NOT NULL, " +
+                    "competitor_store_id INTEGER NOT NULL, " +
+                    "competitor_store_price REAL, " +
+                    "article_store_price REAL, " +
+                    "article_ref_price REAL, " +
+                    "article_new_price REAL, " +
+                    "reference_article_id INTEGER NOT NULL, " +
+                    "comments TEXT  )" );
+        }
+    };
+
     static final Migration MIGRATION_5_6 = new Migration(5, 6) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -97,8 +130,7 @@ public abstract class LocalDatabase extends RoomDatabase {
                     "ON departments_in_sector (department_id)" );
         }
     };
-    public abstract ArticleDao articleDao();
-    public abstract CompanyDao companyDao();
+
     static final Migration MIGRATION_6_7 = new Migration(6, 7) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -108,19 +140,19 @@ public abstract class LocalDatabase extends RoomDatabase {
                     "analysis_article_id INTEGER NOT NULL, " +
                     "own_article_info_id INTEGER NOT NULL, " +
                     "competitor_store_id INTEGER NOT NULL, " +
-                    "competitor_store_price INTEGER NOT NULL, " +
+                    "competitor_store_price REAL NOT NULL, " +
                     "reference_article_id INTEGER NOT NULL, " +
                     "FOREIGN KEY (analysis_id) REFERENCES analyzes(id), " +
                     "FOREIGN KEY (competitor_store_id) REFERENCES stores(id) )" );
             database.execSQL("CREATE INDEX index_competitors_prices_analysis_id " +
-                    "ON analyzes (id)" );
+                    "ON competitors_prices (analysis_id)" );
             database.execSQL("CREATE INDEX index_competitors_prices_competitor_store_id " +
-                    "ON stores (id)" );
-            database.execSQL("ALTER TABLE AnalysisArticle ADD COLUMN own_article_info_id INTEGER NOT NULL");
+                    "ON competitors_prices (competitor_store_id)" );
+            database.execSQL("ALTER TABLE analysis_articles ADD COLUMN own_article_info_id INTEGER NOT NULL DEFAULT -1");
         }
     };
+
     private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
-    public abstract DepartmentDao departmentDao();
 
     public static LocalDatabase getInstance() {
         if (instance == null) {
@@ -149,14 +181,22 @@ public abstract class LocalDatabase extends RoomDatabase {
         return instance;
     }
 
+
     public abstract AnalysisArticleDao analysisArticleDao();
+
+    public abstract AnalysisCompetitorSlotDao analysisCompetitorSlotDao();
 
     public abstract AnalysisDao analysisDao();
 
+    public abstract ArticleDao articleDao();
+    public abstract CompanyDao companyDao();
     public abstract CompetitorPriceDao competitorPriceDao();
 
     public abstract CountryDao countryDao();
 
+
+
+    public abstract DepartmentDao departmentDao();
     public abstract DepartmentInSectorDao departmentInSectorDao();
 
     public abstract EanCodeDao eanCodeDao();
@@ -169,43 +209,9 @@ public abstract class LocalDatabase extends RoomDatabase {
 
     public abstract OwnArticleInfoDao ownArticleInfoDao();
 
-    // Dane pomocnicze
-
     public abstract OwnStoreDao ownStoreDao();
 
-    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS competitor_slots (" +
-                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "slot_nr INTEGER NOT NULL, " +
-                    "company_id INTEGER NOT NULL, " +
-                    "other_store_id INTEGER NOT NULL )" );
-                    /*
-                    "other_store_id INTEGER, " +
-                    "PRIMARY KEY(id))");
-                    */
-        }
-    };
-
     public abstract SectorDao sectorDao();
-
-    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS analysis_articles (" +
-                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "analysis_id INTEGER NOT NULL, " +
-                    "article_id INTEGER NOT NULL, " +
-                    "competitor_store_id INTEGER NOT NULL, " +
-                    "competitor_store_price REAL, " +
-                    "article_store_price REAL, " +
-                    "article_ref_price REAL, " +
-                    "article_new_price REAL, " +
-                    "reference_article_id INTEGER NOT NULL, " +
-                    "comments TEXT  )" );
-        }
-    };
 
     public abstract StoreDao storeDao();
 

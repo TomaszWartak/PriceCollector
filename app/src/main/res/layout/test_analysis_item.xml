@@ -98,7 +98,7 @@
                 card_view:layout_constraintTop_toBottomOf="@+id/analysis_finish_date" />
 
             <ProgressBar
-                android:id="@+id/remote_2_local_progressBar"
+                android:id="@+id/test_analysis_item__progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

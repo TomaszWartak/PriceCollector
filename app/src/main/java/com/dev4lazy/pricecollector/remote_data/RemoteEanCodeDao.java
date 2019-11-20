@@ -19,6 +19,10 @@ public interface RemoteEanCodeDao extends _Dao<RemoteEanCode> {
     Integer getNumberOf();
 
     @Override
+    @Query("SELECT COUNT(*) FROM ean_codes")
+    LiveData<Integer> getNumberOfLiveData();
+
+    @Override
     @Query("DELETE FROM ean_codes")
     int deleteAll();
 

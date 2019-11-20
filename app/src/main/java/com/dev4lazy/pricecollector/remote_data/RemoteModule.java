@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.model.entities;
+package com.dev4lazy.pricecollector.remote_data;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -9,10 +9,11 @@ import androidx.room.PrimaryKey;
 	[SEC_Id] [int] NOT NULL,
 
  */
-public class Module {
+public class RemoteModule {
+
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int remote_id; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
+
     private String name;
 
     public int getId() {
@@ -21,14 +22,6 @@ public class Module {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getRemote_id() {
-        return remote_id;
-    }
-
-    public void setRemote_id(int remote_id) {
-        this.remote_id = remote_id;
     }
 
     public String getName() {

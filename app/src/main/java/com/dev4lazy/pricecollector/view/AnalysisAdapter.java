@@ -6,12 +6,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
+import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
+
+import static com.dev4lazy.pricecollector.view.ProgressPresenter.DATA_SIZE_UNKNOWN;
 
 public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.AnalysisViewHolder> {
 
@@ -42,6 +46,8 @@ public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.
     }
 
     class AnalysisViewHolder extends RecyclerView.ViewHolder {
+        // TODO sprawdź, czy tu nie jest potrzebny VieMOdel, czy to się nie zgubi przy obrocie
+
         private TextView textViewAnalysisCreationDate;
         private TextView textViewAnalysisDueDate;
         private TextView textViewAnalysisFinishDate;
@@ -49,17 +55,40 @@ public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.
 
         public AnalysisViewHolder( View view ) {
             super(view);
-            textViewAnalysisCreationDate = view.findViewById( R.id.analysisItem_creationDate );
-            textViewAnalysisDueDate = view.findViewById( R.id.analysisItem_dueDate );
-            textViewAnalysisFinishDate = view.findViewById( R.id.analysisItem_finishDate );
-            textViewAnalysisConfirmationDate = view.findViewById( R.id.analysisItem_confirmationDate );
+            textViewAnalysisCreationDate = view.findViewById( R.id.analysis_item__creation_date);
+            textViewAnalysisDueDate = view.findViewById( R.id.analysis_Item__due_date);
+            textViewAnalysisFinishDate = view.findViewById( R.id.analysis_item__finish_date);
+            textViewAnalysisConfirmationDate = view.findViewById( R.id.analysis_item__confirmation_date );
+            view.setOnClickListener( (View v) -> {
+                openCompetitorSlots( v );
+            });
+            view.findViewById(R.id.button_analysis_articles_create).setOnClickListener( (View v) -> {
+                updateArticlesAllData( new ProgressBarPresenter( view.findViewById(R.id.analysis_item__progressBar), DATA_SIZE_UNKNOWN ) );
+            });
+        }
+
+        private void openCompetitorSlots( View view) {
+            // TODO sloty muszą się otworzyć dla konkretnej analizy, więc jakoś (ViewModel) trzeba przekazać info o analizie
+            Navigation.findNavController( view ).navigate(R.id.action_mainFragment_to_analysisCompetitorsFragment);
+        }
+
+        public void updateArticlesAllData( ProgressPresenter progressPresenter ) {
+            AnalysisDataUpdater.getInstance().createArticles( progressPresenter );
         }
 
         protected void bind( Analysis analysis ) {
-            textViewAnalysisCreationDate.setText( dateConverter.date2String( analysis.getCreationDate() ) );
-            textViewAnalysisDueDate.setText( dateConverter.date2String( analysis.getDueDate() ) );
-            textViewAnalysisFinishDate.setText( dateConverter.date2String( analysis.getFinishDate() ) );
-            textViewAnalysisConfirmationDate.setText( dateConverter.date2String( analysis.getConfirmationDate() ) );
+            if (analysis.getCreationDate()!=null) {
+                textViewAnalysisCreationDate.setText(dateConverter.date2String( analysis.getCreationDate() ) );
+            }
+            if (analysis.getDueDate()!=null) {
+                textViewAnalysisDueDate.setText( dateConverter.date2String( analysis.getDueDate() ) );
+            }
+            if (analysis.getFinishDate()!=null) {
+                textViewAnalysisFinishDate.setText( dateConverter.date2String( analysis.getFinishDate() ) );
+            }
+            if (analysis.getConfirmationDate()!=null) {
+                textViewAnalysisConfirmationDate.setText( dateConverter.date2String( analysis.getConfirmationDate() ) );
+            }
         }
 
         protected void clear() {
