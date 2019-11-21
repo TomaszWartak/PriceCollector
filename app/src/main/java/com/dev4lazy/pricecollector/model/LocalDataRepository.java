@@ -65,21 +65,6 @@ public class LocalDataRepository {
 // Analysis
     private AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
     private Data<Analysis> analyzes  = new Data<>( analysisDao );
-//-----------------------------------------------------------------------
-// AnalysisCompetitorSlot
-    private AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
-    private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
-//-----------------------------------------------------------------------
-// Article
-    private ArticleDao articleDao = AppHandle.getHandle().getLocalDatabase().articleDao();
-    private Data<Article> articles = new Data<>(articleDao);
-//-----------------------------------------------------------------------
-// Country
-    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
-//-----------------------------------------------------------------------
-// Family (2019-11-21 08:58 OK)
-    private FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
-    private Data<Family> families = new Data<>( familyDao );
 
     public void askAnalyzesNumberOf( MutableLiveData<Integer> result ) {
         analyzes.getNumberOfData( result );
@@ -101,11 +86,6 @@ public class LocalDataRepository {
         analyzes.findDataById( id, result );
     }
 
-//-----------------------------------------------------------------------
-// CompetitorPrice
-    private CompetitorPriceDao competitorPriceDao = AppHandle.getHandle().getLocalDatabase().competitorPriceDao();
-    private Data<CompetitorPrice> competitorPrices = new Data<>( competitorPriceDao );
-
     public void insertAnalyzes ( ArrayList<Analysis> analyzesList, ProgressPresenter progressPresenter ) {
         analyzes.insertDataList( analyzesList, progressPresenter );
     }
@@ -117,6 +97,21 @@ public class LocalDataRepository {
     public void deleteAnalysis(Analysis analysis, MutableLiveData<Integer> result ) {
         analyzes.deleteData( analysis, result );
     }
+
+//-----------------------------------------------------------------------
+// AnalysisCompetitorSlot
+    private AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
+    private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
+
+//-----------------------------------------------------------------------
+// Article
+    private ArticleDao articleDao = AppHandle.getHandle().getLocalDatabase().articleDao();
+    private Data<Article> articles = new Data<>(articleDao);
+
+//-----------------------------------------------------------------------
+// CompetitorPrice
+    private CompetitorPriceDao competitorPriceDao = AppHandle.getHandle().getLocalDatabase().competitorPriceDao();
+    private Data<CompetitorPrice> competitorPrices = new Data<>( competitorPriceDao );
 
     public void askCompetitorPricesNumberOf( MutableLiveData<Integer> result ) {
         competitorPrices.getNumberOfData( result );
@@ -141,6 +136,13 @@ public class LocalDataRepository {
     public void deleteAllCompetitorPrices( MutableLiveData<Integer> result ) {
         competitorPrices.deleteAllData( result );
     }
+//-----------------------------------------------------------------------
+// Country
+    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+//-----------------------------------------------------------------------
+// Family (2019-11-21 08:58 OK)
+    private FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
+    private Data<Family> families = new Data<>( familyDao );
 
 
 //-----------------------------------------------------------------------
@@ -167,27 +169,27 @@ public class LocalDataRepository {
         competitorPrices.findDataById( id, result );
     }
 
-    public void insertFamily(Family remoteFamily, MutableLiveData<Long> result ) {
-        families.insertData( remoteFamily, result );
+    public void insertFamily(Family family, MutableLiveData<Long> result ) {
+        families.insertData( family, result );
     }
 
-    public void insertRemoteFamilies( ArrayList<Family> familiesList, ProgressPresenter progressPresenter ) {
+    public void inserFamilies( ArrayList<Family> familiesList, ProgressPresenter progressPresenter ) {
         families.insertDataList( familiesList, progressPresenter );
     }
 
-    public void updateFamily( Family remoteFamily, MutableLiveData<Integer> result ) {
-        families.updateData( remoteFamily, result );
+    public void updateFamily( Family family, MutableLiveData<Integer> result ) {
+        families.updateData( family, result );
     }
 
-    public void deleteFamily( Family remoteFamily, MutableLiveData<Integer> result ) {
-        families.deleteData( remoteFamily, result );
+    public void deleteFamily( Family family, MutableLiveData<Integer> result ) {
+        families.deleteData( family, result );
     }
 
-    public void deleteAllRemoteFamilies( MutableLiveData<Integer> result ) {
+    public void deleteAllFamilies( MutableLiveData<Integer> result ) {
         families.deleteAllData( result );
     }
 
-    public void getAllRemoteFamilies( MutableLiveData<List<Family>> result ) {
+    public void getAllFamilies( MutableLiveData<List<Family>> result ) {
         families.getAllData( result );
     }
 
