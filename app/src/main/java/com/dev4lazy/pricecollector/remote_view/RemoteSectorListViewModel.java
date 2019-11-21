@@ -18,7 +18,7 @@ public class RemoteSectorListViewModel extends AndroidViewModel {
 
     public RemoteSectorListViewModel(Application application) {
         super(application);
-        RemoteSectorDao remoteSectorDao = AppHandle.getHandle().getRemoteDatabase().sectorDao();
+        RemoteSectorDao remoteSectorDao = AppHandle.getHandle().getRemoteDatabase().remoteSectorDao();
         DataSource.Factory<Integer, RemoteSector>  factory = remoteSectorDao.getAllPaged();
         LivePagedListBuilder<Integer, RemoteSector> pagedListBuilder = new LivePagedListBuilder<Integer, RemoteSector>(factory, 50);
         remoteSectorsLiveData = pagedListBuilder.build();

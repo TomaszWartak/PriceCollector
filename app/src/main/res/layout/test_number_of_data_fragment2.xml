@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.LoginFragment">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:paddingTop="16dp">
+
+        <TextView
+            android:id="@+id/number_of_RemoteAnalysis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Analysis : " />
+
+        <TextView
+            android:id="@+id/number_of_RemoteAnalysisRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RemoteAnalysisRow : " />
+
+        <TextView
+            android:id="@+id/number_of_RemoteDepartment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Department : " />
+
+        <TextView
+            android:id="@+id/number_of_RemoteEanCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EanCode : " />
+
+        <TextView
+            android:id="@+id/number_of_RemoteFamily"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Family : " />
+
+        <TextView
+            android:id="@+id/number_of_RemoteMarket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Market : " />
+
+        <TextView
+            android:id="@+id/number_of_RemoteModule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Module : " />
+
+        <TextView
+            android:id="@+id/number_of_RemoteSector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sector : " />
+
+        <TextView
+            android:id="@+id/number_of_RemoteUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User : " />
+
+        <TextView
+            android:id="@+id/number_of_RemoteUOProject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UOProject : " />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>

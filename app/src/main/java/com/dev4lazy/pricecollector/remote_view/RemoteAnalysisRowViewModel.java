@@ -18,7 +18,7 @@ public class RemoteAnalysisRowViewModel extends AndroidViewModel {
 
     public RemoteAnalysisRowViewModel(Application application) {
         super(application);
-        RemoteAnalysisRowDao analysisRowDao = AppHandle.getHandle().getRemoteDatabase().analysisRowDao();
+        RemoteAnalysisRowDao analysisRowDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisRowDao();
         DataSource.Factory<Integer, RemoteAnalysisRow>  factory = analysisRowDao.getAllPaged();
         LivePagedListBuilder<Integer, RemoteAnalysisRow> pagedListBuilder = new LivePagedListBuilder<Integer, RemoteAnalysisRow>(factory, 50);
         analysisRowsLiveData = pagedListBuilder.build();

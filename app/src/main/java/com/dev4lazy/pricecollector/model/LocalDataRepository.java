@@ -14,6 +14,7 @@ import com.dev4lazy.pricecollector.model.db.CountryDao;
 import com.dev4lazy.pricecollector.model.db.DepartmentDao;
 import com.dev4lazy.pricecollector.model.db.DepartmentInSectorDao;
 import com.dev4lazy.pricecollector.model.db.EanCodeDao;
+import com.dev4lazy.pricecollector.model.db.FamilyDao;
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
 import com.dev4lazy.pricecollector.model.db.OwnArticleInfoDao;
 import com.dev4lazy.pricecollector.model.db.OwnStoreDao;
@@ -28,6 +29,7 @@ import com.dev4lazy.pricecollector.model.entities.Country;
 import com.dev4lazy.pricecollector.model.entities.Department;
 import com.dev4lazy.pricecollector.model.entities.DepartmentInSector;
 import com.dev4lazy.pricecollector.model.entities.EanCode;
+import com.dev4lazy.pricecollector.model.entities.Family;
 import com.dev4lazy.pricecollector.model.entities.OwnArticleInfo;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.model.entities.Sector;
@@ -61,18 +63,23 @@ public class LocalDataRepository {
 // po getInstance -----------------------------------------------------------------------
     
 // Analysis
-private AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
+    private AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
     private Data<Analysis> analyzes  = new Data<>( analysisDao );
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // AnalysisCompetitorSlot
     private AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
+    private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
 //-----------------------------------------------------------------------
-// CompetitorPrice
-    private CompetitorPriceDao competitorPriceDao = AppHandle.getHandle().getLocalDatabase().competitorPriceDao();
-    private Data<CompetitorPrice> competitorPrices = new Data<>( competitorPriceDao );
-    //-----------------------------------------------------------------------
+// Article
+    private ArticleDao articleDao = AppHandle.getHandle().getLocalDatabase().articleDao();
+    private Data<Article> articles = new Data<>(articleDao);
+//-----------------------------------------------------------------------
 // Country
     private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+//-----------------------------------------------------------------------
+// Family (2019-11-21 08:58 OK)
+    private FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
+    private Data<Family> families = new Data<>( familyDao );
 
     public void askAnalyzesNumberOf( MutableLiveData<Integer> result ) {
         analyzes.getNumberOfData( result );
@@ -81,27 +88,6 @@ private AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analy
     public void insertAnalysis( Analysis analysis, MutableLiveData<Long> result ) {
         analyzes.insertData( analysis, result );
     }
-
-    public void insertAnalyzes ( ArrayList<Analysis> analyzesList, ProgressPresenter progressPresenter ) {
-        analyzes.insertDataList( analyzesList, progressPresenter );
-    }
-
-    public void updateAnalysis( Analysis analysis, MutableLiveData<Integer> result ) {
-        analyzes .updateData( analysis, result );
-    }
-
-    public void deleteAnalysis(Analysis analysis, MutableLiveData<Integer> result ) {
-        analyzes.deleteData( analysis, result );
-    }
-    private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
-//-----------------------------------------------------------------------
-// Article
-    private ArticleDao articleDao = AppHandle.getHandle().getLocalDatabase().articleDao();
-    private Data<Article> articles = new Data<>(articleDao);
-    //-----------------------------------------------------------------------
-// Company
-    private CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
-    private Data<Company> companies = new Data<>(companyDao);
 
     public void deleteAllAnalyzes ( MutableLiveData<Integer> result ) {
         analyzes.deleteAllData( result );
@@ -113,6 +99,23 @@ private AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analy
 
     public void findAnalysisById( int id, MutableLiveData<List<Analysis>> result ) {
         analyzes.findDataById( id, result );
+    }
+
+//-----------------------------------------------------------------------
+// CompetitorPrice
+    private CompetitorPriceDao competitorPriceDao = AppHandle.getHandle().getLocalDatabase().competitorPriceDao();
+    private Data<CompetitorPrice> competitorPrices = new Data<>( competitorPriceDao );
+
+    public void insertAnalyzes ( ArrayList<Analysis> analyzesList, ProgressPresenter progressPresenter ) {
+        analyzes.insertDataList( analyzesList, progressPresenter );
+    }
+
+    public void updateAnalysis( Analysis analysis, MutableLiveData<Integer> result ) {
+        analyzes .updateData( analysis, result );
+    }
+
+    public void deleteAnalysis(Analysis analysis, MutableLiveData<Integer> result ) {
+        analyzes.deleteData( analysis, result );
     }
 
     public void askCompetitorPricesNumberOf( MutableLiveData<Integer> result ) {
@@ -139,6 +142,23 @@ private AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analy
         competitorPrices.deleteAllData( result );
     }
 
+
+//-----------------------------------------------------------------------
+// Company
+    private CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
+    private Data<Company> companies = new Data<>(companyDao);
+
+
+//-----------------------------------------------------------------------
+// Department
+    private DepartmentDao departmentDao = AppHandle.getHandle().getLocalDatabase().departmentDao();
+    private Data<Department> departments = new Data<>(departmentDao);
+
+//-----------------------------------------------------------------------
+// DepartmentInSector
+    private DepartmentInSectorDao departmentInSectorDao = AppHandle.getHandle().getLocalDatabase().departmentInSectorDao();
+    private Data<DepartmentInSector> departmentInSectors = new Data<>(departmentInSectorDao);
+
     public void getAllCompetitorPrices( MutableLiveData<List<CompetitorPrice>> result ) {
         competitorPrices.getAllData( result );
     }
@@ -146,14 +166,35 @@ private AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analy
     public void findCompetitorPriceById( int id, MutableLiveData<List<CompetitorPrice>> result ) {
         competitorPrices.findDataById( id, result );
     }
-//-----------------------------------------------------------------------
-// Department
-    private DepartmentDao departmentDao = AppHandle.getHandle().getLocalDatabase().departmentDao();
-    private Data<Department> departments = new Data<>(departmentDao);
-//-----------------------------------------------------------------------
-// DepartmentInSector
-    private DepartmentInSectorDao departmentInSectorDao = AppHandle.getHandle().getLocalDatabase().departmentInSectorDao();
-    private Data<DepartmentInSector> departmentInSectors = new Data<>(departmentInSectorDao);
+
+    public void insertFamily(Family remoteFamily, MutableLiveData<Long> result ) {
+        families.insertData( remoteFamily, result );
+    }
+
+    public void insertRemoteFamilies( ArrayList<Family> familiesList, ProgressPresenter progressPresenter ) {
+        families.insertDataList( familiesList, progressPresenter );
+    }
+
+    public void updateFamily( Family remoteFamily, MutableLiveData<Integer> result ) {
+        families.updateData( remoteFamily, result );
+    }
+
+    public void deleteFamily( Family remoteFamily, MutableLiveData<Integer> result ) {
+        families.deleteData( remoteFamily, result );
+    }
+
+    public void deleteAllRemoteFamilies( MutableLiveData<Integer> result ) {
+        families.deleteAllData( result );
+    }
+
+    public void getAllRemoteFamilies( MutableLiveData<List<Family>> result ) {
+        families.getAllData( result );
+    }
+
+    public void findFamilyById( int id, MutableLiveData<List<Family>> result ) {
+        families.findDataById( id, result );
+    }
+
 //-----------------------------------------------------------------------
 // OwnArticleInfo
     private OwnArticleInfoDao ownArticleInfoDao = AppHandle.getHandle().getLocalDatabase().ownArticleInfoDao();
@@ -296,9 +337,6 @@ private AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analy
         return countryDao.getAllLiveData();
     }
     */
-
-//-----------------------------------------------------------------------
-// Family
 
 //-----------------------------------------------------------------------
 // Market

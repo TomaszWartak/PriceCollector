@@ -44,19 +44,19 @@ public class RemoteDataRepository {
     private RemoteAnalysisDao remoteAnalysisDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisDao();
     private Data<RemoteAnalysis> analyzes = new Data<>(remoteAnalysisDao);
 
-    private RemoteAnalysisRowDao remoteAnalysisRowDao = AppHandle.getHandle().getRemoteDatabase().analysisRowDao();
+    private RemoteAnalysisRowDao remoteAnalysisRowDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisRowDao();
     private Data<RemoteAnalysisRow> analysisRows = new Data<>(remoteAnalysisRowDao);
 
-    private RemoteEanCodeDao remoteEanCodeDao = AppHandle.getHandle().getRemoteDatabase().eanCodeDao();
+    private RemoteEanCodeDao remoteEanCodeDao = AppHandle.getHandle().getRemoteDatabase().remoteEanCodeDao();
     private Data<RemoteEanCode> eanCodes = new Data<>(remoteEanCodeDao);
     
-    private RemoteUserDao userDao = AppHandle.getHandle().getRemoteDatabase().userDao();
+    private RemoteUserDao userDao = AppHandle.getHandle().getRemoteDatabase().remoteUserDao();
     private Data<RemoteUser> users = new Data<>(userDao);
 
-    private RemoteDepartmentDao departmentDao = AppHandle.getHandle().getRemoteDatabase().departmentDao();
+    private RemoteDepartmentDao departmentDao = AppHandle.getHandle().getRemoteDatabase().remoteDepartmentDao();
     private Data<RemoteDepartment> departments = new Data<>(departmentDao);
 
-    private RemoteSectorDao sectorDao = AppHandle.getHandle().getRemoteDatabase().sectorDao();
+    private RemoteSectorDao sectorDao = AppHandle.getHandle().getRemoteDatabase().remoteSectorDao();
     private Data<RemoteSector> sectors = new Data<>(sectorDao);
     
     private MediatorLiveData<List<RemoteAnalysisRow>> mObservableAnalysisRows;
@@ -179,8 +179,9 @@ public class RemoteDataRepository {
 
 //-----------------------------------------------------------------------------------
     private RemoteFamilyDao remoteFamilyDao = AppHandle.getHandle().getRemoteDatabase().remoteFamilyDao();
+    private Data<RemoteFamily> remoteFamilies = new Data<>( remoteFamilyDao );
 
-//-----------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------
     public void insertUser( RemoteUser remoteUser, MutableLiveData<Long> result) {
         users.insertData( remoteUser, result);
     }
@@ -215,7 +216,6 @@ public class RemoteDataRepository {
     public void deleteAllSectors(MutableLiveData<Integer> result) {
         sectors.deleteAllData(result);
     }
-    private Data<RemoteFamily> remoteFamilies = new Data<>( remoteFamilyDao );
     private RemoteMarketDao remoteMarketDao = AppHandle.getHandle().getRemoteDatabase().remoteMarketDao();
     private Data<RemoteMarket> remoteMarkets = new Data<>( remoteMarketDao );
 //-----------------------------------------------------------------------------------

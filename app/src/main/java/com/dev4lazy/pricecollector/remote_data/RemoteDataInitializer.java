@@ -34,8 +34,6 @@ public class RemoteDataInitializer {
 
     private List<RemoteUOProject> remoteUOProjects = null;
 
-
-
     private RemoteAnalysis remoteAnalysis = null;
 
     private Csv2EanCodeConverter csv2EanCodeConverter;
@@ -233,6 +231,7 @@ public class RemoteDataInitializer {
         remoteModules = new ArrayList<>();
         RemoteModule remoteModule = new RemoteModule();
         remoteModule.setName( resources.getString(R.string.dummy_string) );
+        remoteModules.add(remoteModule);
     }
 
     public void clearRemoteModules() {
@@ -244,6 +243,7 @@ public class RemoteDataInitializer {
         remoteFamilies = new ArrayList<>();
         RemoteFamily remoteFamily = new RemoteFamily();
         remoteFamily.setName( resources.getString(R.string.dummy_string) );
+        remoteFamilies.add(remoteFamily);
     }
 
     public void clearRemoteFamilies() {
@@ -255,6 +255,7 @@ public class RemoteDataInitializer {
         remoteMarkets = new ArrayList<>();
         RemoteMarket remoteMarket = new RemoteMarket();
         remoteMarket.setName( resources.getString(R.string.dummy_string) );
+        remoteMarkets.add(remoteMarket);
     }
 
     public void clearRemoteMarkets() {
@@ -266,6 +267,7 @@ public class RemoteDataInitializer {
         remoteUOProjects = new ArrayList<>();
         RemoteUOProject remoteUOProject = new RemoteUOProject();
         remoteUOProject.setName( resources.getString(R.string.dummy_string) );
+        remoteUOProjects.add(remoteUOProject);
     }
 
     public void clearRemoteUOProjects() {

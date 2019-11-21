@@ -17,6 +17,7 @@ import com.dev4lazy.pricecollector.model.entities.OwnArticleInfo;
 import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.entities.UOProject;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
+import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.remote_data.RemoteAnalysis;
 import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRow;
 import com.dev4lazy.pricecollector.remote_data.RemoteDepartment;
@@ -380,7 +381,14 @@ public class AnalysisDataUpdater {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllSectors(result);
     }
 
-    private void createDepartmentsMap( ProgressPresenter progressPresenter ) {
+tworzenie dummy dodac meto
+family itd get itd get
+może raczej
+LocalDataRepository trzeba a pozniej
+ dy na zmiaRemoteX i
+     createRemoteX (a mo do LocalDataInitializer?
+    do dla Family, Market, Module, UOProject   privne
+    privateze instrt, alba add?)ate void createDepartmentsMap( ProgressPresenter progressPresenter ) {
         MutableLiveData<List<Department>> result = new MutableLiveData<>();
         Observer<List<Department>> resultObserver = new Observer<List<Department>>() {
             @Override
@@ -391,15 +399,13 @@ public class AnalysisDataUpdater {
                     for (Department department : departmentList ) {
                         classScopeDepartmentMap.put( department.getSymbol(), department );
                     }
-                    createDummyFamily( progressPresenter );
+                    getRemoteFamily( progressPresenter );
                 }
             }
         };
         result.observeForever(resultObserver);
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllDepartments(result);
-    }
-
-    private void createDummyFamily( ProgressPresenter progressPresenter ) {
+    } void getRemoteFamily( ProgressPresenter progressPresenter ) {
         Remote2LocalConverter converter = new Remote2LocalConverter();
         MutableLiveData<List<RemoteFamily>> result = new MutableLiveData<>();
         Observer<List<RemoteFamily>> resultObserver = new Observer<List<RemoteFamily>>() {
@@ -408,12 +414,26 @@ public class AnalysisDataUpdater {
                 if ((familiesList != null)&&(!familiesList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
                     classScopeFamily = converter.createFamily( familiesList.get(0) );
-                    createDummyMarket( progressPresenter );
+                    createDummyFamily( progressPresenter );
                 }
             }
         };
         result.observeForever(resultObserver);
         AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteFamilies( result );
+    }
+    private void createDummyFamily( ProgressPresenter progressPresenter ) {
+        MutableLiveData<Long> result = new MutableLiveData<>();
+        Observer<Long> resultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged( Long familyId ) {
+                if ((familyId != null)&&(familyId>0)) {
+                    result.removeObserver(this); // this = observer...
+                    createDummyMarket( progressPresenter );
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertFamily( classScopeFamily, result );
     }
 
     private void createDummyMarket( ProgressPresenter progressPresenter ) {

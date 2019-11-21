@@ -17,7 +17,7 @@ public class RemoteAnalysisRowJoinViewModel extends AndroidViewModel {
 
     public RemoteAnalysisRowJoinViewModel(Application application) {
         super(application);
-        DataSource.Factory<Integer, RemoteAnalysisRowJoin>  factory = RemoteDatabase.getInstance().analysisRowDao().getAllRemoteAnalysisRowJoinPaged();
+        DataSource.Factory<Integer, RemoteAnalysisRowJoin>  factory = RemoteDatabase.getInstance().remoteAnalysisRowDao().getAllRemoteAnalysisRowJoinPaged();
         LivePagedListBuilder<Integer, RemoteAnalysisRowJoin> pagedListBuilder = new LivePagedListBuilder<>(factory, 50);
         analysisRowsLiveData = pagedListBuilder.build();
     }

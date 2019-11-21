@@ -6,7 +6,6 @@
     tools:context=".view.LoginFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/login_fragment_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"

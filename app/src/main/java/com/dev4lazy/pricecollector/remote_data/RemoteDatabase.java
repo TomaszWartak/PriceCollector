@@ -153,9 +153,9 @@ public abstract class RemoteDatabase extends RoomDatabase {
 
     public abstract RemoteAnalysisDao remoteAnalysisDao();
 
-    public abstract RemoteAnalysisRowDao analysisRowDao();
+    public abstract RemoteAnalysisRowDao remoteAnalysisRowDao();
 
-    public abstract RemoteEanCodeDao eanCodeDao();
+    public abstract RemoteEanCodeDao remoteEanCodeDao();
 
     public abstract RemoteFamilyDao remoteFamilyDao();
 
@@ -163,11 +163,11 @@ public abstract class RemoteDatabase extends RoomDatabase {
 
     public abstract RemoteModuleDao remoteModuleDao();
 
-    public abstract RemoteUserDao userDao();
+    public abstract RemoteUserDao remoteUserDao();
 
-    public abstract RemoteDepartmentDao departmentDao();
+    public abstract RemoteDepartmentDao remoteDepartmentDao();
 
-    public abstract RemoteSectorDao sectorDao();
+    public abstract RemoteSectorDao remoteSectorDao();
 
     public abstract RemoteUOProjectDao remoteUOProjectDao();
 

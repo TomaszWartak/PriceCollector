@@ -147,6 +147,9 @@
         <action
             android:id="@+id/action_testActionsFragment2_to_remoteDepartmentsListFragment"
             app:destination="@id/remoteDepartmentsListFragment" />
+        <action
+            android:id="@+id/action_testActionsFragment2_to_testNumbersOfDataFragment2"
+            app:destination="@id/testNumbersOfDataFragment2" />
     </fragment>
     <fragment
         android:id="@+id/remoteUsersListFragment"
@@ -187,5 +190,9 @@
         android:id="@+id/testNumbersOfDataFragment"
         android:name="com.dev4lazy.pricecollector.view.TestNumbersOfDataFragment"
         android:label="TestNumbersOfDataFragment" />
+    <fragment
+        android:id="@+id/testNumbersOfDataFragment2"
+        android:name="com.dev4lazy.pricecollector.view.TestNumbersOfDataFragment2"
+        android:label="TestNumbersOfDataFragment2" />
 
 </navigation>

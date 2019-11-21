@@ -18,7 +18,7 @@ public class RemoteDepartmentListViewModel extends AndroidViewModel {
 
     public RemoteDepartmentListViewModel(Application application) {
         super(application);
-        RemoteDepartmentDao remoteDepartmentDao = AppHandle.getHandle().getRemoteDatabase().departmentDao();
+        RemoteDepartmentDao remoteDepartmentDao = AppHandle.getHandle().getRemoteDatabase().remoteDepartmentDao();
         DataSource.Factory<Integer, RemoteDepartment>  factory = remoteDepartmentDao.getAllPaged();
         LivePagedListBuilder<Integer, RemoteDepartment> pagedListBuilder = new LivePagedListBuilder<Integer, RemoteDepartment>(factory, 50);
         remoteDepartmentsLiveData = pagedListBuilder.build();
