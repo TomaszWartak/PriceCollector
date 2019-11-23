@@ -127,7 +127,7 @@
         tools:layout="@layout/add_store_fragment" />
     <fragment
         android:id="@+id/analysisFragment"
-        android:name="com.dev4lazy.pricecollector.view.AnalysisFragment"
+        android:name="com.dev4lazy.pricecollector.view.AnalysisArticlesFragment"
         android:label="analysis_fragment"
         tools:layout="@layout/analysis_fragment" />
     <fragment

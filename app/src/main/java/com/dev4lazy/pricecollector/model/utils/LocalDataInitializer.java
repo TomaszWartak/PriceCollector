@@ -167,31 +167,40 @@ public class LocalDataInitializer {
 // ---------------------------------------------------------------------------
 // Przygotowanie danych
     private void prepareLocalData() {
-        // TODO coś to nie działa bo w po TWÓRZ LOCAL są tylko sektory i departamenty...
+        copySectorsAndDepartmentsFromRemoteDatabase( );
+    }
+
+    private void copySectorsAndDepartmentsFromRemoteDatabase( ) {
         MutableLiveData<Long> finalResult = new MutableLiveData<>();
         Observer<Long> resultObserver = new Observer<Long>() {
             @Override
             public void onChanged(Long aLong) {
-                if (aLong!=null) {
-                    finalResult.removeObserver(this);
-                    prepareCountries();
-                    prepareCompanies();
-                    prepareOwnStores();
-                    prepareObiStores();
-                    prepareLeroyMerlinStores();
-                    prepareBricomanStores();
-                    prepareLocalCompetitorStores();
-                    prepareCompetitorSlots();
-                    startLocalDataPopulationChain();
-                }
+                finalResult.removeObserver(this);
+                copyDummyFamiliesEtcFromRemoteDatabase( finalResult );
             }
         };
         finalResult.observeForever(resultObserver);
-        copySectorsAndDepartmentsFromRemoteDatabase( finalResult );
+        AnalysisDataUpdater.getInstance().copySectorsAndDepartmentsFromRemoteDatabase( finalResult );
     }
 
-    private void copySectorsAndDepartmentsFromRemoteDatabase( MutableLiveData<Long> finalResult ) {
-        AnalysisDataUpdater.getInstance().copySectorsAndDepartmentsFromRemoteDatabase( finalResult );
+    private void copyDummyFamiliesEtcFromRemoteDatabase( MutableLiveData<Long> finalResult ) {
+        Observer<Long> resultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged(Long aLong) {
+                finalResult.removeObserver(this);
+                prepareCountries();
+                prepareCompanies();
+                prepareOwnStores();
+                prepareObiStores();
+                prepareLeroyMerlinStores();
+                prepareBricomanStores();
+                prepareLocalCompetitorStores();
+                prepareCompetitorSlots();
+                startLocalDataPopulationChain();
+            }
+        };
+        finalResult.observeForever(resultObserver);
+        AnalysisDataUpdater.getInstance().copyDummyFamiliesEtcFromRemoteDatabase( finalResult );
     }
 
     private void prepareCountries() {

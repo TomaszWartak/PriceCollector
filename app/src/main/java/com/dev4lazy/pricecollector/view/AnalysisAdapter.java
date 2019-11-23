@@ -73,7 +73,7 @@ public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.
         }
 
         public void updateArticlesAllData( ProgressPresenter progressPresenter ) {
-            AnalysisDataUpdater.getInstance().createArticles( progressPresenter );
+            AnalysisDataUpdater.getInstance().insertArticles( progressPresenter );
         }
 
         protected void bind( Analysis analysis ) {

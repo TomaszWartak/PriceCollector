@@ -25,7 +25,7 @@ import static android.widget.LinearLayout.VERTICAL;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AnalysisFragment extends Fragment {
+public class AnalysisArticlesFragment extends Fragment {
 
 
     //private AnalysisArticleViewModel viewModel;
@@ -34,12 +34,12 @@ public class AnalysisFragment extends Fragment {
     //private AnalysisArticleAdapter analysisArticleJoinAdapter;
     private AnalysisArticleJoinAdapter analysisArticleJoinAdapter;
 
-    public AnalysisFragment() {
+    public AnalysisArticlesFragment() {
         // Required empty public constructor
     }
 
-    public static AnalysisFragment newInstance() {
-        return new AnalysisFragment();
+    public static AnalysisArticlesFragment newInstance() {
+        return new AnalysisArticlesFragment();
     }
 
     @Override
@@ -52,7 +52,6 @@ public class AnalysisFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated( savedInstanceState );
         //viewModel = ViewModelProviders.of(this).get(AnalysisArticleViewModel.class);
-        viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinViewModel.class);
         recyclerSetup();
         subscribeRecycler();
     }
@@ -66,7 +65,7 @@ public class AnalysisFragment extends Fragment {
     }
 
     private void subscribeRecycler() {
-        //viewModel.getAnalysisRowsLiveData().observe(this, new Observer<PagedList<AnalysisArticle>>() {
+        viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinViewModel.class);
         viewModel.getAnalysisArticleJoinLiveData().observe(this, new Observer<PagedList<AnalysisArticleJoin>>() {
             @Override
             public void onChanged(PagedList<AnalysisArticleJoin> analysisArticlesJoins) {

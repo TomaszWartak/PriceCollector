@@ -16,10 +16,13 @@ import com.dev4lazy.pricecollector.model.db.DepartmentInSectorDao;
 import com.dev4lazy.pricecollector.model.db.EanCodeDao;
 import com.dev4lazy.pricecollector.model.db.FamilyDao;
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
+import com.dev4lazy.pricecollector.model.db.MarketDao;
+import com.dev4lazy.pricecollector.model.db.ModuleDao;
 import com.dev4lazy.pricecollector.model.db.OwnArticleInfoDao;
 import com.dev4lazy.pricecollector.model.db.OwnStoreDao;
 import com.dev4lazy.pricecollector.model.db.SectorDao;
 import com.dev4lazy.pricecollector.model.db.StoreDao;
+import com.dev4lazy.pricecollector.model.db.UOProjectDao;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Article;
@@ -30,10 +33,13 @@ import com.dev4lazy.pricecollector.model.entities.Department;
 import com.dev4lazy.pricecollector.model.entities.DepartmentInSector;
 import com.dev4lazy.pricecollector.model.entities.EanCode;
 import com.dev4lazy.pricecollector.model.entities.Family;
+import com.dev4lazy.pricecollector.model.entities.Market;
+import com.dev4lazy.pricecollector.model.entities.Module;
 import com.dev4lazy.pricecollector.model.entities.OwnArticleInfo;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.entities.Store;
+import com.dev4lazy.pricecollector.model.entities.UOProject;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
 
@@ -136,13 +142,15 @@ public class LocalDataRepository {
     public void deleteAllCompetitorPrices( MutableLiveData<Integer> result ) {
         competitorPrices.deleteAllData( result );
     }
-//-----------------------------------------------------------------------
-// Country
-    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+
 //-----------------------------------------------------------------------
 // Family (2019-11-21 08:58 OK)
     private FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
     private Data<Family> families = new Data<>( familyDao );
+
+//-----------------------------------------------------------------------
+// Country
+    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
 
 
 //-----------------------------------------------------------------------
@@ -160,14 +168,10 @@ public class LocalDataRepository {
 // DepartmentInSector
     private DepartmentInSectorDao departmentInSectorDao = AppHandle.getHandle().getLocalDatabase().departmentInSectorDao();
     private Data<DepartmentInSector> departmentInSectors = new Data<>(departmentInSectorDao);
-
-    public void getAllCompetitorPrices( MutableLiveData<List<CompetitorPrice>> result ) {
-        competitorPrices.getAllData( result );
-    }
-
-    public void findCompetitorPriceById( int id, MutableLiveData<List<CompetitorPrice>> result ) {
-        competitorPrices.findDataById( id, result );
-    }
+//-----------------------------------------------------------------------
+// Market
+    private MarketDao marketDao = AppHandle.getHandle().getLocalDatabase().marketDao();
+    private Data<Market> markets = new Data<>( marketDao );
 
     public void insertFamily(Family family, MutableLiveData<Long> result ) {
         families.insertData( family, result );
@@ -195,6 +199,120 @@ public class LocalDataRepository {
 
     public void findFamilyById( int id, MutableLiveData<List<Family>> result ) {
         families.findDataById( id, result );
+    }
+    private ModuleDao moduleDao = AppHandle.getHandle().getLocalDatabase().moduleDao();
+    private Data<Module> modules = new Data<>( moduleDao );
+    private UOProjectDao uoProjectDao = AppHandle.getHandle().getLocalDatabase().uoProjectDao();
+    private Data<UOProject> uoProjects = new Data<>( uoProjectDao );
+
+    public void getAllCompetitorPrices( MutableLiveData<List<CompetitorPrice>> result ) {
+        competitorPrices.getAllData( result );
+    }
+
+    public void findCompetitorPriceById( int id, MutableLiveData<List<CompetitorPrice>> result ) {
+        competitorPrices.findDataById( id, result );
+    }
+
+    public void askMarketsNumberOf( MutableLiveData<Integer> result ) {
+        markets.getNumberOfData( result );
+    }
+
+    public void insertMarket( Market market, MutableLiveData<Long> result ) {
+        markets.insertData( market, result );
+    }
+
+    public void insertMarkets( ArrayList<Market> marketsList, ProgressPresenter progressPresenter ) {
+        markets.insertDataList( marketsList, progressPresenter );
+    }
+
+    public void updateMarket( Market market, MutableLiveData<Integer> result ) {
+        markets.updateData( market, result );
+    }
+
+//-----------------------------------------------------------------------------------
+// Module
+
+    public void deleteMarket( Market market, MutableLiveData<Integer> result ) {
+        markets.deleteData( market, result );
+    }
+
+    public void deleteAllMarkets( MutableLiveData<Integer> result ) {
+        markets.deleteAllData( result );
+    }
+
+    public void getAllMarkets( MutableLiveData<List<Market>> result ) {
+        markets.getAllData( result );
+    }
+
+    public void findMarketById( int id, MutableLiveData<List<Market>> result ) {
+        markets.findDataById( id, result );
+    }
+
+    public void askModulesNumberOf( MutableLiveData<Integer> result ) {
+        modules.getNumberOfData( result );
+    }
+
+    public void insertModule( Module module, MutableLiveData<Long> result ) {
+        modules.insertData( module, result );
+    }
+
+    public void insertModules( ArrayList<Module> modulesList, ProgressPresenter progressPresenter ) {
+        modules.insertDataList( modulesList, progressPresenter );
+    }
+
+    public void updateModule( Module module, MutableLiveData<Integer> result ) {
+        modules.updateData( module, result );
+    }
+
+    public void deleteModule( Module module, MutableLiveData<Integer> result ) {
+        modules.deleteData( module, result );
+    }
+
+    public void deleteAllModules( MutableLiveData<Integer> result ) {
+        modules.deleteAllData( result );
+    }
+
+//-----------------------------------------------------------------------
+// UOProject
+    
+    public void getAllModules( MutableLiveData<List<Module>> result ) {
+        modules.getAllData( result );
+    }
+
+    public void findModuleById( int id, MutableLiveData<List<Module>> result ) {
+        modules.findDataById( id, result );
+    }
+
+    public void askUOProjectsNumberOf( MutableLiveData<Integer> result ) {
+        uoProjects.getNumberOfData( result );
+    }
+
+    public void insertUOProject(UOProject uoProject, MutableLiveData<Long> result ) {
+        uoProjects.insertData( uoProject, result );
+    }
+
+    public void insertUOProjects( ArrayList<UOProject> uoProjectsList, ProgressPresenter progressPresenter ) {
+        uoProjects.insertDataList( uoProjectsList, progressPresenter );
+    }
+
+    public void updateUOProject( UOProject uoProject, MutableLiveData<Integer> result ) {
+        uoProjects.updateData( uoProject, result );
+    }
+
+    public void deleteUOProject(UOProject uoProject, MutableLiveData<Integer> result ) {
+        uoProjects.deleteData( uoProject, result );
+    }
+
+    public void deleteAllUOProjects( MutableLiveData<Integer> result ) {
+        uoProjects.deleteAllData( result );
+    }
+
+    public void getAllUOProjects( MutableLiveData<List<UOProject>> result ) {
+        uoProjects.getAllData( result );
+    }
+
+    public void findUOProjectById( int id, MutableLiveData<List<UOProject>> result ) {
+        uoProjects.findDataById( id, result );
     }
 
 //-----------------------------------------------------------------------

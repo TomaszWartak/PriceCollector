@@ -64,7 +64,6 @@ public class MainScreenFragment extends Fragment {
         setOnBackPressedCalback();
 
         // todo? setAnalysisItem( inflater, view );
-        viewModel = ViewModelProviders.of(this ).get( AnalysisListViewModel.class );
 
         recyclerSetup( view );
         subscribeRecycler();
@@ -108,6 +107,7 @@ public class MainScreenFragment extends Fragment {
     }
 
     private void subscribeRecycler() {
+        viewModel = ViewModelProviders.of(this ).get( AnalysisListViewModel.class );
         viewModel.getAnalyzesLiveData().observe( this,  new Observer<PagedList<Analysis>>() {
             @Override
             public void onChanged( PagedList<Analysis> analyzesList  ) {
@@ -132,7 +132,7 @@ public class MainScreenFragment extends Fragment {
     }
 
     public void updateArticlesAllData( ProgressPresenter progressPresenter ) {
-        AnalysisDataUpdater.getInstance().createArticles( progressPresenter );
+        AnalysisDataUpdater.getInstance().insertArticles( progressPresenter );
     }
 
     //todo test
@@ -189,7 +189,7 @@ public class MainScreenFragment extends Fragment {
 
     private void getNewAnalysisInfo() {
         /**/ //TODO TEST
-       // analysisDataUpdater.downloadAnalysisBasicData();
+        // analysisDataUpdater.downloadAnalysisBasicData();
         /**/
         analysisDataUpdater.checkNewAnalysisToDownload();
         if (analysisDataUpdater.isNewAnalysisDataReadyToDownlad()) {

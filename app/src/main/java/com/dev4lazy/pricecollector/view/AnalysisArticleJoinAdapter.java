@@ -19,7 +19,6 @@ public class AnalysisArticleJoinAdapter extends PagedListAdapter<AnalysisArticle
     public AnalysisArticleJoinAdapter(AnalysisArticleJoinDiffCalback analysisArticleJoinDiffCalback){
         super(analysisArticleJoinDiffCalback);
         this.analysisArticleJoinDiffCalback = analysisArticleJoinDiffCalback;
-
     }
 
     @Override
