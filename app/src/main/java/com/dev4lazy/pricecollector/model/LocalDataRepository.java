@@ -143,10 +143,13 @@ public class LocalDataRepository {
         competitorPrices.deleteAllData( result );
     }
 
-//-----------------------------------------------------------------------
-// Family (2019-11-21 08:58 OK)
-    private FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
-    private Data<Family> families = new Data<>( familyDao );
+    public void getAllCompetitorPrices( MutableLiveData<List<CompetitorPrice>> result ) {
+        competitorPrices.getAllData( result );
+    }
+
+    public void findCompetitorPriceById( int id, MutableLiveData<List<CompetitorPrice>> result ) {
+        competitorPrices.findDataById( id, result );
+    }
 
 //-----------------------------------------------------------------------
 // Country
@@ -168,10 +171,11 @@ public class LocalDataRepository {
 // DepartmentInSector
     private DepartmentInSectorDao departmentInSectorDao = AppHandle.getHandle().getLocalDatabase().departmentInSectorDao();
     private Data<DepartmentInSector> departmentInSectors = new Data<>(departmentInSectorDao);
+
 //-----------------------------------------------------------------------
-// Market
-    private MarketDao marketDao = AppHandle.getHandle().getLocalDatabase().marketDao();
-    private Data<Market> markets = new Data<>( marketDao );
+// Family (2019-11-21 08:58 OK)
+    private FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
+    private Data<Family> families = new Data<>( familyDao );
 
     public void insertFamily(Family family, MutableLiveData<Long> result ) {
         families.insertData( family, result );
@@ -200,18 +204,11 @@ public class LocalDataRepository {
     public void findFamilyById( int id, MutableLiveData<List<Family>> result ) {
         families.findDataById( id, result );
     }
-    private ModuleDao moduleDao = AppHandle.getHandle().getLocalDatabase().moduleDao();
-    private Data<Module> modules = new Data<>( moduleDao );
-    private UOProjectDao uoProjectDao = AppHandle.getHandle().getLocalDatabase().uoProjectDao();
-    private Data<UOProject> uoProjects = new Data<>( uoProjectDao );
 
-    public void getAllCompetitorPrices( MutableLiveData<List<CompetitorPrice>> result ) {
-        competitorPrices.getAllData( result );
-    }
-
-    public void findCompetitorPriceById( int id, MutableLiveData<List<CompetitorPrice>> result ) {
-        competitorPrices.findDataById( id, result );
-    }
+//-----------------------------------------------------------------------
+// Market
+    private MarketDao marketDao = AppHandle.getHandle().getLocalDatabase().marketDao();
+    private Data<Market> markets = new Data<>( marketDao );
 
     public void askMarketsNumberOf( MutableLiveData<Integer> result ) {
         markets.getNumberOfData( result );
@@ -229,9 +226,6 @@ public class LocalDataRepository {
         markets.updateData( market, result );
     }
 
-//-----------------------------------------------------------------------------------
-// Module
-
     public void deleteMarket( Market market, MutableLiveData<Integer> result ) {
         markets.deleteData( market, result );
     }
@@ -247,6 +241,12 @@ public class LocalDataRepository {
     public void findMarketById( int id, MutableLiveData<List<Market>> result ) {
         markets.findDataById( id, result );
     }
+
+//-----------------------------------------------------------------------------------
+// Module
+
+    private ModuleDao moduleDao = AppHandle.getHandle().getLocalDatabase().moduleDao();
+    private Data<Module> modules = new Data<>( moduleDao );
 
     public void askModulesNumberOf( MutableLiveData<Integer> result ) {
         modules.getNumberOfData( result );
@@ -272,9 +272,6 @@ public class LocalDataRepository {
         modules.deleteAllData( result );
     }
 
-//-----------------------------------------------------------------------
-// UOProject
-    
     public void getAllModules( MutableLiveData<List<Module>> result ) {
         modules.getAllData( result );
     }
@@ -282,6 +279,12 @@ public class LocalDataRepository {
     public void findModuleById( int id, MutableLiveData<List<Module>> result ) {
         modules.findDataById( id, result );
     }
+
+//-----------------------------------------------------------------------
+// UOProject
+    
+    private UOProjectDao uoProjectDao = AppHandle.getHandle().getLocalDatabase().uoProjectDao();
+    private Data<UOProject> uoProjects = new Data<>( uoProjectDao );
 
     public void askUOProjectsNumberOf( MutableLiveData<Integer> result ) {
         uoProjects.getNumberOfData( result );
