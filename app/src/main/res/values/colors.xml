@@ -6,6 +6,6 @@
     <color name="colorWarning">#FA0303</color>
     <color name="colorSecondaryText">@color/secondary_text_default_material_light</color> <!-- colors_material.xml -->
     <color name="colorWarning3">@color/primary_text_default_material_light</color>
-
+    <color name="colorValue">#2574a9</color>
 
 </resources>

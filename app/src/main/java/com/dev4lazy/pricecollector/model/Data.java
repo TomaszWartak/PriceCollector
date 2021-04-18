@@ -39,9 +39,13 @@ public class Data<D> {
 
     public void insertDataList(ArrayList<D> dataList, ProgressPresenter progressPresenter ) {
         // TODO tutaj raczej PagedList...
-        new InsertListAsyncTask(dao, progressPresenter, null).execute(dataList);
+        insertDataList( dataList, progressPresenter, null );
     }
 
+    public void insertDataList( List<D> dataList, ProgressPresenter progressPresenter, MutableLiveData<Long> resultLD ) {
+        // TODO tutaj raczej PagedList...
+        new InsertListAsyncTask(dao, progressPresenter, resultLD ).execute(dataList);
+    }
     public void updateData(D data, MutableLiveData<Integer> resultLD) {
         new UpdateAsyncTask(dao, resultLD).execute(data);
     }
@@ -72,8 +76,8 @@ public class Data<D> {
 
     private class GetNumberOfAsyncTask extends AsyncTask<Void,Void,Integer> {
 
-        private _Dao dao;
-        private MutableLiveData<Integer> resultLD;
+        private final _Dao dao;
+        private final MutableLiveData<Integer> resultLD;
 
         GetNumberOfAsyncTask(_Dao dao, MutableLiveData<Integer> resultLD ) {
             this.dao = dao;
@@ -97,8 +101,8 @@ public class Data<D> {
 
     private class InsertAsyncTask extends AsyncTask<D,Void,Long> {
 
-        private _Dao dao;
-        private MutableLiveData<Long> resultLD;
+        private final _Dao dao;
+        private final MutableLiveData<Long> resultLD;
 
         InsertAsyncTask(_Dao dao, MutableLiveData<Long> resultLD ) {
             this.dao = dao;
@@ -120,14 +124,14 @@ public class Data<D> {
         }
     }
 
-    private class InsertListAsyncTask extends AsyncTask<ArrayList<D>,Void,Void> {
+    private class InsertListAsyncTask extends AsyncTask<List<D>,Void,Long> {
 
-        private _Dao dao;
-        private MutableLiveData<Void> resultLD;
-        private ProgressPresenter progressPresenter;
+        private final _Dao dao;
+        private final MutableLiveData<Long> resultLD;
+        private final ProgressPresenter progressPresenter;
 
 
-        InsertListAsyncTask(_Dao dao, ProgressPresenter progressPresenter, MutableLiveData<Void> resultLD ) {
+        InsertListAsyncTask(_Dao dao, ProgressPresenter progressPresenter, MutableLiveData<Long> resultLD ) {
             this.dao = dao;
             this.progressPresenter = progressPresenter;
             this.resultLD = resultLD;
@@ -142,14 +146,15 @@ public class Data<D> {
         }
 
         @Override
-        protected Void doInBackground ( ArrayList<D> ...params){
+        protected Long doInBackground ( List<D> ...params){
+            Long id = null;
             for (D data : params[0]) {
-                Long id = dao.insert(data);
+                id = dao.insert(data);
                 if (progressPresenter!=null){
                     publishProgress();
                 }
             }
-            return null;
+            return id;
         }
 
         @Override
@@ -161,7 +166,7 @@ public class Data<D> {
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Long result) {
             super.onPostExecute(result);
             if (resultLD!=null) {
                 resultLD.postValue(result);
@@ -174,8 +179,8 @@ public class Data<D> {
 
     private class UpdateAsyncTask extends AsyncTask<D,Void,Integer> {
 
-        private _Dao dao;
-        private MutableLiveData<Integer> resultLD;
+        private final _Dao dao;
+        private final MutableLiveData<Integer> resultLD;
 
         UpdateAsyncTask(_Dao dao, MutableLiveData<Integer> resultLD ) {
             this.dao = dao;
@@ -199,8 +204,8 @@ public class Data<D> {
 
      private class DeleteAsyncTask extends AsyncTask<D,Void,Integer> {
 
-        private _Dao dao;
-        private MutableLiveData<Integer> resultLD;
+        private final _Dao dao;
+        private final MutableLiveData<Integer> resultLD;
 
         DeleteAsyncTask(_Dao dao, MutableLiveData<Integer> resultLD ) {
             this.dao = dao;
@@ -224,8 +229,8 @@ public class Data<D> {
 
     private class findDataByIdAsyncTask extends AsyncTask< Integer,Void,List<D> >{
 
-        private _Dao dao;
-        private MutableLiveData<List<D> > resultLD;
+        private final _Dao dao;
+        private final MutableLiveData<List<D> > resultLD;
 
         findDataByIdAsyncTask(_Dao dao, MutableLiveData<List<D> > resultLD ) {
             this.dao = dao;
@@ -252,8 +257,8 @@ public class Data<D> {
 
      private class findDataByNameAsyncTask extends AsyncTask<String,Void,List<D>>{
 
-        private _Dao dao;
-        private MutableLiveData<List<D> > resultLD;
+        private final _Dao dao;
+        private final MutableLiveData<List<D> > resultLD;
 
         findDataByNameAsyncTask(_Dao dao, MutableLiveData<List<D>> resultLD ) {
             this.dao = dao;
@@ -276,8 +281,8 @@ public class Data<D> {
 
     private class getAllDataAsyncTask extends AsyncTask< Void,Void,List<D> >{
 
-        private _Dao dao;
-        private MutableLiveData<List<D> > resultLD;
+        private final _Dao dao;
+        private final MutableLiveData<List<D> > resultLD;
 
         getAllDataAsyncTask(_Dao dao, MutableLiveData<List<D> > resultLD ) {
             this.dao = dao;
@@ -301,8 +306,8 @@ public class Data<D> {
 
     private class deleteAllDataAsyncTask extends AsyncTask< Void,Void,Integer >{
 
-        private _Dao dao;
-        private MutableLiveData<Integer > resultLD;
+        private final _Dao dao;
+        private final MutableLiveData<Integer > resultLD;
 
         deleteAllDataAsyncTask(_Dao dao, MutableLiveData<Integer> resultLD ) {
             this.dao = dao;
@@ -325,8 +330,8 @@ public class Data<D> {
 
     private class getViaStringQueryAsyncTask extends AsyncTask<String,Void,List<D>>{
 
-        private _Dao dao;
-        private MutableLiveData<List<D> > resultLD;
+        private final _Dao dao;
+        private final MutableLiveData<List<D> > resultLD;
 
         getViaStringQueryAsyncTask(_Dao dao, MutableLiveData<List<D>> resultLD ) {
             this.dao = dao;
@@ -349,8 +354,8 @@ public class Data<D> {
 
     private class getViaQueryAsyncTask extends AsyncTask<SimpleSQLiteQuery,Void,List<D>>{
 
-        private _Dao dao;
-        private MutableLiveData<List<D> > resultLD;
+        private final _Dao dao;
+        private final MutableLiveData<List<D> > resultLD;
 
         getViaQueryAsyncTask(_Dao dao, MutableLiveData<List<D>> resultLD ) {
             this.dao = dao;

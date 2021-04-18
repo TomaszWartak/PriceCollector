@@ -12,11 +12,11 @@ import com.dev4lazy.pricecollector.model.db.AnalysisDao;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
-public class AnalysisListViewModel extends AndroidViewModel {
+public class AnalyzesListViewModel extends AndroidViewModel {
 
-    private LiveData<PagedList<Analysis>> analyzesLiveData;
+    private final LiveData<PagedList<Analysis>> analyzesLiveData;
 
-    public AnalysisListViewModel(Application application) {
+    public AnalyzesListViewModel(Application application) {
         super(application);
         AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
         DataSource.Factory<Integer, Analysis>  factory = analysisDao.getAllPaged();

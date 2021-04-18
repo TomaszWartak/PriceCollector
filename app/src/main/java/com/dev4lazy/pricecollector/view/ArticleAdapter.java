@@ -35,12 +35,12 @@ public class ArticleAdapter extends PagedListAdapter<Article, ArticleAdapter.Art
     @NonNull
     @Override
     public ArticleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_item, parent, false);
         return new ArticleViewHolder( view );
     }
 
     class ArticleViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewArticleName;
+        private final TextView textViewArticleName;
 
         public ArticleViewHolder(View view ) {
             super(view);

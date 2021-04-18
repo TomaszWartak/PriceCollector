@@ -1,11 +1,20 @@
 package com.dev4lazy.pricecollector.model.entities;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity(tableName = "articles" ) // [dbo].[DCT_Article]
+@Entity(
+        tableName = "articles",
+        indices = {
+                @Index(
+                        value = "remote_id",
+                        unique = true
+                ),
+        }
+) // [dbo].[DCT_Article]
 /*
     [SKU_Id] [int] NOT NULL,
 	[SKU_Name] [nvarchar](100) NULL,

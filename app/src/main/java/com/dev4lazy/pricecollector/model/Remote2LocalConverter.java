@@ -24,12 +24,14 @@ import com.dev4lazy.pricecollector.remote_data.RemoteUOProject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Remote2LocalConverter {
 
     public Analysis createAnalysis(RemoteAnalysis remoteAnalysis ) {
         Analysis analysis = new Analysis();
+        analysis.setRemote_id( remoteAnalysis.getId() );
         analysis.setCreationDate( remoteAnalysis.getCreationDate() );
         analysis.setDueDate( remoteAnalysis.getDueDate() );
         analysis.setFinishDate( remoteAnalysis.getFinishDate() );
@@ -62,11 +64,27 @@ public class Remote2LocalConverter {
         return department;
     }
 
+    public List<Department> createDepartments( List<RemoteDepartment> remoteDepartments ) {
+        List<Department> departments = new ArrayList<>();
+        for (RemoteDepartment remoteDepartment : remoteDepartments) {
+            departments.add( createDepartment( remoteDepartment ) );
+        }
+        return departments;
+    }
+
     public Sector createSector(RemoteSector remoteSector ) {
         Sector sector = new Sector();
         sector.setRemote_id( remoteSector.getId() );
         sector.setName( remoteSector.getName() );
         return sector;
+    }
+
+    public List<Sector> createSectors( List<RemoteSector> remoteSectors ) {
+        List<Sector> sectors = new ArrayList<>();
+        for (RemoteSector remoteSector : remoteSectors) {
+            sectors.add( createSector( remoteSector ) );
+        }
+        return sectors;
     }
 
     public Family createFamily(RemoteFamily remoteFamily ) {
@@ -131,9 +149,9 @@ public class Remote2LocalConverter {
     public EanCode createEanCode(RemoteEanCode remoteEanCode, Article article ) {
         EanCode localEanCode = new EanCode();
         // remoteEanCode.article_id = casto;
-        localEanCode.remote_id = remoteEanCode.getId();
-        localEanCode.value = remoteEanCode.getValue();
-        localEanCode.articleId = article.getId();
+        localEanCode.setRemote_id( remoteEanCode.getId() );
+        localEanCode.setValue( remoteEanCode.getValue() );
+        localEanCode.setArticleId( article.getId() );
         return localEanCode;
     }
 
@@ -166,7 +184,11 @@ public class Remote2LocalConverter {
             OwnArticleInfo ownArticleInfo,
             Store copetitorStore
     ) {
-        AnalysisArticle analysisArticle = new AnalysisArticle();
+       /* todo Store na razie olewam, żeby nie generować 1000 artykułów dla każdego sklepu
+        na razie idę w wizję, że lista AnalysisArticle jest jedna, a dla kazdego sklepu
+        jeśli cena jest sprawdzona, to powstaje CompteitorPrice, a lista AnalysisArticle
+        jest modyfikowana tylko do wyświetlania
+         */ AnalysisArticle analysisArticle = new AnalysisArticle();
         analysisArticle.setAnalysisId( analysis.getId() );
         //analysisArticle.setArticleId( article.getId() );
         analysisArticle.setArticleId( ownArticleInfo.getArticleId() );
@@ -181,6 +203,12 @@ public class Remote2LocalConverter {
             Article article,
             Store copetitorStore
     ) {
+        /* todo Store na razie olewam, żeby nie generować 1000 artykułów dla każdego sklepu
+        na razie idę w wizję, że lista AnalysisArticle jest jedna, a dla kazdego sklepu
+        jeśli cena jest sprawdzona, to powstaje CompteitorPrice, a lista AnalysisArticle
+        jest modyfikowana tylko do wyświetlania
+         */
+
         return null;
     }
 }

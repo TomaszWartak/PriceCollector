@@ -16,7 +16,7 @@ import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 @Database(
-        version = 6,
+        version = 7,
         entities = {
                 RemoteAnalysis.class,
                 RemoteAnalysisRow.class,
@@ -122,6 +122,12 @@ public abstract class RemoteDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE UNIQUE INDEX index_ean_codes__value ON ean_codes (value)" );
+        }
+    };
     private static volatile RemoteDatabase instance;
 
     public static RemoteDatabase getInstance() {
@@ -133,13 +139,14 @@ public abstract class RemoteDatabase extends RoomDatabase {
                             context,
                             RemoteDatabase.class, DATABASE_NAME )
                             //.addCallback(roomDatabaseCallback)
-                            // .fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
+                             //.fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
                             /**/
                             .addMigrations(MIGRATION_1_2)
                             .addMigrations(MIGRATION_2_3)
                             .addMigrations(MIGRATION_3_4)
                             .addMigrations(MIGRATION_4_5)
                             .addMigrations(MIGRATION_5_6)
+                            .addMigrations(MIGRATION_6_7)
                             /**/
                             .build();
                     instance.updateDatabaseCreated(context);

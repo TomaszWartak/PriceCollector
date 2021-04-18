@@ -5,6 +5,7 @@ import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Update;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
@@ -25,7 +26,7 @@ public interface _Dao<D> {
     // Zobacz też OneNote Studia/ .. / Kodowanie/!! Współpraca z biblioteką Room/Stworzenie DAO/!! Przykład  uniwersalnego abstrakcyjnego DAO
 
     // @Insert(onConflict = OnConflictStrategy.IGNORE) - domyślnie jest ABORT
-    @Insert
+    @Insert( onConflict = OnConflictStrategy.IGNORE )
     Long insert( D data );
 
     // todo Czy dać tutaj metodę insertAll, updateAll?

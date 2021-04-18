@@ -41,25 +41,37 @@ public class RemoteDataRepository {
     private static RemoteDataRepository sInstance;
     private RemoteDatabase remoteDatabase;
 
-    private RemoteAnalysisDao remoteAnalysisDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisDao();
-    private Data<RemoteAnalysis> analyzes = new Data<>(remoteAnalysisDao);
+    private final RemoteAnalysisDao remoteAnalysisDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisDao();
+    private final Data<RemoteAnalysis> analyzes = new Data<>(remoteAnalysisDao);
 
-    private RemoteAnalysisRowDao remoteAnalysisRowDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisRowDao();
-    private Data<RemoteAnalysisRow> analysisRows = new Data<>(remoteAnalysisRowDao);
+    private final RemoteAnalysisRowDao remoteAnalysisRowDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisRowDao();
+    private final Data<RemoteAnalysisRow> analysisRows = new Data<>(remoteAnalysisRowDao);
 
-    private RemoteEanCodeDao remoteEanCodeDao = AppHandle.getHandle().getRemoteDatabase().remoteEanCodeDao();
-    private Data<RemoteEanCode> eanCodes = new Data<>(remoteEanCodeDao);
+    private final RemoteEanCodeDao remoteEanCodeDao = AppHandle.getHandle().getRemoteDatabase().remoteEanCodeDao();
+    private final Data<RemoteEanCode> eanCodes = new Data<>(remoteEanCodeDao);
     
-    private RemoteUserDao userDao = AppHandle.getHandle().getRemoteDatabase().remoteUserDao();
-    private Data<RemoteUser> users = new Data<>(userDao);
+    private final RemoteDepartmentDao departmentDao = AppHandle.getHandle().getRemoteDatabase().remoteDepartmentDao();
+    private final Data<RemoteDepartment> departments = new Data<>(departmentDao);
 
-    private RemoteDepartmentDao departmentDao = AppHandle.getHandle().getRemoteDatabase().remoteDepartmentDao();
-    private Data<RemoteDepartment> departments = new Data<>(departmentDao);
+    private final RemoteFamilyDao remoteFamilyDao = AppHandle.getHandle().getRemoteDatabase().remoteFamilyDao();
+    private final Data<RemoteFamily> remoteFamilies = new Data<>( remoteFamilyDao );
 
-    private RemoteSectorDao sectorDao = AppHandle.getHandle().getRemoteDatabase().remoteSectorDao();
-    private Data<RemoteSector> sectors = new Data<>(sectorDao);
-    
-    private MediatorLiveData<List<RemoteAnalysisRow>> mObservableAnalysisRows;
+    private final RemoteMarketDao remoteMarketDao = AppHandle.getHandle().getRemoteDatabase().remoteMarketDao();
+    private final Data<RemoteMarket> remoteMarkets = new Data<>( remoteMarketDao );
+
+    private final RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabase().remoteModuleDao();
+    private final Data<RemoteModule> remoteModules = new Data<>( remoteModuleDao );
+
+    private final RemoteSectorDao sectorDao = AppHandle.getHandle().getRemoteDatabase().remoteSectorDao();
+    private final Data<RemoteSector> sectors = new Data<>(sectorDao);
+
+    private final RemoteUOProjectDao remoteUOProjectDao = AppHandle.getHandle().getRemoteDatabase().remoteUOProjectDao();
+    private final Data<RemoteUOProject> remoteUOProjects = new Data<>( remoteUOProjectDao );
+
+    private final RemoteUserDao userDao = AppHandle.getHandle().getRemoteDatabase().remoteUserDao();
+    private final Data<RemoteUser> users = new Data<>(userDao);
+
+    private final MediatorLiveData<List<RemoteAnalysisRow>> mObservableAnalysisRows;
 
     private RemoteDataRepository() {
         mObservableAnalysisRows = new MediatorLiveData<>();
@@ -125,7 +137,6 @@ public class RemoteDataRepository {
         new InsertRowAsyncTask(remoteAnalysisRowDao).execute(remoteAnalysisRow);
     }
 
-//-----------------------------------------------------------------------------------
     public void updateAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
         remoteAnalysisRowDao.update(remoteAnalysisRow);
     }
@@ -153,9 +164,6 @@ public class RemoteDataRepository {
         return remoteAnalysisRowDao.getAllLiveData();
     }
 
-    public void getAllDepartments( MutableLiveData<List<RemoteDepartment>> result ) {
-        departments.getAllData( result );
-    }
 
 //-----------------------------------------------------------------------------------
     public void insertAnalysis( RemoteAnalysis remoteAnalysis, MutableLiveData<Long> result ) {
@@ -167,7 +175,7 @@ public class RemoteDataRepository {
     }
 
     /*
-    public void findAnalysisNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result) {
+    public void findAnalyzesNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result) {
         // analyzes.getViaQuery( "SELECT * from analyzes WHERE creation_date >= "+lastCheckDate+, result);
         analyzes.getViaQuery( "SELECT * from analyzes WHERE creation_date >= "+lastCheckDate, result);
 
@@ -175,11 +183,17 @@ public class RemoteDataRepository {
     }
 
      */
+//-----------------------------------------------------------------------------------
 
+
+    public void findAnalyzesNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result ) {
+        List<Object> queryArguments = new ArrayList<>();
+        queryArguments.add( lastCheckDate.getTime() );
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT * from analyzes WHERE creation_date > ?", queryArguments.toArray() );
+        analyzes.getViaQuery( query, result);
+    }
 
 //-----------------------------------------------------------------------------------
-    private RemoteFamilyDao remoteFamilyDao = AppHandle.getHandle().getRemoteDatabase().remoteFamilyDao();
-    private Data<RemoteFamily> remoteFamilies = new Data<>( remoteFamilyDao );
 
     //-----------------------------------------------------------------------------------
     public void insertUser( RemoteUser remoteUser, MutableLiveData<Long> result) {
@@ -199,8 +213,9 @@ public class RemoteDataRepository {
         departments.insertData( remoteDepartment, result);
     }
 
-    public void getAllSectors( MutableLiveData<List<RemoteSector>> result ) {
-        sectors.getAllData( result );
+
+    public void getAllDepartments( MutableLiveData<List<RemoteDepartment>> result ) {
+        departments.getAllData( result );
     }
 
     public void deleteAllDepartments(MutableLiveData<Integer> result) {
@@ -212,24 +227,16 @@ public class RemoteDataRepository {
         sectors.insertData( remoteSector, result);
     }
 
-
+    public void getAllSectors( MutableLiveData<List<RemoteSector>> result ) {
+        sectors.getAllData( result );
+    }
     public void deleteAllSectors(MutableLiveData<Integer> result) {
         sectors.deleteAllData(result);
     }
-    private RemoteMarketDao remoteMarketDao = AppHandle.getHandle().getRemoteDatabase().remoteMarketDao();
-    private Data<RemoteMarket> remoteMarkets = new Data<>( remoteMarketDao );
-//-----------------------------------------------------------------------------------
-private RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabase().remoteModuleDao();
-    private Data<RemoteModule> remoteModules = new Data<>( remoteModuleDao );
-    private RemoteUOProjectDao remoteUOProjectDao = AppHandle.getHandle().getRemoteDatabase().remoteUOProjectDao();
-    private Data<RemoteUOProject> remoteUOProjects = new Data<>( remoteUOProjectDao );
 
-    public void findAnalysisNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result) {
-        List<Object> queryArguments = new ArrayList<>();
-        queryArguments.add( lastCheckDate.getTime() );
-        SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT * from analyzes WHERE creation_date >= ?", queryArguments.toArray() );
-        analyzes.getViaQuery( query, result);
-    }
+
+
+//-----------------------------------------------------------------------------------
 
     public void askRemoteFamiliesNumberOf( MutableLiveData<Integer> result ) {
         remoteFamilies.getNumberOfData( result );
@@ -238,9 +245,6 @@ private RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabas
     public void insertRemoteFamily( RemoteFamily remoteFamily, MutableLiveData<Long> result ) {
         remoteFamilies.insertData( remoteFamily, result );
     }
-
-//-----------------------------------------------------------------------------------
-
     public void insertRemoteFamilies( ArrayList<RemoteFamily> remoteFamiliesList, ProgressPresenter progressPresenter ) {
         remoteFamilies.insertDataList( remoteFamiliesList, progressPresenter );
     }
@@ -264,6 +268,8 @@ private RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabas
     public void findRemoteFamilyById( int id, MutableLiveData<List<RemoteFamily>> result ) {
         remoteFamilies.findDataById( id, result );
     }
+
+    //-----------------------------------------------------------------------------------
 
     public void askRemoteMarketsNumberOf( MutableLiveData<Integer> result ) {
         remoteMarkets.getNumberOfData( result );
@@ -297,6 +303,8 @@ private RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabas
         remoteMarkets.findDataById( id, result );
     }
 
+    //-----------------------------------------------------------------------------------
+
     public void askRemoteModulesNumberOf( MutableLiveData<Integer> result ) {
         remoteModules.getNumberOfData( result );
     }
@@ -321,8 +329,6 @@ private RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabas
         remoteModules.deleteAllData( result );
     }
 
-//-----------------------------------------------------------------------------------
-
     public void getAllRemoteModules( MutableLiveData<List<RemoteModule>> result ) {
         remoteModules.getAllData( result );
     }
@@ -330,6 +336,8 @@ private RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabas
     public void findRemoteModuleById( int id, MutableLiveData<List<RemoteModule>> result ) {
         remoteModules.findDataById( id, result );
     }
+
+    //-----------------------------------------------------------------------------------
 
     public void askRemoteUOProjectsNumberOf( MutableLiveData<Integer> result ) {
         remoteUOProjects.getNumberOfData( result );
@@ -384,7 +392,7 @@ private RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabas
 
     //-----------------------------------------------------------------------------------
     private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
-        private RemoteDatabase asyncTaskAnalyzesDatabase;
+        private final RemoteDatabase asyncTaskAnalyzesDatabase;
 
         ClearDatabaseAsyncTask() {
             asyncTaskAnalyzesDatabase = AppHandle.getHandle().getRemoteDatabase();
@@ -400,7 +408,7 @@ private RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabas
 //-----------------------------------------------------------------------------------
 
     private static class GetRowsCountAsyncTask extends AsyncTask<Void,Void,Integer> {
-        private RemoteAnalysisRowDao mAssyncTaskDAO;
+        private final RemoteAnalysisRowDao mAssyncTaskDAO;
 
         GetRowsCountAsyncTask(RemoteAnalysisRowDao dao) {
             mAssyncTaskDAO = dao;
@@ -418,7 +426,7 @@ private RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabas
     }
 
     private static class InsertRowAsyncTask extends AsyncTask<RemoteAnalysisRow,Void,Void> {
-        private RemoteAnalysisRowDao mAssyncTaskDAO;
+        private final RemoteAnalysisRowDao mAssyncTaskDAO;
 
         InsertRowAsyncTask(RemoteAnalysisRowDao dao) {
             mAssyncTaskDAO = dao;

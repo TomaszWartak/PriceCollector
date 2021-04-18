@@ -41,6 +41,16 @@ public class AlertDialogFragment extends DialogFragment {
         // EditText editText = viewInflated.findViewById(R.id.textView2);
         // editText.setText( "azssssssss");
         AlertDialogFragmentViewModel alertDialogFragmentViewModel = ViewModelProviders.of( getActivity() ).get( AlertDialogFragmentViewModel.class );
+
+
+        /* todo AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( getContext() )
+                .setTitle( alertDialogFragmentViewModel.getTitle() )
+                .setMessage( alertDialogFragmentViewModel.getMessage() )
+                .setCancelable( alertDialogFragmentViewModel.isCancelable() );
+
+         */
+
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( getContext() );
         // alertDialogBuilder.setView( viewInflated );
         alertDialogBuilder.setTitle( alertDialogFragmentViewModel.getTitle() );

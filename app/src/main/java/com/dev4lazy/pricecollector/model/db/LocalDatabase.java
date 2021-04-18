@@ -34,7 +34,7 @@ import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 @Database(
-    version = 7,
+    version = 10,
     entities = {
         AnalysisCompetitorSlot.class,
         Analysis.class,
@@ -66,6 +66,37 @@ public abstract class LocalDatabase extends RoomDatabase {
     private final static String DATABASE_NAME = "price_collector_local_database";
 
     private static volatile LocalDatabase instance;
+
+
+    public static LocalDatabase getInstance() {
+        if (instance == null) {
+            Context context = AppHandle.getHandle().getApplicationContext();
+            synchronized (LocalDatabase.class) {
+                if (instance == null) {
+                    instance = Room.databaseBuilder(context.getApplicationContext(),
+                            LocalDatabase.class, DATABASE_NAME )
+                            //.addCallback(roomDatabaseCallback)
+                            // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to od komentuj .falback...
+                            // i za komentuj .addMigrations
+                            //.fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
+                            /**/
+                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(MIGRATION_2_3)
+                            .addMigrations(MIGRATION_3_4)
+                            .addMigrations(MIGRATION_4_5)
+                            .addMigrations(MIGRATION_5_6)
+                            .addMigrations(MIGRATION_6_7)
+                            .addMigrations(MIGRATION_7_8)
+                            .addMigrations(MIGRATION_8_9)
+                            .addMigrations(MIGRATION_9_10)
+                            /**/
+                            .build();
+                    instance.updateDatabaseCreated(context);
+                }
+            }
+        }
+        return instance;
+    }
 
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
@@ -152,69 +183,50 @@ public abstract class LocalDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_7_8 = new Migration(7, 8) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE analyzes ADD COLUMN remote_id INTEGER NOT NULL DEFAULT -1");
+            database.execSQL("CREATE UNIQUE INDEX index_analyzes__remote_id ON analyzes (remote_id)" );
+            database.execSQL("CREATE UNIQUE INDEX index_articles__remote_id ON articles (remote_id)" );
+            database.execSQL("CREATE UNIQUE INDEX index_ean_codes__remote_id ON ean_codes (remote_id)" );
+        }
+    };
+
+    static final Migration MIGRATION_8_9 = new Migration(8, 9) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("DROP INDEX index_own_articles_infos_article_id");
+            database.execSQL("CREATE UNIQUE INDEX index_own_articles__infos_article_id ON own_articles_infos (article_id)" );
+        }
+    };
+
+    static final Migration MIGRATION_9_10 = new Migration(9, 10) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE analyzes ADD COLUMN dataDownloaded INTEGER NOT NULL DEFAULT 0"); // true to 1 and false to 0
+        }
+    };
+
     private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
 
-    public static LocalDatabase getInstance() {
-        if (instance == null) {
-            Context context = AppHandle.getHandle().getApplicationContext();
-            synchronized (LocalDatabase.class) {
-                if (instance == null) {
-                    instance = Room.databaseBuilder(context.getApplicationContext(),
-                            LocalDatabase.class, DATABASE_NAME )
-                            //.addCallback(roomDatabaseCallback)
-                            // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to od komentuj .falback...
-                            // i za komentuj .addMigrations
-                            //.fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
-                            /**/
-                            .addMigrations(MIGRATION_1_2)
-                            .addMigrations(MIGRATION_2_3)
-                            .addMigrations(MIGRATION_3_4)
-                            .addMigrations(MIGRATION_4_5)
-                            .addMigrations(MIGRATION_5_6)
-                            .addMigrations(MIGRATION_6_7)
-                            /**/
-                            .build();
-                    instance.updateDatabaseCreated(context);
-                }
-            }
-        }
-        return instance;
-    }
-
-
     public abstract AnalysisArticleDao analysisArticleDao();
-
     public abstract AnalysisCompetitorSlotDao analysisCompetitorSlotDao();
-
     public abstract AnalysisDao analysisDao();
-
     public abstract ArticleDao articleDao();
     public abstract CompanyDao companyDao();
     public abstract CompetitorPriceDao competitorPriceDao();
-
     public abstract CountryDao countryDao();
-
-
-
     public abstract DepartmentDao departmentDao();
     public abstract DepartmentInSectorDao departmentInSectorDao();
-
     public abstract EanCodeDao eanCodeDao();
-
     public abstract FamilyDao familyDao();
-
     public abstract MarketDao marketDao();
-
     public abstract ModuleDao moduleDao();
-
     public abstract OwnArticleInfoDao ownArticleInfoDao();
-
     public abstract OwnStoreDao ownStoreDao();
-
     public abstract SectorDao sectorDao();
-
     public abstract StoreDao storeDao();
-
     public abstract UOProjectDao uoProjectDao();
 
     private void updateDatabaseCreated(final Context context) {

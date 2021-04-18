@@ -174,27 +174,6 @@ public class TestNumbersOfDataFragment2 extends Fragment {
         });
     }
 
-    /*
-    numberOfAnalysis
-    numberOfAnalysisArticle
-    numberOfAnalysisArticleShortData
-    numberOfAnalysisCompetitorSlot
-    numberOfArticle
-    numberOfCompany
-    numberOfCompetitorPrice
-    numberOfCountry
-    numberOfDepartment
-    numberOfDepartmentInSector
-    numberOfEanCode
-    numberOfFamily
-    numberOfMarket
-    numberOfModule
-    numberOfOwnArticleInfo
-    numberOfOwnStore
-    numberOfSector
-    numberOfStore
-    numberOfUOProject
-     */
 }
 
 

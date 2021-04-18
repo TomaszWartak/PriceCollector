@@ -7,17 +7,29 @@ import androidx.lifecycle.Observer;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.LocalDataRepository;
+import com.dev4lazy.pricecollector.model.Remote2LocalConverter;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Country;
 import com.dev4lazy.pricecollector.model.entities.Department;
 import com.dev4lazy.pricecollector.model.entities.DepartmentInSector;
+import com.dev4lazy.pricecollector.model.entities.Family;
+import com.dev4lazy.pricecollector.model.entities.Market;
+import com.dev4lazy.pricecollector.model.entities.Module;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.entities.Store;
-import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
+import com.dev4lazy.pricecollector.model.entities.UOProject;
+import com.dev4lazy.pricecollector.remote_data.RemoteDepartment;
+import com.dev4lazy.pricecollector.remote_data.RemoteFamily;
+import com.dev4lazy.pricecollector.remote_data.RemoteMarket;
+import com.dev4lazy.pricecollector.remote_data.RemoteModule;
+import com.dev4lazy.pricecollector.remote_data.RemoteSector;
+import com.dev4lazy.pricecollector.remote_data.RemoteUOProject;
 import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.utils.AppSettings;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,12 +39,18 @@ import static com.dev4lazy.pricecollector.utils.AppPreferences.BRICOMAN_STORES_I
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPANIES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPETITORS_SLOTS_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COUNTRIES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.DEPARTMENTS_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.DUMMY_FAMILY_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.DUMMY_MARKET_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.DUMMY_MODULE_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.LM_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_COMPETITORS_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_DATA_NOT_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.OBI_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.OWN_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.SECTORS_DEPARTMENTS_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.SECTORS_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.UOPROJECT_INITIALIZED;
 
 /**
  * LocalDataInitializer
@@ -43,7 +61,7 @@ public class LocalDataInitializer {
 
     // +++
     private static LocalDataInitializer instance;
-    private AppDataFeeder appDataFeeder;
+    private final AppDataFeeder appDataFeeder;
 
     // Kraje
     // (0) - "Kraj własny"
@@ -58,6 +76,14 @@ public class LocalDataInitializer {
     private List<Store> lmStores = null;
     private List<Store> bricomanStores = null;
     private List<Store> localCompetitorStores = null;
+    private List<Sector> sectors = null;
+    private List<Department> departments = null;
+    private Map<String, Integer> sectorsMap = null;
+    private Map<String, Integer> departmentsMap = null;
+    private Family dummyFamily = null;
+    private Market dummyMarket = null;
+    private Module dummyModule = null;
+    private UOProject dummyUOProject = null;
 
     private boolean firstCallCountries = true;
     private boolean firstCallCompanies = true;
@@ -88,11 +114,6 @@ public class LocalDataInitializer {
         return instance;
     }
 
-// ---------------------------------------------------------------------------
-// Przygotowanie danych
-
-
-
 //--------------------------------------------------------------------------
 // Local Database
 
@@ -100,8 +121,9 @@ public class LocalDataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(null);
         // todo to niżej przeniósłbym do AppSettings - czyli warstwę wyżej
         //  inicjalizacja bazy lokalnej -> setLocalDatabaseNotInitialized()
-        AppHandle.getHandle().getPrefs().setLocalDatabaseInitialized(false);
-        AppHandle.getHandle().getPrefs().setInitialisationStage(LOCAL_DATA_NOT_INITIALIZED);
+        AppHandle.getHandle().getPrefs().saveLocalDatabaseInitialized(false);
+        AppHandle.getHandle().getPrefs().saveInitialisationStage(LOCAL_DATA_NOT_INITIALIZED);
+        AppSettings.getInstance().setLastAnalysisCreationDate( new Date( 0 ) );
     }
 
     public void initializeLocalDatabase() {
@@ -119,6 +141,14 @@ public class LocalDataInitializer {
         switch (localDatabaseInitalisationStage) {
             case LOCAL_DATA_NOT_INITIALIZED:
                 initializeLocalData();
+                break;
+            case SECTORS_INITIALIZED:
+                prepareLocalData();
+                populateDepartments();
+                break;
+            case DEPARTMENTS_INITIALIZED:
+                prepareLocalData();
+                populateDepartmentsInSector();
                 break;
             case SECTORS_DEPARTMENTS_INITIALIZED:
                 prepareLocalData();
@@ -153,6 +183,22 @@ public class LocalDataInitializer {
                 populateCompetitorSlotNr1();
                 break;
             case COMPETITORS_SLOTS_INITIALIZED:
+                prepareLocalData();
+                populateDummyFamily();
+                break;
+            case DUMMY_FAMILY_INITIALIZED:
+                prepareLocalData();
+                populateDummyMarket();
+                break;
+            case DUMMY_MARKET_INITIALIZED:
+                prepareLocalData();
+                populateDummyModule();
+                break;
+            case DUMMY_MODULE_INITIALIZED:
+                prepareLocalData();
+                populateDummyUOProject();
+                break;
+            case UOPROJECT_INITIALIZED:
                 // inicjalizacja była kompletna
                 break;
         }
@@ -167,40 +213,15 @@ public class LocalDataInitializer {
 // ---------------------------------------------------------------------------
 // Przygotowanie danych
     private void prepareLocalData() {
-        copySectorsAndDepartmentsFromRemoteDatabase( );
-    }
-
-    private void copySectorsAndDepartmentsFromRemoteDatabase( ) {
-        MutableLiveData<Long> finalResult = new MutableLiveData<>();
-        Observer<Long> resultObserver = new Observer<Long>() {
-            @Override
-            public void onChanged(Long aLong) {
-                finalResult.removeObserver(this);
-                copyDummyFamiliesEtcFromRemoteDatabase( finalResult );
-            }
-        };
-        finalResult.observeForever(resultObserver);
-        AnalysisDataUpdater.getInstance().copySectorsAndDepartmentsFromRemoteDatabase( finalResult );
-    }
-
-    private void copyDummyFamiliesEtcFromRemoteDatabase( MutableLiveData<Long> finalResult ) {
-        Observer<Long> resultObserver = new Observer<Long>() {
-            @Override
-            public void onChanged(Long aLong) {
-                finalResult.removeObserver(this);
-                prepareCountries();
-                prepareCompanies();
-                prepareOwnStores();
-                prepareObiStores();
-                prepareLeroyMerlinStores();
-                prepareBricomanStores();
-                prepareLocalCompetitorStores();
-                prepareCompetitorSlots();
-                startLocalDataPopulationChain();
-            }
-        };
-        finalResult.observeForever(resultObserver);
-        AnalysisDataUpdater.getInstance().copyDummyFamiliesEtcFromRemoteDatabase( finalResult );
+        prepareCountries();
+        prepareCompanies();
+        prepareOwnStores();
+        prepareObiStores();
+        prepareLeroyMerlinStores();
+        prepareBricomanStores();
+        prepareLocalCompetitorStores();
+        prepareCompetitorSlots();
+        startPreparingOtherLocalDataChain();
     }
 
     private void prepareCountries() {
@@ -277,17 +298,166 @@ public class LocalDataInitializer {
          */
     }
 
+    private void startPreparingOtherLocalDataChain() {
+        prepareSectors(); // todo 2??
+    }
+
+    private void prepareSectors() {
+        getSectorsFromRemoteDatabase( );
+    }
+
+    private void getSectorsFromRemoteDatabase( ) {
+        MutableLiveData<List<RemoteSector>> getAllRemoteSectorsResult = new MutableLiveData<>();
+        Observer<List<RemoteSector>> resultObserver = new Observer<List<RemoteSector>>() {
+            @Override
+            public void onChanged( List<RemoteSector> remoteSectors ) {
+                getAllRemoteSectorsResult.removeObserver(this); // this = observer...
+                if (!remoteSectors.isEmpty()) {
+                    Remote2LocalConverter remote2LocalConverter = new Remote2LocalConverter();
+                    sectors = remote2LocalConverter.createSectors( remoteSectors );
+                    getDepartmentsFromRemoteDatabase( );
+                }
+            }
+        };
+        getAllRemoteSectorsResult.observeForever( resultObserver );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllSectors(getAllRemoteSectorsResult);
+    }
+
+    private void getDepartmentsFromRemoteDatabase( ) {
+        MutableLiveData<List<RemoteDepartment>> getAllRemoteDepartmentsResult = new MutableLiveData<>();
+        Observer<List<RemoteDepartment>> insertingResultObserver = new Observer<List<RemoteDepartment>>() {
+            @Override
+            public void onChanged( List<RemoteDepartment> remoteDepartments ) {
+                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
+                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
+                getAllRemoteDepartmentsResult.removeObserver(this); // this = observer...
+                if (!remoteDepartments.isEmpty()) {
+                    Remote2LocalConverter remote2LocalConverter = new Remote2LocalConverter();
+                    departments = remote2LocalConverter.createDepartments( remoteDepartments );
+                    getFamilyFromRemoteDatabase(  );
+                }
+            }
+        };
+        getAllRemoteDepartmentsResult.observeForever( insertingResultObserver );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllDepartments( getAllRemoteDepartmentsResult );
+    }
+
+    private void getFamilyFromRemoteDatabase( ) {
+        Remote2LocalConverter converter = new Remote2LocalConverter();
+        MutableLiveData<List<RemoteFamily>> result = new MutableLiveData<>();
+        Observer<List<RemoteFamily>> resultObserver = new Observer<List<RemoteFamily>>() {
+            @Override
+            public void onChanged(List<RemoteFamily> familiesList ) {
+                if ((familiesList != null)&&(!familiesList.isEmpty())) {
+                    result.removeObserver(this); // this = observer...
+                    dummyFamily = converter.createFamily( familiesList.get(0) );
+                    getMarketFromRemoteDatabase();
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteFamilies( result );
+    }
+
+    private void getMarketFromRemoteDatabase( ) {
+        Remote2LocalConverter converter = new Remote2LocalConverter();
+        MutableLiveData<List<RemoteMarket>> result = new MutableLiveData<>();
+        Observer<List<RemoteMarket>> resultObserver = new Observer<List<RemoteMarket>>() {
+            @Override
+            public void onChanged(List<RemoteMarket> marketsList) {
+                if ((marketsList!= null)&&(!marketsList.isEmpty())) {
+                    result.removeObserver(this); // this = observer...
+                    dummyMarket = converter.createMarket( marketsList.get(0) );
+                    getModuleFromRemoteDatabase();
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteMarkets(result);
+    }
+
+      private void getModuleFromRemoteDatabase( ) {
+        Remote2LocalConverter converter = new Remote2LocalConverter();
+        MutableLiveData<List<RemoteModule>> result = new MutableLiveData<>();
+        Observer<List<RemoteModule>> resultObserver = new Observer<List<RemoteModule>>() {
+            @Override
+            public void onChanged(List<RemoteModule> modulesList) {
+                if ((modulesList != null)&&(!modulesList.isEmpty())) {
+                    result.removeObserver(this); // this = observer...
+                    dummyModule = converter.createModule( modulesList.get(0) );
+                    getUOProjectFromRemoteDatabase();
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteModules(result);
+    }
+
+
+    private void getUOProjectFromRemoteDatabase( ) {
+        Remote2LocalConverter converter = new Remote2LocalConverter();
+        MutableLiveData<List<RemoteUOProject>> result = new MutableLiveData<>();
+        Observer<List<RemoteUOProject>> resultObserver = new Observer<List<RemoteUOProject>>() {
+            @Override
+            public void onChanged(List<RemoteUOProject> uoProjectList) {
+                if ((uoProjectList != null)&&(!uoProjectList.isEmpty())) {
+                    result.removeObserver(this); // this = observer...
+                    dummyUOProject = converter.createUOProject( uoProjectList.get(0) );
+                    startLocalDataPopulationChain();
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteUOProjects(result);
+    }
+
+
 
 // ---------------------------------------------------------------------------
 // Zapis danych
 
 
     private void startLocalDataPopulationChain() {
-        prepareSectors();
+        populateSectors();
     }
 
-    private void prepareSectors() {
-        // todo no a teraz jak jesteś taki mądry, to połącz...
+
+    private void populateSectors() {
+        MutableLiveData<Long> populateSectorsResult = new MutableLiveData<>();
+        Observer<Long> resultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged( Long lastSectorId) {
+                populateSectorsResult.removeObserver(this); // this = observer...
+                if (lastSectorId!=null) {
+                    AppHandle.getHandle().getPrefs().saveInitialisationStage( SECTORS_INITIALIZED );
+                    populateDepartments();
+                }
+            }
+        };
+        populateSectorsResult.observeForever( resultObserver );
+        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+        localDataRepository.insertSectors( sectors, populateSectorsResult );
+    }
+
+
+    private void populateDepartments() {
+        MutableLiveData<Long> populateDepartmentsResult = new MutableLiveData<>();
+        Observer<Long> resultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged( Long lastDepartmentId) {
+                populateDepartmentsResult.removeObserver(this); // this = observer...
+                if (lastDepartmentId!=null) {
+                    AppHandle.getHandle().getPrefs().saveInitialisationStage( DEPARTMENTS_INITIALIZED );
+                    createSectors();
+                }
+            }
+        };
+        populateDepartmentsResult.observeForever( resultObserver );
+        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+        localDataRepository.insertDepartments( departments, populateDepartmentsResult );
+    }
+
+    private void createSectors() {
         // odczyt sektorów
         MutableLiveData<List<Sector>> getAllSectorsResult = new MutableLiveData<>();
         Observer<List<Sector>> getAllSectorsResultObserver = new Observer<List<Sector>>() {
@@ -298,9 +468,9 @@ public class LocalDataInitializer {
                 getAllSectorsResult.removeObserver(this); // this = observer...
                 if (!sectorList.isEmpty()) {
                     Stream< Sector > sectorStream = sectorList.stream();
-                    Map< String, Integer > sectorsMap = sectorStream.collect(
+                    sectorsMap = sectorStream.collect(
                             Collectors.toMap( Sector::getName, Sector::getId ) );
-                    prepareDepartments( sectorsMap );
+                    createDepartments( );
                 }
             }
         };
@@ -308,7 +478,7 @@ public class LocalDataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllSectors( getAllSectorsResult );
     }
 
-    private void prepareDepartments( Map<String, Integer> sectorsMap ) {
+    private void createDepartments( ) {
         MutableLiveData<List<Department>> getAllDepartmentsResult = new MutableLiveData<>();
         Observer<List<Department>> getAllDepartmentsResultObserver = new Observer<List<Department>>() {
             @Override
@@ -318,9 +488,9 @@ public class LocalDataInitializer {
                 getAllDepartmentsResult.removeObserver(this); // this = observer...
                 if (!departmentList.isEmpty()) {
                     Stream<Department> departmentStream = departmentList.stream();
-                    Map<String, Integer> departmentsMap = departmentStream.collect(
+                    departmentsMap = departmentStream.collect(
                             Collectors.toMap( Department::getSymbol, Department::getId ) );
-                    populateDepartmentsInSector( sectorsMap, departmentsMap );
+                    populateDepartmentsInSector( );
                 }
             }
         };
@@ -329,8 +499,7 @@ public class LocalDataInitializer {
     }
 
     private void populateDepartmentsInSector(
-            Map<String, Integer> sectorsMap,
-            Map<String, Integer> departmentsMap ) {
+             ) {
         DepartmentInSector departmentInSector = new DepartmentInSector();
         Resources resources = AppHandle.getHandle().getResources();
         Integer sectorId;
@@ -421,7 +590,7 @@ public class LocalDataInitializer {
                 getAllDepartmentsInSectorsResult.removeObserver(this); // this = observer...
                 if (!departmensInSectorsList.isEmpty()) {
                 }
-                AppHandle.getHandle().getPrefs().setInitialisationStage(SECTORS_DEPARTMENTS_INITIALIZED);
+                AppHandle.getHandle().getPrefs().saveInitialisationStage(SECTORS_DEPARTMENTS_INITIALIZED);
                 populateCountries();
             }
         };
@@ -452,7 +621,7 @@ public class LocalDataInitializer {
                     ownCountryInsertResult.removeObserver(this); // this = observer...
                     if (ownCountryId!=-1) {
                         //insertOwnCompany(ownCountryId);
-                        AppHandle.getHandle().getPrefs().setInitialisationStage(COUNTRIES_INITIALIZED);
+                        AppHandle.getHandle().getPrefs().saveInitialisationStage(COUNTRIES_INITIALIZED);
                         populateCompanies();
                     }
                 }
@@ -478,7 +647,7 @@ public class LocalDataInitializer {
                             company.setCountryId(country.getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertCompany( company, null );
                         }
-                        AppHandle.getHandle().getPrefs().setInitialisationStage(COMPANIES_INITIALIZED);
+                        AppHandle.getHandle().getPrefs().saveInitialisationStage(COMPANIES_INITIALIZED);
                         populateOwnStores();}
                 }
             }
@@ -503,7 +672,7 @@ public class LocalDataInitializer {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertOwnStore( store, null );
                         }
-                        AppHandle.getHandle().getPrefs().setInitialisationStage(OWN_STORES_INITIALIZED);
+                        AppHandle.getHandle().getPrefs().saveInitialisationStage(OWN_STORES_INITIALIZED);
                         populateLMStores();                    }
                 }
             }
@@ -526,7 +695,7 @@ public class LocalDataInitializer {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
-                        AppHandle.getHandle().getPrefs().setInitialisationStage(LM_STORES_INITIALIZED);
+                        AppHandle.getHandle().getPrefs().saveInitialisationStage(LM_STORES_INITIALIZED);
                         populateObiStores();
                     }
                 }
@@ -550,7 +719,7 @@ public class LocalDataInitializer {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
-                        AppHandle.getHandle().getPrefs().setInitialisationStage(OBI_STORES_INITIALIZED);
+                        AppHandle.getHandle().getPrefs().saveInitialisationStage(OBI_STORES_INITIALIZED);
                         populateBricomanStores();
                     }
                 }
@@ -574,7 +743,7 @@ public class LocalDataInitializer {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
-                        AppHandle.getHandle().getPrefs().setInitialisationStage(BRICOMAN_STORES_INITIALIZED);
+                        AppHandle.getHandle().getPrefs().saveInitialisationStage(BRICOMAN_STORES_INITIALIZED);
                         populateLocalCompetitorStores();
                     }
                 }
@@ -598,7 +767,7 @@ public class LocalDataInitializer {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore(store, null);
                         }
-                        AppHandle.getHandle().getPrefs().setInitialisationStage( LOCAL_COMPETITORS_STORES_INITIALIZED);
+                        AppHandle.getHandle().getPrefs().saveInitialisationStage( LOCAL_COMPETITORS_STORES_INITIALIZED);
                         populateCompetitorSlotNr1();
                     }
                 }
@@ -608,7 +777,6 @@ public class LocalDataInitializer {
         Company localCompetitorCompany = companies.get( ProductionDataFeeder.getInstance().LOCAL_COMPETITOR_INDEX);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
     }
-
 
     // Slot nr 1 = LM
     private void populateCompetitorSlotNr1() {
@@ -730,7 +898,8 @@ public class LocalDataInitializer {
                         analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
                         analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
-                        AppHandle.getHandle().getSettings().setLocalDatabaseInitialized();
+                        AppHandle.getHandle().getPrefs().saveInitialisationStage( COMPETITORS_SLOTS_INITIALIZED );
+                        populateDummyFamily( );
                     }
                 }
             }
@@ -738,6 +907,71 @@ public class LocalDataInitializer {
         result.observeForever(resultObserver);
         Company localCompetitorCompany = companies.get( ProductionDataFeeder.getInstance().LOCAL_COMPETITOR_INDEX);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+    }
+
+    private void populateDummyFamily( ) {
+        MutableLiveData<Long> result = new MutableLiveData<>();
+        Observer<Long> resultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged( Long familyId ) {
+                if ((familyId != null)&&(familyId>0)) {
+                    result.removeObserver(this); // this = observer...
+                    AppHandle.getHandle().getPrefs().saveInitialisationStage( DUMMY_FAMILY_INITIALIZED );
+                    populateDummyMarket();
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertFamily( dummyFamily, result );
+    }
+
+    private void populateDummyMarket() {
+        MutableLiveData<Long> finalResult = new MutableLiveData<>();
+        MutableLiveData<Long> result = new MutableLiveData<>();
+        Observer<Long> resultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged( Long marketId ) {
+                if ((marketId != null)&&(marketId>0)) {
+                    result.removeObserver(this); // this = observer...
+                    AppHandle.getHandle().getPrefs().saveInitialisationStage( DUMMY_MARKET_INITIALIZED );
+                    populateDummyModule( );
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertMarket( dummyMarket, result );
+    }
+
+    private void populateDummyModule( ) {
+        MutableLiveData<Long> finalResult = new MutableLiveData<>();
+        MutableLiveData<Long> result = new MutableLiveData<>();
+        Observer<Long> resultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged( Long marketId ) {
+                if ((marketId != null)&&(marketId>0)) {
+                    result.removeObserver(this); // this = observer...
+                    AppHandle.getHandle().getPrefs().saveInitialisationStage( DUMMY_MODULE_INITIALIZED );
+                    populateDummyUOProject( );
+                }
+            }
+        };
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertModule( dummyModule, result );
+    }
+
+    private void populateDummyUOProject( ) {
+        MutableLiveData<Long> finalResult = new MutableLiveData<>();
+        Observer<Long> resultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged(Long marketId) {
+                if ((marketId != null) && (marketId > 0)) {
+                    finalResult.removeObserver(this); // this = observer...
+                    AppHandle.getHandle().getSettings().setLocalDatabaseInitialized();
+                }
+            }
+        };
+        finalResult.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().insertUOProject( dummyUOProject, finalResult);
     }
 
     private class StartCallback implements LocalDataRepository.AfterDatabaseClearedCallback {

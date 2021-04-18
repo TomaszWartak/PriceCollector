@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">PriceCollector</string>
+    <string name="app_name" translatable="false">PriceCollector</string>
 
 
     <!-- wspólne -->
     <string name="not_translated">nie przetłumaczone...</string>
-    <string name="caption_ok">OK</string>
+    <string name="caption_ok" translatable="false">OK</string>
     <string name="caption_cancel">Anuluj</string>
     <string name="question_close_app">Czy chcesz zamknąć aplikację?</string>
 
@@ -12,10 +12,10 @@
     <string name="departments_structure_description">struktura działowa</string>
 
     <!-- for tests -->
-    <string name="test_start_screen_label">START SCREEN</string>
-    <string name="test_setup_preferences_fragment">PREFERENCES SCREEN</string>
-    <string name="test_login_fragment_label">LOGIN FRAGMENT</string>
-    <string name="test_main_fragment_label">MAIN FRAGMENT</string>
+    <string name="test_start_screen_label" translatable="false">START SCREEN</string>
+    <string name="test_setup_preferences_fragment" translatable="false">PREFERENCES SCREEN</string>
+    <string name="test_login_fragment_label" translatable="false">LOGIN FRAGMENT</string>
+    <string name="test_main_fragment_label" translatable="false">MAIN FRAGMENT</string>
 
     <!-- for loging screen -->
     <string name="caption_login_button">Loguj</string>
@@ -65,16 +65,16 @@
     <string name="r70_department_name">Dekoracje</string>
     <string name="r80_department_name">Elektryczny</string>
     <string name="r90_department_name">Budowalany</string>
-    <string name="r06_department_symbol">R-06</string>
-    <string name="r10_department_symbol">R-10</string>
-    <string name="r20_department_symbol">R-20</string>
-    <string name="r30_department_symbol">R-30</string>
-    <string name="r40_department_symbol">R-40</string>
-    <string name="r50_department_symbol">R-50</string>
-    <string name="r60_department_symbol">R-60</string>
-    <string name="r70_department_symbol">R-70</string>
-    <string name="r80_department_symbol">R-80</string>
-    <string name="r90_department_symbol">R-90</string>
+    <string name="r06_department_symbol" translatable="false">R-06</string>
+    <string name="r10_department_symbol" translatable="false">R-10</string>
+    <string name="r20_department_symbol" translatable="false">R-20</string>
+    <string name="r30_department_symbol" translatable="false">R-30</string>
+    <string name="r40_department_symbol" translatable="false">R-40</string>
+    <string name="r50_department_symbol" translatable="false">R-50</string>
+    <string name="r60_department_symbol" translatable="false">R-60</string>
+    <string name="r70_department_symbol" translatable="false">R-70</string>
+    <string name="r80_department_symbol" translatable="false">R-80</string>
+    <string name="r90_department_symbol" translatable="false">R-90</string>
 
     <!-- sectors -->
     <string name="sbud_sector_name">Budujesz</string>
@@ -97,8 +97,19 @@
     <string name="yes_i_want_to_go_to_settings">Tak - chcę przejść do Ustawień</string>
     <string name="no_i_want_to_exit_app_message">Nie - chcę wyjść z aplikacji</string>
 
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="dummy_string" translatable="false">dummy</string>
+    <string name="competitor_price_label">Cena konkurenta:</string>
+    <string name="comment_label">Komentarz:</string>
+    <string name="reference_article_label">Artykuł referencyjny</string>
+    <string name="name_label">Nazwa:</string>
+    <string name="ean_code_label" translatable="false">EAN:</string>
+
+    <!-- dialog dotyczący pobrania danych analizy -->
+    <string name="data_ready_to_download">DANE GOTOWE DO POBRANIA...</string>
+    <string name="question_about_downloading_data">Czy chcesz teraz pobrać dane?</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="dummy_string">dummy</string>
 
 </resources>

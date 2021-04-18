@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,13 +16,16 @@ import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
+import com.dev4lazy.pricecollector.utils.AppHandle;
+
+import java.util.Date;
 
 import static com.dev4lazy.pricecollector.view.ProgressPresenter.DATA_SIZE_UNKNOWN;
 
 public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.AnalysisViewHolder> {
 
     private AnalysisDiffCallback analysisDiffCallback = null; // todo
-    private DateConverter dateConverter;
+    private final DateConverter dateConverter;
 
     public AnalysisAdapter( AnalysisDiffCallback analysisDiffCalback){
         super( analysisDiffCalback );
@@ -48,10 +53,12 @@ public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.
     class AnalysisViewHolder extends RecyclerView.ViewHolder {
         // TODO sprawdź, czy tu nie jest potrzebny VieMOdel, czy to się nie zgubi przy obrocie
 
-        private TextView textViewAnalysisCreationDate;
-        private TextView textViewAnalysisDueDate;
-        private TextView textViewAnalysisFinishDate;
-        private TextView textViewAnalysisConfirmationDate;
+        private Analysis analysis;
+        private final TextView textViewAnalysisCreationDate;
+        private final TextView textViewAnalysisDueDate;
+        private final TextView textViewAnalysisFinishDate;
+        private final TextView textViewAnalysisConfirmationDate;
+        private final TextView textViewAnalysisDataReadyToDownload;
 
         public AnalysisViewHolder( View view ) {
             super(view);
@@ -59,36 +66,73 @@ public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.
             textViewAnalysisDueDate = view.findViewById( R.id.analysis_Item__due_date);
             textViewAnalysisFinishDate = view.findViewById( R.id.analysis_item__finish_date);
             textViewAnalysisConfirmationDate = view.findViewById( R.id.analysis_item__confirmation_date );
-            view.setOnClickListener( (View v) -> {
-                openCompetitorSlots( v );
-            });
-            view.findViewById(R.id.button_analysis_articles_create).setOnClickListener( (View v) -> {
-                updateArticlesAllData( new ProgressBarPresenter( view.findViewById(R.id.analysis_item__progressBar), DATA_SIZE_UNKNOWN ) );
-            });
+            textViewAnalysisDataReadyToDownload = view.findViewById(R.id.analysis_item__data_to_download );
         }
 
         private void openCompetitorSlots( View view) {
             // TODO sloty muszą się otworzyć dla konkretnej analizy, więc jakoś (ViewModel) trzeba przekazać info o analizie
-            Navigation.findNavController( view ).navigate(R.id.action_mainFragment_to_analysisCompetitorsFragment);
-        }
-
-        public void updateArticlesAllData( ProgressPresenter progressPresenter ) {
-            AnalysisDataUpdater.getInstance().insertArticles( progressPresenter );
+            Navigation.findNavController( view ).navigate(R.id.action_analyzesListFragment_to_analysisCompetitorsFragment);
         }
 
         protected void bind( Analysis analysis ) {
-            if (analysis.getCreationDate()!=null) {
-                textViewAnalysisCreationDate.setText(dateConverter.date2String( analysis.getCreationDate() ) );
+            this.analysis = analysis;
+            Date date = analysis.getCreationDate();
+            if ( dateIsCorrect( date ) ) {
+                textViewAnalysisCreationDate.setText( dateConverter.date2String( date ) );
             }
-            if (analysis.getDueDate()!=null) {
-                textViewAnalysisDueDate.setText( dateConverter.date2String( analysis.getDueDate() ) );
+            date = analysis.getDueDate();
+            if ( dateIsCorrect( date ) ) {
+                textViewAnalysisDueDate.setText( dateConverter.date2String( date ) );
             }
-            if (analysis.getFinishDate()!=null) {
-                textViewAnalysisFinishDate.setText( dateConverter.date2String( analysis.getFinishDate() ) );
+            date = analysis.getFinishDate();
+            if ( dateIsCorrect( date ) ) {
+                textViewAnalysisFinishDate.setText( dateConverter.date2String( date ) );
             }
-            if (analysis.getConfirmationDate()!=null) {
-                textViewAnalysisConfirmationDate.setText( dateConverter.date2String( analysis.getConfirmationDate() ) );
+            date = analysis.getConfirmationDate();
+            if ( dateIsCorrect( date ) ) {
+                textViewAnalysisConfirmationDate.setText( dateConverter.date2String( date ) );
             }
+            int visibility = textViewAnalysisDataReadyToDownload.getVisibility();
+            if ( analysis.isDataNotDownloaded() ) {
+                if (visibility!=View.VISIBLE) {
+                    textViewAnalysisDataReadyToDownload.setVisibility(View.VISIBLE);
+                }
+                itemView.setOnClickListener( (View v) -> {
+                    textViewAnalysisDataReadyToDownload.setVisibility(View.GONE);
+                    MutableLiveData<Boolean> finalResult = new MutableLiveData<>();
+                    Observer<Boolean> resultObserver = new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean analysisDataDownloaded) {
+                            if (analysisDataDownloaded != null) {
+                                finalResult.removeObserver(this); // this = observer...
+                                AppHandle.getHandle().getRepository().getLocalDataRepository().updateAnalysis( analysis, null );
+                                notifyDataSetChanged();
+                            }
+                        }
+                    };
+                    finalResult.observeForever(resultObserver);
+                    updateArticlesAllData(
+                            finalResult,
+                            new ProgressBarPresenter(
+                                    itemView.findViewById(R.id.analysis_item__progressBar),
+                                    DATA_SIZE_UNKNOWN ) );
+                });
+            } else {
+                if (visibility!=View.GONE) {
+                    textViewAnalysisDataReadyToDownload.setVisibility(View.GONE);
+                }
+                itemView.setOnClickListener( (View v) -> {
+                    openCompetitorSlots( v );
+                });
+            }
+        }
+
+        private boolean dateIsCorrect( Date date ) {
+            return (date!=null)&&(dateConverter.date2Long(date)!=0L);
+        }
+
+        public void updateArticlesAllData( MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+            AnalysisDataUpdater.getInstance().insertArticles( analysis, finalResult, progressPresenter );
         }
 
         protected void clear() {
@@ -96,6 +140,7 @@ public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.
             textViewAnalysisDueDate.setText( null );
             textViewAnalysisFinishDate.setText( null );
             textViewAnalysisConfirmationDate.setText( null );
+            textViewAnalysisDataReadyToDownload.setText( null );
         }
 
     }

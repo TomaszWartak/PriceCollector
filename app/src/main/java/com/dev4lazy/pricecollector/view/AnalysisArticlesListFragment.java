@@ -18,40 +18,40 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
+import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsViewModel;
 
 import static android.widget.LinearLayout.VERTICAL;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AnalysisArticlesFragment extends Fragment {
+public class AnalysisArticlesListFragment extends Fragment {
 
 
-    //private AnalysisArticleViewModel viewModel;
-    private AnalysisArticleJoinViewModel viewModel;
+    //private AnalysisArticleJoinViewModel viewModel;
+    private AnalysisArticleJoinsViewModel viewModel;
     private RecyclerView recyclerView;
     //private AnalysisArticleAdapter analysisArticleJoinAdapter;
     private AnalysisArticleJoinAdapter analysisArticleJoinAdapter;
 
-    public AnalysisArticlesFragment() {
+    public AnalysisArticlesListFragment() {
         // Required empty public constructor
     }
 
-    public static AnalysisArticlesFragment newInstance() {
-        return new AnalysisArticlesFragment();
+    public static AnalysisArticlesListFragment newInstance() {
+        return new AnalysisArticlesListFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.analysis_fragment, container, false);
+        return inflater.inflate(R.layout.analysis_articles_list_fragment, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated( savedInstanceState );
-        //viewModel = ViewModelProviders.of(this).get(AnalysisArticleViewModel.class);
+        //viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinViewModel.class);
         recyclerSetup();
         subscribeRecycler();
     }
@@ -65,7 +65,7 @@ public class AnalysisArticlesFragment extends Fragment {
     }
 
     private void subscribeRecycler() {
-        viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinsViewModel.class);
         viewModel.getAnalysisArticleJoinLiveData().observe(this, new Observer<PagedList<AnalysisArticleJoin>>() {
             @Override
             public void onChanged(PagedList<AnalysisArticleJoin> analysisArticlesJoins) {

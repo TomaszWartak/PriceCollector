@@ -41,20 +41,20 @@ public class TestActionsFragment extends Fragment {
     }
 
     private void setTestButtons(View view) {
-        view.findViewById(R.id.button_create_remote).setOnClickListener((View v) -> {
-            RemoteDataInitializer.getInstance().initializeRemoteDatabase();
-        });
         view.findViewById(R.id.button_clear_remote).setOnClickListener((View v) -> {
             RemoteDataInitializer.getInstance().clearRemoteDatabase();
         });
-        view.findViewById(R.id.button_remote).setOnClickListener((View v) -> {
-            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_remoteAnalysisRowJoinFragment);
+        view.findViewById(R.id.button_create_remote).setOnClickListener((View v) -> {
+            RemoteDataInitializer.getInstance().initializeRemoteDatabase();
         });
-        view.findViewById(R.id.button_create_local).setOnClickListener((View v) -> {
-            LocalDataInitializer.getInstance().initializeLocalDatabase();
+        view.findViewById(R.id.button_show_remote).setOnClickListener((View v) -> {
+            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_remoteAnalysisRowJoinFragment);
         });
         view.findViewById(R.id.button_clear_local).setOnClickListener((View v) -> {
             LocalDataInitializer.getInstance().clearLocalDatabase();
+        });
+        view.findViewById(R.id.button_create_local).setOnClickListener((View v) -> {
+            LocalDataInitializer.getInstance().initializeLocalDatabase();
         });
         view.findViewById(R.id.button_countries).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_countriesListFragment);
@@ -68,15 +68,14 @@ public class TestActionsFragment extends Fragment {
         view.findViewById(R.id.button_other_stores).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_otherStoresListFragment);
         });
-        // TODO zrobione => zrób ClassGenerator dla Article bo trzeba sprawdzić, czy artykuły są wygenerowane
-        // TODO jeśli tak, to to samo dla OwnArticleInfo
-        // TRZEBA wygenerować AnalysisArticle
         view.findViewById(R.id.button_show_articles).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_articlesListFragment);
         });
+        /* todo?
         view.findViewById(R.id.button_show_depts_in_secs).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_departmentInSectorsListFragment);
         });
+          */
         view.findViewById(R.id.button_show_numbers_of_data).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_testNumbersOfDataFragment);
         });

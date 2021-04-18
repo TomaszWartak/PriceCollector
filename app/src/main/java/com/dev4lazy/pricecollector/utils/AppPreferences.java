@@ -2,26 +2,39 @@ package com.dev4lazy.pricecollector.utils;
 
 import android.content.SharedPreferences;
 
+import com.dev4lazy.pricecollector.model.utils.DateConverter;
+
+import java.util.Date;
+
+/**
+ * AppPrefernces
+ * Służy do zapisu i odczytu ustawień w SharedPreferences
+ */
 public class AppPreferences {
 
 // AppPreferences -----------------------------------------------------------------------------
     private static AppPreferences instance = new AppPreferences();
+
+// SharedPreferences ---------------------------------------------------------------------------
+    private SharedPreferences prefs = null;
+    private SharedPreferences.Editor prefsEditor = null;
+
 // Ustawienia językowe -------------------------------------------------------------------------
     private final String COUNTRY_NAME_KEY = "COUNTRY_NAME";
     private final String ENGLISH_COUNTRY_NAME_KEY = "ENGLISH_COUNTRY_NAME";
 
 // Uprawnienia aplikacji -----------------------------------------------------------------------
-// Lokalna baza danych-------------------------------------------------------------------------
-    private final String LOCAL_DATABASE_INITIALIZED_KEY = "LOCAL_DATABASE_INITIALIZED";
-// Kontrola etapów inicjalizacji
-    private final String INITIALISATION_STAGE_KEY = "INITIALISATION_STAGE";
-    private final String ANALYSIS_COMPETITORS_SLOTS_INITIALIZED_KEY = "ANALYSIS_COMPETITORS_SLOTS_INITIALIZED";
     private final String ANALYSIS_COMPETITORS_NUMBER_KEY = "ANALYSIS_COMPETITORS_NUMBER";
     public int MAX_ANALYSIS_COMPETITORS_NUMBER = 5; //-1 oznacza dowolną ilość
-// SharedPreferences ---------------------------------------------------------------------------
-    private SharedPreferences prefs = null;
-    private SharedPreferences.Editor prefsEditor = null;
+    private final String LAST_ANALYSIS_DOWNLOAD_DATE_KEY = "LAST_ANALYSIS_DOWNLOAD_DATE";
 
+// Lokalna baza danych-------------------------------------------------------------------------
+    private final String LOCAL_DATABASE_INITIALIZED_KEY = "LOCAL_DATABASE_INITIALIZED";
+
+// Kontrola etapów inicjalizacji
+
+    private final String ANALYSIS_COMPETITORS_SLOTS_INITIALIZED_KEY = "ANALYSIS_COMPETITORS_SLOTS_INITIALIZED";
+    private final String INITIALISATION_STAGE_KEY = "INITIALISATION_STAGE";
     public static final int LOCAL_DATA_NOT_INITIALIZED = 0;
     public static final int COUNTRIES_INITIALIZED = 1;
     public static final int COMPANIES_INITIALIZED = 2;
@@ -32,7 +45,14 @@ public class AppPreferences {
     public static final int LOCAL_COMPETITORS_STORES_INITIALIZED = 7;
     public static final int COMPETITORS_SLOTS_INITIALIZED = 8;
     public static final int SECTORS_DEPARTMENTS_INITIALIZED = 9;
-    public static final int LOCAL_DATA_INITIALIZED = COMPETITORS_SLOTS_INITIALIZED;
+    public static final int SECTORS_INITIALIZED = 10;
+    public static final int DEPARTMENTS_INITIALIZED = 11;
+    public static final int DUMMY_FAMILY_INITIALIZED = 12;
+    public static final int DUMMY_MARKET_INITIALIZED = 13;
+    public static final int DUMMY_MODULE_INITIALIZED = 14;
+    public static final int UOPROJECT_INITIALIZED = 15;
+
+    public static final int LOCAL_DATA_INITIALIZED = UOPROJECT_INITIALIZED; // <- !!!!
 
     // todo language
     private String language;
@@ -66,7 +86,7 @@ public class AppPreferences {
     }
 
 // Uprawnienia aplikacji -----------------------------------------------------------------------
-    public void setFirstTimeAskingPermission( String permission, boolean isFirstTime ) {
+    public void saveFirstTimeAskingPermission(String permission, boolean isFirstTime ) {
         prefsEditor.putBoolean( permission, isFirstTime );
         prefsEditor.commit();
     }
@@ -75,8 +95,9 @@ public class AppPreferences {
         return prefs.getBoolean( permission,true );
     }
 
-    // Ustawienia językowe -------------------------------------------------------------------------
+// Ustawienia językowe -------------------------------------------------------------------------
     public String getLanguage() {
+        // todo prefsEditor.get...
         return language;
     }
 
@@ -85,19 +106,19 @@ public class AppPreferences {
     }
 
     public String getCountryName() {
-        return prefs.getString(COUNTRY_NAME_KEY, "");  // defValue może być null
+        return prefs.getString( COUNTRY_NAME_KEY, "");  // defValue może być null
     }
 
-    public void setCountryName(String value) {
-        prefsEditor.putString(COUNTRY_NAME_KEY, value);
+    public void saveCountryName(String value) {
+        prefsEditor.putString( COUNTRY_NAME_KEY, value);
         prefsEditor.apply();
     }
 
     public String getEnglishCountryName() {
-        return prefs.getString(ENGLISH_COUNTRY_NAME_KEY, "");  // defValue może być null
+        return prefs.getString( ENGLISH_COUNTRY_NAME_KEY, "");  // defValue może być null
     }
 
-    public void setEnglishCountryName(String value) {
+    public void saveEnglishCountryName(String value) {
         prefsEditor.putString(ENGLISH_COUNTRY_NAME_KEY, value);
         prefsEditor.apply();
     }
@@ -107,7 +128,11 @@ public class AppPreferences {
         return prefs.getBoolean(LOCAL_DATABASE_INITIALIZED_KEY, false);
     }
 
-    public void setLocalDatabaseInitialized(boolean value) {
+    public boolean isLocalDatabaseNotInitialized() {
+        return !isLocalDatabaseInitialized();
+    }
+
+    public void saveLocalDatabaseInitialized(boolean value) {
         prefsEditor.putBoolean(LOCAL_DATABASE_INITIALIZED_KEY, value);
         prefsEditor.apply();
     }
@@ -116,19 +141,29 @@ public class AppPreferences {
         return prefs.getInt(INITIALISATION_STAGE_KEY, LOCAL_DATA_NOT_INITIALIZED);
     }
 
-    public void setInitialisationStage(int value) {
+    public void saveInitialisationStage(int value) {
         prefsEditor.putInt(INITIALISATION_STAGE_KEY, value);
         prefsEditor.commit();
     }
 
-// Data ostatniego pobrania danych z serwera ---------------------------------------------------
+// Daty ostatniego pobrania danych z serwera ---------------------------------------------------
+
+    public void saveLastAnalysisDownloadDate( Date date ) {
+        prefsEditor.putLong( LAST_ANALYSIS_DOWNLOAD_DATE_KEY, new DateConverter().date2Long( date ));
+        prefsEditor.commit();
+    }
+
+    public Date getLastAnalysisDownloadDate() {
+        long longDate = prefs.getLong( LAST_ANALYSIS_DOWNLOAD_DATE_KEY, 0L);
+        return new DateConverter().long2Date( longDate );
+    }
 
 // Czy od ostaniego pobrania danych zostały zmienione dane lokalne -----------------------------
 
 // Konfiguracja okna ze sklepami konukernycjnymi wybranymi do analizy --------------------------
 
-    public void setMaxAnalysisCompetitorsNumber( int value ) {
-        MAX_ANALYSIS_COMPETITORS_NUMBER = value;
+    public void saveMaxAnalysisCompetitorsNumber( int value ) {
+        MAX_ANALYSIS_COMPETITORS_NUMBER = value; // <-- todo to jest wartość "stałej", więc raczej do AppSettings
     }
 
     // TODO ostatni raz, kiedy tu zaglądałem to poniższe metody (do tagu XXX) nie były używane
@@ -140,7 +175,7 @@ public class AppPreferences {
         return prefs.getBoolean(ANALYSIS_COMPETITORS_SLOTS_INITIALIZED_KEY, false);
     }
 
-    public void setCompetitorsSlotsInitialized(boolean value) {
+    public void saveCompetitorsSlotsInitialized(boolean value) {
         prefsEditor.putBoolean(ANALYSIS_COMPETITORS_SLOTS_INITIALIZED_KEY, value);
         prefsEditor.apply();
     }
@@ -149,7 +184,7 @@ public class AppPreferences {
         return prefs.getInt(ANALYSIS_COMPETITORS_NUMBER_KEY, 5);
     }
 
-    public void setAnalysisCompetitorsNumber(int value) {
+    public void saveAnalysisCompetitorsNumber(int value) {
         prefsEditor.putInt(ANALYSIS_COMPETITORS_NUMBER_KEY, value);
         prefsEditor.commit();
     }

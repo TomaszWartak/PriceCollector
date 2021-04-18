@@ -18,7 +18,7 @@ import androidx.room.PrimaryKey;
         @ForeignKey( entity = UOProject.class, parentColumns = "id", childColumns = "uo_project_id" )
     },
     indices = {
-        @Index( value = "article_id" ),
+        @Index( value = "article_id", unique = true ),
         @Index( value = "sector_id" ),
         @Index( value = "department_id" ),
         @Index( value = "family_id" ),

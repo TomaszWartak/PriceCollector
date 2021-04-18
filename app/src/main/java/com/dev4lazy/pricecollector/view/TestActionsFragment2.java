@@ -50,16 +50,18 @@ public class TestActionsFragment2 extends Fragment {
         view.findViewById(R.id.button_show_remote_users).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteUsersListFragment);
         });
-        view.findViewById(R.id.button_create_remote2).setOnClickListener((View v) -> {
-            // todo usuń new RemoteDatabaseInitializer(this).doConversion();
-            RemoteDataInitializer.getInstance().initializeRemoteDatabase();
-        });
+
         view.findViewById(R.id.button_clear_remote2).setOnClickListener((View v) -> {
             RemoteDataInitializer.getInstance().clearRemoteDatabase();
+        });
+        view.findViewById(R.id.button_create_remote2).setOnClickListener((View v) -> {
+            RemoteDataInitializer.getInstance().initializeRemoteDatabase();
         });
         view.findViewById(R.id.button_show_remote2).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteAnalysisRowJoinFragment);
         });
+
+        /* todo ?
         view.findViewById(R.id.button_clear_remote_sects_depts).setOnClickListener((View v) -> {
             RemoteDataInitializer.getInstance().clearRemoteSectors();
             RemoteDataInitializer.getInstance().clearRemoteDepartments();
@@ -76,11 +78,24 @@ public class TestActionsFragment2 extends Fragment {
         view.findViewById(R.id.button_show_remote_departments).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteDepartmentsListFragment);
         });
+
+         */
+
         view.findViewById(R.id.button_clear_local2).setOnClickListener((View v) -> {
             LocalDataInitializer.getInstance().clearLocalDatabase();
         });
         view.findViewById(R.id.button_show_numbers_of_data2).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_testNumbersOfDataFragment2);
+        });
+        view.findViewById(R.id.button_add_second_remote_analysis).setOnClickListener((View v) -> {
+            RemoteDataInitializer remoteDataInitializer = RemoteDataInitializer.getInstance();
+            remoteDataInitializer.prepareRemoteAnalyzes();
+            remoteDataInitializer.populateRemoteAnalysis( 1 );
+        });
+        view.findViewById(R.id.button_add_third_remote_analysis).setOnClickListener((View v) -> {
+            RemoteDataInitializer remoteDataInitializer = RemoteDataInitializer.getInstance();
+            remoteDataInitializer.prepareRemoteAnalyzes();
+            remoteDataInitializer.populateRemoteAnalysis( 2 );
         });
     }
 

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/test_actions_fragment_layout2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".view.AnalysisArticleFragment">
+
+
+            <ImageView
+                android:id="@+id/analysisArticleFragment_imageArticle"
+                android:layout_width="85dp"
+                android:layout_height="112dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/common_google_signin_btn_icon_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/analysisArticleFragment_articleName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="TextView"
+                app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_imageArticle"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/analysisArticleFragment_ownCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="TextView"
+                app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_imageArticle"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_articleName" />
+
+            <TextView
+                android:id="@+id/analysisArticleFragment_eanCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="TextView"
+                app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_imageArticle"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_ownCode" />
+
+            <TextView
+                android:id="@+id/analysisArticleFragment_labelCompetitorPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/competitor_price_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_imageArticle" />
+
+            <TextView
+                android:id="@+id/analysisArticleFragment_labelComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="76dp"
+                android:text="@string/comment_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_labelCompetitorPrice" />
+
+            <EditText
+                android:id="@+id/analysisArticleFragment_articleComment"
+                android:layout_width="269dp"
+                android:layout_height="164dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_labelComment"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_competitorPrice" />
+
+            <EditText
+                android:id="@+id/analysisArticleFragment_competitorPrice"
+                android:layout_width="231dp"
+                android:layout_height="77dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:ems="10"
+                android:inputType="number"
+                app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_labelCompetitorPrice"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_eanCode" />
+
+            <View
+                android:id="@+id/analysisArticleFragment_divider"
+                android:layout_width="409dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_articleComment" />
+
+            <TextView
+                android:id="@+id/analysisArticleFragment_headerRefArticle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/reference_article_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_divider" />
+
+            <TextView
+                android:id="@+id/analysisArticleFragment_labelRefArticleName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="116dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/name_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_headerRefArticle" />
+
+            <TextView
+                android:id="@+id/analysisArticleFragment_labelRefArticleEan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="116dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/ean_code_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_labelRefArticleName" />
+
+            <ImageView
+                android:id="@+id/analysisArticleFragment_imageRefArticle"
+                android:layout_width="85dp"
+                android:layout_height="91dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:src="@drawable/common_google_signin_btn_icon_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_headerRefArticle" />
+
+            <TextView
+                android:id="@+id/analysisArticleFragment_labelRefArticleComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/comment_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_imageRefArticle" />
+
+            <EditText
+                android:id="@+id/analysisArticleFragment_refArticleComment"
+                android:layout_width="268dp"
+                android:layout_height="136dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="52dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_labelRefArticleComment"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_labelRefArticleEan" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

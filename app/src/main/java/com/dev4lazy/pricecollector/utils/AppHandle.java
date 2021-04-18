@@ -39,4 +39,6 @@ public class AppHandle extends Application{
     public AppPreferences getPrefs() { return AppPreferences.getInstance(); }
 
     public AppSettings getSettings() { return AppSettings.getInstance(); }
+
+
 }

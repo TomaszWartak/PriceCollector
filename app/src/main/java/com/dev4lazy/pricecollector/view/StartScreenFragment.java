@@ -99,7 +99,7 @@ public class StartScreenFragment extends Fragment {
                     else {
                         AppPreferences appPreferences = AppHandle.getHandle().getPrefs();
                         if (appPreferences.isFirstTimeAskingPermission( permissionName )) {
-                            appPreferences.setFirstTimeAskingPermission( permissionName, false );
+                            appPreferences.saveFirstTimeAskingPermission( permissionName, false );
                             permissionsUtils.callUserForPermission( permissionName, ALL_PERMISSIONS_REQUEST );
                             break;
                         } else {

@@ -34,12 +34,12 @@ public class RemoteDataInitializer {
 
     private List<RemoteUOProject> remoteUOProjects = null;
 
-    private RemoteAnalysis remoteAnalysis = null;
+    private List<RemoteAnalysis> remoteAnalyzes = null;
 
     private Csv2EanCodeConverter csv2EanCodeConverter;
     private Csv2AnalysisRowConverter csv2AnalysisRowConverter;
 
-    private boolean firstCallRemoteAnalysis = true;
+    private final boolean firstCallRemoteAnalysis = true;
 
 // ---------------------------------------------------------------------------
 // Przygotowanie danych
@@ -85,7 +85,7 @@ public class RemoteDataInitializer {
         prepareRemoteUsers();
         prepareRemoteDepartments();
         prepareRemoteSectors();
-        prepareRemoteAnalysis();
+        prepareRemoteAnalyzes();
         prepareRemoteFamilies();
         prepareRemoteMarkets();
         prepareRemoteModules();
@@ -129,19 +129,59 @@ public class RemoteDataInitializer {
         AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllUsers( null );
     }
 
-    private void prepareRemoteAnalysis() {
-        remoteAnalysis = new RemoteAnalysis();
+    public void prepareRemoteAnalyzes() {
+        remoteAnalyzes = new ArrayList<>();
+        prepareRemoteAnalysis1( remoteAnalyzes );
+        prepareRemoteAnalysis2( remoteAnalyzes );
+        prepareRemoteAnalysis3( remoteAnalyzes );
+    }
+
+    private void prepareRemoteAnalysis1( List<RemoteAnalysis> remoteAnalyzes ) {
+        RemoteAnalysis remoteAnalysis = new RemoteAnalysis();
         try {
-            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2019-10-24") );
+            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2019-09-15") );
         } catch (ParseException parseException) {
 
         }
         try {
-            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-10-31"));
+            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-09-30"));
         } catch (ParseException parseException) {
 
         }
         remoteAnalysis.setFinished( false );
+        remoteAnalyzes.add( remoteAnalysis );
+    }
+
+    private void prepareRemoteAnalysis2( List<RemoteAnalysis> remoteAnalyzes ) {
+        RemoteAnalysis remoteAnalysis = new RemoteAnalysis();
+        try {
+            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2019-10-07") );
+        } catch (ParseException parseException) {
+
+        }
+        try {
+            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-10-21"));
+        } catch (ParseException parseException) {
+
+        }
+        remoteAnalysis.setFinished( false );
+        remoteAnalyzes.add( remoteAnalysis );
+    }
+
+    private void prepareRemoteAnalysis3( List<RemoteAnalysis> remoteAnalyzes ) {
+        RemoteAnalysis remoteAnalysis = new RemoteAnalysis();
+        try {
+            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2019-11-05") );
+        } catch (ParseException parseException) {
+
+        }
+        try {
+            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-11=30"));
+        } catch (ParseException parseException) {
+
+        }
+        remoteAnalysis.setFinished( false );
+        remoteAnalyzes.add( remoteAnalysis );
     }
 
     private void clearRemoteAnalysis() {
@@ -280,7 +320,7 @@ public class RemoteDataInitializer {
         clearRemoteDatabase();
         prepareConverters();
         // todo tą metodę trzeba usunąć
-        populateAnaylysisRowsAndEanCodes(-1);
+        populateRemoteAnalysisRows(-1);
     }
      */
 
@@ -344,8 +384,8 @@ public class RemoteDataInitializer {
         populateRemoteModules();
         populateRemoteUOProjects();
         // todo ? I dupa, bo RemoteAnalysisRow.analysisId zalezy od Analysis.id
-        // Czyli populateAnaylysisRowsAndEanCodes jest wołane z populateRemoteAnalysis
-        populateRemoteAnalysis();
+        // Czyli populateRemoteAnalysisRows jest wołane z populateRemoteAnalysis
+        populateRemoteAnalysis( 0 );
     }
 
     public void populateRemoteUsers() {
@@ -390,39 +430,38 @@ public class RemoteDataInitializer {
         }
     }
     
-    private void populateRemoteAnalysis() {
-       // TODO!! przy MainScreenFragment nie znajduje żadnej remote Analizy...
-       // TODO!! sprawdx czy tutaj się coś dopisuje...
+    public void populateRemoteAnalysis( int analysisNr ) {
         MutableLiveData<Long> analysisInsertResult = new MutableLiveData<>();
         Observer<Long> insertingResultObserver = new Observer<Long>() {
             @Override
             public void onChanged(Long analysisId) {
                 // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
                 // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
-                if (firstCallRemoteAnalysis) {
-                    firstCallRemoteAnalysis = false;
-                    analysisInsertResult.removeObserver(this); // this = observer...
-                    if (analysisId!=-1) {
-                        populateAnaylysisRowsAndEanCodes( analysisId.intValue() );
-                    }
+                analysisInsertResult.removeObserver(this); // this = observer...
+                if (analysisId!=-1) {
+                    prepareConverters();
+                    populateRemoteAnalysisRows( analysisId.intValue() );
+                    populateRemoteEanCodes( );
                 }
             }
         };
         analysisInsertResult.observeForever( insertingResultObserver );
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().insertAnalysis( remoteAnalysis, analysisInsertResult );
-    }
-
-    private void populateAnaylysisRowsAndEanCodes( int analysisId ) {
-        prepareConverters();
-        csv2AnalysisRowConverter.makeAnalisisRowList( analysisId );
-        csv2AnalysisRowConverter.insertAllAnalysisRows();
-        csv2EanCodeConverter.makeEanCodeList();
-        csv2EanCodeConverter.insertAllEanCodes();
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().insertAnalysis( remoteAnalyzes.get( analysisNr ), analysisInsertResult );
     }
 
     private void prepareConverters() {
         csv2AnalysisRowConverter = new Csv2AnalysisRowConverter();
         csv2EanCodeConverter = new Csv2EanCodeConverter();
+    }
+
+    private void populateRemoteAnalysisRows(int analysisId ) {
+        csv2AnalysisRowConverter.makeAnalisisRowList( analysisId );
+        csv2AnalysisRowConverter.insertAllAnalysisRows();
+    }
+
+    private void populateRemoteEanCodes( ) {
+        csv2EanCodeConverter.makeEanCodeList();
+        csv2EanCodeConverter.insertAllEanCodes();
     }
 
 }

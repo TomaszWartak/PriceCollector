@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class AnalysisCompetitorsAdapter extends ArrayAdapter<CompetitorSlotFullData> {
 
     // todo? problematyczne (może być null), ale w inny sposób nie mogłem dobrać się do ViewModel
-    private Fragment hostFragment;
+    private final Fragment hostFragment;
 
     public AnalysisCompetitorsAdapter(Context context, Fragment fragment, ArrayList<CompetitorSlotFullData> slots) {
         super(context, 0, slots);
@@ -180,7 +180,7 @@ public class AnalysisCompetitorsAdapter extends ArrayAdapter<CompetitorSlotFullD
 
     private class SlotViewWhenNoStoresOnClickListener implements View.OnClickListener {
 
-        private CompetitorSlotFullData competitorSlotFullData;
+        private final CompetitorSlotFullData competitorSlotFullData;
 
         SlotViewWhenNoStoresOnClickListener(CompetitorSlotFullData competitorSlotFullData ) {
             this.competitorSlotFullData = competitorSlotFullData;
@@ -194,7 +194,7 @@ public class AnalysisCompetitorsAdapter extends ArrayAdapter<CompetitorSlotFullD
 
     private class SlotViewWhenNoStoreChosenOnClickListener implements View.OnClickListener {
 
-        private CompetitorSlotFullData competitorSlotFullData;
+        private final CompetitorSlotFullData competitorSlotFullData;
 
         SlotViewWhenNoStoreChosenOnClickListener(CompetitorSlotFullData competitorSlotFullData ) {
             this.competitorSlotFullData = competitorSlotFullData;
@@ -213,7 +213,7 @@ public class AnalysisCompetitorsAdapter extends ArrayAdapter<CompetitorSlotFullD
 
     private class SlotViewWhenStoreChosenOnClickListener implements View.OnClickListener {
 
-        private CompetitorSlotFullData competitorSlotFullData;
+        private final CompetitorSlotFullData competitorSlotFullData;
 
         SlotViewWhenStoreChosenOnClickListener(CompetitorSlotFullData competitorSlotFullData ) {
             this.competitorSlotFullData = competitorSlotFullData;
@@ -221,7 +221,8 @@ public class AnalysisCompetitorsAdapter extends ArrayAdapter<CompetitorSlotFullD
 
         @Override
         public void onClick(View view) {
-            Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisFragment );
+            Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisArticlesListFragment);
+            //todo ? Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisArticlesPagerFragment );
         }
 
     }
@@ -249,7 +250,7 @@ public class AnalysisCompetitorsAdapter extends ArrayAdapter<CompetitorSlotFullD
 
     private class SlotViewWhenStoreChosenOnLongClickListener implements View.OnLongClickListener {
 
-        private CompetitorSlotFullData competitorSlotFullData;
+        private final CompetitorSlotFullData competitorSlotFullData;
 
         SlotViewWhenStoreChosenOnLongClickListener(CompetitorSlotFullData competitorSlotFullData ) {
             this.competitorSlotFullData = competitorSlotFullData;

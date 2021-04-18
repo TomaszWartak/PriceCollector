@@ -52,6 +52,9 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.0.0"
     // https://developer.android.com/jetpack/androidx/releases/recyclerview
 
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    // https://developer.android.com/jetpack/androidx/releases/viewpager2
+
     implementation "androidx.preference:preference:1.1.0"
     // 2019-09-12 https://developer.android.com/jetpack/androidx/releases/preference
 
@@ -71,7 +74,7 @@ dependencies {
     //implementation 'com.google.firebase:firebase-admin:6.9.0' // todo na potrzeby testowago generowania tokenów
 
     // Room 2019-09-12 https://developer.android.com/jetpack/androidx/releases/room
-    def room_version = '2.2.0-rc01'
+    def room_version = '2.2.0'
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 

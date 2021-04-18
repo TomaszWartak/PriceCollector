@@ -7,6 +7,7 @@ import com.dev4lazy.pricecollector.model.LocalDataRepository;
 import com.dev4lazy.pricecollector.model.Remote2LocalConverter;
 import com.dev4lazy.pricecollector.model.RemoteDataRepository;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
+import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
 import com.dev4lazy.pricecollector.model.entities.Article;
 import com.dev4lazy.pricecollector.model.entities.Department;
 import com.dev4lazy.pricecollector.model.entities.EanCode;
@@ -16,20 +17,13 @@ import com.dev4lazy.pricecollector.model.entities.Module;
 import com.dev4lazy.pricecollector.model.entities.OwnArticleInfo;
 import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.entities.UOProject;
-import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import com.dev4lazy.pricecollector.remote_data.RemoteAnalysis;
 import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRow;
-import com.dev4lazy.pricecollector.remote_data.RemoteDepartment;
 import com.dev4lazy.pricecollector.remote_data.RemoteEanCode;
-import com.dev4lazy.pricecollector.remote_data.RemoteFamily;
-import com.dev4lazy.pricecollector.remote_data.RemoteMarket;
-import com.dev4lazy.pricecollector.remote_data.RemoteModule;
-import com.dev4lazy.pricecollector.remote_data.RemoteSector;
-import com.dev4lazy.pricecollector.remote_data.RemoteUOProject;
 import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.utils.AppSettings;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -54,14 +48,15 @@ public class AnalysisDataUpdater {
     private static AnalysisDataUpdater instance;
 
     private ArrayList<RemoteAnalysisRow> classScopeRemoteAnalysisRowsList;
-    private HashMap<Integer, Article> classScopeArticleMap;
-    private HashMap<String, Sector> classScopeSectorMap;
-    private HashMap<String, Department> classScopeDepartmentMap;
+    private HashMap<Integer, Article> classScopeArticleMap; // Article.getRemote_id()
+    private HashMap<String, Sector> classScopeSectorMap; // Sector.getName()
+    private HashMap<String, Department> classScopeDepartmentMap; // Department.getSymbol()
     private Family classScopeFamily;
     private Module classScopeModule;
     private Market classScopeMarket;
     private UOProject classScopeUOProject;
-    
+    private HashMap<Integer, OwnArticleInfo> classScopeOwnArticleInfoMap; // OwnArticleInfo.getArticleId()
+
 
     private AnalysisDataUpdater() {
 
@@ -80,30 +75,56 @@ public class AnalysisDataUpdater {
 //----------------------------------------------------------------
 // Obsługa danych podstawowoych analizy
 
+    // true, jeśli zapytano serwer o to, czy są nowe analizy i była odpowiedź
+    private boolean serverRepliedThereAreNewAnalyzes = false;
+
+    public boolean isServerRepliedThereAreNewAnalyzes() {
+        return serverRepliedThereAreNewAnalyzes;
+    }
+
     // true, jesli na serwerze jest nowa analiza do wykonania, czyli trzeba ją pobrać
     private boolean newAnalysisReadyToDownload = false;
 
-    /*
-    Sprawdza, czy na serwerze danych jest nowa analiza do wykonania.
-    Efekt uboczny: Ustawia wartość newAnalysisReadyToDownload na true, jesli są.
+    /**
+     * Sprawdza, czy na serwerze danych jest nowa analiza do wykonania.
+     * Efekty uboczne:
+     *      Ustawia wartość serverRepliedThereAreNewAnalyzes na true, jeśli jest odpowiedź z serwera
+     *      Ustawia wartość newAnalysisReadyToDownload na true, jesli są.
      */
-    public void checkNewAnalysisToDownload() {
-        // todo
+    public void checkNewAnalysisToDownload( MutableLiveData<Boolean> result ) {
+        serverRepliedThereAreNewAnalyzes = false;
+        newAnalysisReadyToDownload = false;
+        MutableLiveData<List<RemoteAnalysis>> findAnalyzesNewerThenResult = new MutableLiveData<>();
+        Observer<List<RemoteAnalysis>> resultObserver = new Observer<List<RemoteAnalysis>>() {
+            @Override
+            public void onChanged(List<RemoteAnalysis> remoteAnalysisList) {
+                serverRepliedThereAreNewAnalyzes = true;
+                result.postValue( true );
+                newAnalysisReadyToDownload = (remoteAnalysisList != null) && (!remoteAnalysisList.isEmpty());
+                if (newAnalysisReadyToDownload) {
+                    findAnalyzesNewerThenResult.removeObserver(this); // this = observer...
+                }
+            }
+        };
+        findAnalyzesNewerThenResult.observeForever( resultObserver );
+        RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+        Date lastCheckAnalysisDate = AppSettings.getInstance().getLastAnalysisCreationDate();
+        remoteDataRepository.findAnalyzesNewerThen( lastCheckAnalysisDate, findAnalyzesNewerThenResult );
     }
 
-    public boolean isNewAnalysisDataReadyToDownlad() {
-        return newAnalysisDataReadyToDownlad;
+    public boolean isNewAnalysisReadyToDownlad() {
+        return newAnalysisReadyToDownload;
     }
 
     // dane podstawowe analizy
-    private Analysis analysisBasicData = null;
+    private final Analysis analysisBasicData = null;
 
     /*
     Pobiera dane podstawowe analizy (daty itd)
     Efekt uboczny: Ustawia wartość analysisBasicData
      */
     public void downloadAnalysisBasicData() {
-        createAnalysis();
+        getNewAnalysis();
     }
 
     /*
@@ -138,15 +159,56 @@ public class AnalysisDataUpdater {
         return !isAnalysisFinished();
     }
 
+    public void getNewAnalysis() {
+        MutableLiveData<List<RemoteAnalysis>> result = new MutableLiveData<>();
+        Observer<List<RemoteAnalysis>> resultObserver = new Observer<List<RemoteAnalysis>>() {
+            @Override
+            public void onChanged(List<RemoteAnalysis> remoteAnalysisList) {
+                if ((remoteAnalysisList != null)&&(!remoteAnalysisList.isEmpty())) {
+                    result.removeObserver(this); // this = observer...
+                    Remote2LocalConverter converter = new Remote2LocalConverter();
+                    ArrayList<Analysis> newAnalyzes = new ArrayList<>();
+                    Date dateTheLastRemoteAnalysisWasCreated = new Date( 0 );
+                    for (RemoteAnalysis remoteAnalysis : remoteAnalysisList ) {
+                        // TODO jeśli jest jakaś analiza nowa, ale zakończona to jej nie ruszamy
+                        Analysis analysis = converter.createAnalysis( remoteAnalysis );
+                        if (remoteAnalysis.isNotFinished()) {
+                            newAnalyzes.add(analysis);
+                        }
+                        if (analysis.getCreationDate().compareTo(dateTheLastRemoteAnalysisWasCreated)>0) {
+                            dateTheLastRemoteAnalysisWasCreated = analysis.getCreationDate();
+                        }
+                    }
+                    AppSettings.getInstance().setLastAnalysisCreationDate( dateTheLastRemoteAnalysisWasCreated );
+                    newAnalysisReadyToDownload = false;
+                    insertNewAnalyzes( newAnalyzes );
+                }
+            }
+        };
+        result.observeForever( resultObserver );
+        RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+        Date dateTheLastAnalysisWasCreated = AppSettings.getInstance().getLastAnalysisCreationDate();
+        remoteDataRepository.findAnalyzesNewerThen( dateTheLastAnalysisWasCreated, result );
+    }
+
+    private void insertNewAnalyzes( ArrayList<Analysis> newAnalyzes ) {
+        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+        localDataRepository.insertAnalyzes( newAnalyzes, NO_PROGRESS_PRESENTER );
+    }
+
 //----------------------------------------------------------------
-// Obsługa danych szczegółowych analizy
+// Obsługa danych szczegółowych analizy (artykułów w analizie)
 
     // todo - jak sprawdzić na serwerze danych, czy są dane do aktualizacji, bez pobierania tych danych?
     // Chyba tylko jeśli na serwerze będzie dana informująca o tym
     // W innym przypadku trzeba chyba pobrać dane...
 
     // true - jeśli na serwerze danych są dane do pobrania.
-    private boolean newAnalysisDataReadyToDownlad = false;
+    private final boolean newAnalysisDataReadyToDownlad = false;
+
+    public boolean isNewAnalysisDataReadyToDownlad() {
+        return newAnalysisDataReadyToDownlad;
+    }
 
     /*
     Sprawdza, czy na serwerze danych są dane do pobrania.
@@ -197,187 +259,6 @@ public class AnalysisDataUpdater {
 
     }
 
-    public void copySectorsAndDepartmentsFromRemoteDatabase( MutableLiveData<Long> finalResult ) {
-        MutableLiveData<List<RemoteSector>> getAllRemoteSectorsResult = new MutableLiveData<>();
-        Observer<List<RemoteSector>> insertingResultObserver = new Observer<List<RemoteSector>>() {
-            @Override
-            public void onChanged( List<RemoteSector> remoteSectors ) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
-                getAllRemoteSectorsResult.removeObserver(this); // this = observer...
-                if (!remoteSectors.isEmpty()) {
-                    Remote2LocalConverter remote2LocalConverter = new Remote2LocalConverter();
-                    Sector sector;
-                    LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-                    for (RemoteSector remoteSector : remoteSectors) {
-                        sector = remote2LocalConverter.createSector( remoteSector );
-                        localDataRepository.insertSector( sector, null );
-                    }
-                    copyDepartmentsFromRemoteDatabase( finalResult );
-                }
-            }
-        };
-        getAllRemoteSectorsResult.observeForever( insertingResultObserver );
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllSectors(getAllRemoteSectorsResult);
-    }
-
-    private void copyDepartmentsFromRemoteDatabase( MutableLiveData<Long> finalResult ) {
-        MutableLiveData<List<RemoteDepartment>> getAllRemoteDepartmentsResult = new MutableLiveData<>();
-        Observer<List<RemoteDepartment>> insertingResultObserver = new Observer<List<RemoteDepartment>>() {
-            @Override
-            public void onChanged( List<RemoteDepartment> remoteDepartments ) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
-                getAllRemoteDepartmentsResult.removeObserver(this); // this = observer...
-                if (!remoteDepartments.isEmpty()) {
-                    Remote2LocalConverter remote2LocalConverter = new Remote2LocalConverter();
-                    Department department;
-                    LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-                    RemoteDepartment lastRemoteDepartment = remoteDepartments.get( remoteDepartments.size()-1 );
-                    for (RemoteDepartment remoteDepartment : remoteDepartments) {
-                        department = remote2LocalConverter.createDepartment( remoteDepartment );
-                        if (remoteDepartment==lastRemoteDepartment ) {
-                            localDataRepository.insertDepartment( department, finalResult );
-                        } else {
-                            localDataRepository.insertDepartment( department, null );
-                        }
-                    }
-                }
-            }
-        };
-        getAllRemoteDepartmentsResult.observeForever( insertingResultObserver );
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllDepartments( getAllRemoteDepartmentsResult );
-    }
-
-    public void copyDummyFamiliesEtcFromRemoteDatabase( MutableLiveData<Long> finalResult ) {
-        getRemoteFamily( finalResult );
-    }
-
-    private void getRemoteFamily( MutableLiveData<Long> finalResult ) {
-        Remote2LocalConverter converter = new Remote2LocalConverter();
-        MutableLiveData<List<RemoteFamily>> result = new MutableLiveData<>();
-        Observer<List<RemoteFamily>> resultObserver = new Observer<List<RemoteFamily>>() {
-            @Override
-            public void onChanged(List<RemoteFamily> familiesList ) {
-                if ((familiesList != null)&&(!familiesList.isEmpty())) {
-                    result.removeObserver(this); // this = observer...
-                    Family family = converter.createFamily( familiesList.get(0) );
-                    insertDummyFamily( family, finalResult );
-                }
-            }
-        };
-        result.observeForever(resultObserver);
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteFamilies( result );
-    }
-
-    private void insertDummyFamily( Family family, MutableLiveData<Long> finalResult ) {
-        MutableLiveData<Long> result = new MutableLiveData<>();
-        Observer<Long> resultObserver = new Observer<Long>() {
-            @Override
-            public void onChanged( Long familyId ) {
-                if ((familyId != null)&&(familyId>0)) {
-                    result.removeObserver(this); // this = observer...
-                    getRemoteMarket( finalResult );
-                }
-            }
-        };
-        result.observeForever(resultObserver);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().insertFamily( family, result );
-    }
-
-    private void getRemoteMarket( MutableLiveData<Long> finalResult ) {
-        Remote2LocalConverter converter = new Remote2LocalConverter();
-        MutableLiveData<List<RemoteMarket>> result = new MutableLiveData<>();
-        Observer<List<RemoteMarket>> resultObserver = new Observer<List<RemoteMarket>>() {
-            @Override
-            public void onChanged(List<RemoteMarket> marketsList) {
-                if ((marketsList!= null)&&(!marketsList.isEmpty())) {
-                    result.removeObserver(this); // this = observer...
-                    Market market = converter.createMarket( marketsList.get(0) );
-                    insertDummyMarket( market, finalResult );
-                }
-            }
-        };
-        result.observeForever(resultObserver);
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteMarkets(result);
-    }
-
-    private void insertDummyMarket( Market market, MutableLiveData<Long> finalResult ) {
-        MutableLiveData<Long> result = new MutableLiveData<>();
-        Observer<Long> resultObserver = new Observer<Long>() {
-            @Override
-            public void onChanged( Long marketId ) {
-                if ((marketId != null)&&(marketId>0)) {
-                    result.removeObserver(this); // this = observer...
-                    getRemoteModule( finalResult );
-                }
-            }
-        };
-        result.observeForever(resultObserver);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().insertMarket( market, result );
-    }
-
-    private void getRemoteModule( MutableLiveData<Long> finalResult ) {
-        Remote2LocalConverter converter = new Remote2LocalConverter();
-        MutableLiveData<List<RemoteModule>> result = new MutableLiveData<>();
-        Observer<List<RemoteModule>> resultObserver = new Observer<List<RemoteModule>>() {
-            @Override
-            public void onChanged(List<RemoteModule> modulesList) {
-                if ((modulesList != null)&&(!modulesList.isEmpty())) {
-                    result.removeObserver(this); // this = observer...
-                    Module module = converter.createModule( modulesList.get(0) );
-                    insertDummyModule( module, finalResult );
-                }
-            }
-        };
-        result.observeForever(resultObserver);
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteModules(result);
-    }
-
-    private void insertDummyModule( Module module, MutableLiveData<Long> finalResult ) {
-        MutableLiveData<Long> result = new MutableLiveData<>();
-        Observer<Long> resultObserver = new Observer<Long>() {
-            @Override
-            public void onChanged( Long marketId ) {
-                if ((marketId != null)&&(marketId>0)) {
-                    result.removeObserver(this); // this = observer...
-                    getRemoteUOProject( finalResult );
-                }
-            }
-        };
-        result.observeForever(resultObserver);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().insertModule( module, result );
-    }
-    private void getRemoteUOProject( MutableLiveData<Long> finalResult ) {
-        Remote2LocalConverter converter = new Remote2LocalConverter();
-        MutableLiveData<List<RemoteUOProject>> result = new MutableLiveData<>();
-        Observer<List<RemoteUOProject>> resultObserver = new Observer<List<RemoteUOProject>>() {
-            @Override
-            public void onChanged(List<RemoteUOProject> uoProjectList) {
-                if ((uoProjectList != null)&&(!uoProjectList.isEmpty())) {
-                    result.removeObserver(this); // this = observer...
-                    UOProject uoProject = converter.createUOProject( uoProjectList.get(0) );
-                    insertDummyUOProject( uoProject, finalResult );
-                }
-            }
-        };
-        result.observeForever(resultObserver);
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteUOProjects(result);
-    }
-
-    private void insertDummyUOProject( UOProject uoProject, MutableLiveData<Long> finalResult ) {
-        Observer<Long> resultObserver = new Observer<Long>() {
-            @Override
-            public void onChanged(Long marketId) {
-                if ((marketId != null) && (marketId > 0)) {
-                    finalResult.removeObserver(this); // this = observer...
-                }
-            }
-        };
-        finalResult.observeForever(resultObserver);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().insertUOProject( uoProject, finalResult);
-    }
-
     /**
      * Dopisuje artykuły do lokalnej bazy danych.
      * Tworzy listę wierszy analizy z bazy zdalnej classScopeRemoteAnalysisRowsList, widoczną na pozimie klasy.
@@ -386,9 +267,10 @@ public class AnalysisDataUpdater {
      * 3. Utworzenie listy artykułów, na podstawie listy wierszy analizy.
      * 4. Dopisanie artykułów do bazy lokalnej.
      * 5. Wywołąnie createArticlesMap().
+     * @param analysis
      * @param progressPresenter
      */
-    public void insertArticles(ProgressPresenter progressPresenter ) {
+    public void insertArticles( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
         MutableLiveData<List<RemoteAnalysisRow>> result = new MutableLiveData<>();
         Observer<List<RemoteAnalysisRow>> resultObserver = new Observer<List<RemoteAnalysisRow>>() {
             @Override
@@ -405,8 +287,11 @@ public class AnalysisDataUpdater {
                     // todo?? ProgressBar progressBar = getView().findViewById(R.id.remote_2_local_progressBar);
                     // todo?? ProgressBarPresenter progressBarPresenter = new ProgressBarPresenter( progressBar, articlesList.size()  );
                     LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+                    if (progressPresenter!=null) {
+                        progressPresenter.reset(articlesList.size());
+                    }
                     localDataRepository.insertArticles( articlesList, progressPresenter );
-                    createArticlesMap( progressPresenter );
+                    createArticlesMap( analysis, finalResult, progressPresenter );
                 }
             }
         };
@@ -421,7 +306,7 @@ public class AnalysisDataUpdater {
      * 3. Wywołanie insertEanCodes() w celu dopisania kodów kreskowych.
      * @param progressPresenter
      */
-    private void createArticlesMap( ProgressPresenter progressPresenter ) {
+    private void createArticlesMap( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
         MutableLiveData<List<Article>> result = new MutableLiveData<>();
         Observer<List<Article>> resultObserver = new Observer<List<Article>>() {
             @Override
@@ -432,7 +317,7 @@ public class AnalysisDataUpdater {
                     for (Article article : articleList ) {
                         classScopeArticleMap.put( article.getRemote_id(), article );
                     }
-                    insertEanCodes( articleList, progressPresenter );
+                    insertEanCodes( analysis, finalResult, articleList, progressPresenter );
                 }
             }
         };
@@ -442,14 +327,14 @@ public class AnalysisDataUpdater {
 
     /**
      * Dopisuje do bazy lokalnej listę kodów kreskowych dla listy artykułów articleList.
-     * 1. Pobtanie wszysykich kodów kreskowych z bazy zdalnej.
+     * 1. Pobranie wszysykich kodów kreskowych z bazy zdalnej.
      * 2. Utworzenie listy kodów kreskowych.
      * 3. Dodanie kodów kreskowych do bazy lokalnej.
      * 4. Wywołanie createSectorsMap() w celu utworzenia mapy sektorów
      * @param articleList
      * @param progressPresenter
      */
-    private void insertEanCodes(List<Article> articleList, ProgressPresenter progressPresenter ) {
+    private void insertEanCodes( Analysis analysis, MutableLiveData<Boolean> finalResult, List<Article> articleList, ProgressPresenter progressPresenter ) {
         MutableLiveData<List<RemoteEanCode>> result = new MutableLiveData<>();
         Observer<List<RemoteEanCode>> resultObserver = new Observer<List<RemoteEanCode>>() {
             @Override
@@ -464,7 +349,7 @@ public class AnalysisDataUpdater {
                         progressPresenter.reset(eanCodeList.size());
                     }
                     localDataRepository.insertEanCodes( eanCodeList, progressPresenter );
-                    createSectorsMap( progressPresenter );
+                    createSectorsMap( analysis, finalResult, progressPresenter );
                 }
             }
         };
@@ -494,7 +379,7 @@ public class AnalysisDataUpdater {
         return converter.createEanCodesList( remoteEanCodesHashMap, articlesHashMap );
     }
 
-    private void createSectorsMap( ProgressPresenter progressPresenter ) {
+    private void createSectorsMap( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
         MutableLiveData<List<Sector>> result = new MutableLiveData<>();
         Observer<List<Sector>> resultObserver = new Observer<List<Sector>>() {
             @Override
@@ -505,7 +390,7 @@ public class AnalysisDataUpdater {
                     for (Sector sector : sectorList ) {
                         classScopeSectorMap.put( sector.getName(), sector );
                     }
-                    createDepartmentsMap( progressPresenter );
+                    createDepartmentsMap( analysis, finalResult, progressPresenter );
                 }
             }
         };
@@ -513,7 +398,7 @@ public class AnalysisDataUpdater {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllSectors(result);
     }
 
-    private void createDepartmentsMap( ProgressPresenter progressPresenter ) {
+    private void createDepartmentsMap( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
         MutableLiveData<List<Department>> result = new MutableLiveData<>();
         Observer<List<Department>> resultObserver = new Observer<List<Department>>() {
             @Override
@@ -524,7 +409,7 @@ public class AnalysisDataUpdater {
                     for (Department department : departmentList ) {
                         classScopeDepartmentMap.put( department.getSymbol(), department );
                     }
-                    createDummyFamily( progressPresenter );
+                    createDummyFamily( analysis, finalResult, progressPresenter );
                 }
             }
         };
@@ -532,7 +417,7 @@ public class AnalysisDataUpdater {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllDepartments(result);
     }
 
-    private void createDummyFamily( ProgressPresenter progressPresenter ) {
+    private void createDummyFamily( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
         MutableLiveData<List<Family>> result = new MutableLiveData<>();
         Observer<List<Family>> resultObserver = new Observer<List<Family>>() {
             @Override
@@ -540,7 +425,7 @@ public class AnalysisDataUpdater {
                 if ((familiesList != null)&&(!familiesList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
                     classScopeFamily = familiesList.get(0);
-                    createDummyMarket( progressPresenter );
+                    createDummyMarket( analysis, finalResult, progressPresenter );
                 }
             }
         };
@@ -548,7 +433,7 @@ public class AnalysisDataUpdater {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllFamilies( result );
     }
 
-    private void createDummyMarket( ProgressPresenter progressPresenter ) {
+    private void createDummyMarket( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
         MutableLiveData<List<Market>> result = new MutableLiveData<>();
         Observer<List<Market>> resultObserver = new Observer<List<Market>>() {
             @Override
@@ -556,7 +441,7 @@ public class AnalysisDataUpdater {
                 if ((marketsList != null)&&(!marketsList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
                     classScopeMarket = marketsList.get(0);
-                    createDummyModule( progressPresenter );
+                    createDummyModule( analysis, finalResult, progressPresenter );
                 }
             }
         };
@@ -564,7 +449,7 @@ public class AnalysisDataUpdater {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllMarkets( result );
     }
 
-    private void createDummyModule( ProgressPresenter progressPresenter ) {
+    private void createDummyModule( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
         MutableLiveData<List<Module>> result = new MutableLiveData<>();
         Observer<List<Module>> resultObserver = new Observer<List<Module>>() {
             @Override
@@ -572,7 +457,7 @@ public class AnalysisDataUpdater {
                 if ((modulesList != null)&&(!modulesList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
                     classScopeModule = modulesList.get(0);
-                    createDummyUOProject( progressPresenter );
+                    createDummyUOProject( analysis, finalResult, progressPresenter );
                 }
             }
         };
@@ -580,7 +465,7 @@ public class AnalysisDataUpdater {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllModules( result );
     }
 
-    private void createDummyUOProject( ProgressPresenter progressPresenter ) {
+    private void createDummyUOProject( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
         MutableLiveData<List<UOProject>> result = new MutableLiveData<>();
         Observer<List<UOProject>> resultObserver = new Observer<List<UOProject>>() {
             @Override
@@ -588,7 +473,7 @@ public class AnalysisDataUpdater {
                 if ((uoProjectsList != null)&&(!uoProjectsList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
                     classScopeUOProject = uoProjectsList.get(0);
-                    insertOwnArticlesInfos( progressPresenter );
+                    insertOwnArticlesInfos( analysis, finalResult, progressPresenter );
                 }
             }
         };
@@ -598,9 +483,10 @@ public class AnalysisDataUpdater {
 
     /**
      * Dodaje do bazy lokalnej opisy artykułów własnych
+     * @param analysis
      * @param progressPresenter
      */
-    private void insertOwnArticlesInfos(ProgressPresenter progressPresenter ) {
+    private void insertOwnArticlesInfos( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
         Remote2LocalConverter converter = new Remote2LocalConverter();
         OwnArticleInfo ownArticleInfo;
         ArrayList<OwnArticleInfo> ownArticleInfoList = new ArrayList<>();
@@ -615,62 +501,80 @@ public class AnalysisDataUpdater {
                     classScopeMarket,
                     classScopeUOProject
             );
-            ownArticleInfoList.add(ownArticleInfo);
+            ownArticleInfoList.add( ownArticleInfo );
         }
-        // ProgressBar progressBar = getView().findViewById(R.id.remote_2_local_progressBar);
-        // ProgressBarPresenter progressBarPresenter = new ProgressBarPresenter( progressBar, ownArticleInfoList.size() );
+
+        MutableLiveData<Long> insertResult = new MutableLiveData<>();
+        Observer<Long> insertingResultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged(Long lastAddedOwnArticleInfoId) {
+                    insertResult.removeObserver(this); // this = observer...
+                    if (lastAddedOwnArticleInfoId!=null) {
+                        createOwnArticleInfosMap( analysis, finalResult, progressPresenter );
+                    }
+            }
+        };
         if (progressPresenter!=null) {
             progressPresenter.reset(ownArticleInfoList.size());
         }
+        insertResult.observeForever(insertingResultObserver);
         LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-        localDataRepository.insertOwnArticleInfos( ownArticleInfoList, progressPresenter );
+        localDataRepository.insertOwnArticleInfos( ownArticleInfoList, progressPresenter, insertResult );
     }
 
-    public void createAnalysis() {
-        // TODO !!! Date lastCheckAnalysisDate = ???
-        MutableLiveData<List<RemoteAnalysis>> result = new MutableLiveData<>();
-        Observer<List<RemoteAnalysis>> resultObserver = new Observer<List<RemoteAnalysis>>() {
+    private void createOwnArticleInfosMap( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+        MutableLiveData<List<OwnArticleInfo>> result = new MutableLiveData<>();
+        Observer<List<OwnArticleInfo>> resultObserver = new Observer<List<OwnArticleInfo>>() {
             @Override
-            public void onChanged(List<RemoteAnalysis> remoteAnalysisList) {
-                if ((remoteAnalysisList != null)&&(!remoteAnalysisList.isEmpty())) {
+            public void onChanged(List<OwnArticleInfo> ownArticleInfosList) {
+                if ((ownArticleInfosList != null)&&(!ownArticleInfosList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
-                    Remote2LocalConverter converter = new Remote2LocalConverter();
-                    ArrayList<Analysis> newAnalyzes = new ArrayList<>();
-                    for (RemoteAnalysis remoteAnalysis : remoteAnalysisList ) {
-                        // TODO jeśli jest jakaś analiza nowa, ale zakończona to jej nie ruszamy
-                        Analysis analysis = converter.createAnalysis( remoteAnalysis );
-                        if (remoteAnalysis.isNotFinished()) {
-                            newAnalyzes.add(analysis);
-                        }
+                    classScopeOwnArticleInfoMap = new HashMap<>();
+                    for (OwnArticleInfo ownArticleInfo : ownArticleInfosList ) {
+                        classScopeOwnArticleInfoMap.put( ownArticleInfo.getArticleId(), ownArticleInfo );
                     }
-                    insertNewAnalyzes( newAnalyzes );
+                    insertAnalysisArticles( analysis, finalResult, progressPresenter );
                 }
             }
         };
-        result.observeForever( resultObserver );
-        RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
-        Date lastCheckAnalysisDate = null;
-        try {
-            lastCheckAnalysisDate = new DateConverter().string2Date( "2019-01-01" ); // TODO !!!! data
-        } catch ( ParseException ex ) {
-            ex.printStackTrace();
-            return;
+        result.observeForever(resultObserver);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().getAllOwnArticleInfos(result);
+    }
+
+    private void insertAnalysisArticles( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+        Remote2LocalConverter converter = new Remote2LocalConverter();
+        AnalysisArticle analysisArticle;
+        ArrayList<AnalysisArticle> analysisArticlesList = new ArrayList<>();
+        Article article;
+        OwnArticleInfo ownArticleInfo;
+        for (RemoteAnalysisRow remoteAnalysisRow : classScopeRemoteAnalysisRowsList) {
+            article = classScopeArticleMap.get( remoteAnalysisRow.getArticleCode() );
+            ownArticleInfo = classScopeOwnArticleInfoMap.get( article.getId() );
+            analysisArticle = converter.createAnalysisArticle(
+                    remoteAnalysisRow,
+                    analysis,
+                    ownArticleInfo,
+                    null // todo??? <---
+            );
+            analysisArticlesList.add( analysisArticle );
         }
-        remoteDataRepository.findAnalysisNewerThen( lastCheckAnalysisDate, result );
-    }
 
-    private void insertNewAnalyzes(ArrayList<Analysis> newAnalyzes ) {
         LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-        localDataRepository.insertAnalyzes( newAnalyzes, NO_PROGRESS_PRESENTER );
+        MutableLiveData<Long> insertResult = new MutableLiveData<>();
+        Observer<Long> insertingResultObserver = new Observer<Long>() {
+            @Override
+            public void onChanged(Long lastInsertedId) {
+                insertResult.removeObserver( this ); // this = observer...
+                analysis.setDataDownloaded( true );
+                localDataRepository.updateAnalysis( analysis, null );
+                finalResult.postValue( true );
+            }
+        };
+        if (progressPresenter!=null) {
+            progressPresenter.reset( analysisArticlesList.size() );
+        }
+        insertResult.observeForever( insertingResultObserver );
+        localDataRepository.insertAnalysisArticles( analysisArticlesList, progressPresenter, insertResult );
     }
-
-        /*
-        // TODO !!!!
-        i dla każdej AnalysisiArticles...
-
-    i tworzenie wiersza analizy wreszcie...
-
-         */
-
 
 }

@@ -18,8 +18,8 @@ public class DateConverter {
 
     @TypeConverter
     public Long date2Long(Date date) {
-        long result = -1;
-        if ( date!=null) {
+        long result = 0;
+        if ( date!=null ) {
             result = date.getTime();
         }
         return result;

@@ -35,13 +35,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="40dp"
-                android:text="Ilości dancyh"
+                android:text="Ilości danych"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/button_other_stores"
                 app:layout_constraintHorizontal_bias="0.471"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <!--com.google.android.material.button.MaterialButton
                 android:id="@+id/button_create_departments_in_sector"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.458"
                 app:layout_constraintStart_toEndOf="@+id/button_countries"
-                app:layout_constraintTop_toTopOf="@+id/button_remote" />
+                app:layout_constraintTop_toTopOf="@+id/button_show_remote" /-->
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_own_stores"
@@ -76,7 +76,7 @@
                 app:layout_constraintStart_toEndOf="@+id/button_own_stores"
                 app:layout_constraintTop_toTopOf="@+id/button_own_stores" />
 
-            <com.google.android.material.button.MaterialButton
+            <!--com.google.android.material.button.MaterialButton
                 android:id="@+id/button_show_depts_in_secs"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.404"
                 app:layout_constraintStart_toEndOf="@+id/button_own_stores"
-                app:layout_constraintTop_toBottomOf="@+id/button_other_stores" />
+                app:layout_constraintTop_toBottomOf="@+id/button_other_stores" /-->
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_companies"
@@ -132,7 +132,7 @@
                 android:layout_marginBottom="20dp"
                 android:backgroundTint="@color/design_default_color_secondary"
                 android:text="Twórz remote"
-                app:layout_constraintBottom_toTopOf="@+id/button_remote"
+                app:layout_constraintBottom_toTopOf="@+id/button_show_remote"
                 app:layout_constraintEnd_toStartOf="@+id/button_create_local"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -160,7 +160,7 @@
                 app:layout_constraintTop_toTopOf="@+id/button_clear_remote" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_remote"
+                android:id="@+id/button_show_remote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="76dp"

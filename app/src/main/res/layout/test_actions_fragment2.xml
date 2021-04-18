@@ -17,6 +17,7 @@
             android:layout_height="match_parent"
             tools:context=".view.TestActionsFragment">
 
+            <!--
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_show_remote_departments"
@@ -59,6 +60,8 @@
                 app:layout_constraintHorizontal_bias="0.515"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_clear_remote_sects_depts" />
+
+            -->
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_clear_remote_users"
@@ -133,7 +136,7 @@
                 android:text="Czyść Local"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_show_remote_departments" />
+                app:layout_constraintTop_toBottomOf="@+id/button_show_remote2" />
 
 
             <com.google.android.material.button.MaterialButton
@@ -144,6 +147,28 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_clear_local2" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_add_second_remote_analysis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/design_default_color_secondary"
+                android:text="Dodaj analizę nr 2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_show_numbers_of_data2" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_add_third_remote_analysis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/design_default_color_secondary"
+                android:text="Dodaj analizę nr 3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_add_second_remote_analysis" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -17,7 +17,8 @@ import androidx.room.PrimaryKey;
         )
     },
     indices = {
-        @Index(value = "article_id")
+        @Index( value = "article_id"),
+        @Index( value = "value", unique = true )
     }
 )
 public class RemoteEanCode {
@@ -63,7 +64,7 @@ public class RemoteEanCode {
 
     public static class EanCodeBuilder {
 
-        private RemoteEanCode remoteEanCode = new RemoteEanCode();
+        private final RemoteEanCode remoteEanCode = new RemoteEanCode();
 
         public EanCodeBuilder id (Integer id) {
             remoteEanCode.id = id;

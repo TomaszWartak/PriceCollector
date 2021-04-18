@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.dev4lazy.pricecollector.model.db.AnalysisArticleDao;
 import com.dev4lazy.pricecollector.model.db.AnalysisCompetitorSlotDao;
 import com.dev4lazy.pricecollector.model.db.AnalysisDao;
 import com.dev4lazy.pricecollector.model.db.ArticleDao;
@@ -24,6 +25,7 @@ import com.dev4lazy.pricecollector.model.db.SectorDao;
 import com.dev4lazy.pricecollector.model.db.StoreDao;
 import com.dev4lazy.pricecollector.model.db.UOProjectDao;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
+import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Article;
 import com.dev4lazy.pricecollector.model.entities.Company;
@@ -61,16 +63,11 @@ public class LocalDataRepository {
         return instance;
     }
 
-    /*private LocalDataRepository() {
-
-    }
-     */
-
 // po getInstance -----------------------------------------------------------------------
     
 // Analysis
-    private AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
-    private Data<Analysis> analyzes  = new Data<>( analysisDao );
+    private final AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
+    private final Data<Analysis> analyzes  = new Data<>( analysisDao );
 
     public void askAnalyzesNumberOf( MutableLiveData<Integer> result ) {
         analyzes.getNumberOfData( result );
@@ -106,18 +103,138 @@ public class LocalDataRepository {
 
 //-----------------------------------------------------------------------
 // AnalysisCompetitorSlot
-    private AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
-    private Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
+    private final AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
+    private final Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
+
+
+    public void insertAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Long> result ) {
+        slots.insertData(analysisCompetitorSlot,result);
+    }
+
+    public void updateAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Integer> result  ) {
+        slots.updateData(analysisCompetitorSlot, result);
+    }
+
+    public void deleteAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Integer> result   ) {
+        slots.deleteData(analysisCompetitorSlot, result);
+    }
+
+    public void findAnalysisCompetitorSlotById(int id, MutableLiveData<List<AnalysisCompetitorSlot>> result) {
+        slots.findDataById( id, result);
+    }
+
+    public void findAnalysisCompetitorSlotByName(String analysisCompetitorSlotName, MutableLiveData<List<AnalysisCompetitorSlot>> result ) {
+        slots.findDataByName(analysisCompetitorSlotName, result);
+    }
+
+    public void getAllAnalysisCompetitorSlotsSortedBySlotNr(MutableLiveData<List<AnalysisCompetitorSlot>> result) {
+        slots.getViaQuery(
+                "SELECT * from competitor_slots ORDER BY slot_nr ASC",
+                result );
+        /* todo
+        AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao().getViaQueryLiveData(
+                new SimpleSQLiteQuery("SELECT * from competitor_slots ORDER BY slot_nr ASC")
+        );
+        */
+    }
+
+    public LiveData<List<AnalysisCompetitorSlot>> getAllSlotsLD() {
+        return analysisCompetitorSlotDao.getAllLiveData();
+    }
 
 //-----------------------------------------------------------------------
+// AnalysisArticle
+    private final AnalysisArticleDao analysisArticleDao = AppHandle.getHandle().getLocalDatabase().analysisArticleDao();
+    private final Data<AnalysisArticle> analysisArticles = new Data<>( analysisArticleDao );
+
+    public void askAnalysisArticlesNumberOf( MutableLiveData<Integer> result ) {
+        analysisArticles.getNumberOfData( result );
+    }
+
+    public void insertAnalysisArticle( AnalysisArticle analysisArticle, MutableLiveData<Long> result ) {
+        analysisArticles.insertData( analysisArticle, result );
+    }
+
+    public void insertAnalysisArticles( ArrayList<AnalysisArticle> analysisArticlesList, ProgressPresenter progressPresenter ) {
+        analysisArticles.insertDataList( analysisArticlesList, progressPresenter );
+    }
+
+    public void insertAnalysisArticles(
+            ArrayList<AnalysisArticle> analysisArticlesList,
+            ProgressPresenter progressPresenter,
+            MutableLiveData<Long> resultLD ) {
+        analysisArticles.insertDataList( analysisArticlesList, progressPresenter, resultLD );
+    }
+
+    public void updateAnalysisArticle( AnalysisArticle analysisArticle, MutableLiveData<Integer> result ) {
+        analysisArticles.updateData( analysisArticle, result );
+    }
+
+    public void deleteAnalysisArticle( AnalysisArticle analysisArticle, MutableLiveData<Integer> result ) {
+        analysisArticles.deleteData( analysisArticle, result );
+    }
+
+    public void deleteAllAnalysisArticles( MutableLiveData<Integer> result ) {
+        analysisArticles.deleteAllData( result );
+    }
+
+    public void getAllAnalysisArticles( MutableLiveData<List<AnalysisArticle>> result ) {
+        analysisArticles.getAllData( result );
+    }
+
+    public void findAnalysisArticleById( int id, MutableLiveData<List<AnalysisArticle>> result ) {
+        analysisArticles.findDataById( id, result );
+    }
+
+    //-----------------------------------------------------------------------
 // Article
-    private ArticleDao articleDao = AppHandle.getHandle().getLocalDatabase().articleDao();
-    private Data<Article> articles = new Data<>(articleDao);
+    private final ArticleDao articleDao = AppHandle.getHandle().getLocalDatabase().articleDao();
+    private final Data<Article> articles = new Data<>(articleDao);
+
+    public void insertArticles( ArrayList<Article> articlesList, ProgressPresenter progressPresenter) {
+        articles.insertDataList( articlesList, progressPresenter );
+    }
+
+    public void getAllArticles( MutableLiveData<List<Article>> result ) {
+        articles.getAllData( result );
+    }
+
 
 //-----------------------------------------------------------------------
+// Company
+    private final CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
+    private final Data<Company> companies = new Data<>(companyDao);
+
+    public void insertCompany( Company company, MutableLiveData<Long> result ) {
+        companies.insertData(company,result);
+    }
+
+    public void updateCompany( Company company, MutableLiveData<Integer> result  ) {
+        companies.updateData(company, result);
+    }
+
+    public void deleteCompany( Company company, MutableLiveData<Integer> result   ) {
+        companies.deleteData(company, result);
+    }
+
+    public LiveData<List<Company>> getAllCompaniesLD() {
+        return companyDao.getAllLiveData();
+    }
+
+    public void findCompanyById(int id, MutableLiveData<List<Company>> result) {
+        companies.findDataById( id, result);
+    }
+
+    public void findCompanyByName(String companyName, MutableLiveData<List<Company>> result ) {
+        companies.findDataByName(companyName, result);
+    }
+
+
+
+    //-----------------------------------------------------------------------
 // CompetitorPrice
-    private CompetitorPriceDao competitorPriceDao = AppHandle.getHandle().getLocalDatabase().competitorPriceDao();
-    private Data<CompetitorPrice> competitorPrices = new Data<>( competitorPriceDao );
+    private final CompetitorPriceDao competitorPriceDao = AppHandle.getHandle().getLocalDatabase().competitorPriceDao();
+    private final Data<CompetitorPrice> competitorPrices = new Data<>( competitorPriceDao );
 
     public void askCompetitorPricesNumberOf( MutableLiveData<Integer> result ) {
         competitorPrices.getNumberOfData( result );
@@ -153,29 +270,78 @@ public class LocalDataRepository {
 
 //-----------------------------------------------------------------------
 // Country
-    private CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+    private final CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
+    private final Data<Country> countries = new Data<>(countryDao);
+
+    public void insertCountry(Country country, MutableLiveData<Long> result ) {
+        countries.insertData(country,result);
+    }
+
+    public void updateCountry( Country country, MutableLiveData<Integer> result  ) {
+        countries.updateData(country,result);
+    }
+
+    public void deleteCountry( Country country, MutableLiveData<Integer> result  ) {
+        countries.deleteData(country,result);
+    }
+
+    public void findCountryById(int id, MutableLiveData<List<Country>> result) {
+        countries.findDataById( id, result);
+    }
+
+    public void findCountryByName(String countryName, MutableLiveData<List<Country>> result) {
+        countries.findDataByName(countryName, result);
+    }
 
 
-//-----------------------------------------------------------------------
-// Company
-    private CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
-    private Data<Company> companies = new Data<>(companyDao);
+    public LiveData<List<Country>> getAllCountriesLD() {
+        return countryDao.getAllLiveData();
+    }
 
 
 //-----------------------------------------------------------------------
 // Department
-    private DepartmentDao departmentDao = AppHandle.getHandle().getLocalDatabase().departmentDao();
-    private Data<Department> departments = new Data<>(departmentDao);
+    private final DepartmentDao departmentDao = AppHandle.getHandle().getLocalDatabase().departmentDao();
+    private final Data<Department> departments = new Data<>(departmentDao);
+
+    public void insertDepartment( Department department, MutableLiveData<Long> result ) {
+        departments.insertData( department, result );
+    }
+
+    public void insertDepartments( List<Department> departmentsList, MutableLiveData<Long> result ) {
+        departments.insertDataList( departmentsList,null, result);
+    }
+
+    public void getAllDepartments( MutableLiveData<List<Department>> result ) {
+        departments.getAllData( result );
+    }
 
 //-----------------------------------------------------------------------
 // DepartmentInSector
-    private DepartmentInSectorDao departmentInSectorDao = AppHandle.getHandle().getLocalDatabase().departmentInSectorDao();
-    private Data<DepartmentInSector> departmentInSectors = new Data<>(departmentInSectorDao);
+    private final DepartmentInSectorDao departmentInSectorDao = AppHandle.getHandle().getLocalDatabase().departmentInSectorDao();
+    private final Data<DepartmentInSector> departmentInSectors = new Data<>(departmentInSectorDao);
+
+    public void insertDepartmentInSector( DepartmentInSector departmentInSector, MutableLiveData<Long> result ) {
+        departmentInSectors.insertData( departmentInSector, result );
+    }
+
+    public void getAllDepartmentInSectors( MutableLiveData<List<DepartmentInSector>> result ) {
+        departmentInSectors.getAllData( result );
+    }
 
 //-----------------------------------------------------------------------
-// Family (2019-11-21 08:58 OK)
-    private FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
-    private Data<Family> families = new Data<>( familyDao );
+// EanCode
+    private final EanCodeDao eanCodeDao = AppHandle.getHandle().getLocalDatabase().eanCodeDao();
+    private final Data<EanCode> eanCodes = new Data<EanCode>(eanCodeDao);
+
+    public void insertEanCodes( ArrayList<EanCode> eanCodeList, ProgressPresenter progressPresenter) {
+        eanCodes.insertDataList( eanCodeList, progressPresenter );
+    }
+
+//-----------------------------------------------------------------------
+// Family
+    private final FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
+    private final Data<Family> families = new Data<>( familyDao );
 
     public void insertFamily(Family family, MutableLiveData<Long> result ) {
         families.insertData( family, result );
@@ -207,8 +373,8 @@ public class LocalDataRepository {
 
 //-----------------------------------------------------------------------
 // Market
-    private MarketDao marketDao = AppHandle.getHandle().getLocalDatabase().marketDao();
-    private Data<Market> markets = new Data<>( marketDao );
+    private final MarketDao marketDao = AppHandle.getHandle().getLocalDatabase().marketDao();
+    private final Data<Market> markets = new Data<>( marketDao );
 
     public void askMarketsNumberOf( MutableLiveData<Integer> result ) {
         markets.getNumberOfData( result );
@@ -245,8 +411,8 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------------------
 // Module
 
-    private ModuleDao moduleDao = AppHandle.getHandle().getLocalDatabase().moduleDao();
-    private Data<Module> modules = new Data<>( moduleDao );
+    private final ModuleDao moduleDao = AppHandle.getHandle().getLocalDatabase().moduleDao();
+    private final Data<Module> modules = new Data<>( moduleDao );
 
     public void askModulesNumberOf( MutableLiveData<Integer> result ) {
         modules.getNumberOfData( result );
@@ -280,212 +446,28 @@ public class LocalDataRepository {
         modules.findDataById( id, result );
     }
 
-//-----------------------------------------------------------------------
-// UOProject
-    
-    private UOProjectDao uoProjectDao = AppHandle.getHandle().getLocalDatabase().uoProjectDao();
-    private Data<UOProject> uoProjects = new Data<>( uoProjectDao );
-
-    public void askUOProjectsNumberOf( MutableLiveData<Integer> result ) {
-        uoProjects.getNumberOfData( result );
-    }
-
-    public void insertUOProject(UOProject uoProject, MutableLiveData<Long> result ) {
-        uoProjects.insertData( uoProject, result );
-    }
-
-    public void insertUOProjects( ArrayList<UOProject> uoProjectsList, ProgressPresenter progressPresenter ) {
-        uoProjects.insertDataList( uoProjectsList, progressPresenter );
-    }
-
-    public void updateUOProject( UOProject uoProject, MutableLiveData<Integer> result ) {
-        uoProjects.updateData( uoProject, result );
-    }
-
-    public void deleteUOProject(UOProject uoProject, MutableLiveData<Integer> result ) {
-        uoProjects.deleteData( uoProject, result );
-    }
-
-    public void deleteAllUOProjects( MutableLiveData<Integer> result ) {
-        uoProjects.deleteAllData( result );
-    }
-
-    public void getAllUOProjects( MutableLiveData<List<UOProject>> result ) {
-        uoProjects.getAllData( result );
-    }
-
-    public void findUOProjectById( int id, MutableLiveData<List<UOProject>> result ) {
-        uoProjects.findDataById( id, result );
-    }
 
 //-----------------------------------------------------------------------
 // OwnArticleInfo
-    private OwnArticleInfoDao ownArticleInfoDao = AppHandle.getHandle().getLocalDatabase().ownArticleInfoDao();
-    private Data<OwnArticleInfo> ownArticleInfos = new Data<OwnArticleInfo>(ownArticleInfoDao);
-//-----------------------------------------------------------------------
-// Sector
-    private SectorDao sectorDao = AppHandle.getHandle().getLocalDatabase().sectorDao();
-    private Data<Sector> sectors = new Data<>(sectorDao);
+    private final OwnArticleInfoDao ownArticleInfoDao = AppHandle.getHandle().getLocalDatabase().ownArticleInfoDao();
+    private final Data<OwnArticleInfo> ownArticleInfos = new Data<OwnArticleInfo>(ownArticleInfoDao);
 
-    public void insertAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Long> result ) {
-        slots.insertData(analysisCompetitorSlot,result);
+
+    public void insertOwnArticleInfos(
+            ArrayList<OwnArticleInfo> ownArticleInfoList,
+            ProgressPresenter progressPresenter,
+            MutableLiveData<Long> resultLD ) {
+        ownArticleInfos.insertDataList( ownArticleInfoList, progressPresenter, resultLD );
     }
 
-    public void updateAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Integer> result  ) {
-        slots.updateData(analysisCompetitorSlot, result);
-    }
-
-    public void deleteAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Integer> result   ) {
-        slots.deleteData(analysisCompetitorSlot, result);
-    }
-
-    public void insertArticles( ArrayList<Article> articlesList, ProgressPresenter progressPresenter) {
-        articles.insertDataList( articlesList, progressPresenter );
-    }
-
-    public void getAllArticles( MutableLiveData<List<Article>> result ) {
-        articles.getAllData( result );
-    }
-
-    public void insertCompany( Company company, MutableLiveData<Long> result ) {
-        companies.insertData(company,result);
-    }
-
-    public void updateCompany( Company company, MutableLiveData<Integer> result  ) {
-        companies.updateData(company, result);
-    }
-
-    public void deleteCompany( Company company, MutableLiveData<Integer> result   ) {
-        companies.deleteData(company, result);
-    }
-
-    public void findCountryById(int id, MutableLiveData<List<Country>> result) {
-        countries.findDataById( id, result);
-    }
-
-    public void findCountryByName(String countryName, MutableLiveData<List<Country>> result) {
-        countries.findDataByName(countryName, result);
-    }
-
-//-----------------------------------------------------------------------
-// EanCode
-    private EanCodeDao eanCodeDao = AppHandle.getHandle().getLocalDatabase().eanCodeDao();
-    private Data<EanCode> eanCodes = new Data<EanCode>(eanCodeDao);
-
-    public void insertDepartment( Department department, MutableLiveData<Long> result ) {
-        departments.insertData( department, result );
-    }
-
-    private Data<Country> countries = new Data<>(countryDao);
-
-    public void insertCountry(Country country, MutableLiveData<Long> result ) {
-        countries.insertData(country,result);
-    }
-
-    /*
-    public LiveData<List<Country>> getCountryByIdLD(int countryId) {
-        return countryDao.findByIdLD(countryId);
-    }
-
-
-    public LiveData<List<Country>> getCountryByNameLD(String countryName) {
-        return countryDao.findByNameLD(countryName);
-    }
-    */
-
-    public void updateCountry( Country country, MutableLiveData<Integer> result  ) {
-        countries.updateData(country,result);
-    }
-
-    public void deleteCountry( Country country, MutableLiveData<Integer> result  ) {
-        countries.deleteData(country,result);
+    public void getAllOwnArticleInfos( MutableLiveData<List<OwnArticleInfo>> result ) {
+        ownArticleInfos.getAllData( result );
     }
 
 //-----------------------------------------------------------------------
 // OwnStore
-    private OwnStoreDao ownStoreDao = AppHandle.getHandle().getLocalDatabase().ownStoreDao();
-    private Data<OwnStore> ownStores = new Data<>(ownStoreDao);
-//-----------------------------------------------------------------------
-// Store
-    private StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
-    private Data<Store> stores = new Data<>(storeDao);
-
-
-    public void findAnalysisCompetitorSlotById(int id, MutableLiveData<List<AnalysisCompetitorSlot>> result) {
-        slots.findDataById( id, result);
-    }
-
-    public void findAnalysisCompetitorSlotByName(String analysisCompetitorSlotName, MutableLiveData<List<AnalysisCompetitorSlot>> result ) {
-        slots.findDataByName(analysisCompetitorSlotName, result);
-    }
-
-
-    public LiveData<List<Company>> getAllCompaniesLD() {
-        return companyDao.getAllLiveData();
-    }
-
-    public void getAllAnalysisCompetitorSlotsSortedBySlotNr(MutableLiveData<List<AnalysisCompetitorSlot>> result) {
-        slots.getViaQuery(
-                "SELECT * from competitor_slots ORDER BY slot_nr ASC",
-                result );
-        /* todo
-        AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao().getViaQueryLiveData(
-                new SimpleSQLiteQuery("SELECT * from competitor_slots ORDER BY slot_nr ASC")
-        );
-        */
-    }
-
-    public LiveData<List<AnalysisCompetitorSlot>> getAllSlotsLD() {
-        return analysisCompetitorSlotDao.getAllLiveData();
-    }
-
-    /* todo ?
-    public LiveData<List<Company>> getFilteredCompaniesLD(String filter) {
-        if ((filter!=null) && (!filter.isEmpty())) {
-            return companyDao.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
-        }
-        return companyDao.getAllLiveData();
-    }
-    */
-    public void findCompanyById(int id, MutableLiveData<List<Company>> result) {
-        companies.findDataById( id, result);
-    }
-
-
-    /*
-    public LiveData<List<Country>> getFilteredCountriesLD(String filter) {
-        if ((filter!=null) && (!filter.isEmpty())) {
-            return countries.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
-        }
-        return countryDao.getAllLiveData();
-    }
-    */
-
-//-----------------------------------------------------------------------
-// Market
-
-//-----------------------------------------------------------------------
-// Module
-
-    public void getAllDepartments( MutableLiveData<List<Department>> result ) {
-        departments.getAllData( result );
-    }
-
-    public void insertDepartmentInSector( DepartmentInSector departmentInSector, MutableLiveData<Long> result ) {
-        departmentInSectors.insertData( departmentInSector, result );
-    }
-
-    public void getAllDepartmentInSectors( MutableLiveData<List<DepartmentInSector>> result ) {
-        departmentInSectors.getAllData( result );
-    }
-    
-    public void findCompanyByName(String companyName, MutableLiveData<List<Company>> result ) {
-        companies.findDataByName(companyName, result);
-    }
-
-    public LiveData<List<Country>> getAllCountriesLD() {
-        return countryDao.getAllLiveData();
-    }
+    private final OwnStoreDao ownStoreDao = AppHandle.getHandle().getLocalDatabase().ownStoreDao();
+    private final Data<OwnStore> ownStores = new Data<>(ownStoreDao);
 
     public void insertOwnStore(OwnStore ownStore, MutableLiveData<Long> result ) {
         ownStores.insertData(ownStore,result);
@@ -521,27 +503,29 @@ public class LocalDataRepository {
         return ownStoreDao.getAllLiveData();
     }
 
-    /*
-    public LiveData<List<OwnStore>> getFilteredOwnStoresLD(String filter) {
-        if ((filter!=null) && (!filter.isEmpty())) {
-            return ownStoreDao.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
-        }
-        return ownStoreDao.getAllLiveData();
-    }
-    */
+//-----------------------------------------------------------------------
+// Sector
+    private final SectorDao sectorDao = AppHandle.getHandle().getLocalDatabase().sectorDao();
+    private final Data<Sector> sectors = new Data<>(sectorDao);
 
-    /* usuń ?
-    public LiveData<List<Company>> getCompanyByIdLD(int companyId) {
-        return companyDao.findByIdLD(companyId);
+
+    public void insertSector(Sector sector, MutableLiveData<Long> result ) {
+        sectors.insertData(sector,result);
     }
 
-    public LiveData<List<Company>> getCompanyByNameLD(String companyName) {
-        return companyDao.findByNameLD(companyName);
+    public void insertSectors( List<Sector> sectorsList, MutableLiveData<Long> result ) {
+        sectors.insertDataList( sectorsList,null, result);
     }
-    */
+
+    public void getAllSectors( MutableLiveData<List<Sector>> result ) {
+        sectors.getAllData( result );
+    }
 
 
-
+//------------~-----------------------------------------------------------
+// Store
+    private final StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
+    private final Data<Store> stores = new Data<>(storeDao);
 
     public void findStoreById(int id, MutableLiveData<List<Store>> result) {
         stores.findDataById( id, result);
@@ -553,8 +537,8 @@ public class LocalDataRepository {
 
     public void getStoresForCompany( int companyId, MutableLiveData<List<Store>> result ) {
         stores.getViaQuery(
-            "SELECT * from stores WHERE company_id="+companyId+" ORDER BY name ASC",
-            result );
+                "SELECT * from stores WHERE company_id="+companyId+" ORDER BY name ASC",
+                result );
     }
 
     public void findStoreByName(String storeName, MutableLiveData<List<Store>> result ) {
@@ -578,32 +562,43 @@ public class LocalDataRepository {
     }
 
 
-    /*
-    public LiveData<List<Store>> getFilteredStoresLD(String filter) {
-        if ((filter!=null) && (!filter.isEmpty())) {
-            return storeDao.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
-        }
-        return storeDao.getAllLiveData();
-    }
-    */
-
-    public void insertEanCodes( ArrayList<EanCode> eanCodeList, ProgressPresenter progressPresenter) {
-        eanCodes.insertDataList( eanCodeList, progressPresenter );
-    }
-
-    public void insertOwnArticleInfos( ArrayList<OwnArticleInfo> ownArticleInfoList, ProgressPresenter progressPresenter) {
-        ownArticleInfos.insertDataList( ownArticleInfoList, progressPresenter );
-    }
-
-    public void insertSector(Sector sector, MutableLiveData<Long> result ) {
-        sectors.insertData(sector,result);
-    }
-
-    public void getAllSectors( MutableLiveData<List<Sector>> result ) {
-        sectors.getAllData( result );
-    }
 //-----------------------------------------------------------------------
 // UOProject
+
+    private final UOProjectDao uoProjectDao = AppHandle.getHandle().getLocalDatabase().uoProjectDao();
+    private final Data<UOProject> uoProjects = new Data<>( uoProjectDao );
+
+    public void askUOProjectsNumberOf( MutableLiveData<Integer> result ) {
+        uoProjects.getNumberOfData( result );
+    }
+
+    public void insertUOProject(UOProject uoProject, MutableLiveData<Long> result ) {
+        uoProjects.insertData( uoProject, result );
+    }
+
+    public void insertUOProjects( ArrayList<UOProject> uoProjectsList, ProgressPresenter progressPresenter ) {
+        uoProjects.insertDataList( uoProjectsList, progressPresenter );
+    }
+
+    public void updateUOProject( UOProject uoProject, MutableLiveData<Integer> result ) {
+        uoProjects.updateData( uoProject, result );
+    }
+
+    public void deleteUOProject(UOProject uoProject, MutableLiveData<Integer> result ) {
+        uoProjects.deleteData( uoProject, result );
+    }
+
+    public void deleteAllUOProjects( MutableLiveData<Integer> result ) {
+        uoProjects.deleteAllData( result );
+    }
+
+    public void getAllUOProjects( MutableLiveData<List<UOProject>> result ) {
+        uoProjects.getAllData( result );
+    }
+
+    public void findUOProjectById( int id, MutableLiveData<List<UOProject>> result ) {
+        uoProjects.findDataById( id, result );
+    }
 
 //-----------------------------------------------------------------------------------
 // clearDatabaseAsync
@@ -619,8 +614,8 @@ public class LocalDataRepository {
     }
 
     private static class ClearDatabaseAsyncTask extends AsyncTask<Void,Void,Void> {
-        private LocalDatabase asyncTaskAnalyzesDatabase;
-        private AfterDatabaseClearedCallback afterDatabaseClearedCallback;
+        private final LocalDatabase asyncTaskAnalyzesDatabase;
+        private final AfterDatabaseClearedCallback afterDatabaseClearedCallback;
 
         ClearDatabaseAsyncTask(LocalDatabase database, AfterDatabaseClearedCallback callback) {
             asyncTaskAnalyzesDatabase = database;

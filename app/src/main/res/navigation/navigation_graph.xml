@@ -24,24 +24,30 @@
         android:label="loging_fragment"
         tools:layout="@layout/login_fragment" >
         <action
-            android:id="@+id/action_logingFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            android:id="@+id/action_logingFragment_to_analyzesListFragment"
+            app:destination="@id/analyzesListFragment" />
         <action
             android:id="@+id/action_logingFragment_to_testActionsFragment2"
             app:destination="@id/testActionsFragment2" />
     </fragment>
 
     <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.dev4lazy.pricecollector.view.MainScreenFragment"
-        android:label="main_fragment"
-        tools:layout="@layout/main_screen_fragment" >
+        android:id="@+id/analyzesListFragment"
+        android:name="com.dev4lazy.pricecollector.view.AnalyzesListFragment"
+        android:label="analyzes_list_fragment"
+        tools:layout="@layout/analyzes_list_fragment" >
         <action
-            android:id="@+id/action_mainFragment_to_testActionsFragment"
+            android:id="@+id/action_analyzesListFragment_to_testActionsFragment"
             app:destination="@id/testActionsFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_analysisCompetitorsFragment"
+            android:id="@+id/action_analyzesListFragment_to_analysisCompetitorsFragment"
             app:destination="@id/analysisCompetitorsFragment" />
+        <action
+            android:id="@+id/action_analyzesListFragment_to_alertDialogFragment2"
+            app:destination="@id/alertDialogFragment2" />
+        <action
+            android:id="@+id/action_analyzesListFragment_to_alertDialogFragment"
+            app:destination="@id/alertDialogFragment" />
     </fragment>
 
     <fragment
@@ -50,7 +56,7 @@
         android:label="fragment_set_up_prefernces"
         tools:layout="@layout/set_up_preferences_fragment" >
         <action
-            android:id="@+id/action_setUpPreferncesFragment_to_logingFragment"
+            android:id="@+id/action_setUpPreferencesFragment_to_logingFragment"
             app:destination="@id/logingFragment" />
     </fragment>
 
@@ -117,8 +123,11 @@
             android:id="@+id/action_analysisCompetitorsFragment_to_addStoreDialogFragment"
             app:destination="@id/addStoreDialogFragment" />
         <action
-            android:id="@+id/action_analysisCompetitorsFragment_to_analysisFragment"
+            android:id="@+id/action_analysisCompetitorsFragment_to_analysisArticlesListFragment"
             app:destination="@id/analysisFragment" />
+        <action
+            android:id="@+id/action_analysisCompetitorsFragment_to_analysisArticlesPagerFragment"
+            app:destination="@id/analysisArticlesPagerFragment" />
     </fragment>
     <dialog
         android:id="@+id/addStoreDialogFragment"
@@ -127,9 +136,16 @@
         tools:layout="@layout/add_store_fragment" />
     <fragment
         android:id="@+id/analysisFragment"
-        android:name="com.dev4lazy.pricecollector.view.AnalysisArticlesFragment"
+        android:name="com.dev4lazy.pricecollector.view.AnalysisArticlesListFragment"
         android:label="analysis_fragment"
-        tools:layout="@layout/analysis_fragment" />
+        tools:layout="@layout/analysis_articles_list_fragment" >
+        <action
+            android:id="@+id/action_analysisFragment_to_analysisArticleFragment"
+            app:destination="@id/analysisArticleFragment" />
+        <action
+            android:id="@+id/action_analysisFragment_to_analysisArticlesPagerFragment"
+            app:destination="@id/analysisArticlesPagerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/testActionsFragment2"
         android:name="com.dev4lazy.pricecollector.view.TestActionsFragment2"
@@ -194,5 +210,19 @@
         android:id="@+id/testNumbersOfDataFragment2"
         android:name="com.dev4lazy.pricecollector.view.TestNumbersOfDataFragment2"
         android:label="TestNumbersOfDataFragment2" />
+    <fragment
+        android:id="@+id/analysisArticleFragment"
+        android:name="com.dev4lazy.pricecollector.view.AnalysisArticleFragment"
+        android:label="analysis_article_fragment"
+        tools:layout="@layout/analysis_article_fragment" />
+    <fragment
+        android:id="@+id/analysisArticlesPagerFragment"
+        android:name="com.dev4lazy.pricecollector.view.AnalysisArticlesPagerFragment"
+        android:label="AnalysisArticlesPagerFragment" />
+    <dialog
+        android:id="@+id/alertDialogFragment2"
+        android:name="com.dev4lazy.pricecollector.view.AlertDialogFragment2"
+        android:label="AlertDialogFragment2"
+        tools:layout="@layout/alert_dialog_fragment2" />
 
 </navigation>

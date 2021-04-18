@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
 import com.dev4lazy.pricecollector.model.logic.User;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
@@ -24,6 +25,8 @@ import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
 
 import java.util.List;
+
+import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,10 +99,13 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
                     AppHandle.getHandle().getSettings().setUser( new User( remoteUser ) );
                     // userViewModel.clear(); todo nie ma takiej metody...
                     // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
-                    if (!AppHandle.getHandle().getPrefs().isLocalDatabaseInitialized()) {
+                    if (AppHandle.getHandle().getPrefs().isLocalDatabaseNotInitialized()) {
                         LocalDataInitializer.getInstance().initializeLocalDatabase();
                     }
-                    Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_mainFragment);
+                    //todo sprawdzenie, co jest w preferencjach i odtworzenie na ekranie
+                    getPreferencesInfo();
+                    // todo sprawdzenie czy na serwerze zdalnym jest nowa analiza - pobranie
+                    startRisingChain();
                 } else {
                     Toast.makeText(
                         getContext(),
@@ -111,6 +117,36 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         };
         findRemoteUserResult.observeForever(findRemoteUserResultObserver);
         AppHandle.getHandle().getRepository().getRemoteDataRepository().findUserByLogin(userViewModel.getUser().getLogin(), findRemoteUserResult );
+    }
+
+    private void getPreferencesInfo() { // todo czy getSettingsInfo?
+        //todo
+        // język
+        // użytkownik -> sklep amcierzysty, dział ew sektor
+        // sprawdzenie co słychać w zdalnej bazie danych -> poniżej jest getNewAnalysisInfo()
+        // ew info do użytkownika
+        // zob. klasę .model.logic.AnalysisDataUpdater
+        // zob. OneNote Kodowanie / Po zalogowaniu / ??Aktualizacja AnalyzesListFragment
+
+    }
+
+    private void startRisingChain() {
+        // TODO !!! tutaj i wszędzie gdzie jest oczkiwanie na dane trzeba zrobić ograniczenie czasowe na odpowiedź...
+        getNewAnalysisInfo();
+    }
+
+    private void getNewAnalysisInfo() {
+        // todo to jest sztuka... bo może się kręcić w nieskończoność...
+        MutableLiveData<Boolean> serverRepliedResult = new MutableLiveData<>();
+        Observer<Boolean> resultObserver = new Observer<Boolean>() {
+            @Override
+            public void onChanged( Boolean isServerReplied ) {
+                Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
+            }
+        };
+        serverRepliedResult.observeForever( resultObserver );
+        AnalysisDataUpdater analysisDataUpdater = getInstance();
+        analysisDataUpdater.checkNewAnalysisToDownload( serverRepliedResult );
     }
 
     @Override
