@@ -101,16 +101,6 @@ public class AddStoreDialogFragment extends DialogFragment {
                         Toast.LENGTH_LONG).show();
                 }
                 */
-                /*
-                Note note = new Note.NoteBuilder()
-                        .priority(priority)
-                        .creationDate(System.currentTimeMillis())
-                        .title(title)
-                        .content(content)
-                        .kind(noteKind)
-                        .build();
-                mViewModel.insertNote(note);
-                 */
             }
         });
         builder.setNegativeButton(R.string.caption_cancel, new DialogInterface.OnClickListener() {
@@ -147,7 +137,7 @@ public class AddStoreDialogFragment extends DialogFragment {
                 });
             }
         });
-        return alertDialog /* todo builder.create() */;
+        return alertDialog;
     }
 
     private boolean isValid(Store store) {

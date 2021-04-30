@@ -673,7 +673,8 @@ public class LocalDataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertOwnStore( store, null );
                         }
                         AppHandle.getHandle().getPrefs().saveInitialisationStage(OWN_STORES_INITIALIZED);
-                        populateLMStores();                    }
+                        populateLMStores();
+                    }
                 }
             }
         };

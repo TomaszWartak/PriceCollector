@@ -15,7 +15,7 @@
             android:id="@+id/test_actions_fragment_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".view.TestActionsFragment">
+            tools:context=".test_view.inside_app_data_initialization_screen.TestActionsFragment">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_show_articles"

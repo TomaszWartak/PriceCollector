@@ -17,7 +17,9 @@ public class AlertDialogFragment extends DialogFragment {
         // todo ??? Empty constructor required for DialogFragment
     }
 
-
+    // todo: newInstance(), to jakiś bezsens chyba... Sprowadza się do "new AlertDialogFragment()"
+    //  zresztą nigdzie chyba nie jest używana...
+    //  czyli do wywołania konstruktora. Wszędzie, gdzie jest wywoływane newInstance(), zrób po prostu new AlertDialogFragment()...
     public static AlertDialogFragment newInstance( ) {
         AlertDialogFragment alertDialogFragment = new AlertDialogFragment( );
 //        Bundle args = new Bundle();

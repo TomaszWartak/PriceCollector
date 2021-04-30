@@ -36,7 +36,7 @@ public class Analysis {
     @ColumnInfo(name = "confirmation_date")
     private Date confirmationDate;
     private Boolean finished;
-    private boolean dataDownloaded;
+    private Boolean dataDownloaded;
 
     public int getId() {
         return id;
@@ -94,7 +94,7 @@ public class Analysis {
         this.finished = finished;
     }
 
-    public boolean isDataDownloaded() {
+    public Boolean isDataDownloaded() {
         return dataDownloaded;
     }
 

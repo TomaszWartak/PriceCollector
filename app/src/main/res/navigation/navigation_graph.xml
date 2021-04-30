@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/startScreenFragment"
-        android:name="com.dev4lazy.pricecollector.view.StartScreenFragment"
+        android:name="com.dev4lazy.pricecollector.view.start_screen.StartScreenFragment"
         android:label="start_screen_fragment"
         tools:layout="@layout/start_screen_fragment">
         <action
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/logingFragment"
-        android:name="com.dev4lazy.pricecollector.view.LoginFragment"
+        android:name="com.dev4lazy.pricecollector.view.login_screen.LoginFragment"
         android:label="loging_fragment"
         tools:layout="@layout/login_fragment" >
         <action
@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/analyzesListFragment"
-        android:name="com.dev4lazy.pricecollector.view.AnalyzesListFragment"
+        android:name="com.dev4lazy.pricecollector.view.analyzes_list_screen.AnalyzesListFragment"
         android:label="analyzes_list_fragment"
         tools:layout="@layout/analyzes_list_fragment" >
         <action
@@ -45,14 +45,14 @@
         <action
             android:id="@+id/action_analyzesListFragment_to_alertDialogFragment2"
             app:destination="@id/alertDialogFragment2" />
-        <action
+        <!--action
             android:id="@+id/action_analyzesListFragment_to_alertDialogFragment"
-            app:destination="@id/alertDialogFragment" />
+            app:destination="@id/alertDialogFragment" /-->
     </fragment>
 
     <fragment
         android:id="@+id/setUpPreferncesFragment"
-        android:name="com.dev4lazy.pricecollector.view.SetUpPreferencesFragment"
+        android:name="com.dev4lazy.pricecollector.view.setup_preferences_screen.SetUpPreferencesFragment"
         android:label="fragment_set_up_prefernces"
         tools:layout="@layout/set_up_preferences_fragment" >
         <action
@@ -62,31 +62,31 @@
 
     <fragment
         android:id="@+id/otherStoresListFragment"
-        android:name="com.dev4lazy.pricecollector.view.OtherStoresListFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.other_stores_screen.OtherStoresListFragment"
         android:label="other_stores_list_fragment"
         tools:layout="@layout/other_stores_list_fragment" />
 
     <fragment
         android:id="@+id/ownStoresListFragment"
-        android:name="com.dev4lazy.pricecollector.view.OwnStoresListFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.own_stores_screen.OwnStoresListFragment"
         android:label="own_stores_list_fragment"
         tools:layout="@layout/own_stores_list_fragment" />
 
     <fragment
         android:id="@+id/companiesListFragment"
-        android:name="com.dev4lazy.pricecollector.view.CompaniesListFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.companies_screen.CompaniesListFragment"
         android:label="comapnies_list_fragment"
         tools:layout="@layout/companies_list_fragment" />
 
     <fragment
         android:id="@+id/countriesListFragment"
-        android:name="com.dev4lazy.pricecollector.view.CountriesListFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.countries_screen.CountriesListFragment"
         android:label="countries_list_fragment"
         tools:layout="@layout/countries_list_fragment" />
 
     <fragment
         android:id="@+id/testActionsFragment"
-        android:name="com.dev4lazy.pricecollector.view.TestActionsFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.inside_app_data_initialization_screen.TestActionsFragment"
         android:label="test_actions_fragment"
         tools:layout="@layout/test_actions_fragment">
         <action
@@ -116,7 +116,7 @@
     </fragment>
     <fragment
         android:id="@+id/analysisCompetitorsFragment"
-        android:name="com.dev4lazy.pricecollector.view.AnalysisCompetitorsFragment"
+        android:name="com.dev4lazy.pricecollector.view.analysis_competitors_List_screen.AnalysisCompetitorsListFragment"
         android:label="analysis_competitors_fragment"
         tools:layout="@layout/analysis_competitors_fragment" >
         <action
@@ -136,7 +136,7 @@
         tools:layout="@layout/add_store_fragment" />
     <fragment
         android:id="@+id/analysisFragment"
-        android:name="com.dev4lazy.pricecollector.view.AnalysisArticlesListFragment"
+        android:name="com.dev4lazy.pricecollector.view.analysis_articles_list_screen.AnalysisArticlesListFragment"
         android:label="analysis_fragment"
         tools:layout="@layout/analysis_articles_list_fragment" >
         <action
@@ -148,33 +148,34 @@
     </fragment>
     <fragment
         android:id="@+id/testActionsFragment2"
-        android:name="com.dev4lazy.pricecollector.view.TestActionsFragment2"
+        android:name="com.dev4lazy.pricecollector.test_view.outside_app_data_initializatiion_screen.TestActionsFragment2"
         android:label="test_actions_fragment2"
         tools:layout="@layout/test_actions_fragment2" >
+        <!-- + -->
         <action
             android:id="@+id/action_testActionsFragment2_to_remoteUsersListFragment"
             app:destination="@id/remoteUsersListFragment" />
         <action
             android:id="@+id/action_testActionsFragment2_to_remoteAnalysisRowJoinFragment"
             app:destination="@id/remoteAnalysisRowJoinFragment" />
-        <action
+        <!--action
             android:id="@+id/action_testActionsFragment2_to_remoteSectorsListFragment"
-            app:destination="@id/remoteSectorsListFragment" />
-        <action
+            app:destination="@id/remoteSectorsListFragment" /-->
+        <!--action
             android:id="@+id/action_testActionsFragment2_to_remoteDepartmentsListFragment"
-            app:destination="@id/remoteDepartmentsListFragment" />
+            app:destination="@id/remoteDepartmentsListFragment" /-->
         <action
             android:id="@+id/action_testActionsFragment2_to_testNumbersOfDataFragment2"
             app:destination="@id/testNumbersOfDataFragment2" />
     </fragment>
     <fragment
         android:id="@+id/remoteUsersListFragment"
-        android:name="com.dev4lazy.pricecollector.remote_view.RemoteUsersListFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.remote_users_screen.RemoteUsersListFragment"
         android:label="remote_users_list_fragment"
         tools:layout="@layout/remote_users_list_fragment" />
     <fragment
         android:id="@+id/remoteAnalysisRowJoinFragment"
-        android:name="com.dev4lazy.pricecollector.remote_view.RemoteAnalysisRowJoinFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.remote_articles_screen.RemoteAnalysisRowJoinFragment"
         android:label="RemoteAnalysisRowJoinFragment"
         tools:layout="@layout/remote_analysis_row_fragment" />
     <dialog
@@ -194,21 +195,21 @@
         tools:layout="@layout/remote_departments_list_fragment" />
     <fragment
         android:id="@+id/departmentInSectorsListFragment"
-        android:name="com.dev4lazy.pricecollector.view.DepartmentInSectorsListFragment"
+        android:name="com.dev4lazy.pricecollector.unused.DepartmentInSectorsListFragment"
         android:label="depts_in_secs_list_fragment"
         tools:layout="@layout/depts_in_secs_list_fragment" />
     <fragment
         android:id="@+id/articlesListFragment"
-        android:name="com.dev4lazy.pricecollector.view.ArticlesListFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.articles_screen.ArticlesListFragment"
         android:label="articles_list_fragment"
         tools:layout="@layout/articles_list_fragment" />
     <fragment
         android:id="@+id/testNumbersOfDataFragment"
-        android:name="com.dev4lazy.pricecollector.view.TestNumbersOfDataFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.local_data_numbers_screen.TestNumbersOfDataFragment"
         android:label="TestNumbersOfDataFragment" />
     <fragment
         android:id="@+id/testNumbersOfDataFragment2"
-        android:name="com.dev4lazy.pricecollector.view.TestNumbersOfDataFragment2"
+        android:name="com.dev4lazy.pricecollector.test_view.remote_data_numbers_screen.TestNumbersOfDataFragment2"
         android:label="TestNumbersOfDataFragment2" />
     <fragment
         android:id="@+id/analysisArticleFragment"

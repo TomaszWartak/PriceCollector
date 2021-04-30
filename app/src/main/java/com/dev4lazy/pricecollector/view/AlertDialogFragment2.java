@@ -16,6 +16,7 @@ public class AlertDialogFragment2 extends DialogFragment {
         // todo ??? Empty constructor required for DialogFragment
     }
 
+    // todo: znów jest to bezsensowne newInstance, gdzie jest po prostu konstruktor wołany...
     public static AlertDialogFragment2 newInstance( ) {
         AlertDialogFragment2 alertDialogFragment = new AlertDialogFragment2( );
         return alertDialogFragment;

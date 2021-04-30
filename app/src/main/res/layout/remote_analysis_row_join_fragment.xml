@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".remote_view.RemoteAnalysisRowJoinFragment">
+    tools:context=".test_view.remote_articles_screen.RemoteAnalysisRowJoinFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/remote_analysis_rows_join_recycler"

@@ -31,7 +31,7 @@ public class ProgressBarPresenter implements ProgressPresenter {
 
     private ProgressBar progressBar;
 
-    ProgressBarPresenter( ProgressBar progressBar, int endValue ) {
+    public ProgressBarPresenter(ProgressBar progressBar, int endValue) {
         this.progressBar = progressBar;
         if (endValue<0) {
             endValue=0;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.OwnStoresListFragment">
+    tools:context=".test_view.own_stores_screen.OwnStoresListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/own_stores_recycler"

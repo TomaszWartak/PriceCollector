@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ArticlesListFragment">
+    tools:context=".test_view.articles_screen.ArticlesListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/articles_recycler"
