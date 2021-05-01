@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.login_screen.LoginFragment">
+    tools:context=".view.E1_login_screen.LoginFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/login_fragment_layout"

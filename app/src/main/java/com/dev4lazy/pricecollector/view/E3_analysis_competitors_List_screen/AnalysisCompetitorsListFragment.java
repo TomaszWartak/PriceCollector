@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view.analysis_competitors_List_screen;
+package com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen;
 
 
 import android.os.Bundle;

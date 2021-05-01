@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view.setup_preferences_screen;
+package com.dev4lazy.pricecollector.view.E0_2_setup_preferences_screen;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

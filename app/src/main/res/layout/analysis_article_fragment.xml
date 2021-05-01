@@ -8,10 +8,10 @@
     android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/test_actions_fragment_layout2"
+            android:id="@+id/analysis_article_fragment_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".view.AnalysisArticleFragment">
+            tools:context=".view.E5_article_screen.AnalysisArticleFragment">
 
 
             <ImageView

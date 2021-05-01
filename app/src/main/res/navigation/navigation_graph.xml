@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/startScreenFragment"
-        android:name="com.dev4lazy.pricecollector.view.start_screen.StartScreenFragment"
+        android:name="com.dev4lazy.pricecollector.view.E0_1_start_screen.StartScreenFragment"
         android:label="start_screen_fragment"
         tools:layout="@layout/start_screen_fragment">
         <action
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/logingFragment"
-        android:name="com.dev4lazy.pricecollector.view.login_screen.LoginFragment"
+        android:name="com.dev4lazy.pricecollector.view.E1_login_screen.LoginFragment"
         android:label="loging_fragment"
         tools:layout="@layout/login_fragment" >
         <action
@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/analyzesListFragment"
-        android:name="com.dev4lazy.pricecollector.view.analyzes_list_screen.AnalyzesListFragment"
+        android:name="com.dev4lazy.pricecollector.view.E2_analyzes_list_screen.AnalyzesListFragment"
         android:label="analyzes_list_fragment"
         tools:layout="@layout/analyzes_list_fragment" >
         <action
@@ -52,7 +52,7 @@
 
     <fragment
         android:id="@+id/setUpPreferncesFragment"
-        android:name="com.dev4lazy.pricecollector.view.setup_preferences_screen.SetUpPreferencesFragment"
+        android:name="com.dev4lazy.pricecollector.view.E0_2_setup_preferences_screen.SetUpPreferencesFragment"
         android:label="fragment_set_up_prefernces"
         tools:layout="@layout/set_up_preferences_fragment" >
         <action
@@ -116,7 +116,7 @@
     </fragment>
     <fragment
         android:id="@+id/analysisCompetitorsFragment"
-        android:name="com.dev4lazy.pricecollector.view.analysis_competitors_List_screen.AnalysisCompetitorsListFragment"
+        android:name="com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen.AnalysisCompetitorsListFragment"
         android:label="analysis_competitors_fragment"
         tools:layout="@layout/analysis_competitors_fragment" >
         <action
@@ -136,7 +136,7 @@
         tools:layout="@layout/add_store_fragment" />
     <fragment
         android:id="@+id/analysisFragment"
-        android:name="com.dev4lazy.pricecollector.view.analysis_articles_list_screen.AnalysisArticlesListFragment"
+        android:name="com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticlesListFragment"
         android:label="analysis_fragment"
         tools:layout="@layout/analysis_articles_list_fragment" >
         <action
@@ -213,7 +213,7 @@
         android:label="TestNumbersOfDataFragment2" />
     <fragment
         android:id="@+id/analysisArticleFragment"
-        android:name="com.dev4lazy.pricecollector.view.AnalysisArticleFragment"
+        android:name="com.dev4lazy.pricecollector.view.E5_article_screen.AnalysisArticleFragment"
         android:label="analysis_article_fragment"
         tools:layout="@layout/analysis_article_fragment" />
     <fragment

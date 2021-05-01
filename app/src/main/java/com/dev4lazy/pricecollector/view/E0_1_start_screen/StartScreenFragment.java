@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view.start_screen;
+package com.dev4lazy.pricecollector.view.E0_1_start_screen;
 
 
 import android.content.DialogInterface;

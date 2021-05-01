@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.view.analysis_articles_list_screen.AnalysisArticleJoinDiffCalback;
+import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCalback;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 
 public class AnalysisArticleJoinPagerAdapter extends PagedListAdapter<AnalysisArticleJoin, AnalysisArticleJoinPagerAdapter.AnalysisArticleJoinPagerViewHolder> {

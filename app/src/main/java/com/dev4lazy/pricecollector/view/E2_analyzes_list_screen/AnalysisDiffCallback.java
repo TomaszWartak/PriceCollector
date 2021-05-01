@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view.analyzes_list_screen;
+package com.dev4lazy.pricecollector.view.E2_analyzes_list_screen;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;

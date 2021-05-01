@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view.login_screen;
+package com.dev4lazy.pricecollector.view.E1_login_screen;
 
 
 import android.os.Bundle;

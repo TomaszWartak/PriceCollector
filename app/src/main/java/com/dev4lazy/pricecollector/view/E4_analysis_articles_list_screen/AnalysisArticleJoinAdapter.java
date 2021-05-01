@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view.analysis_articles_list_screen;
+package com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen;
 
 import android.view.LayoutInflater;
 import android.view.View;

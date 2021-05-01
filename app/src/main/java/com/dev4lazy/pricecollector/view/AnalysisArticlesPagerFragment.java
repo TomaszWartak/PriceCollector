@@ -16,7 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.view.analysis_articles_list_screen.AnalysisArticleJoinDiffCalback;
+import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCalback;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsViewModel;
 
 /**

@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view;
+package com.dev4lazy.pricecollector.view.E5_article_screen;
 
 
 import android.os.Bundle;

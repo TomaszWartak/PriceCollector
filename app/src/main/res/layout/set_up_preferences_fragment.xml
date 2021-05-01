@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.setup_preferences_screen.SetUpPreferencesFragment">
+    tools:context=".view.E0_2_setup_preferences_screen.SetUpPreferencesFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

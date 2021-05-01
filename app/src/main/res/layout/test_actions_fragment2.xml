@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/test_actions_fragment_layout2"
+            android:id="@+id/test_actions_fragment_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".test_view.inside_app_data_initialization_screen.TestActionsFragment">
