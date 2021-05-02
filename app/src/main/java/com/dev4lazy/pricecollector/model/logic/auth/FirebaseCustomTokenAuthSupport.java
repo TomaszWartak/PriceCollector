@@ -11,7 +11,7 @@ Dane logowania wysyłane są do usługi w metodzie signIn().
 Obsługa wyniku logowania Firebase odbywa się w metodach callIfSucessful() i callIfUnsucessful()
 wołanych w klasie obsługującej logowanie Firebase (implementującej interfejs FirebaseAuthSupport).
  */
-public class MockCustomTokenOwnAuthSupport
+public class FirebaseCustomTokenAuthSupport
         implements
         AuthSupport,
         AuthSupport.LoginCallback,
@@ -28,17 +28,17 @@ public class MockCustomTokenOwnAuthSupport
 
 // ----------------------------------------------------------
 // obsługa Firebase
-    private FirebaseAuthSupport firebaseAuthServices;
+    private FirebaseAuthSupport firebaseAuthSupport;
 
 // ----------------------------------------------------------
 // konstruktor :-)
-    public MockCustomTokenOwnAuthSupport() {
+    public FirebaseCustomTokenAuthSupport() {
         mockCustomTokenOwnAuthServices = new MockCustomTokenOwnAuthServices();
         mockCustomTokenOwnAuthServices.bindToMockAuthService();
         mockCustomTokenOwnAuthServices.setOnReceiveCallback(this);
         // todo tutaj można podmienić rodzaj autentykacji Firebase
-        firebaseAuthServices = CustomTokenFirebaseAuthSupport.getInstance();
-        firebaseAuthServices.setLoginCallbackService(this);
+        firebaseAuthSupport = CustomTokenFirebaseAuthSupport.getInstance();
+        firebaseAuthSupport.setLoginCallbackService(this);
     }
 
 // ----------------------------------------------------------
@@ -46,8 +46,19 @@ public class MockCustomTokenOwnAuthSupport
 // wysyła dane logowania do własnego serwera logowania
     @Override
     public void signIn() {
+        // TODO: mockCustomTokenOwnAuthServices.isBoundToMockAuthService() trzeba zamienić na
+        //  coś w rodzaju "isAuthServerAvailable()
+        //  Następnie całą sekwencję
+        //   Bundle bundle = new Bundle();
+        //   bundle.putString("userId", userId);
+        //   bundle.putString("password", userPassword);
+        //   mockCustomTokenOwnAuthServices.sendDataToService(bundle);
+        //   trzeba prznieść do MCTOAService, a tutaj zrobic wywołanie metody abstrakcyjne
+        //   interfejsu albo klasy, po której dziedziczyłby MCTOAService, np.
+        //   FirebaseTokenAuthServerServices  <-- AuthServerServices
+        //   A metoda nazywałaby się po prostu signIn???
         if (!mockCustomTokenOwnAuthServices.isBoundToMockAuthService()) {
-            callIfUnsucessful();
+            callIfUnsuccessful();
             return;
         }
         String userId = getCredential("USER_ID");
@@ -62,7 +73,8 @@ public class MockCustomTokenOwnAuthSupport
     // wylogowuje użytkownika z własnego serwera logowania
     @Override
     public void signOut() {
-        firebaseAuthServices.signOut();
+        firebaseAuthSupport.signOut();
+        // TODO: jeśli zrobisz to, co opisałeś w komentarzach do signIn(), to tutaj też musisz
         mockCustomTokenOwnAuthServices.unbindFromMockAuthService();
     }
 
@@ -90,15 +102,15 @@ public class MockCustomTokenOwnAuthSupport
     }
 
     @Override
-    public void callIfSucessful() {
+    public void callIfSuccessful() {
         setLoggedIn(true);
-        loginCallbackService.callIfSucessful();
+        loginCallbackService.callIfSuccessful();
     }
 
     @Override
-    public void callIfUnsucessful() {
+    public void callIfUnsuccessful() {
         setLoggedIn(false);
-        loginCallbackService.callIfUnsucessful();
+        loginCallbackService.callIfUnsuccessful();
     }
 
  // ----------------------------------------------------------
@@ -108,10 +120,10 @@ public class MockCustomTokenOwnAuthSupport
     @Override
     public void callIfDataReceived(boolean authenticated, String token) {
         if (authenticated) {
-            firebaseAuthServices.addCredential("TOKEN", token);
-            firebaseAuthServices.signIn();
+            firebaseAuthSupport.addCredential("TOKEN", token);
+            firebaseAuthSupport.signIn();
         } else {
-            callIfUnsucessful();
+            callIfUnsuccessful();
         }
     }
 

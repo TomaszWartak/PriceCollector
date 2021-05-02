@@ -47,7 +47,7 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
                             Log.d(TAG, "signInFirebase:success");
                             FirebaseUser user = firebaseAuthServices.getCurrentUser();
                             setLoggedIn(true);
-                            callIfSucessful();
+                            callIfSuccessful();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -56,7 +56,7 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInFirebase:failure", exception);
                             setLoggedIn(false);
-                            callIfUnsucessful();
+                            callIfUnsuccessful();
                         }
                     });
         }
@@ -92,13 +92,13 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
     }
 
     @Override
-    public void callIfSucessful() {
-        loginCallbackService.callIfSucessful();
+    public void callIfSuccessful() {
+        loginCallbackService.callIfSuccessful();
     }
 
     @Override
-    public void callIfUnsucessful() {
-        loginCallbackService.callIfUnsucessful();
+    public void callIfUnsuccessful() {
+        loginCallbackService.callIfUnsuccessful();
     }
 
 

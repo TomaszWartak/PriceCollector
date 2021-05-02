@@ -88,10 +88,11 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
 // Obsługa callbacków logowania
 
     @Override
-    public void callIfSucessful() {
+    public void callIfSuccessful() {
         // todo RemoteUser remoteUser = new RemoteUser();
         // todo remoteUser.setLogin(userViewModel.getUser().getLogin());
 
+        // Pobranie danych Użytkownika, który się zalogował, z bazy zdalnej (np.ABC)
         MutableLiveData<List<RemoteUser>> findRemoteUserResult = new MutableLiveData<>();
         Observer<List<RemoteUser>>findRemoteUserResultObserver = new Observer<List<RemoteUser>>() {
             @Override
@@ -114,7 +115,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
                 } else {
                     Toast.makeText(
                         getContext(),
-                        // todo
+                        // todo PObranie napisu z zasobów res/... "W zdalnej bazie danych nie znaleziono danych użytkownika"+userViewModel.getUser().getLogin()
                             "coś nie bangla... Brak użytkowników",
                         Toast.LENGTH_SHORT).show();
                 }
@@ -155,7 +156,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     }
 
     @Override
-    public void callIfUnsucessful() {
+    public void callIfUnsuccessful() {
             // todo kumnuikat jakiś :-)
         Toast.makeText(
             getContext(),

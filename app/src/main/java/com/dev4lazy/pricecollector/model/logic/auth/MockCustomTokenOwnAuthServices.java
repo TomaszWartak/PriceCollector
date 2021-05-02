@@ -56,7 +56,7 @@ public class MockCustomTokenOwnAuthServices /* todo implements MockCustomTokenOw
         }
     };
 
-    public void setBoundToMockAuthService(Boolean bound) {
+    private void setBoundToMockAuthService(Boolean bound) {
         boundToMockAuthService = bound;
     }
 

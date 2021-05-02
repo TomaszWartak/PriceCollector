@@ -70,8 +70,8 @@ public interface AuthSupport {
     void setLoginCallbackService(LoginCallback loginCallback);
 
     interface LoginCallback {
-        void callIfSucessful();
-        void callIfUnsucessful();
+        void callIfSuccessful();
+        void callIfUnsuccessful();
     }
 
 }
