@@ -38,7 +38,7 @@ public class SetUpPreferencesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         // todo usuń
-        Navigation.findNavController(view).navigate(R.id.action_setUpPreferencesFragment_to_logingFragment);
+        Navigation.findNavController(view).navigate(R.id.action_setUpPreferencesFragment_to_loginFragment);
         super.onViewCreated(view, savedInstanceState);
     }
 }

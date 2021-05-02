@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRowJoin;
-import com.dev4lazy.pricecollector.remote_view.RemoteAnalysisRowJoinViewModel;
+import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRowJoin;
+import com.dev4lazy.pricecollector.remote_view_viewmodel.RemoteAnalysisRowJoinViewModel;
 
 import static android.widget.LinearLayout.VERTICAL;
 

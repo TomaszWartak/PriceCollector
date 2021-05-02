@@ -12,15 +12,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
 import com.dev4lazy.pricecollector.model.logic.User;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
-import com.dev4lazy.pricecollector.remote_data.RemoteUser;
+import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
 
@@ -50,11 +52,14 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+        // todo usuń to: userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         View view = inflater.inflate(R.layout.login_fragment, container, false);
-        view.findViewById(R.id.login_fragment_layout).setOnClickListener((View v) -> {
-            Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_testActionsFragment2);
-        });
+        if (BuildConfig.DEBUG) {
+            view.findViewById(R.id.login_fragment_layout).setOnClickListener((View v) -> {
+                Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_testActionsFragment2);
+            });
+        }
         view.findViewById(R.id.login_button).setOnClickListener((View v) -> {
             logIn(view);
         });

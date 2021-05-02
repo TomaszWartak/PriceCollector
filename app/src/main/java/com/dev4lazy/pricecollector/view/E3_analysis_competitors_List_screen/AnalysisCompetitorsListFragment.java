@@ -13,8 +13,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.AnalysisCompetitorSlotList;
-import com.dev4lazy.pricecollector.model.CompetitorSlotFullData;
+import com.dev4lazy.pricecollector.model.logic.AnalysisCompetitorSlotList;
+import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.utils.AppHandle;

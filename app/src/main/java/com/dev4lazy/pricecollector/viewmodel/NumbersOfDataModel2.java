@@ -5,7 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.dev4lazy.pricecollector.remote_data.RemoteDatabase;
+import com.dev4lazy.pricecollector.remote_model.db.RemoteDatabase;
 
 
 public class NumbersOfDataModel2 extends AndroidViewModel {

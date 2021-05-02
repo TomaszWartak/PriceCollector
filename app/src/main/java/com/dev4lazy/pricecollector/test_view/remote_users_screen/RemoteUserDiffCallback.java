@@ -3,8 +3,7 @@ package com.dev4lazy.pricecollector.test_view.remote_users_screen;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.dev4lazy.pricecollector.model.entities.Country;
-import com.dev4lazy.pricecollector.remote_data.RemoteUser;
+import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 
 
 public class RemoteUserDiffCallback extends DiffUtil.ItemCallback<RemoteUser>{

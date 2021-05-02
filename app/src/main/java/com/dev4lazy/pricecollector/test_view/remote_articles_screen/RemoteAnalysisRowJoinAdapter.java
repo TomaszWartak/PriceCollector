@@ -10,7 +10,7 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRowJoin;
+import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRowJoin;
 
 public class RemoteAnalysisRowJoinAdapter extends PagedListAdapter<RemoteAnalysisRowJoin, RemoteAnalysisRowJoinAdapter.RemoteAnalysisRowJoinViewHolder> {
 

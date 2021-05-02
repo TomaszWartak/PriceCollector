@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".remote_view.RemoteSectorsListFragment">
+    tools:context=".remote_view_viewmodel.RemoteSectorsListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/remote_sectors_recycler"

@@ -4,7 +4,7 @@ import com.dev4lazy.pricecollector.model.entities.Department;
 import com.dev4lazy.pricecollector.model.entities.Market;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.model.entities.Sector;
-import com.dev4lazy.pricecollector.remote_data.RemoteUser;
+import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 
 public class User {
 

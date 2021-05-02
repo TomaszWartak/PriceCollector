@@ -13,7 +13,7 @@ import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
-import com.dev4lazy.pricecollector.remote_data.RemoteDataInitializer;
+import com.dev4lazy.pricecollector.remote_model.utils.RemoteDataInitializer;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 /**

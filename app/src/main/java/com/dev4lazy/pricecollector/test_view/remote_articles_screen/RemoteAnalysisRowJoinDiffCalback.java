@@ -3,7 +3,7 @@ package com.dev4lazy.pricecollector.test_view.remote_articles_screen;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.dev4lazy.pricecollector.remote_data.RemoteAnalysisRowJoin;
+import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRowJoin;
 
 public class RemoteAnalysisRowJoinDiffCalback extends DiffUtil.ItemCallback<RemoteAnalysisRowJoin>{
 

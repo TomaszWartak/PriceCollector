@@ -56,7 +56,7 @@
         android:label="fragment_set_up_prefernces"
         tools:layout="@layout/set_up_preferences_fragment" >
         <action
-            android:id="@+id/action_setUpPreferencesFragment_to_logingFragment"
+            android:id="@+id/action_setUpPreferencesFragment_to_loginFragment"
             app:destination="@id/logingFragment" />
     </fragment>
 
@@ -185,12 +185,12 @@
         tools:layout="@layout/alert_dialog_fragment" />
     <fragment
         android:id="@+id/remoteSectorsListFragment"
-        android:name="com.dev4lazy.pricecollector.remote_view.RemoteSectorsListFragment"
+        android:name="com.dev4lazy.pricecollector.remote_view_viewmodel.RemoteSectorsListFragment"
         android:label="remote_sectors_list_fragment"
         tools:layout="@layout/remote_sectors_list_fragment" />
     <fragment
         android:id="@+id/remoteDepartmentsListFragment"
-        android:name="com.dev4lazy.pricecollector.remote_view.RemoteDepartmentsListFragment"
+        android:name="com.dev4lazy.pricecollector.remote_view_viewmodel.RemoteDepartmentsListFragment"
         android:label="remote_departments_list_fragment"
         tools:layout="@layout/remote_departments_list_fragment" />
     <fragment

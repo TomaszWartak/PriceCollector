@@ -2,11 +2,11 @@ package com.dev4lazy.pricecollector.utils;
 
 import android.app.Application;
 
-import com.dev4lazy.pricecollector.model.DataRepository;
+import com.dev4lazy.pricecollector.model.logic.DataRepository;
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
 import com.dev4lazy.pricecollector.model.logic.auth.AppAuthSupport;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
-import com.dev4lazy.pricecollector.remote_data.RemoteDatabase;
+import com.dev4lazy.pricecollector.remote_model.db.RemoteDatabase;
 
 public class AppHandle extends Application{
 
