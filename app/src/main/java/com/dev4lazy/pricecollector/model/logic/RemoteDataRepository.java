@@ -108,6 +108,7 @@ public class RemoteDataRepository {
         new ClearDatabaseAsyncTask().execute();
     }
 
+
 //-----------------------------------------------------------------------------------
 // getAnalysisRowsCount
     public LiveData<Integer> getAnalysisRowsCount() {
@@ -189,7 +190,14 @@ public class RemoteDataRepository {
     public void findAnalyzesNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result ) {
         List<Object> queryArguments = new ArrayList<>();
         queryArguments.add( lastCheckDate.getTime() );
-        SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT * from analyzes WHERE creation_date > ?", queryArguments.toArray() );
+        // todo posprzątaj to
+        // queryArguments.add( "0" );
+        // queryArguments.add( "analyzes" );
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT * FROM analyzes WHERE creation_date > ?"  /**/, queryArguments.toArray() /**/ );
+        // todo test
+        // String queryString = query.getSql();
+        // int pc = query.getArgCount();
+        // todo end test
         analyzes.getViaQuery( query, result);
     }
 

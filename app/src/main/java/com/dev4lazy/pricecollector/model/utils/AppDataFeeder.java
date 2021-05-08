@@ -74,11 +74,11 @@ public class AppDataFeeder implements DataFeeder {
     }
 
     @Override
-    public List<Store> getBricomanStoresInitialList() {
+    public List<Store> getCastoramaStoresInitialList() {
         if (BuildConfig.DEBUG) {
-            return testDataFeeder.getBricomanStoresInitialList();
+            return testDataFeeder.getCastoramaStoresInitialList();
         } else {
-            return productionDataFeeder.getBricomanStoresInitialList();
+            return productionDataFeeder.getCastoramaStoresInitialList();
         }
     }
 

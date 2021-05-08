@@ -19,7 +19,7 @@ public interface DataFeeder {
 
     List<Store> getLmStoresInitialList();
 
-    List<Store> getBricomanStoresInitialList();
+    List<Store> getCastoramaStoresInitialList();
 
     List<Store> getLocalCompetitorStoresInitialList();
 

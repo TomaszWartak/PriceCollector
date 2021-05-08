@@ -51,8 +51,6 @@ public class ArticlesListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated( savedInstanceState );
-        viewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
-        //viewModel = ViewModelProviders.of(this).get(ArticleJoinViewModel.class);
         recyclerSetup();
         subscribeRecycler();
     }
@@ -68,6 +66,8 @@ public class ArticlesListFragment extends Fragment {
     }
 
     private void subscribeRecycler() {
+        viewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
+        //viewModel = ViewModelProviders.of(this).get(ArticleJoinViewModel.class);
         viewModel.getArticlesLiveDataPaged().observe(this, new Observer<PagedList<Article>>() {
         //viewModel.getArticleJoinLiveData().observe(this, new Observer<PagedList<ArticleJoin>>() {
             @Override

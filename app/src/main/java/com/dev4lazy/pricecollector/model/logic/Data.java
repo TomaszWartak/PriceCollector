@@ -27,6 +27,7 @@ public class Data<D> {
 
     public void getNumberOfData(MutableLiveData<Integer> result ) {
         new GetNumberOfAsyncTask(dao, result).execute();
+        // new GetNumberOfAsyncTask(dao, result).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR );
     }
 
     public void insertData(D data ) {
@@ -35,6 +36,7 @@ public class Data<D> {
 
     public void insertData(D data, MutableLiveData<Long> result ) {
         new InsertAsyncTask(dao, result).execute(data);
+        // new InsertAsyncTask(dao, result).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, data );
     }
 
     public void insertDataList(ArrayList<D> dataList, ProgressPresenter progressPresenter ) {
@@ -45,33 +47,42 @@ public class Data<D> {
     public void insertDataList( List<D> dataList, ProgressPresenter progressPresenter, MutableLiveData<Long> resultLD ) {
         // TODO tutaj raczej PagedList...
         new InsertListAsyncTask(dao, progressPresenter, resultLD ).execute(dataList);
+        // new InsertListAsyncTask(dao, progressPresenter, resultLD ).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, dataList );
     }
     public void updateData(D data, MutableLiveData<Integer> resultLD) {
         new UpdateAsyncTask(dao, resultLD).execute(data);
+        // new UpdateAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, data );
     }
+
 
     public void deleteData(D data, MutableLiveData<Integer> resultLD) {
         new DeleteAsyncTask(dao, resultLD).execute(data);
+        // new DeleteAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, data );
     }
 
     public void getAllData( MutableLiveData<List<D>> resultLD ) {
         new getAllDataAsyncTask(dao, resultLD).execute();
+        // new getAllDataAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR );
     }
 
     public void deleteAllData( MutableLiveData<Integer> resultLD ) {
         new deleteAllDataAsyncTask( dao, resultLD).execute();
+        // new deleteAllDataAsyncTask( dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR );
     }
 
-    public void getViaQuery(String query, MutableLiveData<List<D>> resultLD) {
-        new getViaStringQueryAsyncTask(dao, resultLD).execute(query);
+    public void getViaQuery(String stringQuery, MutableLiveData<List<D>> resultLD) {
+        new getViaStringQueryAsyncTask(dao, resultLD).execute(stringQuery);
+        // new getViaStringQueryAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, stringQuery );
     }
 
     public void getViaQuery(SimpleSQLiteQuery query, MutableLiveData<List<D>> resultLD) {
         new getViaQueryAsyncTask(dao, resultLD).execute( query );
+        // new getViaQueryAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, query );
     }
 
     public void findDataById(Integer id, MutableLiveData<List<D>> resultLD) {
         new findDataByIdAsyncTask(dao, resultLD).execute(id);
+        // new findDataByIdAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, id );
     }
 
     private class GetNumberOfAsyncTask extends AsyncTask<Void,Void,Integer> {

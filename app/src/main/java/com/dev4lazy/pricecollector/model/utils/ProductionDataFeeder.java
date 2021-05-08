@@ -11,11 +11,11 @@ import java.util.List;
 public class ProductionDataFeeder implements DataFeeder {
 
     private static ProductionDataFeeder instance = null;
-    public final String[] COMPANIES_NAMES = {"Castorama", "Leroy Merlin", "OBI", "BRICOMAN", "Konkurent lokalny"};
-    public final int CASTORAMA_INDEX = 0;
+    public final String[] COMPANIES_NAMES = {"BRIKO", "Leroy Merlin", "OBI", "Castorama", "Konkurent lokalny"};
+    public final int BRIKO_INDEX = 0;
     public final int LEROY_MERLIN_INDEX = 1;
     public final int OBI_INDEX = 2;
-    public final int BRICOMAN_INDEX = 3;
+    public final int CASTORAMA_INDEX = 3;
     public final int LOCAL_COMPETITOR_INDEX = 4;
 
     public static ProductionDataFeeder getInstance() {
@@ -44,7 +44,7 @@ public class ProductionDataFeeder implements DataFeeder {
         List<Company> companies = new ArrayList<>();
         // Nie zmieniaj kolejności, bo dalej ma to znaczenie :-)
         Company company = new Company();
-        company.setName(COMPANIES_NAMES[CASTORAMA_INDEX]);
+        company.setName(COMPANIES_NAMES[BRIKO_INDEX]);
         companies.add(company);
         company = new Company();
         company.setName(COMPANIES_NAMES[LEROY_MERLIN_INDEX]);
@@ -53,7 +53,7 @@ public class ProductionDataFeeder implements DataFeeder {
         company.setName(COMPANIES_NAMES[OBI_INDEX]);
         companies.add(company);
         company = new Company();
-        company.setName(COMPANIES_NAMES[BRICOMAN_INDEX]);
+        company.setName(COMPANIES_NAMES[CASTORAMA_INDEX]);
         companies.add(company);
         company = new Company();
         company.setName(COMPANIES_NAMES[LOCAL_COMPETITOR_INDEX]);
@@ -85,7 +85,7 @@ public class ProductionDataFeeder implements DataFeeder {
     }
 
     @Override
-    public List<Store> getBricomanStoresInitialList() {
+    public List<Store> getCastoramaStoresInitialList() {
         return null;
     }
 

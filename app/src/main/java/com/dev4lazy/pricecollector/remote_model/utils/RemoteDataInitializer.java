@@ -70,6 +70,7 @@ public class RemoteDataInitializer {
 // Remote Database
 
     public void clearRemoteDatabase() {
+        // Czyści wszystkie tabele
         AppHandle.getHandle().getRepository().getRemoteDataRepository().clearDatabase();
     }
 
@@ -458,8 +459,12 @@ public class RemoteDataInitializer {
     }
 
     private void prepareConverters() {
-        csv2AnalysisRowConverter = new Csv2AnalysisRowConverter();
-        csv2EanCodeConverter = new Csv2EanCodeConverter();
+        if (csv2AnalysisRowConverter==null) {
+            csv2AnalysisRowConverter = new Csv2AnalysisRowConverter();
+        }
+        if (csv2EanCodeConverter==null) {
+            csv2EanCodeConverter = new Csv2EanCodeConverter();
+        }
     }
 
     private void populateRemoteAnalysisRows(int analysisId ) {

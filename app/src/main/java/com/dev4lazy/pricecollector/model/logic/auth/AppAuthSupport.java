@@ -8,7 +8,7 @@ public class AppAuthSupport {
 
     private AppAuthSupport() {
         // todo! tutaj możesz zmianić sposób logowania
-        this.authSupport = new FirebaseCustomTokenAuthSupport();
+        this.authSupport = new MockCustomTokenOwnAuthSupport();
     }
 
     public static AppAuthSupport getInstance() {

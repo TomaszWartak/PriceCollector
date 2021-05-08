@@ -86,7 +86,7 @@
 
     <fragment
         android:id="@+id/testActionsFragment"
-        android:name="com.dev4lazy.pricecollector.test_view.inside_app_data_initialization_screen.TestActionsFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.test_actions_screen.TestActionsFragment"
         android:label="test_actions_fragment"
         tools:layout="@layout/test_actions_fragment">
         <action
@@ -124,7 +124,7 @@
             app:destination="@id/addStoreDialogFragment" />
         <action
             android:id="@+id/action_analysisCompetitorsFragment_to_analysisArticlesListFragment"
-            app:destination="@id/analysisFragment" />
+            app:destination="@id/analysisArticlesListFragment" />
         <action
             android:id="@+id/action_analysisCompetitorsFragment_to_analysisArticlesPagerFragment"
             app:destination="@id/analysisArticlesPagerFragment" />
@@ -135,7 +135,7 @@
         android:label="AddStoreDialogFragment"
         tools:layout="@layout/add_store_fragment" />
     <fragment
-        android:id="@+id/analysisFragment"
+        android:id="@+id/analysisArticlesListFragment"
         android:name="com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticlesListFragment"
         android:label="analysis_fragment"
         tools:layout="@layout/analysis_articles_list_fragment" >
@@ -148,7 +148,7 @@
     </fragment>
     <fragment
         android:id="@+id/testActionsFragment2"
-        android:name="com.dev4lazy.pricecollector.test_view.outside_app_data_initializatiion_screen.TestActionsFragment2"
+        android:name="com.dev4lazy.pricecollector.test_view.test_actions_2_screen.TestActionsFragment2"
         android:label="test_actions_fragment2"
         tools:layout="@layout/test_actions_fragment2" >
         <!-- + -->

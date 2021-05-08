@@ -66,7 +66,7 @@ public class AnalysisArticlesListFragment extends Fragment {
 
     private void subscribeRecycler() {
         viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinsViewModel.class);
-        viewModel.getAnalysisArticleJoinLiveData().observe(this, new Observer<PagedList<AnalysisArticleJoin>>() {
+        viewModel.getAnalysisArticleJoinLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
             @Override
             public void onChanged(PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                 if (!analysisArticlesJoins.isEmpty()) {

@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.dev4lazy.pricecollector.utils.AppPreferences.BRICOMAN_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppPreferences.CASTORAMA_STORES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPANIES_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPETITORS_SLOTS_INITIALIZED;
 import static com.dev4lazy.pricecollector.utils.AppPreferences.COUNTRIES_INITIALIZED;
@@ -74,7 +74,7 @@ public class LocalDataInitializer {
     // Sklepy sieci konkurencyjnych
     private List<Store> obiStores = null;
     private List<Store> lmStores = null;
-    private List<Store> bricomanStores = null;
+    private List<Store> castoramaStores = null;
     private List<Store> localCompetitorStores = null;
     private List<Sector> sectors = null;
     private List<Department> departments = null;
@@ -90,7 +90,7 @@ public class LocalDataInitializer {
     private boolean firstCallOwnStores = true;
     private boolean firstCallObiStores = true;
     private boolean firstCallLMStores = true;
-    private boolean firstCallBricomanStores = true;
+    private boolean firstCallCastoramaStores = true;
     private boolean firstCallLocalCompetitorStores = true;
     private boolean firstCallCompetitorsSlotsNr1 = true;
     private boolean firstCallCompetitorsSlotsNr2 = true;
@@ -118,6 +118,7 @@ public class LocalDataInitializer {
 // Local Database
 
     public void clearLocalDatabase() {
+        // Wyczyszczenie wszystkich tabel
         AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(null);
         // todo to niżej przeniósłbym do AppSettings - czyli warstwę wyżej
         //  inicjalizacja bazy lokalnej -> setLocalDatabaseNotInitialized()
@@ -172,9 +173,9 @@ public class LocalDataInitializer {
                 break;
             case LM_STORES_INITIALIZED:
                 prepareLocalData();
-                populateBricomanStores();
+                populateCastoramaStores();
                 break;
-            case BRICOMAN_STORES_INITIALIZED:
+            case CASTORAMA_STORES_INITIALIZED:
                 prepareLocalData();
                 populateLocalCompetitorStores();
                 break;
@@ -245,7 +246,7 @@ public class LocalDataInitializer {
     }
 
     private void prepareBricomanStores() {
-        bricomanStores = appDataFeeder.getBricomanStoresInitialList();
+        castoramaStores = appDataFeeder.getCastoramaStoresInitialList();
     }
 
     private void prepareLocalCompetitorStores() {
@@ -679,7 +680,7 @@ public class LocalDataInitializer {
             }
         };
         result.observeForever(resultObserver);
-        Company ownCompany = companies.get(ProductionDataFeeder.getInstance().CASTORAMA_INDEX);
+        Company ownCompany = companies.get(ProductionDataFeeder.getInstance().BRIKO_INDEX);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(ownCompany.getName(),result);
     }
 
@@ -721,7 +722,7 @@ public class LocalDataInitializer {
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
                         AppHandle.getHandle().getPrefs().saveInitialisationStage(OBI_STORES_INITIALIZED);
-                        populateBricomanStores();
+                        populateCastoramaStores();
                     }
                 }
             }
@@ -731,27 +732,27 @@ public class LocalDataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(obiCompany.getName(),result);
     }
 
-    private void populateBricomanStores() {
+    private void populateCastoramaStores() {
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
             public void onChanged(List<Company> companiesList) {
-                if (firstCallBricomanStores) {
-                    firstCallBricomanStores = false;
+                if (firstCallCastoramaStores) {
+                    firstCallCastoramaStores = false;
                     result.removeObserver(this); // this = observer...
                     if (companiesList!=null) {
-                        for (Store store : bricomanStores ) {
+                        for (Store store : castoramaStores) {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
-                        AppHandle.getHandle().getPrefs().saveInitialisationStage(BRICOMAN_STORES_INITIALIZED);
+                        AppHandle.getHandle().getPrefs().saveInitialisationStage(CASTORAMA_STORES_INITIALIZED);
                         populateLocalCompetitorStores();
                     }
                 }
             }
         };
         result.observeForever(resultObserver);
-        Company bricomanCompany = companies.get(ProductionDataFeeder.getInstance().BRICOMAN_INDEX);
+        Company bricomanCompany = companies.get(ProductionDataFeeder.getInstance().CASTORAMA_INDEX);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(bricomanCompany.getName(),result);
     }
 
@@ -853,7 +854,7 @@ public class LocalDataInitializer {
             }
         };
         result.observeForever(resultObserver);
-        Company localCompetitorCompany = companies.get( ProductionDataFeeder.getInstance().BRICOMAN_INDEX);
+        Company localCompetitorCompany = companies.get( ProductionDataFeeder.getInstance().CASTORAMA_INDEX);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
     }
 

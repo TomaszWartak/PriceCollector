@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.test_view.inside_app_data_initialization_screen;
+package com.dev4lazy.pricecollector.test_view.test_actions_screen;
 
 
 import android.content.pm.PackageManager;

@@ -36,6 +36,8 @@ public class Remote2LocalConverter {
         analysis.setDueDate( remoteAnalysis.getDueDate() );
         analysis.setFinishDate( remoteAnalysis.getFinishDate() );
         analysis.setConfirmationDate( remoteAnalysis.getConfirmationDate() );
+        analysis.setFinished( false );
+        analysis.setDataDownloaded( false );
         return analysis;
     }
 
@@ -148,7 +150,7 @@ public class Remote2LocalConverter {
 
     public EanCode createEanCode(RemoteEanCode remoteEanCode, Article article ) {
         EanCode localEanCode = new EanCode();
-        // remoteEanCode.article_id = casto;
+        // remoteEanCode.article_id = briko;
         localEanCode.setRemote_id( remoteEanCode.getId() );
         localEanCode.setValue( remoteEanCode.getValue() );
         localEanCode.setArticleId( article.getId() );
@@ -164,8 +166,8 @@ public class Remote2LocalConverter {
     public ArrayList<EanCode> createEanCodesList(
             HashMap<Integer, RemoteEanCode> remoteEanCodesHashMap,
             HashMap<Integer, Article> articlesHashMap ) {
-        // Podczas tworzenia Article z RemoteAnalysisRow (createArticle() ) do Article.remoteId jest wpisywany kod casto.
-        // Podobnie przy tworzeniu RemoteEanCode, do jego pola articleId również jest wpisywany kod casto.
+        // Podczas tworzenia Article z RemoteAnalysisRow (createArticle() ) do Article.remoteId jest wpisywany kod briko.
+        // Podobnie przy tworzeniu RemoteEanCode, do jego pola articleId również jest wpisywany kod briko.
         // Dzięki temu można sparować eanCode z Article.
         ArrayList<EanCode> eanCodesList = new ArrayList<>();
         RemoteEanCode remoteEanCode;

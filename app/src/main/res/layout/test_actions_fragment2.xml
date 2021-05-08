@@ -15,7 +15,7 @@
             android:id="@+id/test_actions_fragment_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".test_view.inside_app_data_initialization_screen.TestActionsFragment">
+            tools:context=".test_view.test_actions_screen.TestActionsFragment">
 
             <!--
 
@@ -143,7 +143,7 @@
                 android:id="@+id/button_show_numbers_of_data2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pokaż ilości danych"
+                android:text="Pokaż ilości danych remote"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_clear_local2" />

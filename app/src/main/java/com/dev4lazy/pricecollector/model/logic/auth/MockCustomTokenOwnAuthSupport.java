@@ -11,7 +11,7 @@ Dane logowania wysyłane są do usługi w metodzie signIn().
 Obsługa wyniku logowania Firebase odbywa się w metodach callIfSucessful() i callIfUnsucessful()
 wołanych w klasie obsługującej logowanie Firebase (implementującej interfejs FirebaseAuthSupport).
  */
-public class FirebaseCustomTokenAuthSupport
+public class MockCustomTokenOwnAuthSupport
         implements
         AuthSupport,
         AuthSupport.LoginCallback,
@@ -32,7 +32,7 @@ public class FirebaseCustomTokenAuthSupport
 
 // ----------------------------------------------------------
 // konstruktor :-)
-    public FirebaseCustomTokenAuthSupport() {
+    public MockCustomTokenOwnAuthSupport() {
         mockCustomTokenOwnAuthServices = new MockCustomTokenOwnAuthServices();
         mockCustomTokenOwnAuthServices.bindToMockAuthService();
         mockCustomTokenOwnAuthServices.setOnReceiveCallback(this);
@@ -57,6 +57,7 @@ public class FirebaseCustomTokenAuthSupport
         //   interfejsu albo klasy, po której dziedziczyłby MCTOAService, np.
         //   FirebaseTokenAuthServerServices  <-- AuthServerServices
         //   A metoda nazywałaby się po prostu signIn???
+        //   UWAGA - stworzyłem interfejs TokenAuthServerServices, ale nie użyłem, go żeby czegoś nie popsuć...
         if (!mockCustomTokenOwnAuthServices.isBoundToMockAuthService()) {
             callIfUnsuccessful();
             return;

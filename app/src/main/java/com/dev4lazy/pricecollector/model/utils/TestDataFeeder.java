@@ -44,30 +44,30 @@ public class TestDataFeeder implements DataFeeder {
     public List<OwnStore> getOwnStoresInitialList() {
         List<OwnStore> ownStores = new ArrayList<>();
         OwnStore ownStore = new OwnStore( );
-        ownStore.setName( "Castorama Rybnik" );
+        ownStore.setName( "BRIKO Rybnik" );
         ownStore.setCity( "Rybnik" );
-        ownStore.setStreet( "Obwiednia Północna 21" );
+        ownStore.setStreet( "Żorska" );
         ownStore.setZipCode( "44-200" );
         ownStore.setOwnNumber( "8033" );
         ownStore.setSapOwnNumber( "1563" );
         ownStore.setStructureType( StoreStructureType.BY_SECTORS );
         ownStores.add( ownStore);
         ownStore = new OwnStore();
-        ownStore.setName( "Castorama Katowice" );
+        ownStore.setName( "BRIKO Katowice" );
         ownStore.setCity( "Katowice" );
-        ownStore.setStreet( "aleja Roździeńskiego 198" );
+        ownStore.setStreet( "Górnośląska 57" );
         ownStore.setZipCode( "40-315" );
         ownStore.setOwnNumber( "8007" );
         ownStore.setSapOwnNumber( "????" );
         ownStore.setStructureType( StoreStructureType.BY_DEPARTMENTS );
         ownStores.add( ownStore );
         ownStore = new OwnStore();
-        ownStore.setName("Castorama Sosnowiec" );
-        ownStore.setCity( "Sosnowiec" );
-        ownStore.setStreet( "Jana Długosza 82" );
-        ownStore.setZipCode( "41-219" );
+        ownStore.setName("BRIKO Czeladź" );
+        ownStore.setCity( "Czeladź" );
+        ownStore.setStreet( "Będzińska 80" );
+        ownStore.setZipCode( "41-250" );
         ownStore.setOwnNumber( "8015" );
-        ownStore.setSapOwnNumber( "????" );
+        ownStore.setSapOwnNumber( "1500" );
         ownStore.setStructureType( StoreStructureType.BY_DEPARTMENTS );
         ownStores.add( ownStore );
         return ownStores;
@@ -98,11 +98,20 @@ public class TestDataFeeder implements DataFeeder {
     }
 
     @Override
-    public List<Store> getBricomanStoresInitialList() {
-        List<Store> bricomanStores = new ArrayList<>();
+    public List<Store> getCastoramaStoresInitialList() {
+        List<Store> castoramaStores = new ArrayList<>();
         Store otherStore = new Store();
-        // Bricoman Jaworzno
-        return bricomanStores;
+        otherStore.setName("Castorama Rybnik");
+        otherStore.setCity("Rybnik");
+        otherStore.setStreet("Obwiednia Północna 21");
+        otherStore.setZipCode("44-200");
+        castoramaStores.add(otherStore);
+        otherStore = new Store();
+        otherStore.setName("Castorama Żory");
+        otherStore.setCity("Żory");
+        otherStore.setStreet("Al. Zjednoczonej Europy 26");
+        otherStore.setZipCode("44-240");
+        castoramaStores.add(otherStore);return castoramaStores;
     }
 
     @Override

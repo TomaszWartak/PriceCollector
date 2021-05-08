@@ -92,6 +92,18 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         // todo RemoteUser remoteUser = new RemoteUser();
         // todo remoteUser.setLogin(userViewModel.getUser().getLogin());
 
+        // Sprawdzenie, czy baza zdalna (ABC) jest utworzona i dostepna
+        // TODO: sprawdzenie powoduje wywołanie RemoteDatabase.getInstance(), które tworzy bazę
+        /*/  dlatego takie sprawdzenie nie ma sensu...
+        if (!AppHandle.getHandle().getRemoteDatabase().getDatabaseCreated().getValue()) {
+            Toast.makeText(
+                getContext(),
+                // todo PObranie napisu z zasobów res/... "Zdalna baza danych nie jest zainicjowana. Nie można pobrać dancyh użytkownika."
+
+                "Zdalna baza danych nie jest zainicjowana. Nie można pobrać dancyh użytkownika.",
+                Toast.LENGTH_SHORT).show();
+                return;
+        } */
         // Pobranie danych Użytkownika, który się zalogował, z bazy zdalnej (np.ABC)
         MutableLiveData<List<RemoteUser>> findRemoteUserResult = new MutableLiveData<>();
         Observer<List<RemoteUser>>findRemoteUserResultObserver = new Observer<List<RemoteUser>>() {
@@ -142,7 +154,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     }
 
     private void getNewAnalysisInfo() {
-        // todo to jest sztuka... bo może się kręcić w nieskończoność...
+        // todo to jest sztuka... bo może się kręcić w nieskończoność... jeśli nie ma nowych analiz?
         MutableLiveData<Boolean> serverRepliedResult = new MutableLiveData<>();
         Observer<Boolean> resultObserver = new Observer<Boolean>() {
             @Override
