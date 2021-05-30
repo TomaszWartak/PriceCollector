@@ -138,6 +138,55 @@ public class RemoteDataInitializer {
         AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllUsers( null );
     }
 
+    public void prepareRemoteDepartments() {
+        Resources resources = AppHandle.getHandle().getResources();
+        remoteDepartments = new ArrayList<>();
+        RemoteDepartment remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r06_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r06_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r10_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r10_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r20_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r20_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r30_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r30_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r40_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r40_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r50_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r50_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r60_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r60_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r70_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r70_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r80_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r80_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+        remoteDepartment = new RemoteDepartment();
+        remoteDepartment.setName(resources.getString(R.string.r90_department_name));
+        remoteDepartment.setSymbol(resources.getString(R.string.r90_department_symbol));
+        remoteDepartments.add(remoteDepartment);
+    }
+
+    public void clearRemoteDepartments() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllDepartments( null );
+    }
+
     public void prepareRemoteAnalyzes() {
         remoteAnalyzes = new ArrayList<>();
         prepareRemoteAnalysis1( remoteAnalyzes );
@@ -198,55 +247,6 @@ public class RemoteDataInitializer {
 
     }
 
-    public void prepareRemoteDepartments() {
-        Resources resources = AppHandle.getHandle().getResources();
-        remoteDepartments = new ArrayList<>();
-        RemoteDepartment remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r06_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r06_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r10_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r10_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r20_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r20_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r30_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r30_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r40_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r40_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r50_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r50_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r60_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r60_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r70_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r70_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r80_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r80_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-        remoteDepartment = new RemoteDepartment();
-        remoteDepartment.setName(resources.getString(R.string.r90_department_name));
-        remoteDepartment.setSymbol(resources.getString(R.string.r90_department_symbol));
-        remoteDepartments.add(remoteDepartment);
-    }
-    
-
-    public void clearRemoteDepartments() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllDepartments( null );
-    }
 
     public void prepareRemoteSectors() {
         Resources resources = AppHandle.getHandle().getResources();
