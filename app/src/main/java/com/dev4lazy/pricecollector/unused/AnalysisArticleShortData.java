@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.model.entities;
+package com.dev4lazy.pricecollector.unused;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

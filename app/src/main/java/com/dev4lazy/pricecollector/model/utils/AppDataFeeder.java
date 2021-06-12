@@ -38,12 +38,20 @@ public class AppDataFeeder implements DataFeeder {
 
     @Override
     public List<Country> getCountriesInitialList() {
-        return productionDataFeeder.getCountriesInitialList();
+        if (BuildConfig.DEBUG) {
+            return testDataFeeder.getCountriesInitialList();
+        } else {
+            return productionDataFeeder.getCountriesInitialList();
+        }
     }
 
     @Override
     public List<Company> getCompaniesInitialList() {
-        return productionDataFeeder.getCompaniesInitialList();
+        if (BuildConfig.DEBUG) {
+            return testDataFeeder.getCompaniesInitialList();
+        } else {
+            return productionDataFeeder.getCompaniesInitialList();
+        }
     }
 
     @Override

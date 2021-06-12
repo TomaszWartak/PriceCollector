@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
         @ForeignKey(
             //entity = Article.class,
             entity = RemoteAnalysisRow.class,
-            parentColumns = "articleCode", // kod casto
+            parentColumns = "articleCode", // kod briko
             childColumns = "article_id"
         )
     },
@@ -28,7 +28,7 @@ public class RemoteEanCode {
     private int remote_id; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
     private String value;
     @ColumnInfo(name = "article_id")
-    private int articleId; // tutaj casto, jako article_id
+    private int articleId; // tutaj briko, jako article_id
 
     public int getId() {
         return id;

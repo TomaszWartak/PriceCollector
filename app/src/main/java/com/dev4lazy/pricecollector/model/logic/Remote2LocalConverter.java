@@ -183,16 +183,10 @@ public class Remote2LocalConverter {
             RemoteAnalysisRow remoteAnalysisRow,
             Analysis analysis,
             // todo? Article article,
-            OwnArticleInfo ownArticleInfo,
-            Store copetitorStore
+            OwnArticleInfo ownArticleInfo
     ) {
-       /* todo Store na razie olewam, żeby nie generować 1000 artykułów dla każdego sklepu
-        na razie idę w wizję, że lista AnalysisArticle jest jedna, a dla kazdego sklepu
-        jeśli cena jest sprawdzona, to powstaje CompteitorPrice, a lista AnalysisArticle
-        jest modyfikowana tylko do wyświetlania
-         */ AnalysisArticle analysisArticle = new AnalysisArticle();
+        AnalysisArticle analysisArticle = new AnalysisArticle();
         analysisArticle.setAnalysisId( analysis.getId() );
-        //analysisArticle.setArticleId( article.getId() );
         analysisArticle.setArticleId( ownArticleInfo.getArticleId() );
         analysisArticle.setOwnArticleInfoId( ownArticleInfo.getId() );
         analysisArticle.setArticleRefPrice( remoteAnalysisRow.getArticleRefPrice() );
@@ -203,7 +197,7 @@ public class Remote2LocalConverter {
     public AnalysisArticle createAnalysisArticlesList(
             Analysis analysis,
             Article article,
-            Store copetitorStore
+            Store competitorStore
     ) {
         /* todo Store na razie olewam, żeby nie generować 1000 artykułów dla każdego sklepu
         na razie idę w wizję, że lista AnalysisArticle jest jedna, a dla kazdego sklepu

@@ -32,12 +32,15 @@ public class OwnArticleInfo {
     private int remoteId; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
     @ColumnInfo(name = "article_id")
     private int articleId;
-    private String ownCode; // kod casto
+    private String ownCode; // kod briko
     private int sapCode;
     private int magentoCode;
-    private double refPrice;
-    private double storePrice;
-    private double storeMarginPercent;
+    private double refPrice; // todo: to chyba nie jest potrzebne, bo jest w CompetitorPrice.
+    //   Nie... Gdyż CompetitorPrice jest tworzone dopiero, gdy zapisujesz dane w trakcoe badania cen
+    private double storePrice; // todo: to chyba nie jest potrzebne, bo jest w CompetitorPrice
+    //   Nie... Gdyż CompetitorPrice jest tworzone dopiero, gdy zapisujesz dane w trakcoe badania cen
+    private double storeMarginPercent; // todo: to chyba nie jest potrzebne, bo jest w CompetitorPrice
+    //   Nie... Gdyż CompetitorPrice jest tworzone dopiero, gdy zapisujesz dane w trakcoe badania cen
     @ColumnInfo(name = "sector_id")
     private int sectorId;
     @ColumnInfo(name = "market_id")

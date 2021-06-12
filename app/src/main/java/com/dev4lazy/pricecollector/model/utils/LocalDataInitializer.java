@@ -219,7 +219,7 @@ public class LocalDataInitializer {
         prepareOwnStores();
         prepareObiStores();
         prepareLeroyMerlinStores();
-        prepareBricomanStores();
+        prepareCastoramaStores();
         prepareLocalCompetitorStores();
         prepareCompetitorSlots();
         startPreparingOtherLocalDataChain();
@@ -245,7 +245,7 @@ public class LocalDataInitializer {
         lmStores = appDataFeeder.getLmStoresInitialList();
     }
 
-    private void prepareBricomanStores() {
+    private void prepareCastoramaStores() {
         castoramaStores = appDataFeeder.getCastoramaStoresInitialList();
     }
 

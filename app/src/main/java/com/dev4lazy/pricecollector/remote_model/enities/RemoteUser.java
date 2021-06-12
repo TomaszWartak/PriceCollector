@@ -10,9 +10,9 @@ public class RemoteUser {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String login;
-    private String name;
-    private String email;
+    private String login; // prywatny adres e-mail
+    private String name; // imię i nazwisko
+    private String email; // służbowy adres e-mail
     private String ownStoreNumber; // OwnStore.ownNumber
     private String departmentSymbol; // Department.symbol
     private String sectorName; // Sector.name

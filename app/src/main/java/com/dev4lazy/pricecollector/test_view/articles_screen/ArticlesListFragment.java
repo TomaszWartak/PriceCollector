@@ -68,7 +68,7 @@ public class ArticlesListFragment extends Fragment {
     private void subscribeRecycler() {
         viewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
         //viewModel = ViewModelProviders.of(this).get(ArticleJoinViewModel.class);
-        viewModel.getArticlesLiveDataPaged().observe(this, new Observer<PagedList<Article>>() {
+        viewModel.getArticlesLiveDataPaged().observe(getViewLifecycleOwner(), new Observer<PagedList<Article>>() {
         //viewModel.getArticleJoinLiveData().observe(this, new Observer<PagedList<ArticleJoin>>() {
             @Override
             public void onChanged(PagedList<Article> articles) {

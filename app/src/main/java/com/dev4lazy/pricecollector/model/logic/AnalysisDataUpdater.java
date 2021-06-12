@@ -550,8 +550,7 @@ public class AnalysisDataUpdater {
             analysisArticle = converter.createAnalysisArticle(
                     remoteAnalysisRow,
                     analysis,
-                    ownArticleInfo,
-                    null // todo??? <---
+                    ownArticleInfo
             );
             analysisArticlesList.add( analysisArticle );
         }

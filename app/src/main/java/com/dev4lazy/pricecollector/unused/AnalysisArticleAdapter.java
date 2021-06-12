@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view;
+package com.dev4lazy.pricecollector.unused;
 
 import android.view.LayoutInflater;
 import android.view.View;

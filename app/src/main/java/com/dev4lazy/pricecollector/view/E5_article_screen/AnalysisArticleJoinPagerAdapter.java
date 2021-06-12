@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view;
+package com.dev4lazy.pricecollector.view.E5_article_screen;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +39,7 @@ public class AnalysisArticleJoinPagerAdapter extends PagedListAdapter<AnalysisAr
 
     class AnalysisArticleJoinPagerViewHolder extends RecyclerView.ViewHolder {
 
-        AnalysisArticleJoin analysisArticleJoin;
+        // todo usuń AnalysisArticleJoin analysisArticleJoin;
         private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
         private TextView textViewArticleName;
         private TextView textViewOwnCode;

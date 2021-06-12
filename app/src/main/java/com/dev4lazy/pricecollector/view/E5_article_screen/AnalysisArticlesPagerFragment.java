@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view;
+package com.dev4lazy.pricecollector.view.E5_article_screen;
 
 
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.viewpager2.widget.ViewPager2;
@@ -48,7 +49,6 @@ public class AnalysisArticlesPagerFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated( savedInstanceState );
-        //viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinViewModel.class);
         viewPagerSetup();
         subscribeViewPager();
     }
@@ -62,8 +62,8 @@ public class AnalysisArticlesPagerFragment extends Fragment {
     }
 
     private void subscribeViewPager() {
-        viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinsViewModel.class);
-        viewModel.getAnalysisArticleJoinLiveData().observe(this, new Observer<PagedList<AnalysisArticleJoin>>() {
+        viewModel = new ViewModelProvider(this).get(AnalysisArticleJoinsViewModel.class);
+        viewModel.getAnalysisArticleJoinLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
             @Override
             public void onChanged(PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                 if (!analysisArticlesJoins.isEmpty()) {

@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Country;
-import com.dev4lazy.pricecollector.unused.CountryListViewModel;
+import com.dev4lazy.pricecollector.view.AlertDialogFragment2;
 
 public class CountriesListFragment extends Fragment {
 
-    private CountryListViewModel viewModel;
+    private AlertDialogFragment2.CountryListViewModel viewModel;
     private RecyclerView recyclerView;
     private CountryAdapter countryAdapter;
 
@@ -38,7 +38,7 @@ public class CountriesListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(CountryListViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(AlertDialogFragment2.CountryListViewModel.class);
         recyclerSetup();
         subscribeRecycler();
     }
@@ -52,11 +52,11 @@ public class CountriesListFragment extends Fragment {
     }
 
     private void subscribeRecycler() {
-        viewModel.getCountrysLiveData().observe(this, new Observer<PagedList<Country>>() {
+        viewModel.getCountriesLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<Country>>() {
             @Override
-            public void onChanged(PagedList<Country> storesList) {
-                if (!storesList.isEmpty()) {
-                    countryAdapter.submitList(storesList);
+            public void onChanged(PagedList<Country> countriesList) {
+                if (!countriesList.isEmpty()) {
+                    countryAdapter.submitList(countriesList);
                 }
             }
         });

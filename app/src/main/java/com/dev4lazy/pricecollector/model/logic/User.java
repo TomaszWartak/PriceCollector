@@ -10,10 +10,10 @@ public class User {
 
     private String login;
     private String name;
-    private String email;
+    private String email; // nie używane
     private OwnStore ownStore;
     private Department department;
-    private Market market;
+    private Market market; // nie używane
     private Sector sector;
 
     public User() {

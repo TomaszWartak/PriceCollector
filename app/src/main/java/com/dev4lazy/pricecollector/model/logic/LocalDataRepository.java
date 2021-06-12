@@ -94,7 +94,7 @@ public class LocalDataRepository {
     }
 
     public void updateAnalysis( Analysis analysis, MutableLiveData<Integer> result ) {
-        analyzes .updateData( analysis, result );
+        analyzes.updateData( analysis, result );
     }
 
     public void deleteAnalysis(Analysis analysis, MutableLiveData<Integer> result ) {

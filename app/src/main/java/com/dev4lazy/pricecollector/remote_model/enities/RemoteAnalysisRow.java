@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey;
 )
 // todo
 //  sprawdź dla dużej ilości wierszy (1000?) jaki wpływ na czas wyświetlenie (będzie jakieś wyświetlanie?),
-//  będzie miał dodanie indeksu po kodzie casto
+//  będzie miał dodanie indeksu po kodzie briko
 public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
 
     /*
@@ -31,10 +31,10 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
     [SKU_ShopCostDate] [date] NULL,
     [SKU_PMMPrice] [money] NULL,
     [SKU_PMMPriceDate] [date] NULL,
-    [SKU_CastoChangePrice] [money] NULL,
+    [SKU_BrikoChangePrice] [money] NULL,
     [SKU_LMPrice] [money] NULL,
     [SKU_OBIPrice] [money] NULL,
-    [SKU_BricomanPrice] [money] NULL,
+    [SKU_CastoramaPrice] [money] NULL,
     [SKU_LocalCompetitorPrice1] [money] NULL,
     [SKU_LocalCompetitorPrice2] [money] NULL,        */
 
@@ -42,7 +42,7 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
     @PrimaryKey(autoGenerate = true)
     private int id;
     private Integer analysisId;
-    private Integer articleCode; // kod casto
+    private Integer articleCode; // kod briko
     private Integer storeId;
     private String articleName;
     private Double articleStorePrice;

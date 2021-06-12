@@ -187,6 +187,33 @@ public class RemoteDataInitializer {
         AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllDepartments( null );
     }
 
+    public void prepareRemoteSectors() {
+        Resources resources = AppHandle.getHandle().getResources();
+        remoteSectors = new ArrayList<>();
+        RemoteSector remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.sbud_sector_name));
+        remoteSectors.add(remoteSector);
+        remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.srem_sector_name));
+        remoteSectors.add(remoteSector);
+        remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.surz_sector_name));
+        remoteSectors.add(remoteSector);
+        remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.sdek_sector_name));
+        remoteSectors.add(remoteSector);
+        remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.sogr_sector_name));
+        remoteSectors.add(remoteSector);
+        remoteSector = new RemoteSector();
+        remoteSector.setName(resources.getString(R.string.sok_sector_name));
+        remoteSectors.add(remoteSector);
+    }
+
+    public void clearRemoteSectors() {
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllSectors( null );
+    }
+
     public void prepareRemoteAnalyzes() {
         remoteAnalyzes = new ArrayList<>();
         prepareRemoteAnalysis1( remoteAnalyzes );
@@ -245,34 +272,6 @@ public class RemoteDataInitializer {
     private void clearRemoteAnalysis() {
         AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllAnalyzes( null );
 
-    }
-
-
-    public void prepareRemoteSectors() {
-        Resources resources = AppHandle.getHandle().getResources();
-        remoteSectors = new ArrayList<>();
-        RemoteSector remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.sbud_sector_name));
-        remoteSectors.add(remoteSector);
-        remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.srem_sector_name));
-        remoteSectors.add(remoteSector);
-        remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.surz_sector_name));
-        remoteSectors.add(remoteSector);
-        remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.sdek_sector_name));
-        remoteSectors.add(remoteSector);
-        remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.sogr_sector_name));
-        remoteSectors.add(remoteSector);
-        remoteSector = new RemoteSector();
-        remoteSector.setName(resources.getString(R.string.sok_sector_name));
-        remoteSectors.add(remoteSector);
-    }
-
-    public void clearRemoteSectors() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllSectors( null );
     }
 
     private void prepareRemoteModules(){
@@ -383,7 +382,7 @@ public class RemoteDataInitializer {
 
     private void startRemoteDataInitialisationChain() {
         populateRemoteUsers();
-        // Nie zrobiłem łąncucha. W przypadku Remote nie ma tworzenia zależności on line.
+        // todo Nie zrobiłem łąncucha. W przypadku Remote nie ma tworzenia zależności on line.
         // Wystarczy zainicjować dane w odpowiedniej kolejności.
         // A przynajmniej tak mi się wydaje... :-)
         populateRemoteDepartments();
@@ -449,6 +448,8 @@ public class RemoteDataInitializer {
                 analysisInsertResult.removeObserver(this); // this = observer...
                 if (analysisId!=-1) {
                     prepareConverters();
+                    // todo: jesli populateRemoteAnalysis() jest wołane z startRemoteDataInitialisationChain,
+                    //  to prepareCOnverters było już wcześniej wołane. Czyli konwertery są dwa razy tworozne
                     populateRemoteAnalysisRows( analysisId.intValue() );
                     populateRemoteEanCodes( );
                 }

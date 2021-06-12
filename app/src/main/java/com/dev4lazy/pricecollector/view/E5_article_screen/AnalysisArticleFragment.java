@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 
 /**
@@ -28,7 +30,7 @@ public class AnalysisArticleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        analysisArticleJoinViewModel = ViewModelProviders.of( getActivity() ).get( AnalysisArticleJoinViewModel.class );
+        analysisArticleJoinViewModel = new ViewModelProvider( getActivity() ).get( AnalysisArticleJoinViewModel.class );
         View view = inflater.inflate(R.layout.analysis_article_fragment, container, false);
         setView( view );
         return view;
@@ -37,6 +39,9 @@ public class AnalysisArticleFragment extends Fragment {
     private void setView( View view ) {
         // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
         TextView textViewArticleName  = view.findViewById( R.id.analysisArticleFragment_articleName );
+        // todo start test
+        AnalysisArticleJoin arj = analysisArticleJoinViewModel.getAnalysisArticleJoin();
+        // todo stop test
         textViewArticleName.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getArticleName() );
         TextView textViewOwnCode = view.findViewById( R.id.analysisArticleFragment_ownCode );
         textViewOwnCode.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getOwnCode() );
