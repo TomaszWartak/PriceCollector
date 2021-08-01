@@ -40,7 +40,7 @@ public class CountriesListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(AlertDialogFragment2.CountryListViewModel.class);
         recyclerSetup();
-        subscribeRecycler();
+        recyclerSubscribtion();
     }
 
     private void recyclerSetup() {
@@ -51,7 +51,7 @@ public class CountriesListFragment extends Fragment {
         recyclerView.setAdapter(countryAdapter);
     }
 
-    private void subscribeRecycler() {
+    private void recyclerSubscribtion() {
         viewModel.getCountriesLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<Country>>() {
             @Override
             public void onChanged(PagedList<Country> countriesList) {

@@ -18,15 +18,15 @@ public class AnalysisArticleJoin {
     @ColumnInfo(name = "article_new_price")
     private Double articleNewPrice; // from AnalysisArticle.
     @ColumnInfo(name = "competitor_store_id")
-    private int competitorStoreId; // from AnalysisArticle.
+    private int competitorStoreId; // from CompetitorPrice.
     @ColumnInfo(name = "competitor_store_price")
-    private Double competitorStorePrice; // from AnalysisArticle.
+    private Double competitorStorePrice; // from CompetitorPrice.
     @ColumnInfo(name = "reference_article_id")
-    private int referenceArticleId; // from AnalysisArticle.
+    private int referenceArticleId; // from CompetitorPrice.
     private String comments; // from AnalysisArticle.
     @ColumnInfo(name = "name")
     private String articleName; // from Article.name by AnalysisArticle.articleId
-    private String ownCode; // kod casto from OwnArticleInfo. by AnalysisArticle.articleId
+    private String ownCode; // kod briko from OwnArticleInfo. by AnalysisArticle.articleId
     @ColumnInfo(name = "value")
     private String eanCode; // from OwnArticleInfo. by AnalysisArticle.articleId
     private String referenceArticleName; // from Article. by AnalysisArticle.referenceArticleId

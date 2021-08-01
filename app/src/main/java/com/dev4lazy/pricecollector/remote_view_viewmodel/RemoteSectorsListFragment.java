@@ -42,7 +42,7 @@ public class RemoteSectorsListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(RemoteSectorListViewModel.class);
         recyclerSetup();
-        subscribeRecycler();
+        recyclerSubscribtion();
     }
 
     private void recyclerSetup() {
@@ -53,8 +53,8 @@ public class RemoteSectorsListFragment extends Fragment {
         recyclerView.setAdapter(remoteSectorAdapter);
     }
 
-    private void subscribeRecycler() {
-        viewModel.getRemoteSectorsLiveData().observe(this, new Observer<PagedList<RemoteSector>>() {
+    private void recyclerSubscribtion() {
+        viewModel.getRemoteSectorsLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<RemoteSector>>() {
             @Override
             public void onChanged(PagedList<RemoteSector> remoteSectorsList ) {
                 if (!remoteSectorsList.isEmpty()) {

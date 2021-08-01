@@ -37,7 +37,7 @@ public class DepartmentInSectorsListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of( this ).get( DepartmentInSectorListViewModel.class);
         recyclerSetup();
-        subscribeRecycler();
+        recyclerSubscribtion();
     }
 
     private void recyclerSetup() {
@@ -48,7 +48,7 @@ public class DepartmentInSectorsListFragment extends Fragment {
         recyclerView.setAdapter( departmentInSectorAdapter );
     }
 
-    private void subscribeRecycler() {
+    private void recyclerSubscribtion() {
         viewModel.getDepartmentInSectorsLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<DepartmentInSector>>() {
             @Override
             public void onChanged( PagedList<DepartmentInSector> departmentInSectorsList  ) {

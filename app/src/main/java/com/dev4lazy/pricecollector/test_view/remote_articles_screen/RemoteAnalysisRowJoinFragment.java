@@ -41,7 +41,7 @@ public class RemoteAnalysisRowJoinFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(RemoteAnalysisRowJoinViewModel.class);
         recyclerSetup();
-        subscribeRecycler();
+        recyclerSubscribtion();
     }
 
     private void recyclerSetup() {
@@ -53,8 +53,8 @@ public class RemoteAnalysisRowJoinFragment extends Fragment {
         recyclerView.setAdapter(remoteAnalysisRowJoinAdapter);
     }
 
-    private void subscribeRecycler() {
-        viewModel.getAnalysisRowsJoinLiveData().observe(this, new Observer<PagedList<RemoteAnalysisRowJoin>>() {
+    private void recyclerSubscribtion() {
+        viewModel.getAnalysisRowsJoinLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<RemoteAnalysisRowJoin>>() {
             @Override
             public void onChanged(PagedList<RemoteAnalysisRowJoin> remoteAnalysisRowsJoin) {
                 if (!remoteAnalysisRowsJoin.isEmpty()) {

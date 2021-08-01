@@ -64,7 +64,7 @@ public class AnalyzesListFragment extends Fragment {
         setOnBackPressedCalback();
 
         recyclerSetup( view );
-        subscribeRecycler();
+        recyclerSubscribtion();
 
         if (BuildConfig.DEBUG) {
             // todo test
@@ -93,7 +93,7 @@ public class AnalyzesListFragment extends Fragment {
                         .show();
             }
         };
-        getActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+        getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
     private class LogOffListener implements DialogInterface.OnClickListener {
@@ -119,7 +119,7 @@ public class AnalyzesListFragment extends Fragment {
         recyclerView.setAdapter( analysisAdapter );
     }
 
-    private void subscribeRecycler() {
+    private void recyclerSubscribtion() {
         viewModel = ViewModelProviders.of(this ).get( AnalyzesListViewModel.class );
         viewModel.getAnalyzesLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<Analysis>>() {
             @Override

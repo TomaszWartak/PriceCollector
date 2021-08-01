@@ -42,7 +42,7 @@ public class OtherStoresListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(OtherStoreListViewModel.class);
         recyclerSetup();
-        subscribeRecycler();
+        recyclerSubscribtion();
     }
 
     private void recyclerSetup() {
@@ -53,8 +53,8 @@ public class OtherStoresListFragment extends Fragment {
         recyclerView.setAdapter(otherStoreAdapter);
     }
 
-    private void subscribeRecycler() {
-        viewModel.getStoresLiveData().observe(this, new Observer<PagedList<Store>>() {
+    private void recyclerSubscribtion() {
+        viewModel.getStoresLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<Store>>() {
             @Override
             public void onChanged(PagedList<Store> storesList) {
                 if (!storesList.isEmpty()) {

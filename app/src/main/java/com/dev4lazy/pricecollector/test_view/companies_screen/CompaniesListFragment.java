@@ -40,7 +40,7 @@ public class CompaniesListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(CompanyListViewModel.class);
         recyclerSetup();
-        subscribeRecycler();
+        recyclerSubscribtion();
     }
 
     private void recyclerSetup() {
@@ -51,8 +51,8 @@ public class CompaniesListFragment extends Fragment {
         recyclerView.setAdapter(companyAdapter);
     }
 
-    private void subscribeRecycler() {
-        viewModel.getCompaniesLiveData().observe(this, new Observer<PagedList<Company>>() {
+    private void recyclerSubscribtion() {
+        viewModel.getCompaniesLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<Company>>() {
             @Override
             public void onChanged(PagedList<Company> storesList) {
                 if (!storesList.isEmpty()) {

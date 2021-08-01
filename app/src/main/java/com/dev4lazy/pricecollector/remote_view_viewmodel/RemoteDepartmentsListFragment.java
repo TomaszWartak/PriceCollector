@@ -41,7 +41,7 @@ public class RemoteDepartmentsListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of( this ).get( RemoteDepartmentListViewModel.class);
         recyclerSetup();
-        subscribeRecycler();
+        recyclerSubscribtion();
     }
 
     private void recyclerSetup() {
@@ -52,8 +52,8 @@ public class RemoteDepartmentsListFragment extends Fragment {
         recyclerView.setAdapter( remoteDepartmentAdapter );
     }
 
-    private void subscribeRecycler() {
-        viewModel.getRemoteDepartmentsLiveData().observe( this,  new Observer<PagedList<RemoteDepartment>>() {
+    private void recyclerSubscribtion() {
+        viewModel.getRemoteDepartmentsLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<RemoteDepartment>>() {
             @Override
             public void onChanged( PagedList<RemoteDepartment> remoteDepartmentsList  ) {
                 if (!remoteDepartmentsList.isEmpty()) {

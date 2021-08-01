@@ -53,7 +53,7 @@ public class AnalysisArticlesListFragment extends Fragment {
         super.onActivityCreated( savedInstanceState );
         //viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinViewModel.class);
         recyclerSetup();
-        subscribeRecycler();
+        recyclerSubscribtion();
     }
 
     private void recyclerSetup() {
@@ -64,7 +64,7 @@ public class AnalysisArticlesListFragment extends Fragment {
         recyclerView.setAdapter(analysisArticleJoinAdapter);
     }
 
-    private void subscribeRecycler() {
+    private void recyclerSubscribtion() {
         viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinsViewModel.class);
         viewModel.getAnalysisArticleJoinLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
             @Override

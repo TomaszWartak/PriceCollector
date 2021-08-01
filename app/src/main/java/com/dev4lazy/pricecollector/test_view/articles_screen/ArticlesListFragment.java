@@ -52,7 +52,7 @@ public class ArticlesListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated( savedInstanceState );
         recyclerSetup();
-        subscribeRecycler();
+        recyclerSubscribtion();
     }
 
     private void recyclerSetup() {
@@ -65,7 +65,7 @@ public class ArticlesListFragment extends Fragment {
         //recyclerView.setAdapter(analysisArticleJoinAdapter);
     }
 
-    private void subscribeRecycler() {
+    private void recyclerSubscribtion() {
         viewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
         //viewModel = ViewModelProviders.of(this).get(ArticleJoinViewModel.class);
         viewModel.getArticlesLiveDataPaged().observe(getViewLifecycleOwner(), new Observer<PagedList<Article>>() {

@@ -40,7 +40,7 @@ public class RemoteUsersListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(RemoteUserListViewModel.class);
         recyclerSetup();
-        subscribeRecycler();
+        recyclerSubscribtion();
     }
 
     private void recyclerSetup() {
@@ -51,8 +51,8 @@ public class RemoteUsersListFragment extends Fragment {
         recyclerView.setAdapter(remoteUserAdapter);
     }
 
-    private void subscribeRecycler() {
-        viewModel.getRemoteUsersLiveData().observe(this, new Observer<PagedList<RemoteUser>>() {
+    private void recyclerSubscribtion() {
+        viewModel.getRemoteUsersLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<RemoteUser>>() {
             @Override
             public void onChanged(PagedList<RemoteUser> remoteUsersList ) {
                 if (!remoteUsersList.isEmpty()) {
