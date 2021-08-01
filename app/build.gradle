@@ -4,11 +4,11 @@ apply plugin: 'com.google.gms.google-services'
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.dev4lazy.pricecollector"
         minSdkVersion 26
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -36,6 +36,10 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Dodałem do nie upgradzie do ArcticFox przy buiildzie nie mógł znaleźć
+    // implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.31'
+    // 2021-08-01 https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
 
     // Android X
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -97,8 +101,8 @@ dependencies {
     // 2021-04-22 https://mvnrepository.com/artifact/androidx.lifecycle/lifecycle-extensions
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
 
-    // Paging 2021-04-22 https://developer.android.com/jetpack/androidx/releases/paging
-    implementation "android.arch.paging:runtime:2.1.2" // prev 2.1.0
+    // Paging 2021-08-01 https://developer.android.com/jetpack/androidx/releases/paging
+    implementation "androidx.paging:paging-runtime:3.0.1" // prev 2.1.2
 
     // Współdzielona biblioteka z definicją danych lokalnych
     // implementation project(":pricecollectorlocaldata-debug")
