@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen;
+package com.dev4lazy.pricecollector.unused;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.MainActivity;
+import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCalback;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 
-public class AnalysisArticleJoinAdapter extends PagedListAdapter<AnalysisArticleJoin, AnalysisArticleJoinAdapter.AnalysisArticleJoinViewHolder> {
+public class AnalysisArticleJoinAdapterOld extends PagedListAdapter<AnalysisArticleJoin, AnalysisArticleJoinAdapterOld.AnalysisArticleJoinViewHolder> {
 
-    public AnalysisArticleJoinAdapter( AnalysisArticleJoinDiffCalback analysisArticleJoinDiffCalback ){
+    public AnalysisArticleJoinAdapterOld(AnalysisArticleJoinDiffCalback analysisArticleJoinDiffCalback ){
         super( analysisArticleJoinDiffCalback );
     }
 

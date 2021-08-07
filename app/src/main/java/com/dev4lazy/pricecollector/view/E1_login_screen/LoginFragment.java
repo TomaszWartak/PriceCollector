@@ -154,7 +154,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     }
 
     private void getNewAnalysisInfo() {
-        // todo to jest sztuka... bo może się kręcić w nieskończoność... jeśli nie ma nowych analiz?
+        // todo XXX to jest sztuka... bo może się kręcić w nieskończoność... jeśli nie ma nowych analiz?
         MutableLiveData<Boolean> serverRepliedResult = new MutableLiveData<>();
         Observer<Boolean> resultObserver = new Observer<Boolean>() {
             @Override

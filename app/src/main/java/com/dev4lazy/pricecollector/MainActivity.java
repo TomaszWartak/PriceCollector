@@ -17,19 +17,19 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
     // todo ? private AppBarConfiguration appBarConfiguration;
 
     // todo ?
-    public Toolbar toolbar;
+    public Toolbar toolbar; // todo Toolbar
 
-    public DrawerLayout drawerLayout;
+    public DrawerLayout drawerLayout; // todo DrawerLayout
 
-    public NavController navController;
+    public NavController navController; // todo NavController
 
-    public NavigationView navigationView;
+    public NavigationView navigationView; // todo NavigationView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        setupNavigation();
+        setupNavigation(); // todo <-- ta metoda jest pusta...
 
         // Inicalizacja obiektu preferencji
         AppHandle.getHandle().getPrefs().setPrefs( getPreferences(Context.MODE_PRIVATE) );

@@ -20,8 +20,9 @@ public class AppHandle extends Application{
 
     public static AppHandle getHandle() { return appHandle; }
 
-    public void shutDown() {
+    public void shutdown() {
         // todo tutaj zapisanie preferences, bazy danych itp...
+        // todo A może jest jakaś metoda onDestroy() ? w której może być Shutdown wołany
         getPrefs().commit();
         getAuthSupport().signOut();
     }

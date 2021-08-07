@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.R;
@@ -22,12 +22,8 @@ import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsViewModel;
  */
 public class AnalysisArticlesListFragment extends Fragment {
 
-
-    //private AnalysisArticleJoinViewModel viewModel;
-    private AnalysisArticleJoinsViewModel viewModel;
     private AnalysisArticleJoinsRecyclerView recyclerView;
-    //private AnalysisArticleAdapter analysisArticleJoinAdapter;
-    private AnalysisArticleJoinAdapter analysisArticleJoinAdapter;
+    private AnalysisArticleJoinsViewModel viewModel;
 
     public AnalysisArticlesListFragment() {
         // Required empty public constructor
@@ -46,28 +42,23 @@ public class AnalysisArticlesListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated( savedInstanceState );
-        //viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinViewModel.class);
-        recyclerSetup();
-        recyclerSubscribtion();
+        recyclerViewSetup();
+        recyclerViewSubscribtion();
     }
 
-    private void recyclerSetup() {
-        // analysisArticleJoinAdapter = new AnalysisArticleJoinAdapter(new AnalysisArticleJoinDiffCalback());
+    private void recyclerViewSetup() {
         recyclerView = getView().findViewById(R.id.analysis_articles_recycler);
-        /*recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
-        recyclerView.setAdapter(analysisArticleJoinAdapter); */
         recyclerView.setup();
     }
 
-    private void recyclerSubscribtion() {
-        viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinsViewModel.class);
-        viewModel.getAnalysisArticleJoinLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
+    private void recyclerViewSubscribtion() {
+        // viewModel = ViewModelProviders.of(this).get(AnalysisArticleJoinsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(AnalysisArticleJoinsViewModel.class);
+        viewModel.getAnalysisArticleJoinLiveData().observe( getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
             @Override
-            public void onChanged(PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
+            public void onChanged( PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                 if (!analysisArticlesJoins.isEmpty()) {
-                    //analysisArticleJoinAdapter.submitList(analysisArticlesJoins);
-                    recyclerView.submitArticlesList(analysisArticlesJoins);
+                    recyclerView.submitArticlesList( analysisArticlesJoins );
                 }
             }
         });

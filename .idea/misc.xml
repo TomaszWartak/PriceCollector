@@ -9,6 +9,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.15885416666666666" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_article_fragment.xml" value="0.20885416666666667" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_articles_list_fragment.xml" value="0.21041666666666667" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/companies_list_fragment.xml" value="0.20885416666666667" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/main_activity.xml" value="0.21145833333333333" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/set_up_preferences_fragment.xml" value="0.21197916666666666" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/start_screen_fragment.xml" value="0.215625" />
       </map>
     </option>
   </component>

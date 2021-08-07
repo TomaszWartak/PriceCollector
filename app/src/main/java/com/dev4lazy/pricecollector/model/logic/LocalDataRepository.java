@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.paging.DataSource;
 
 import com.dev4lazy.pricecollector.model.db.AnalysisArticleDao;
 import com.dev4lazy.pricecollector.model.db.AnalysisCompetitorSlotDao;
@@ -42,6 +43,7 @@ import com.dev4lazy.pricecollector.model.entities.OwnStore;
 import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.model.entities.UOProject;
+import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
 
@@ -180,6 +182,10 @@ public class LocalDataRepository {
 
     public void getAllAnalysisArticles( MutableLiveData<List<AnalysisArticle>> result ) {
         analysisArticles.getAllData( result );
+    }
+
+    public DataSource.Factory<Integer, AnalysisArticleJoin> getAllAnalysisArticlesJoin() {
+        return ((AnalysisArticleDao)analysisArticles.getDao()).getAllAnalysisArticlesJoin();
     }
 
     public void findAnalysisArticleById( int id, MutableLiveData<List<AnalysisArticle>> result ) {

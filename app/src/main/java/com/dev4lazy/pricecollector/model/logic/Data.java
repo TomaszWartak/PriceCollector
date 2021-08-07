@@ -25,6 +25,10 @@ public class Data<D> {
         this.dao = dao;
     }
 
+    public _Dao getDao() {
+        return dao;
+    }
+
     public void getNumberOfData(MutableLiveData<Integer> result ) {
         new GetNumberOfAsyncTask(dao, result).execute();
         // new GetNumberOfAsyncTask(dao, result).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR );

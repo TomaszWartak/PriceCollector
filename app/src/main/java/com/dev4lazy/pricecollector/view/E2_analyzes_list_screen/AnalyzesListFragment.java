@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
@@ -106,7 +107,7 @@ public class AnalyzesListFragment extends Fragment {
 
     private void finishApp() {
         // TODO promotor: czy to można bardziej elegancko zrobić?
-        AppHandle.getHandle().shutDown();
+        AppHandle.getHandle().shutdown();
         getActivity().finishAndRemoveTask();
         System.exit(0);
     }
@@ -120,7 +121,7 @@ public class AnalyzesListFragment extends Fragment {
     }
 
     private void recyclerSubscribtion() {
-        viewModel = ViewModelProviders.of(this ).get( AnalyzesListViewModel.class );
+        viewModel = new ViewModelProvider(this ).get( AnalyzesListViewModel.class );
         viewModel.getAnalyzesLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<Analysis>>() {
             @Override
             public void onChanged( PagedList<Analysis> analyzesList  ) {

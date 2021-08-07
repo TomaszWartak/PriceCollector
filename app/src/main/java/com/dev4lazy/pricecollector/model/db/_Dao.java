@@ -22,7 +22,7 @@ public interface _Dao<D> {
     // Ale wkleiłem z powrotem...
     // jeśli to działa, to przenieś również @Update i @Delete do wszystkich Dao, <-- chyba nie...
     // albo zrób interface Room_Dao, który będzie używany zamiast _Dao. TO CHYBA NAJLEPSZY POMYSŁ
-    // Zrefakturyj _Dao na Room_Dao, gdzie będą tylko metody z adnotacjami Room, a wszystkie będą w _dao
+    // Zrefaktoryzuj _Dao na Room_Dao, gdzie będą tylko metody z adnotacjami Room, a wszystkie będą w _dao
     // Zobacz też OneNote Studia/ .. / Kodowanie/!! Współpraca z biblioteką Room/Stworzenie DAO/!! Przykład  uniwersalnego abstrakcyjnego DAO
 
     // @Insert(onConflict = OnConflictStrategy.IGNORE) - domyślnie jest ABORT

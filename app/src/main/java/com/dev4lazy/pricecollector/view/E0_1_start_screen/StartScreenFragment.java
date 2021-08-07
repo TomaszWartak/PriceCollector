@@ -188,7 +188,7 @@ public class StartScreenFragment extends Fragment {
     }
 
     private void finishApp() {
-        AppHandle.getHandle().shutDown();
+        AppHandle.getHandle().shutdown();
         getActivity().finishAndRemoveTask();
         System.exit(0);
     }

@@ -1,14 +1,26 @@
 package com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
+import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dev4lazy.pricecollector.MainActivity;
+import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
+import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 
 public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
 
@@ -16,13 +28,78 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
         super(context);
     }
 
+    public AnalysisArticleJoinsRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super( context, attrs );
+    }
+
     public void setup() {
-        setLayoutManager(new LinearLayoutManager(getContext())); // todo ????
-        addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
-        setAdapter(new AnalysisArticleJoinAdapter(new AnalysisArticleJoinDiffCalback()) );
+        setLayoutManager( new LinearLayoutManager(getContext())); // todo ????
+        addItemDecoration( new DividerItemDecoration(getContext(), VERTICAL));
+        setAdapter( new AnalysisArticleJoinAdapter(new AnalysisArticleJoinDiffCalback()) );
     }
 
     public void submitArticlesList( PagedList<AnalysisArticleJoin> analysisArticlesJoins ) {
         ((AnalysisArticleJoinAdapter)getAdapter()).submitList(analysisArticlesJoins);
     }
+
+    private class AnalysisArticleJoinAdapter extends PagedListAdapter<AnalysisArticleJoin, AnalysisArticleJoinAdapter.AnalysisArticleJoinViewHolder> {
+
+        public AnalysisArticleJoinAdapter(AnalysisArticleJoinDiffCalback analysisArticleJoinDiffCalback ){
+            super( analysisArticleJoinDiffCalback );
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull AnalysisArticleJoinAdapter.AnalysisArticleJoinViewHolder holder, int position) {
+            AnalysisArticleJoin analysisArticleJoin = getItem(position);
+            if (analysisArticleJoin == null) {
+                holder.clear();
+            } else {
+                holder.bind(analysisArticleJoin);
+            }
+        }
+
+        @NonNull
+        @Override
+        public AnalysisArticleJoinAdapter.AnalysisArticleJoinViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_item, parent, false);
+            return new AnalysisArticleJoinAdapter.AnalysisArticleJoinViewHolder( view );
+        }
+
+        class AnalysisArticleJoinViewHolder extends RecyclerView.ViewHolder {
+
+            private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
+            private final TextView textViewArticleName;
+            private final TextView textViewArticleOwnCode;
+            private final TextView textViewArticleEanCode;
+
+            public AnalysisArticleJoinViewHolder(View view ) {
+                super(view);
+                textViewArticleName = view.findViewById(R.id.analysisArticleItem_articleName);
+                textViewArticleOwnCode = view.findViewById(R.id.analysisArticleItem_ownCode);
+                textViewArticleEanCode = view.findViewById(R.id.analysisArticleItem_eanCode);
+                view.setOnClickListener( (View v) -> {
+                    openAnalysisArticle( v );
+                });
+            }
+
+            private void openAnalysisArticle( View view) {
+                analysisArticleJoinViewModel = ViewModelProviders.of( (MainActivity)itemView.getContext() ).get( AnalysisArticleJoinViewModel.class );
+                analysisArticleJoinViewModel.setAnalysisArticleJoin( getItem( getAdapterPosition() ) );
+                Navigation.findNavController( view ).navigate(R.id.action_analysisFragment_to_analysisArticlesPagerFragment);
+            }
+
+            protected void bind( AnalysisArticleJoin analysisArticleJoin ) {
+                textViewArticleName.setText( analysisArticleJoin.getArticleName() );
+                textViewArticleOwnCode.setText( analysisArticleJoin.getOwnCode() );
+                textViewArticleEanCode.setText( analysisArticleJoin.getEanCode() );
+            }
+
+            protected void clear() {
+                textViewArticleName.setText( null );
+                textViewArticleOwnCode.setText( null );
+                textViewArticleEanCode.setText( null );
+            }
+
+        } //  class AnalysisArticleJoinViewHolder
+    } // class AnalysisArticleJoinAdapter22
 }

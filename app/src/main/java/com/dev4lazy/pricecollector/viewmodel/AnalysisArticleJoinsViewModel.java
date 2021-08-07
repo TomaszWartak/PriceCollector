@@ -10,6 +10,8 @@ import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
+import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
+import com.dev4lazy.pricecollector.utils.AppHandle;
 
 public class AnalysisArticleJoinsViewModel extends AndroidViewModel {
 
@@ -17,7 +19,9 @@ public class AnalysisArticleJoinsViewModel extends AndroidViewModel {
 
     public AnalysisArticleJoinsViewModel(Application application) {
         super(application);
-        DataSource.Factory<Integer, AnalysisArticleJoin> factory = LocalDatabase.getInstance().analysisArticleDao().getAllAnalysisArticlesJoin();
+        // DataSource.Factory<Integer, AnalysisArticleJoin> factory = LocalDatabase.getInstance().analysisArticleDao().getAllAnalysisArticlesJoin();
+        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+        DataSource.Factory<Integer, AnalysisArticleJoin> factory = localDataRepository.getAllAnalysisArticlesJoin();
         LivePagedListBuilder<Integer, AnalysisArticleJoin> pagedListBuilder = new LivePagedListBuilder<Integer, AnalysisArticleJoin>(factory, 50);
         analysisRowsLiveData = pagedListBuilder.build();
     }
