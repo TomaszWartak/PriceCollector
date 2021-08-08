@@ -7,6 +7,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Update;
+import androidx.room.RawQuery;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import java.util.List;
@@ -15,6 +16,9 @@ import java.util.List;
 public interface _Dao<D> {
 
     Integer getNumberOf();
+
+    @RawQuery
+    Integer getNumberOfViaQuery( SimpleSQLiteQuery query );
 
     LiveData<Integer> getNumberOfLiveData();
 

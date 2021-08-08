@@ -88,7 +88,12 @@ public class AnalysisDataUpdater {
      *      Ustawia wartość serverRepliedThereAreNewAnalyzes na true, jeśli jest odpowiedź z serwera
      *      Ustawia wartość newAnalysisReadyToDownload na true, jesli są.
      */
-    public void checkNewAnalysisToDownload( MutableLiveData<Boolean> result ) {
+    public void checkNewAnalysisToDownload_old( MutableLiveData<Boolean> result ) {
+        // TODO XXX obawiam się, że to nie zadziała, jesli nie będzie żadnych analiz
+        //  Wtedy chyba zapytanie "SELECT * FROM analyzes WHERE creation_date > ?"
+        //  nie zwróci żadnych danych. Może lepiej nie pobierac analiz
+        //  (zwłaszcza, ze tutaj dane te sa pomijane), tylko zadać zapytanie
+        //  ile jest analiz, coś jak "COUNT * FROM analyzes WHERE creation_date > ?"
         serverRepliedThereAreNewAnalyzes = false;
         newAnalysisReadyToDownload = false;
         MutableLiveData<List<RemoteAnalysis>> findAnalyzesNewerThenResult = new MutableLiveData<>();
@@ -109,6 +114,24 @@ public class AnalysisDataUpdater {
         remoteDataRepository.findAnalyzesNewerThen( lastCheckAnalysisDate, findAnalyzesNewerThenResult );
     }
 
+    public void checkNewAnalysisToDownload( MutableLiveData<Boolean> result ) {
+        serverRepliedThereAreNewAnalyzes = false;
+        newAnalysisReadyToDownload = false;
+        MutableLiveData<Integer> countAnalyzesNewerThenResult = new MutableLiveData<>();
+        Observer<Integer> resultObserver = new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer remoteAnalyzesCount) {
+                serverRepliedThereAreNewAnalyzes = true;
+                result.postValue( true );
+                newAnalysisReadyToDownload = (remoteAnalyzesCount != null) && (remoteAnalyzesCount.intValue()>0);
+                countAnalyzesNewerThenResult.removeObserver(this); // this = observer...
+            }
+        };
+        countAnalyzesNewerThenResult.observeForever( resultObserver );
+        RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+        Date lastCheckAnalysisDate = AppSettings.getInstance().getLastAnalysisCreationDate();
+        remoteDataRepository.countAnalyzesNewerThen( lastCheckAnalysisDate, countAnalyzesNewerThenResult );
+    }
     public boolean isNewAnalysisReadyToDownlad() {
         return newAnalysisReadyToDownload;
     }

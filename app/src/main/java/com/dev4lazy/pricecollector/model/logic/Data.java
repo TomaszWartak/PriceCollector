@@ -34,6 +34,12 @@ public class Data<D> {
         // new GetNumberOfAsyncTask(dao, result).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR );
     }
 
+    public void getNumberOfData(SimpleSQLiteQuery query, MutableLiveData<Integer> result ) {
+        // new GetNumberOfAsyncTask(dao, result).execute();
+        new GetNumberOfViaQueryAsyncTask(dao, result).execute(query);
+        // new GetNumberOfAsyncTask(dao, result).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR );
+    }
+
     public void insertData(D data ) {
         insertData(data, null );
     }
@@ -103,6 +109,30 @@ public class Data<D> {
         protected Integer doInBackground ( Void ...params){
             Integer numberOf = dao.getNumberOf();
             return numberOf;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+            if (resultLD!=null) {
+                resultLD.postValue(result);
+            }
+        }
+    }
+
+    private class GetNumberOfViaQueryAsyncTask extends AsyncTask<SimpleSQLiteQuery,Void,Integer> {
+
+        private final _Dao dao;
+        private final MutableLiveData<Integer> resultLD;
+
+        GetNumberOfViaQueryAsyncTask(_Dao dao, MutableLiveData<Integer> resultLD ) {
+            this.dao = dao;
+            this.resultLD = resultLD;
+        }
+
+        @Override
+        protected Integer doInBackground ( SimpleSQLiteQuery ...params){
+            return dao.getNumberOfViaQuery( params[0] );
         }
 
         @Override

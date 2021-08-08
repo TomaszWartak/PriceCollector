@@ -35,7 +35,7 @@ import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getIns
 public class AnalyzesListFragment extends Fragment {
 
 
-    private MainViewModel mViewModel;
+    private MainViewModel mViewModel; // todo nieuzywany...
 
     private AnalyzesListViewModel viewModel;
     private RecyclerView recyclerView;
@@ -132,6 +132,7 @@ public class AnalyzesListFragment extends Fragment {
         });
     }
 
+
     /*
     private void setAnalysisItem(@NonNull LayoutInflater inflater, View view) {
         viewAnalysisiItem = inflater.inflate(R.layout.test_analysis_item,null);
@@ -203,7 +204,8 @@ public class AnalyzesListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        // TODO XXX ten viewmodel jest pusty i raczej nie potrzebny do niczego
+        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         // TODO: Use the ViewModel
     }
 

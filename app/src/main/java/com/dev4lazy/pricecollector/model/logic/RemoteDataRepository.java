@@ -186,6 +186,19 @@ public class RemoteDataRepository {
      */
 //-----------------------------------------------------------------------------------
 
+    public void countAnalyzesNewerThen( Date lastCheckDate, MutableLiveData<Integer> result ) {
+        List<Object> queryArguments = new ArrayList<>();
+        queryArguments.add( lastCheckDate.getTime() );
+        // todo posprzątaj to
+        // queryArguments.add( "0" );
+        // queryArguments.add( "analyzes" );
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT COUNT() FROM analyzes WHERE creation_date > ?"  /**/, queryArguments.toArray() /**/ );
+        // todo test
+        // String queryString = query.getSql();
+        // int pc = query.getArgCount();
+        // todo end test
+        analyzes.getNumberOfData( query, result);
+    }
 
     public void findAnalyzesNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result ) {
         List<Object> queryArguments = new ArrayList<>();

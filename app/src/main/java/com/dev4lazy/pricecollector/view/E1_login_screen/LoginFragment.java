@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
 
@@ -153,18 +155,51 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         getNewAnalysisInfo();
     }
 
+    // TODO XXX Jeśli serwer nir odpowie, to nie ma przejścia do listy Badań
+    //  i nie znika pleaseWaitSpinner.
+    //  A moze przejście do listy badań zrobić bezwarunkowo, a w OnChanged tylko zniknięcie spinnera?
+    //  Zrobiłem - działa. Przejście so Listy Badań zamyka (ukrywa?) spinner.
+    //  UWAGA: spinner nie zniknie, jeśli nie będzie odpowiedzi z serwera...
+    // TODO XXX jak zrobić, że w razie braku odpowiedzi jest komunikat?
+    //  Może jakiś obiekt, który wysyła zapytanie i uruchamia odliczanie w wątku(?).
+    //  Jeśli jest odpowiedź zanim odliczy - zwraca ją  do wywołującego, a wywołujący
+    //  usuwa observera.
+    //  Po odliczeniu, zwraca informację o niepowodzeniu, a wywołujący usuwa observera
+    //  i wyświetla komunikat.
+    //  Może rozszerzyć interface Observer o metodę z czasem? A może coś takiego jest?
+    //  Zobacz zakomentowaną metodę poniżej onChanged()
+    //  Zeby było ładnie, to zmiast ana sztywno, że  niepowodzenie jest tylko, gdy minie czas,
+    //  to można by stworzyć klasę warunków, w których uznaje się, że jest niepowodzenie,
+    //  której implementacją jest "TimeCondition"
     private void getNewAnalysisInfo() {
-        // todo XXX to jest sztuka... bo może się kręcić w nieskończoność... jeśli nie ma nowych analiz?
+        ProgressBar pleaseWaitSpinner = this.getView().findViewById(R.id.please_wait_spinner);
         MutableLiveData<Boolean> serverRepliedResult = new MutableLiveData<>();
         Observer<Boolean> resultObserver = new Observer<Boolean>() {
             @Override
             public void onChanged( Boolean isServerReplied ) {
+                pleaseWaitSpinner.setVisibility(View.GONE);
+                /// Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
+            }
+            /* @Override
+            public void notHappen() {
+                pleaseWaitSpinner.setVisibility(View.GONE);
+                Komunikat a la "Serwer nie odpowiedział"
                 Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
             }
+            */
         };
+        pleaseWaitSpinner.setVisibility(View.VISIBLE);
         serverRepliedResult.observeForever( resultObserver );
         AnalysisDataUpdater analysisDataUpdater = getInstance();
         analysisDataUpdater.checkNewAnalysisToDownload( serverRepliedResult );
+        // todo test
+        Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+
+        }
+        // todo test stop
     }
 
     @Override
