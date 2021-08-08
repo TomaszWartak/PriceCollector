@@ -192,14 +192,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         serverRepliedResult.observeForever( resultObserver );
         AnalysisDataUpdater analysisDataUpdater = getInstance();
         analysisDataUpdater.checkNewAnalysisToDownload( serverRepliedResult );
-        // todo test
         Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-
-        }
-        // todo test stop
     }
 
     @Override

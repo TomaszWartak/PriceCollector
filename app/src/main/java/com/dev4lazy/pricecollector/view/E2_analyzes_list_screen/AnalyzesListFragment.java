@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
@@ -34,26 +33,11 @@ import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getIns
 
 public class AnalyzesListFragment extends Fragment {
 
-
-    private MainViewModel mViewModel; // todo nieuzywany...
-
     private AnalyzesListViewModel viewModel;
-    private RecyclerView recyclerView;
-    private AnalysisAdapter analysisAdapter;
-
-    // todo? private View viewAnalysisiItem;
-
-    // todo to usunąć, bo służy tylko do wygenerowania mocka bazy remote
-    // private RemoteDatabaseInitializer converter;
+    private AnalyzesRecyclerView recyclerView;
 
     public static AnalyzesListFragment newInstance() {
         return new AnalyzesListFragment();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // todo tutaj zainicjoawanie wykorzystywanych później obiektów tej klasy
     }
 
     @Nullable
@@ -64,8 +48,8 @@ public class AnalyzesListFragment extends Fragment {
 
         setOnBackPressedCalback();
 
-        recyclerSetup( view );
-        recyclerSubscribtion();
+        recyclerViewSetup( view );
+        recyclerViewSubscribtion();
 
         if (BuildConfig.DEBUG) {
             // todo test
@@ -112,21 +96,18 @@ public class AnalyzesListFragment extends Fragment {
         System.exit(0);
     }
 
-    private void recyclerSetup( View view ) {
+    private void recyclerViewSetup(View view ) {
         recyclerView = view.findViewById( R.id.analyzes_recycler );
-        recyclerView.setLayoutManager( new LinearLayoutManager( getActivity() ) ); // todo ????
-        // todo recyclerView.addItemDecoration( new DividerItemDecoration( getActivity(), VERTICAL ));
-        analysisAdapter = new AnalysisAdapter( new AnalysisDiffCallback() );
-        recyclerView.setAdapter( analysisAdapter );
+        recyclerView.setup();
     }
 
-    private void recyclerSubscribtion() {
+    private void recyclerViewSubscribtion() {
         viewModel = new ViewModelProvider(this ).get( AnalyzesListViewModel.class );
         viewModel.getAnalyzesLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<Analysis>>() {
             @Override
             public void onChanged( PagedList<Analysis> analyzesList  ) {
                 if (!analyzesList.isEmpty()) {
-                    analysisAdapter.submitList( analyzesList);
+                    recyclerView.submitAnalyzesList( analyzesList);
                 }
             }
         });
@@ -169,8 +150,7 @@ public class AnalyzesListFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         AnalysisDataUpdater.getInstance().downloadAnalysisBasicData();
-                        // TODO !!! odśwież recycler
-                        analysisAdapter.notifyDataSetChanged();
+                        recyclerView.refresh();
                     }
                 }
             )
@@ -200,15 +180,6 @@ public class AnalyzesListFragment extends Fragment {
             showAskUserForAnalyzesDataDownload( view );
         }
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // TODO XXX ten viewmodel jest pusty i raczej nie potrzebny do niczego
-        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        // TODO: Use the ViewModel
-    }
-
 
 //------------------------------------------------------------------------
 // Obsługa Drawer menu

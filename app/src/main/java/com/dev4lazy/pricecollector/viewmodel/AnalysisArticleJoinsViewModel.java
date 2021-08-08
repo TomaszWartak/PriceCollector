@@ -19,7 +19,6 @@ public class AnalysisArticleJoinsViewModel extends AndroidViewModel {
 
     public AnalysisArticleJoinsViewModel(Application application) {
         super(application);
-        // DataSource.Factory<Integer, AnalysisArticleJoin> factory = LocalDatabase.getInstance().analysisArticleDao().getAllAnalysisArticlesJoin();
         LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
         DataSource.Factory<Integer, AnalysisArticleJoin> factory = localDataRepository.getAllAnalysisArticlesJoin();
         LivePagedListBuilder<Integer, AnalysisArticleJoin> pagedListBuilder = new LivePagedListBuilder<Integer, AnalysisArticleJoin>(factory, 50);

@@ -18,6 +18,8 @@ public class OtherStoreListViewModel extends AndroidViewModel {
 
     public OtherStoreListViewModel(Application application) {
         super(application);
+        // TODO XXX w ViewModelach nie powinieneś odwoływać się bezpośrednio do DAO,
+        //  tylko przez repozytorium
         StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
         DataSource.Factory<Integer, Store>  factory = storeDao.getAllPaged();
         LivePagedListBuilder<Integer, Store> pagedListBuilder = new LivePagedListBuilder<Integer, Store>(factory, 50);
