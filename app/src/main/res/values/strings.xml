@@ -88,6 +88,7 @@
     <string name="short_permission_name_camera">APARAT FOTOGRAFICZNY, KAMERA</string>
     <string name="short_permission_name_internet">INTERNET</string>
     <string name="short_permission_name_read_external_storage">PLIKI Z KARTY PAMIĘCI (SD)</string>
+    <string name="short_permission_name_user_account">KONTO UŻYTKOWNIKA</string>
 
     <!-- do dialogów dot. uprawnień (Permissions) -->
     <string name="nedded_permissions_message_line1">Ta aplikacja potrzebuje zgody na dostęp</string>
@@ -110,6 +111,7 @@
     <string name="question_about_downloading_data">Czy chcesz teraz pobrać dane?</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
+    <string name="short_permission_name_contacts">KONTAKTY</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

@@ -10,8 +10,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/analysis_article_fragment_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".view.E5_article_screen.AnalysisArticleFragment">
+            android:layout_height="wrap_content">
 
 
             <ImageView

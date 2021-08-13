@@ -35,7 +35,7 @@ public class AnalysisArticleAdapter extends PagedListAdapter<AnalysisArticle, An
     @NonNull
     @Override
     public AnalysisArticleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_list_item, parent, false);
         return new AnalysisArticleViewHolder( view );
     }
 

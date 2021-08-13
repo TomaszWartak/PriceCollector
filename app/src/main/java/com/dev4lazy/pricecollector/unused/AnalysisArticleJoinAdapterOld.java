@@ -36,7 +36,7 @@ public class AnalysisArticleJoinAdapterOld extends PagedListAdapter<AnalysisArti
     @NonNull
     @Override
     public AnalysisArticleJoinViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_list_item, parent, false);
         return new AnalysisArticleJoinViewHolder( view );
     }
 

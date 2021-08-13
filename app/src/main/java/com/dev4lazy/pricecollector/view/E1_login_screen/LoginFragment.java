@@ -1,7 +1,10 @@
 package com.dev4lazy.pricecollector.view.E1_login_screen;
 
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +28,12 @@ import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.view.E5_article_screen.AnalysisArticlesPagerFragment;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
 
@@ -37,11 +42,16 @@ import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getIns
  */
 public class LoginFragment extends Fragment implements AuthSupport.LoginCallback {
 
-    // todo ViewModel...
     private UserViewModel userViewModel;
 
+    /* todo usuń
     public LoginFragment() {
         // Required empty public constructor
+    }
+    */
+
+    public static LoginFragment newInstance() {
+        return new LoginFragment();
     }
 
     @Override
@@ -53,8 +63,6 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        // todo usuń to: userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         View view = inflater.inflate(R.layout.login_fragment, container, false);
         if (BuildConfig.DEBUG) {
@@ -69,6 +77,10 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     }
 
     void logIn( View view ) {
+        // TODO XXX pobranie danych usera (e-mail) z systemu
+        // TODO TEST
+        testAccounts();
+
         EditText editTextUserLogin = view.findViewById( R.id.userlogin_edit_text);
         EditText editTextUserPassword = view.findViewById(R.id.password_edit_text);
         // todo zrób tu test jak login i hasło przeżywają bez viewmodelu i z viewmodelem
@@ -84,6 +96,18 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         authSupport.signIn();
     }
 
+    // TODO TEST
+    private void testAccounts() {
+        Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+        Account[] accounts = AccountManager.get(getContext()).getAccounts();
+        int len = accounts.length;
+        for (Account account : accounts) {
+            if (emailPattern.matcher(account.name).matches()) {
+                String possibleEmail = account.name;
+            }
+        }
+    }
+    // TODO END TEST
 
 // ----------------------------------------------------------
 // Implementacja metod interfejsu calbaków logowania AuthSupport.LoginCallback
@@ -203,4 +227,6 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
             "coś nie bangla...",
             Toast.LENGTH_SHORT).show();
     }
+
+    // TODO XXX LoginFragment nie obsługuje klawisza back (nie da się wyjść z aplikacji)
 }

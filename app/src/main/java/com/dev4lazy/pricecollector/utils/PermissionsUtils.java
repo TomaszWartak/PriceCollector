@@ -31,7 +31,9 @@ public class PermissionsUtils {
             //Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.INTERNET,
-            Manifest.permission.CAMERA
+            Manifest.permission.CAMERA /*,
+            Manifest.permission.GET_ACCOUNTS,
+            Manifest.permission.READ_CONTACTS*/
     };
 
     // todo ???
@@ -160,7 +162,6 @@ public class PermissionsUtils {
         if (grantResults.length < 1) {
             return false;
         }
-
         // Verify that each required permission has been granted, otherwise return false.
         for (int result : grantResults) {
             if (result != PackageManager.PERMISSION_GRANTED) {
@@ -223,6 +224,12 @@ public class PermissionsUtils {
                 break;
             case Manifest.permission.READ_EXTERNAL_STORAGE:
                 localePermissionName = resources.getString( R.string.short_permission_name_read_external_storage );
+                break;
+            case Manifest.permission.READ_CONTACTS:
+                localePermissionName = resources.getString(R.string.short_permission_name_contacts);
+                break;
+            case Manifest.permission.GET_ACCOUNTS:
+                localePermissionName = resources.getString( R.string.short_permission_name_user_account );
                 break;
             // todo zrób następne...
         }

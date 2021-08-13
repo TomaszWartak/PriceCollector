@@ -213,9 +213,9 @@
         android:label="TestNumbersOfDataFragment2" />
     <fragment
         android:id="@+id/analysisArticleFragment"
-        android:name="com.dev4lazy.pricecollector.view.E5_article_screen.AnalysisArticleFragment"
+        android:name="com.dev4lazy.pricecollector.unused.AnalysisArticleFragment"
         android:label="AnalysisArticleFragment"
-        tools:layout="@layout/analysis_article_fragment" />
+        tools:layout="@layout/analysis_article" />
     <fragment
         android:id="@+id/analysisArticlesPagerFragment"
         android:name="com.dev4lazy.pricecollector.view.E5_article_screen.AnalysisArticlesPagerFragment"

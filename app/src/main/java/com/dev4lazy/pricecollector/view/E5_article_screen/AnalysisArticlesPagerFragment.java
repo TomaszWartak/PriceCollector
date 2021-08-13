@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -26,15 +25,11 @@ import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsViewModel;
 public class AnalysisArticlesPagerFragment extends Fragment {
 
 
-    //private AnalysisArticleJoinViewModel viewModel;
     private AnalysisArticleJoinsViewModel viewModel;
+    // Niestety nie da się dziedziczyc po ViewPager2, bo jest final.
+    // Dlatego implementacja Adaptera została tutaj.
     private ViewPager2 viewPager;
-    //private AnalysisArticleAdapter analysisArticleJoinPagerAdapter;
     private AnalysisArticleJoinPagerAdapter analysisArticleJoinPagerAdapter;
-
-    public AnalysisArticlesPagerFragment() {
-        // Required empty public constructor
-    }
 
     public static AnalysisArticlesPagerFragment newInstance() {
         return new AnalysisArticlesPagerFragment();
@@ -43,25 +38,19 @@ public class AnalysisArticlesPagerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.analysis_articles_pager_fragment, container, false);
+        View view = inflater.inflate(R.layout.analysis_articles_pager_fragment, container, false);
+        viewPagerSetup( view );
+        viewPagerSubscribtion();
+        return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated( savedInstanceState );
-        viewPagerSetup();
-        subscribeViewPager();
-    }
-
-    private void viewPagerSetup() {
+    private void viewPagerSetup( View view ) {
         analysisArticleJoinPagerAdapter = new AnalysisArticleJoinPagerAdapter( new AnalysisArticleJoinDiffCalback() );
-        viewPager = getView().findViewById(R.id.analysis_articles_pager);
-        // viewPager.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
-        // viewPager.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
+        viewPager = view.findViewById(R.id.analysis_articles_pager);
         viewPager.setAdapter(analysisArticleJoinPagerAdapter);
     }
 
-    private void subscribeViewPager() {
+    private void viewPagerSubscribtion() {
         viewModel = new ViewModelProvider(this).get(AnalysisArticleJoinsViewModel.class);
         viewModel.getAnalysisArticleJoinLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
             @Override

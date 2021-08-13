@@ -64,4 +64,8 @@
     <string name="r90_department_name">Building</string>
     <string name="r10_department_name">Equipment</string>
     <string name="r06_department_name">Services</string>
+    <string name="short_permission_name_user_account">USER ACCOUNT</string>
+    <string name="short_permission_name_contacts">CONTACTS</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

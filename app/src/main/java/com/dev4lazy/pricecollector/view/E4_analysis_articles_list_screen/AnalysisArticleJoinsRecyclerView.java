@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
@@ -62,7 +61,7 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
         @NonNull
         @Override
         public AnalysisArticleJoinViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_list_item, parent, false);
             return new AnalysisArticleJoinViewHolder( view );
         }
 

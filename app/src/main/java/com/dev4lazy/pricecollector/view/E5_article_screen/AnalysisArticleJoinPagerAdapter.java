@@ -33,14 +33,14 @@ public class AnalysisArticleJoinPagerAdapter extends PagedListAdapter<AnalysisAr
     @NonNull
     @Override
     public AnalysisArticleJoinPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_fragment, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article, parent, false);
         return new AnalysisArticleJoinPagerViewHolder( view );
     }
 
     class AnalysisArticleJoinPagerViewHolder extends RecyclerView.ViewHolder {
 
         // todo usuń AnalysisArticleJoin analysisArticleJoin;
-        private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
+        private AnalysisArticleJoinViewModel analysisArticleJoinViewModel; // todo ???
         private TextView textViewArticleName;
         private TextView textViewOwnCode;
         private TextView textViewEanCode;

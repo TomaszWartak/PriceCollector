@@ -1,8 +1,16 @@
 package com.dev4lazy.pricecollector;
 
+import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Patterns;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -11,6 +19,8 @@ import androidx.navigation.NavController;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity /*implements NavigationView.OnNavigationItemSelectedListener*/{
 
@@ -30,7 +40,6 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         setupNavigation(); // todo <-- ta metoda jest pusta...
-
         // Inicalizacja obiektu preferencji
         AppHandle.getHandle().getPrefs().setPrefs( getPreferences(Context.MODE_PRIVATE) );
     }
@@ -105,6 +114,7 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
     }
 
      */
+    /**/
     @Override
     public void onRequestPermissionsResult(
             int requestCode,
@@ -112,5 +122,6 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
             int[] grantResults) {
         super.onRequestPermissionsResult( requestCode, permissions, grantResults );
     }
+    /**/
 
 }
