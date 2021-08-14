@@ -1,6 +1,8 @@
 package com.dev4lazy.pricecollector.view.E0_1_start_screen;
 
 
+import android.accounts.AccountManager;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -10,7 +12,11 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
@@ -20,6 +26,8 @@ import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppPreferences;
 import com.dev4lazy.pricecollector.utils.PermissionsUtils;
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.AccountPicker;
 
 import java.util.ArrayList;
 
@@ -192,4 +200,5 @@ public class StartScreenFragment extends Fragment {
         getActivity().finishAndRemoveTask();
         System.exit(0);
     }
+
 }

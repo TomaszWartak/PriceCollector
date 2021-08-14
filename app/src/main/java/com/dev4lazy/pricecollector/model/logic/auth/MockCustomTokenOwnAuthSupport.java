@@ -2,7 +2,7 @@ package com.dev4lazy.pricecollector.model.logic.auth;
 
 import android.os.Bundle;
 
-/*
+/**
 Klasa obsługująca logowanie na podstawie identyfikatora użytkownika i hasła, z wykorzystaniem tokena Firebase.
 Realizowane jest to tak, że serwer logowania po otrzymaniu danych uwierzytelniających zwraca token Firebase,
 który służy do uwierzytelnienie użytkownika w Firebase.

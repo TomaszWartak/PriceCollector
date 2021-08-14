@@ -3,7 +3,7 @@ package com.dev4lazy.pricecollector.model.logic.auth;
 import java.util.Map;
 import java.util.TreeMap;
 
-/*
+/**
 Interfejsy obsługujące logowanie.
 Wykorzystywane kaskadowo, począwszy od klasy, która np. jedynie pobiera dane logowania od użytkownika,
 aż do klasy, która dokonuje autentykacji. Każda z tych klas musi implementować AuthSupport
@@ -33,7 +33,7 @@ Aby zaimplementować logowanie:
 public interface AuthSupport {
 
 //-----------------------------------------------------------------------
-// Obsługa danych uwierzytelniających na zasadzie klucz-wartość,
+// Obsługa danyach uwierzytelniających na zasadzie klucz-wartość,
     // Np. dla logowania po identyfikatorze i haśle:
     // klucz = "USER_ID", wartość = "nowak_j"
     // klucz = "USER_PASSWORD", wartość = "xyz"

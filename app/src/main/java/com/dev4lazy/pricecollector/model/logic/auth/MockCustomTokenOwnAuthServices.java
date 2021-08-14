@@ -17,6 +17,9 @@ import com.dev4lazy.pricecollector.utils.AppHandle;
 
 import java.util.List;
 
+/**
+ * Obsługuje komunikację z serwisem udajacym serwer logowania
+ */
 public class MockCustomTokenOwnAuthServices /* todo implements MockCustomTokenOwnAuthServices.OnReceiveCallback */{
 
 // ----------------------------------------------------------

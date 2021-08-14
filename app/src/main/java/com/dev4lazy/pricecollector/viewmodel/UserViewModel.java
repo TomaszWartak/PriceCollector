@@ -13,7 +13,7 @@ public class UserViewModel extends AndroidViewModel {
 
     public UserViewModel(@NonNull Application application /*, User user*/ ) {
         super(application);
-        /*this.user = user; */
+        user = new User();
     }
 
     public User getUser() {
@@ -22,5 +22,13 @@ public class UserViewModel extends AndroidViewModel {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    /**
+     * Uwaga: przypisuje null do user
+     */
+    public void clear() {
+        user.clear();
+        user = null;
     }
 }

@@ -9,6 +9,7 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 public class User {
 
     private String login;
+    private String password;
     private String name;
     private String email; // nie używane
     private OwnStore ownStore;
@@ -34,6 +35,13 @@ public class User {
         this.login = login;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
     public String getName() {
         return name;
     }
@@ -81,12 +89,19 @@ public class User {
     public void setSector(Sector sector) {
         this.sector = sector;
     }
-    
+
+    /**
+     * Uwaga: przypisuje null do wszystkich włsciwości
+     */
     public void clear() {
+        login = "xxxxxxxxxxxxxx";
         login = null;
+        password = "xxxxxxxxxxxxx";
+        password = null;
         ownStore = null;
         department = null;
         market = null;
         sector = null;
     }
+
 }

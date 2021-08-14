@@ -19,8 +19,8 @@ buildscript {
         // 2021-04-22 https://mvnrepository.com/artifact/androidx.navigation/navigation-safe-args-gradle-plugin
 
         // na potrzeby Firebase
-        classpath 'com.google.gms:google-services:4.3.8'
-        // 2021-08-01 https://developers.google.com/android/guides/google-services-plugin
+        classpath 'com.google.gms:google-services:4.3.10'
+        // 2021-08-13 https://developers.google.com/android/guides/google-services-plugin
     }
 }
 

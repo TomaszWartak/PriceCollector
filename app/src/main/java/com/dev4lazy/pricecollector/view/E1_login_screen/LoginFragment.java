@@ -4,6 +4,9 @@ package com.dev4lazy.pricecollector.view.E1_login_screen;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.os.Bundle;
+import android.renderscript.Element;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +22,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
 import com.dev4lazy.pricecollector.model.logic.User;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
@@ -42,13 +47,10 @@ import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getIns
  */
 public class LoginFragment extends Fragment implements AuthSupport.LoginCallback {
 
+    // Ten ViewModel jest używany
     private UserViewModel userViewModel;
-
-    /* todo usuń
-    public LoginFragment() {
-        // Required empty public constructor
-    }
-    */
+    private EditText userLoginEditText;
+    private EditText userPasswordEditText;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -63,7 +65,6 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         View view = inflater.inflate(R.layout.login_fragment, container, false);
         if (BuildConfig.DEBUG) {
             view.findViewById(R.id.login_fragment_layout).setOnClickListener((View v) -> {
@@ -71,32 +72,88 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
             });
         }
         view.findViewById(R.id.login_button).setOnClickListener((View v) -> {
-            logIn(view);
+            logIn(/* todo test viemodel view */);
         });
+        viewSetup(view);
+        viewSubscribtion();
         return view;
     }
 
-    void logIn( View view ) {
+    // todo test viewmodel
+    void viewSetup(View view) {
+        userLoginEditText = view.findViewById(R.id.userlogin_edit_text);
+        userPasswordEditText = view.findViewById(R.id.password_edit_text);
+    }
+
+    private void viewSubscribtion() {
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userLoginEditTextSubscription();
+        userPasswordEditTextSubscription();
+    }
+
+    private void userLoginEditTextSubscription() {
+        userLoginEditText.addTextChangedListener(new TextWatcher() {
+             @Override
+             public void beforeTextChanged (CharSequence s,int start, int count, int after){
+             }
+
+             @Override
+             public void onTextChanged (CharSequence charSequence,int start, int before, int count){
+                 userViewModel.getUser().setLogin(charSequence.toString());
+             }
+
+             @Override
+             public void afterTextChanged (Editable s){
+             }
+         });
+    }
+
+    private void userPasswordEditTextSubscription() {
+        userPasswordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged (CharSequence s,int start, int count, int after){
+            }
+
+            @Override
+            public void onTextChanged (CharSequence charSequence,int start, int before, int count){
+                userViewModel.getUser().setPassword(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged (Editable s){
+            }
+        });
+    }
+    // todo end test viewmodel
+
+    void logIn( /* todo test viemodel View view*/ ) {
         // TODO XXX pobranie danych usera (e-mail) z systemu
         // TODO TEST
-        testAccounts();
-
-        EditText editTextUserLogin = view.findViewById( R.id.userlogin_edit_text);
-        EditText editTextUserPassword = view.findViewById(R.id.password_edit_text);
+        // testAccounts();
+        // TODO END TEST
+        // todo test viewmodel
+        // EditText userLoginEditText = view.findViewById( R.id.userlogin_edit_text);
+        // EditText userPasswordEditText = view.findViewById(R.id.password_edit_text);
+        // todo end test viewmodel
         // todo zrób tu test jak login i hasło przeżywają bez viewmodelu i z viewmodelem
-        User user = new User();
-        /**/user.setLogin( editTextUserLogin.getText().toString() );
+        // todo test viewmodel
+        /* User user = new User();
+        user.setLogin( userLoginEditText.getText().toString() );
         user.setLogin("nowak_j");
-        userViewModel.setUser( user );
+        userViewModel.setUser( user ); */
+        // todo end test viewmodel
         AuthSupport authSupport = AppHandle.getHandle().getAuthSupport();
+        authSupport.addCredential("USER_ID", userViewModel.getUser().getLogin() );
+        authSupport.addCredential("USER_PASSWORD", userViewModel.getUser().getPassword() );
+        /**/ userViewModel.getUser().setLogin( "nowak_j");
+        /**/ userViewModel.getUser().setPassword( "nowak" );
         /**/authSupport.addCredential("USER_ID", "nowak_j" );
         /**/authSupport.addCredential("USER_PASSWORD", "nowak");
-        //authSupport.addCredential("USER_ID", user.getLogin() );
-        //authSupport.addCredential("USER_PASSWORD", editTextUserPassword.getText().toString());
+
         authSupport.signIn();
     }
 
-    // TODO TEST
+    /*/ TODO TEST
     private void testAccounts() {
         Pattern emailPattern = Patterns.EMAIL_ADDRESS;
         Account[] accounts = AccountManager.get(getContext()).getAccounts();
@@ -107,8 +164,8 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
             }
         }
     }
-    // TODO END TEST
-
+     TODO END TEST
+    /*/
 // ----------------------------------------------------------
 // Implementacja metod interfejsu calbaków logowania AuthSupport.LoginCallback
 // Obsługa callbacków logowania
@@ -141,7 +198,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
                 if ( (!remoteUsers.isEmpty()) && (remoteUsers.get(0)!=null) ) {
                     RemoteUser remoteUser = remoteUsers.get(0);
                     AppHandle.getHandle().getSettings().setUser( new User( remoteUser ) );
-                    // userViewModel.clear(); todo nie ma takiej metody...
+                    userViewModel.clear();
                     // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
                     if (AppHandle.getHandle().getPrefs().isLocalDatabaseNotInitialized()) {
                         LocalDataInitializer.getInstance().initializeLocalDatabase();
@@ -151,6 +208,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
                     // todo sprawdzenie czy na serwerze zdalnym jest nowa analiza - pobranie
                     startRisingChain();
                 } else {
+                    userPasswordEditText.setText("");
                     Toast.makeText(
                         getContext(),
                         // todo PObranie napisu z zasobów res/... "W zdalnej bazie danych nie znaleziono danych użytkownika"+userViewModel.getUser().getLogin()
@@ -221,6 +279,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
 
     @Override
     public void callIfUnsuccessful() {
+        userPasswordEditText.setText("");
             // todo kumnuikat jakiś :-)
         Toast.makeText(
             getContext(),
