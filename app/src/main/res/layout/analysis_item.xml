@@ -117,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:text="@string/data_ready_to_download"
+                android:text="@string/articles_data_ready_to_download"
                 android:textColor="@color/colorWarning"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
                 card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_confirmation_date"

@@ -19,6 +19,7 @@ public class User {
 
     public User() {
         login = "";
+        password = "";
     }
 
     public User(RemoteUser remoteUser) {

@@ -13,9 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AppUtils {
 
     public static AppCompatActivity getActivity(Context context) {
-        if (context == null) return null;
-        if (context instanceof AppCompatActivity) return (AppCompatActivity) context;
-        if (context instanceof ContextWrapper) return getActivity(((ContextWrapper)context).getBaseContext());
+        if (context != null) {
+            if (context instanceof AppCompatActivity) return (AppCompatActivity) context;
+            if (context instanceof ContextWrapper)
+                return getActivity(((ContextWrapper) context).getBaseContext());
+        };
         return null;
     }
 }

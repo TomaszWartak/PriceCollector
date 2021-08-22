@@ -12,12 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
@@ -26,7 +25,6 @@ import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel2;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
-import com.dev4lazy.pricecollector.viewmodel.MainViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
@@ -35,6 +33,7 @@ public class AnalyzesListFragment extends Fragment {
 
     private AnalyzesListViewModel viewModel;
     private AnalyzesRecyclerView recyclerView;
+    private MutableLiveData<Boolean> newAnalyzesReady; // todo usunąć?
 
     public static AnalyzesListFragment newInstance() {
         return new AnalyzesListFragment();
@@ -50,6 +49,7 @@ public class AnalyzesListFragment extends Fragment {
 
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
+        newAnalyzesCheck();
 
         if (BuildConfig.DEBUG) {
             // todo test
@@ -65,6 +65,29 @@ public class AnalyzesListFragment extends Fragment {
         return view;
     }
 
+    private void newAnalyzesCheck() {
+        /*newAnalyzesReady = new MutableLiveData<>();
+        AnalysisDataUpdater analysisDataUpdater = getInstance();
+        newAnalyzesReady.setValue( analysisDataUpdater.isNewAnalysisReadyToDownlad() );
+        newAnalyzesReady.observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
+            @Override
+            public void onChanged( Boolean newAnalyzesReady  ) {
+                if (newAnalyzesReady) {
+                    showAskUserForAnalyzesDataDownload( getView() );
+                }
+            }
+        }); */
+        AnalysisDataUpdater analysisDataUpdater = getInstance();
+        analysisDataUpdater.getNewAnalysisReadyToDownladLD().observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
+            @Override
+            public void onChanged( Boolean newAnalyzesReady  ) {
+                if (newAnalyzesReady) {
+                    showAskUserForAnalyzesDataDownload( getView() );
+                }
+            }
+        });
+    }
+
     private void  setOnBackPressedCalback() {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
@@ -73,8 +96,8 @@ public class AnalyzesListFragment extends Fragment {
                 new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
                         .setTitle("")
                         .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_ok), new LogOffListener() )
-                        .setNegativeButton(getActivity().getString(R.string.caption_cancel),null)
+                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
                         .show();
             }
         };
@@ -113,7 +136,6 @@ public class AnalyzesListFragment extends Fragment {
         });
     }
 
-
     /*
     private void setAnalysisItem(@NonNull LayoutInflater inflater, View view) {
         viewAnalysisiItem = inflater.inflate(R.layout.test_analysis_item,null);
@@ -140,11 +162,19 @@ public class AnalyzesListFragment extends Fragment {
      */
 
     private void showAskUserForAnalyzesDataDownload( View view ) {
-        AlertDialog alertDialog = new AlertDialog.Builder( getContext() )
-            .setTitle( getString( R.string.data_ready_to_download ))
+        AlertDialogFragmentViewModel2 alertDialogFragmentViewModel =
+                new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel2.class);
+        alertDialogFragmentViewModel.setAlertDialog( getAskUserForAnalyzesDataDownloadDialog() );
+        Navigation.findNavController( view ).navigate( R.id.action_analyzesListFragment_to_alertDialogFragment2 );
+    }
+
+    @NonNull
+    private AlertDialog getAskUserForAnalyzesDataDownloadDialog() {
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder( getContext() )
+            .setTitle( getString( R.string.basic_data_ready_to_download))
             .setMessage( getString( R.string.question_about_downloading_data) )
             .setPositiveButton(
-                getString( R.string.yes ) ,
+                getString( R.string.caption_yes) ,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -156,7 +186,7 @@ public class AnalyzesListFragment extends Fragment {
             )
             // .setNegativeButton( alertDialogFragmentViewModel.getNegativeButtonLabel(), alertDialogFragmentViewModel.getNegativeButtonOnClickListener() )
             .setNegativeButton(
-                getString( R.string.no ),
+                getString( R.string.caption_no),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -167,9 +197,7 @@ public class AnalyzesListFragment extends Fragment {
             )
             .setCancelable( false )
             .create();
-        AlertDialogFragmentViewModel2 alertDialogFragmentViewModel = ViewModelProviders.of(getActivity()).get(AlertDialogFragmentViewModel2.class);
-        alertDialogFragmentViewModel.setAlertDialog( alertDialog );
-        Navigation.findNavController( view ).navigate( R.id.action_analyzesListFragment_to_alertDialogFragment2 );
+        return alertDialog;
     }
 
     @Override

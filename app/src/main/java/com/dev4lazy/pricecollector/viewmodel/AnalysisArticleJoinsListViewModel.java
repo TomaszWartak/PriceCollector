@@ -13,11 +13,11 @@ import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
-public class AnalysisArticleJoinsViewModel extends AndroidViewModel {
+public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
 
     private final LiveData<PagedList<AnalysisArticleJoin>> analysisRowsLiveData;
 
-    public AnalysisArticleJoinsViewModel(Application application) {
+    public AnalysisArticleJoinsListViewModel(Application application) {
         super(application);
         LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
         DataSource.Factory<Integer, AnalysisArticleJoin> factory = localDataRepository.getAllAnalysisArticlesJoin();
@@ -25,7 +25,7 @@ public class AnalysisArticleJoinsViewModel extends AndroidViewModel {
         analysisRowsLiveData = pagedListBuilder.build();
     }
 
-    public LiveData<PagedList<AnalysisArticleJoin>> getAnalysisArticleJoinLiveData() {
+    public LiveData<PagedList<AnalysisArticleJoin>> getAnalysisArticleJoinsListLiveData() {
         return analysisRowsLiveData;
     }
 

@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.model.logic.auth;
+package com.dev4lazy.pricecollector.unused;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;

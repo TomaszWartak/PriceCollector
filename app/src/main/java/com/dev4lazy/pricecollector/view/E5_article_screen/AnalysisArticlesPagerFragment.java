@@ -14,10 +14,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.dev4lazy.pricecollector.MainActivity;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCalback;
-import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsViewModel;
+import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
+import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +27,7 @@ import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsViewModel;
 public class AnalysisArticlesPagerFragment extends Fragment {
 
 
-    private AnalysisArticleJoinsViewModel viewModel;
+    private AnalysisArticleJoinsListViewModel viewModel;
     // Niestety nie da się dziedziczyc po ViewPager2, bo jest final.
     // Dlatego implementacja Adaptera została tutaj.
     private ViewPager2 viewPager;
@@ -51,12 +53,19 @@ public class AnalysisArticlesPagerFragment extends Fragment {
     }
 
     private void viewPagerSubscribtion() {
-        viewModel = new ViewModelProvider(this).get(AnalysisArticleJoinsViewModel.class);
-        viewModel.getAnalysisArticleJoinLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
+        viewModel = new ViewModelProvider(this).get(AnalysisArticleJoinsListViewModel.class);
+        viewModel.getAnalysisArticleJoinsListLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
             @Override
             public void onChanged(PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                 if (!analysisArticlesJoins.isEmpty()) {
                     analysisArticleJoinPagerAdapter.submitList(analysisArticlesJoins);
+                    // TODO XXX jeśli pojawi się zmianna na liście, to będzie się ustawiac w tym miejscu
+                    AnalysisArticleJoinViewModel analysisArticleJoinViewModel =
+                            new ViewModelProvider( (MainActivity)viewPager.getContext() ).get( AnalysisArticleJoinViewModel.class );
+                    viewPager.setCurrentItem(
+                            analysisArticleJoinViewModel.getRecyclerViewPosition(),
+                            false
+                    );
                 }
             }
         });

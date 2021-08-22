@@ -7,12 +7,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MenuItem;
+import android.view.View;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 
@@ -38,10 +43,42 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
-        setupNavigation(); // todo <-- ta metoda jest pusta...
+        setContentView(R.layout.main_activity_drawer);
+        setupToolbar();
+        setupNavigation(); // todo XXX <-- ta metoda jest pusta...
         // Inicalizacja obiektu preferencji
-        AppHandle.getHandle().getPrefs().setPrefs( getPreferences(Context.MODE_PRIVATE) );
+        AppHandle.getHandle().getSettings().setPrefs( getPreferences(Context.MODE_PRIVATE) );
+    }
+
+    private void setupToolbar() {
+        // assigning ID of the toolbar to a variable
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // using toolbar as ActionBar
+        setSupportActionBar(toolbar);
+
+        drawerLayout = findViewById(R.id.main_activity_layout);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close) {
+
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle("mTitle");
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle("mDrawerTitle");
+            }
+        };
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+        // toolbar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void setupNavigation(){
@@ -115,6 +152,20 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
 
      */
     /**/
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(
             int requestCode,

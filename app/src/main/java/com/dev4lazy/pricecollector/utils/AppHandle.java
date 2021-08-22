@@ -8,7 +8,7 @@ import com.dev4lazy.pricecollector.model.logic.auth.AppAuthSupport;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteDatabase;
 
-public class AppHandle extends Application{
+public class AppHandle extends Application {
 
     private static AppHandle appHandle = null;
 
@@ -18,28 +18,34 @@ public class AppHandle extends Application{
         appHandle = this;
     }
 
-    public static AppHandle getHandle() { return appHandle; }
-
-    public void shutdown() {
-        // todo tutaj zapisanie preferences, bazy danych itp...
-        // todo A może jest jakaś metoda onDestroy() ? w której może być Shutdown wołany
-        getPrefs().commit();
-        getAuthSupport().signOut();
+    public static AppHandle getHandle() {
+        return appHandle;
     }
 
     public AuthSupport getAuthSupport() {
         return AppAuthSupport.getInstance().getSupport();
     }
 
-    public LocalDatabase getLocalDatabase() { return LocalDatabase.getInstance();}
+    public LocalDatabase getLocalDatabase() {
+        return LocalDatabase.getInstance();
+    }
 
-    public RemoteDatabase getRemoteDatabase() { return RemoteDatabase.getInstance();}
+    public RemoteDatabase getRemoteDatabase() {
+        return RemoteDatabase.getInstance();
+    }
 
-    public DataRepository getRepository() { return DataRepository.getInstance(); }
+    public DataRepository getRepository() {
+        return DataRepository.getInstance();
+    }
 
-    public AppPreferences getPrefs() { return AppPreferences.getInstance(); }
+    public AppSettings getSettings() {
+        return AppSettings.getInstance();
+    }
 
-    public AppSettings getSettings() { return AppSettings.getInstance(); }
-
-
+    public void shutdown() {
+        // todo A może jest jakaś metoda onDestroy() ? w której może być shutdown() wołany
+        //  Jest metoda onTerminate(), ale ona działa tylko na emulatorze (?)
+        getSettings().commit();
+        getAuthSupport().signOut();
+    }
 }

@@ -179,7 +179,7 @@ public class CompetitorsSlotsListView extends ListView {
                     AnalysisCompetitorSlot slot = competitorSlotFullData.getSlot();
                     switch (item.getItemId()) {
                         case R.id.priceAnalysisMenuItem:
-
+                            Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisArticlesListFragment);
                             break;
                         case R.id.driveToCompetitorStoreMenuItem:
                             break;

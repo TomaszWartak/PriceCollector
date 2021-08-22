@@ -3,23 +3,17 @@ package com.dev4lazy.pricecollector.view;
 import android.app.Dialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class AlertDialogFragment extends DialogFragment {
 
-    // todo Czy tu jest potrzbeny VieeModel?
-
-    public AlertDialogFragment( ) {
-        // todo ??? Empty constructor required for DialogFragment
-    }
-
-    // todo: newInstance(), to jakiś bezsens chyba... Sprowadza się do "new AlertDialogFragment()"
-    //  zresztą nigdzie chyba nie jest używana...
-    //  czyli do wywołania konstruktora. Wszędzie, gdzie jest wywoływane newInstance(), zrób po prostu new AlertDialogFragment()...
     public static AlertDialogFragment newInstance( ) {
         AlertDialogFragment alertDialogFragment = new AlertDialogFragment( );
 //        Bundle args = new Bundle();
@@ -39,28 +33,24 @@ public class AlertDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState ) {
-        // View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_fragment, null);
-        // EditText editText = viewInflated.findViewById(R.id.textView2);
-        // editText.setText( "azssssssss");
-        AlertDialogFragmentViewModel alertDialogFragmentViewModel = ViewModelProviders.of( getActivity() ).get( AlertDialogFragmentViewModel.class );
+        AlertDialogFragmentViewModel alertDialogFragmentViewModel = new ViewModelProvider( getActivity() ).get( AlertDialogFragmentViewModel.class );
+        return getAlertDialog(alertDialogFragmentViewModel);
+    }
 
-
-        /* todo AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( getContext() )
+    @NonNull
+    private AlertDialog getAlertDialog(AlertDialogFragmentViewModel alertDialogFragmentViewModel) {
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder( getContext() )
                 .setTitle( alertDialogFragmentViewModel.getTitle() )
                 .setMessage( alertDialogFragmentViewModel.getMessage() )
-                .setCancelable( alertDialogFragmentViewModel.isCancelable() );
-
-         */
-
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( getContext() );
-        // alertDialogBuilder.setView( viewInflated );
-        alertDialogBuilder.setTitle( alertDialogFragmentViewModel.getTitle() );
-        alertDialogBuilder.setMessage( alertDialogFragmentViewModel.getMessage() );
-        alertDialogBuilder.setCancelable( alertDialogFragmentViewModel.isCancelable() );
-        alertDialogBuilder.setPositiveButton( alertDialogFragmentViewModel.getPositiveButtonLabel(), alertDialogFragmentViewModel.getPostiveButtonOnClickListener() );
-        alertDialogBuilder.setNegativeButton( alertDialogFragmentViewModel.getNegativeButtonLabel(), alertDialogFragmentViewModel.getNegativeButtonOnClickListener() );
-        AlertDialog alertDialog = alertDialogBuilder.create();
+                .setCancelable( alertDialogFragmentViewModel.isCancelable() )
+                .setPositiveButton(
+                        alertDialogFragmentViewModel.getPositiveButtonLabel(),
+                        alertDialogFragmentViewModel.getPostiveButtonOnClickListener() )
+                .setNegativeButton(
+                        alertDialogFragmentViewModel.getNegativeButtonLabel(),
+                        alertDialogFragmentViewModel.getNegativeButtonOnClickListener() )
+                .create();
+        //AlertDialog alertDialog = alertDialogBuilder.create();
         /* Jeśli chcesz przechwycić flow po wybraniu OK, aby zapobiec zamknięciu, jeśli coś jest nie tak,
             to trzeba być jak niżej zrobić.
             Z tym, że wtedy przestanie działać positiveButtonOnClickListener z ViewModel...

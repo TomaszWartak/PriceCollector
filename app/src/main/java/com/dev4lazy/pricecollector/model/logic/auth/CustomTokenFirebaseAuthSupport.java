@@ -46,6 +46,10 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
                             //  }
                             Log.d(TAG, "signInFirebase:success");
                             FirebaseUser user = firebaseAuthServices.getCurrentUser();
+                            // TODO TEST
+                            String name = user.getDisplayName();
+                            String email = user.getEmail();
+                            // TODO ENDTEST
                             setLoggedIn(true);
                             callIfSuccessful();
                         }
@@ -82,7 +86,7 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
 // Implementacja metod interfejsu calbaków logowania AuthSupport.LoginCallback
 // Obsługa callbacków logowania
     @Override
-    public void setLoginCallbackService(LoginCallback loginCallback) {
+    public void setLoginCallback(LoginCallback loginCallback) {
         this.loginCallbackService = loginCallback;
     }
 

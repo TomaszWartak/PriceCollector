@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Country;
-import com.dev4lazy.pricecollector.view.AlertDialogFragment2;
+import com.dev4lazy.pricecollector.viewmodel.CountryListViewModel;
 
 public class CountriesListFragment extends Fragment {
 
-    private AlertDialogFragment2.CountryListViewModel viewModel;
+    private CountryListViewModel viewModel;
     private RecyclerView recyclerView;
     private CountryAdapter countryAdapter;
 
@@ -38,7 +38,7 @@ public class CountriesListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(AlertDialogFragment2.CountryListViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(CountryListViewModel.class);
         recyclerSetup();
         recyclerSubscribtion();
     }

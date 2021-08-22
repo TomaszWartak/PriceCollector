@@ -1,13 +1,10 @@
 package com.dev4lazy.pricecollector.view.E1_login_screen;
 
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.renderscript.Element;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,30 +12,26 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
-import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
 import com.dev4lazy.pricecollector.model.logic.User;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.utils.AppHandle;
-import com.dev4lazy.pricecollector.view.E5_article_screen.AnalysisArticlesPagerFragment;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
 
@@ -59,13 +52,14 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppHandle.getHandle().getAuthSupport().setLoginCallbackService(this);
+        AppHandle.getHandle().getAuthSupport().setLoginCallback(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_fragment, container, false);
+        setOnBackPressedCalback();
         if (BuildConfig.DEBUG) {
             view.findViewById(R.id.login_fragment_layout).setOnClickListener((View v) -> {
                 Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_testActionsFragment2);
@@ -200,11 +194,11 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
                     AppHandle.getHandle().getSettings().setUser( new User( remoteUser ) );
                     userViewModel.clear();
                     // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
-                    if (AppHandle.getHandle().getPrefs().isLocalDatabaseNotInitialized()) {
+                    if (AppHandle.getHandle().getSettings().isLocalDatabaseNotInitialized()) {
                         LocalDataInitializer.getInstance().initializeLocalDatabase();
                     }
                     //todo sprawdzenie, co jest w preferencjach i odtworzenie na ekranie
-                    getPreferencesInfo();
+                    getSettingsInfo();
                     // todo sprawdzenie czy na serwerze zdalnym jest nowa analiza - pobranie
                     startRisingChain();
                 } else {
@@ -221,7 +215,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         AppHandle.getHandle().getRepository().getRemoteDataRepository().findUserByLogin(userViewModel.getUser().getLogin(), findRemoteUserResult );
     }
 
-    private void getPreferencesInfo() { // todo czy getSettingsInfo?
+    private void getSettingsInfo() { // todo czy getSettingsInfo?
         //todo
         // język
         // użytkownik -> sklep amcierzysty, dział ew sektor
@@ -279,13 +273,47 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
 
     @Override
     public void callIfUnsuccessful() {
+        // TODO XXX nie rozróżnia przyczyny niepowodzenia
+        //  jest tylko, że serwer niedostepny, a powinno jeszcze, ze nieprawidłowe dane logowania...
+        //  Może parametrem powiniwn byc komunikat,a w bardziej zaawanoswanej wersji obiekt,
+        //  który udosuepnia informację?
         userPasswordEditText.setText("");
             // todo kumnuikat jakiś :-)
         Toast.makeText(
             getContext(),
-            "coś nie bangla...",
+            R.string.login_server_unavailable,
             Toast.LENGTH_SHORT).show();
     }
 
     // TODO XXX LoginFragment nie obsługuje klawisza back (nie da się wyjść z aplikacji)
+    private void setOnBackPressedCalback() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button event
+                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                        .setTitle("")
+                        .setMessage(R.string.question_close_app)
+                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
+                        .show();
+            }
+        };
+        getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+    }
+
+    private class LogOffListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            finishApp();
+        }
+    }
+
+    private void finishApp() {
+        // TODO promotor: czy to można bardziej elegancko zrobić?
+        AppHandle.getHandle().shutdown();
+        getActivity().finishAndRemoveTask();
+        System.exit(0);
+    }
 }

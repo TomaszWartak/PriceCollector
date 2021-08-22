@@ -10,16 +10,26 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
 
     private AnalysisArticleJoin analysisArticleJoin;
 
+    private int recyclerViewPosition;
+
     public AnalysisArticleJoinViewModel(Application application) {
         super(application);
+    }
+
+    public void setAnalysisArticleJoin( AnalysisArticleJoin analysisArticleJoin ) {
+        this.analysisArticleJoin = analysisArticleJoin;
     }
 
     public AnalysisArticleJoin getAnalysisArticleJoin() {
         return analysisArticleJoin;
     }
 
-    public void setAnalysisArticleJoin( AnalysisArticleJoin analysisArticleJoin ) {
-        this.analysisArticleJoin = analysisArticleJoin;
+    public void setRecyclerViewPosition(int recyclerViewPosition) {
+        this.recyclerViewPosition = recyclerViewPosition;
+    }
+
+    public int getRecyclerViewPosition() {
+        return recyclerViewPosition;
     }
 
 }

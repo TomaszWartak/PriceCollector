@@ -67,7 +67,7 @@ public interface AuthSupport {
 // Obsługa callbacku do obsługi rezultatu logowania
     LoginCallback getLoginCallback();
 
-    void setLoginCallbackService(LoginCallback loginCallback);
+    void setLoginCallback(LoginCallback loginCallback);
 
     interface LoginCallback {
         void callIfSuccessful();

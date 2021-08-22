@@ -60,7 +60,7 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
 
         @NonNull
         @Override
-        public AnalysisArticleJoinViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public AnalysisArticleJoinViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article_list_item, parent, false);
             return new AnalysisArticleJoinViewHolder( view );
         }
@@ -85,6 +85,7 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
             private void openAnalysisArticle( View view) {
                 analysisArticleJoinViewModel = new ViewModelProvider( (MainActivity)itemView.getContext() ).get( AnalysisArticleJoinViewModel.class );
                 analysisArticleJoinViewModel.setAnalysisArticleJoin( getItem( getAdapterPosition() ) );
+                analysisArticleJoinViewModel.setRecyclerViewPosition( getAdapterPosition() );
                 Navigation.findNavController( view ).navigate(R.id.action_analysisFragment_to_analysisArticlesPagerFragment);
             }
 

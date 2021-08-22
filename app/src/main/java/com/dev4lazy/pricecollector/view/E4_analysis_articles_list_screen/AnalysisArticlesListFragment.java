@@ -15,7 +15,7 @@ import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsViewModel;
+import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,7 +23,7 @@ import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsViewModel;
 public class AnalysisArticlesListFragment extends Fragment {
 
     private AnalysisArticleJoinsRecyclerView analysisArticleJoinsRecyclerView;
-    private AnalysisArticleJoinsViewModel viewModel;
+    private AnalysisArticleJoinsListViewModel viewModel;
 
     public static AnalysisArticlesListFragment newInstance() {
         return new AnalysisArticlesListFragment();
@@ -45,8 +45,8 @@ public class AnalysisArticlesListFragment extends Fragment {
     }
 
     private void recyclerViewSubscribtion() {
-        viewModel = new ViewModelProvider(this).get( AnalysisArticleJoinsViewModel.class );
-        viewModel.getAnalysisArticleJoinLiveData().observe( getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
+        viewModel = new ViewModelProvider(this).get( AnalysisArticleJoinsListViewModel.class );
+        viewModel.getAnalysisArticleJoinsListLiveData().observe( getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
             @Override
             public void onChanged( PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                 if (!analysisArticlesJoins.isEmpty()) {

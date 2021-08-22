@@ -102,7 +102,7 @@ public class AnalyzesRecyclerView extends RecyclerView {
             }
 
             private void openCompetitorSlots( View view) {
-                // TODO sloty muszą się otworzyć dla konkretnej analizy, więc jakoś (ViewModel) trzeba przekazać info o analizie
+                // TODO XXX sloty muszą się otworzyć dla konkretnej analizy, więc jakoś (ViewModel) trzeba przekazać info o analizie
                 Navigation.findNavController( view ).navigate(R.id.action_analyzesListFragment_to_analysisCompetitorsFragment);
             }
 

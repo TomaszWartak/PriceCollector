@@ -32,14 +32,22 @@
 
     </LinearLayout>
 
-
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:clipToPadding="false"
+        app:menu="@menu/main_menu"
+        />
+
+    <!--com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        />
+        /-->
     <!-- app:headerLayout="@layout/navigation_header"
     app:menu="@menu/my_navigation_items" -->
 

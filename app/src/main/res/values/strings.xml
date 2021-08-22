@@ -7,7 +7,8 @@
     <string name="caption_ok" translatable="false">OK</string>
     <string name="caption_cancel">Anuluj</string>
     <string name="question_close_app">Czy chcesz zamknąć aplikację?</string>
-
+    <string name="caption_yes">Tak</string>
+    <string name="caption_no">Nie</string>
     <!-- ??? -->
     <string name="departments_structure_description">struktura działowa</string>
 
@@ -107,11 +108,14 @@
     <string name="ean_code_label" translatable="false">EAN:</string>
 
     <!-- dialog dotyczący pobrania danych analizy -->
-    <string name="data_ready_to_download">DANE GOTOWE DO POBRANIA...</string>
+    <string name="basic_data_ready_to_download">DANE PODSTAWOWE BADAŃ CEN - GOTOWE DO POBRANIA...</string>
+    <string name="articles_data_ready_to_download">DANE ARTYKUŁÓW - GOTOWE DO POBRANIA...</string>
     <string name="question_about_downloading_data">Czy chcesz teraz pobrać dane?</string>
-    <string name="yes">Tak</string>
-    <string name="no">Nie</string>
     <string name="short_permission_name_contacts">KONTAKTY</string>
+    <string name="login_server_unavailable">Brak komunikacji z serwerem logowania...</string>
     <!-- TODO: Remove or change this placeholder text -->
 
+    <!-- Dla ActionBarDrawerToggle, ale po co ???-->
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 </resources>

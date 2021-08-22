@@ -35,22 +35,22 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.dev4lazy.pricecollector.utils.AppPreferences.CASTORAMA_STORES_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPANIES_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.COMPETITORS_SLOTS_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.COUNTRIES_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.DEPARTMENTS_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.DUMMY_FAMILY_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.DUMMY_MARKET_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.DUMMY_MODULE_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.LM_STORES_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_COMPETITORS_STORES_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.LOCAL_DATA_NOT_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.OBI_STORES_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.OWN_STORES_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.SECTORS_DEPARTMENTS_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.SECTORS_INITIALIZED;
-import static com.dev4lazy.pricecollector.utils.AppPreferences.UOPROJECT_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.CASTORAMA_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.COMPANIES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.COMPETITORS_SLOTS_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.COUNTRIES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.DEPARTMENTS_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.DUMMY_FAMILY_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.DUMMY_MARKET_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.DUMMY_MODULE_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.LM_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.LOCAL_COMPETITORS_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.LOCAL_DATA_NOT_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.OBI_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.OWN_STORES_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.SECTORS_DEPARTMENTS_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.SECTORS_INITIALIZED;
+import static com.dev4lazy.pricecollector.utils.AppSettings.UOPROJECT_INITIALIZED;
 
 /**
  * LocalDataInitializer
@@ -122,8 +122,8 @@ public class LocalDataInitializer {
         AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(null);
         // todo to niżej przeniósłbym do AppSettings - czyli warstwę wyżej
         //  inicjalizacja bazy lokalnej -> setLocalDatabaseNotInitialized()
-        AppHandle.getHandle().getPrefs().saveLocalDatabaseInitialized(false);
-        AppHandle.getHandle().getPrefs().saveInitialisationStage(LOCAL_DATA_NOT_INITIALIZED);
+        AppHandle.getHandle().getSettings().saveLocalDatabaseInitialized(false);
+        AppHandle.getHandle().getSettings().saveInitialisationStage(LOCAL_DATA_NOT_INITIALIZED);
         AppSettings.getInstance().setLastAnalysisCreationDate( new Date( 0 ) );
     }
 
@@ -138,7 +138,7 @@ public class LocalDataInitializer {
 // ---------------------------------------------------------------------------
 // Metoda sprawdzająca, czy baza danych jest zainicjowana. Jeśli nie jest - inicjalizuje bazę.
     private void checkAndSetIfLocaDatabaselNotInitialized() {
-        int localDatabaseInitalisationStage = AppHandle.getHandle().getPrefs().getLocalDatabaseInitialisationStage();
+        int localDatabaseInitalisationStage = AppHandle.getHandle().getSettings().getLocalDatabaseInitialisationStage();
         switch (localDatabaseInitalisationStage) {
             case LOCAL_DATA_NOT_INITIALIZED:
                 initializeLocalData();
@@ -249,6 +249,10 @@ public class LocalDataInitializer {
         castoramaStores = appDataFeeder.getCastoramaStoresInitialList();
     }
 
+    private void prepareSectors() {
+        getSectorsFromRemoteDatabase( );
+    }
+
     private void prepareLocalCompetitorStores() {
         localCompetitorStores = appDataFeeder.getLocalCompetitorStoresInitialList();
     }
@@ -301,10 +305,6 @@ public class LocalDataInitializer {
 
     private void startPreparingOtherLocalDataChain() {
         prepareSectors(); // todo 2??
-    }
-
-    private void prepareSectors() {
-        getSectorsFromRemoteDatabase( );
     }
 
     private void getSectorsFromRemoteDatabase( ) {
@@ -430,7 +430,7 @@ public class LocalDataInitializer {
             public void onChanged( Long lastSectorId) {
                 populateSectorsResult.removeObserver(this); // this = observer...
                 if (lastSectorId!=null) {
-                    AppHandle.getHandle().getPrefs().saveInitialisationStage( SECTORS_INITIALIZED );
+                    AppHandle.getHandle().getSettings().saveInitialisationStage( SECTORS_INITIALIZED );
                     populateDepartments();
                 }
             }
@@ -448,7 +448,7 @@ public class LocalDataInitializer {
             public void onChanged( Long lastDepartmentId) {
                 populateDepartmentsResult.removeObserver(this); // this = observer...
                 if (lastDepartmentId!=null) {
-                    AppHandle.getHandle().getPrefs().saveInitialisationStage( DEPARTMENTS_INITIALIZED );
+                    AppHandle.getHandle().getSettings().saveInitialisationStage( DEPARTMENTS_INITIALIZED );
                     createSectors();
                 }
             }
@@ -591,7 +591,7 @@ public class LocalDataInitializer {
                 getAllDepartmentsInSectorsResult.removeObserver(this); // this = observer...
                 if (!departmensInSectorsList.isEmpty()) {
                 }
-                AppHandle.getHandle().getPrefs().saveInitialisationStage(SECTORS_DEPARTMENTS_INITIALIZED);
+                AppHandle.getHandle().getSettings().saveInitialisationStage(SECTORS_DEPARTMENTS_INITIALIZED);
                 populateCountries();
             }
         };
@@ -605,8 +605,8 @@ public class LocalDataInitializer {
         // todo tu zamotka jest... Z preferencji, czy z DataInitializera?
         /*
         Country ownCountry = new Country();
-        ownCountry.setName(AppHandle.getHandle().getPrefs().getCountryName());
-        ownCountry.setEnglishName(AppHandle.getHandle().getPrefs().getEnglishCountryName());
+        ownCountry.setName(AppHandle.getHandle().getSettings().getCountryName());
+        ownCountry.setEnglishName(AppHandle.getHandle().getSettings().getEnglishCountryName());
          */
         Country ownCountry = countries.get(0);
 
@@ -622,7 +622,7 @@ public class LocalDataInitializer {
                     ownCountryInsertResult.removeObserver(this); // this = observer...
                     if (ownCountryId!=-1) {
                         //insertOwnCompany(ownCountryId);
-                        AppHandle.getHandle().getPrefs().saveInitialisationStage(COUNTRIES_INITIALIZED);
+                        AppHandle.getHandle().getSettings().saveInitialisationStage(COUNTRIES_INITIALIZED);
                         populateCompanies();
                     }
                 }
@@ -648,13 +648,13 @@ public class LocalDataInitializer {
                             company.setCountryId(country.getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertCompany( company, null );
                         }
-                        AppHandle.getHandle().getPrefs().saveInitialisationStage(COMPANIES_INITIALIZED);
+                        AppHandle.getHandle().getSettings().saveInitialisationStage(COMPANIES_INITIALIZED);
                         populateOwnStores();}
                 }
             }
         };
         result.observeForever(resultObserver);
-        String ownCountryName = AppHandle.getHandle().getPrefs().getCountryName();
+        String ownCountryName = AppHandle.getHandle().getSettings().getCountryName();
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCountryByName(ownCountryName,result);
     }
 
@@ -673,7 +673,7 @@ public class LocalDataInitializer {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertOwnStore( store, null );
                         }
-                        AppHandle.getHandle().getPrefs().saveInitialisationStage(OWN_STORES_INITIALIZED);
+                        AppHandle.getHandle().getSettings().saveInitialisationStage(OWN_STORES_INITIALIZED);
                         populateLMStores();
                     }
                 }
@@ -697,7 +697,7 @@ public class LocalDataInitializer {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
-                        AppHandle.getHandle().getPrefs().saveInitialisationStage(LM_STORES_INITIALIZED);
+                        AppHandle.getHandle().getSettings().saveInitialisationStage(LM_STORES_INITIALIZED);
                         populateObiStores();
                     }
                 }
@@ -721,7 +721,7 @@ public class LocalDataInitializer {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
-                        AppHandle.getHandle().getPrefs().saveInitialisationStage(OBI_STORES_INITIALIZED);
+                        AppHandle.getHandle().getSettings().saveInitialisationStage(OBI_STORES_INITIALIZED);
                         populateCastoramaStores();
                     }
                 }
@@ -745,7 +745,7 @@ public class LocalDataInitializer {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore( store, null );
                         }
-                        AppHandle.getHandle().getPrefs().saveInitialisationStage(CASTORAMA_STORES_INITIALIZED);
+                        AppHandle.getHandle().getSettings().saveInitialisationStage(CASTORAMA_STORES_INITIALIZED);
                         populateLocalCompetitorStores();
                     }
                 }
@@ -769,7 +769,7 @@ public class LocalDataInitializer {
                             store.setCompanyId(companiesList.get(0).getId());
                             AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore(store, null);
                         }
-                        AppHandle.getHandle().getPrefs().saveInitialisationStage( LOCAL_COMPETITORS_STORES_INITIALIZED);
+                        AppHandle.getHandle().getSettings().saveInitialisationStage( LOCAL_COMPETITORS_STORES_INITIALIZED);
                         populateCompetitorSlotNr1();
                     }
                 }
@@ -900,7 +900,7 @@ public class LocalDataInitializer {
                         analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
                         analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
-                        AppHandle.getHandle().getPrefs().saveInitialisationStage( COMPETITORS_SLOTS_INITIALIZED );
+                        AppHandle.getHandle().getSettings().saveInitialisationStage( COMPETITORS_SLOTS_INITIALIZED );
                         populateDummyFamily( );
                     }
                 }
@@ -918,7 +918,7 @@ public class LocalDataInitializer {
             public void onChanged( Long familyId ) {
                 if ((familyId != null)&&(familyId>0)) {
                     result.removeObserver(this); // this = observer...
-                    AppHandle.getHandle().getPrefs().saveInitialisationStage( DUMMY_FAMILY_INITIALIZED );
+                    AppHandle.getHandle().getSettings().saveInitialisationStage( DUMMY_FAMILY_INITIALIZED );
                     populateDummyMarket();
                 }
             }
@@ -935,7 +935,7 @@ public class LocalDataInitializer {
             public void onChanged( Long marketId ) {
                 if ((marketId != null)&&(marketId>0)) {
                     result.removeObserver(this); // this = observer...
-                    AppHandle.getHandle().getPrefs().saveInitialisationStage( DUMMY_MARKET_INITIALIZED );
+                    AppHandle.getHandle().getSettings().saveInitialisationStage( DUMMY_MARKET_INITIALIZED );
                     populateDummyModule( );
                 }
             }
@@ -952,7 +952,7 @@ public class LocalDataInitializer {
             public void onChanged( Long marketId ) {
                 if ((marketId != null)&&(marketId>0)) {
                     result.removeObserver(this); // this = observer...
-                    AppHandle.getHandle().getPrefs().saveInitialisationStage( DUMMY_MODULE_INITIALIZED );
+                    AppHandle.getHandle().getSettings().saveInitialisationStage( DUMMY_MODULE_INITIALIZED );
                     populateDummyUOProject( );
                 }
             }

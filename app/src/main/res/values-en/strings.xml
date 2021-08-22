@@ -12,7 +12,7 @@
     <string name="comment_label">Comment:</string>
     <string name="competitor">Competitor</string>
     <string name="competitor_price_label">Competitor price:</string>
-    <string name="data_ready_to_download">DATA READY TO DOWNLOAD...</string>
+    <string name="basic_data_ready_to_download">BASIC DATA READY TO DOWNLOAD...</string>
     <string name="departments_structure_description">department structure</string>
     <string name="detach_competitor_store">Detach competitor store</string>
     <string name="drive_to_competitor_store">Drive to competitor store</string>
@@ -66,6 +66,8 @@
     <string name="r06_department_name">Services</string>
     <string name="short_permission_name_user_account">USER ACCOUNT</string>
     <string name="short_permission_name_contacts">CONTACTS</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="caption_yes">Yes</string>
+    <string name="caption_no">No</string>
+    <string name="articles_data_ready_to_download">ITEMS DATA READY TO DOWNLOAD...</string>
+    <string name="login_server_unavailable">Login server unavailable...</string>
 </resources>

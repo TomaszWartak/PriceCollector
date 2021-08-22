@@ -9,24 +9,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.model.logic.AnalysisCompetitorSlotList;
 import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
-import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
-import com.dev4lazy.pricecollector.model.entities.Store;
-import com.dev4lazy.pricecollector.utils.AppHandle;
-import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsViewModel;
 import com.dev4lazy.pricecollector.viewmodel.CompetitorsSlotsViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class AnalysisCompetitorsListFragment extends Fragment {
 

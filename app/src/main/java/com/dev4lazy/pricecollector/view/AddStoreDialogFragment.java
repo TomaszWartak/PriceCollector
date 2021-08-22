@@ -3,7 +3,6 @@ package com.dev4lazy.pricecollector.view;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +17,14 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
@@ -46,20 +46,6 @@ public class AddStoreDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.add_store_fragment, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        Resources resources = getResources();
-        builder.setTitle(resources.getString(R.string.add_competitor_store));
-
-        StoreViewModel storeViewModel = ViewModelProviders.of(getActivity()).get(StoreViewModel.class);
-        /* tod? storeViewModel.getData().observe(this, new Observer<Store>() {
-            @Override
-            public void onChanged(Store store) {
-
-            }
-        });
-        */
-        Store store = storeViewModel.getData().getValue();
-
         EditText companyNameEditText = viewInflated.findViewById(R.id.company_name_edit_text);
         EditText storeNameEditText = viewInflated.findViewById(R.id.store_name_edit_text);
         EditText streetEditText = viewInflated.findViewById(R.id.store_street_edit_text);
@@ -78,39 +64,45 @@ public class AddStoreDialogFragment extends DialogFragment {
             }
         };
         result.observeForever(resultObserver);
+        StoreViewModel storeViewModel = new ViewModelProvider(getActivity()).get(StoreViewModel.class);
+        Store store = storeViewModel.getData().getValue();
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyById(store.getCompanyId(),result);
 
-        builder.setView(viewInflated);
-        builder.setPositiveButton(R.string.caption_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // onClick zostaje pusta ze względu na walidację (zob. niżej onShow() )
-                // todo store.setCompanyId();
-                // companyName = companyNameEditText.getText().toString();
-                /*
-                store.setName( storeNameEditText.getText().toString() );
-                store.setStreet( streetEditText.getText().toString() );
-                store.setCity( cityEditText.getText().toString() );
-                store.setZipCode( zipcodeEditText.getText().toString() );
-                if (isValid(store)) {
-                    dialog.dismiss();
-                } else {
-                    Toast.makeText(
-                        getContext(),
-                        validationMessage,
-                        Toast.LENGTH_LONG).show();
-                }
-                */
-            }
-        });
-        builder.setNegativeButton(R.string.caption_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        //builder.show();
-        AlertDialog alertDialog = builder.create();
+        return getAddStoreDialog(
+                viewInflated,
+                storeViewModel,
+                store,
+                storeNameEditText,
+                streetEditText,
+                cityEditText,
+                zipcodeEditText);
+    }
+
+    @NonNull
+    private AlertDialog getAddStoreDialog(
+            View viewInflated,
+            StoreViewModel storeViewModel,
+            Store store,
+            EditText storeNameEditText,
+            EditText streetEditText,
+            EditText cityEditText,
+            EditText zipcodeEditText) {
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(getContext())
+                .setTitle(getString(R.string.add_competitor_store))
+                .setView(viewInflated) // jeśli dialog ma mieć niestandarodowy widok
+                .setPositiveButton(R.string.caption_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // onClick zostaje pusta ze względu na walidację (zob. niżej onShow() )
+                    }
+                })
+                .setNegativeButton(R.string.caption_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create();
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {

@@ -1,33 +1,28 @@
 package com.dev4lazy.pricecollector.view.E0_1_start_screen;
 
 
-import android.accounts.AccountManager;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.utils.AppHandle;
-import com.dev4lazy.pricecollector.utils.AppPreferences;
+
+import com.dev4lazy.pricecollector.utils.AppSettings;
 import com.dev4lazy.pricecollector.utils.PermissionsUtils;
-import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.common.AccountPicker;
+import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel2;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
@@ -105,9 +100,9 @@ public class StartScreenFragment extends Fragment {
                     // Permission is denied (an "never ask again" is checked )
                     // shouldShowRequestPermissionRationale() will return false.
                     else {
-                        AppPreferences appPreferences = AppHandle.getHandle().getPrefs();
-                        if (appPreferences.isFirstTimeAskingPermission( permissionName )) {
-                            appPreferences.saveFirstTimeAskingPermission( permissionName, false );
+                        AppSettings appSettings = AppHandle.getHandle().getSettings();
+                        if (appSettings.isFirstTimeAskingPermission( permissionName )) {
+                            appSettings.saveFirstTimeAskingPermission( permissionName, false );
                             permissionsUtils.callUserForPermission( permissionName, ALL_PERMISSIONS_REQUEST );
                             break;
                         } else {
@@ -122,6 +117,7 @@ public class StartScreenFragment extends Fragment {
     }
 
     private void showExplantationAndAskUserForPermissionDialog(View view, String deniedPermissionsMessage ) {
+        /* TODO XXX usuń
         AlertDialogFragmentViewModel alertDialogFragmentViewModel = ViewModelProviders.of(getActivity()).get(AlertDialogFragmentViewModel.class);
         alertDialogFragmentViewModel.setTitle("");
         alertDialogFragmentViewModel.setMessage(
@@ -151,17 +147,61 @@ public class StartScreenFragment extends Fragment {
         );
         alertDialogFragmentViewModel.setCancelable(false);
         Navigation.findNavController( view ).navigate( R.id.action_startScreenFragment_to_alertDialogFragment );
+         */
+        /* TODO XXX
+        To musisz przetestować - zmiana AlertDialogFragment na AlertDialogFragment2
+        musisz zdjąć uprawnienia i asprawdzić, jak dialog się wyświetli
+
+         */
+        AlertDialogFragmentViewModel2 alertDialogFragmentViewModel =
+                new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel2.class);
+        alertDialogFragmentViewModel.setAlertDialog(
+                getExplantationAndAskUserForPermissionDialog( deniedPermissionsMessage )
+        );
+        Navigation.findNavController( view ).navigate( R.id.action_startScreenFragment_to_alertDialogFragment2 );
+    }
+
+    private AlertDialog getExplantationAndAskUserForPermissionDialog( String deniedPermissionsMessage ) {
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder( getContext() )
+                .setTitle( "")
+                .setMessage(
+                        getString(R.string.nedded_permissions_message_line1) + "\n" +
+                        getString(R.string.nedded_permissions_message_line2) + "\n" +
+                        deniedPermissionsMessage )
+                .setPositiveButton(
+                        getString(R.string.yes_i_want_to_allow_message),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                checkAndRequestPermissions();
+                            }
+                        }
+                )
+                .setNegativeButton(
+                        getString(R.string.no_i_want_to_exit_app_message),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                finishApp();
+                            }
+                        }
+                )
+                .setCancelable( false )
+                .create();
+        return alertDialog;
     }
 
     private void showExplantationAndAskUserForSystemSettings(View view, String deniedPermissionsMessage ) {
+        /* TODO usuń
         AlertDialogFragmentViewModel alertDialogFragmentViewModel = ViewModelProviders.of(getActivity()).get(AlertDialogFragmentViewModel.class);
         alertDialogFragmentViewModel.setTitle("");
-        Resources resources = getResources();
         alertDialogFragmentViewModel.setMessage(
-                resources.getString(R.string.nedded_permissions_message_line1) + "\n" +
-                resources.getString(R.string.nedded_permissions_message_line2) + "\n" +
+                getString(R.string.nedded_permissions_message_line1) + "\n" +
+                getString(R.string.nedded_permissions_message_line2) + "\n" +
                 deniedPermissionsMessage + "\n" +
-                resources.getString(R.string.nedded_permissions_message_go_to_settings)
+                getString(R.string.nedded_permissions_message_go_to_settings)
         );
         alertDialogFragmentViewModel.setPositiveButtonLabel(getString(R.string.yes_i_want_to_go_to_settings));
         alertDialogFragmentViewModel.setPostiveButtonOnClickListener(
@@ -193,6 +233,57 @@ public class StartScreenFragment extends Fragment {
         );
         alertDialogFragmentViewModel.setCancelable(false);
         Navigation.findNavController( view ).navigate( R.id.action_startScreenFragment_to_alertDialogFragment );
+         */
+
+        AlertDialogFragmentViewModel2 alertDialogFragmentViewModel2 =
+                new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel2.class);
+        alertDialogFragmentViewModel2.setAlertDialog(
+                getExplantationAndAskUserForSystemSettingsDialog(deniedPermissionsMessage)
+        );
+
+        Navigation.findNavController( view ).navigate( R.id.action_startScreenFragment_to_alertDialogFragment2 );
+    }
+
+    @NonNull
+    private AlertDialog getExplantationAndAskUserForSystemSettingsDialog(String deniedPermissionsMessage) {
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder( getContext() )
+                .setTitle("")
+                .setMessage(
+                        getString( R.string.nedded_permissions_message_line1) + "\n" +
+                        getString(R.string.nedded_permissions_message_line2) + "\n" +
+                                deniedPermissionsMessage + "\n" +
+                        getString(R.string.nedded_permissions_message_go_to_settings) )
+                .setPositiveButton(
+                        getString(R.string.yes_i_want_to_go_to_settings),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                // Go to app settings
+                                Intent intent = new Intent(
+                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                        // todo może zamiast null powinno być this?
+                                        Uri.fromParts( "package", getActivity().getPackageName(), null )
+                                );
+                                intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
+                                startActivity( intent );
+                                finishApp();
+                            }
+                        }
+                )
+                .setNegativeButton(
+                        getString(R.string.no_i_want_to_exit_app_message),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                finishApp();
+                            }
+                        }
+                )
+                .setCancelable(false)
+                .create();
+        return alertDialog;
     }
 
     private void finishApp() {
