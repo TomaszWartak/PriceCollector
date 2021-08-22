@@ -24,6 +24,11 @@
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/main_activity_drawer.xml" value="0.19701086956521738" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/set_up_preferences_fragment.xml" value="0.21197916666666666" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/start_screen_fragment.xml" value="0.215625" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/menu/analysis_competitors_list_screen_menu.xml" value="0.1" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/menu/anlysis_articles_list_screen_menu.xml" value="0.1" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/menu/anlyzes_list_screen_menu.xml" value="0.1" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/menu/article_screen_menu.xml" value="0.1" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/menu/login_screen_menu.xml" value="0.36615384615384616" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/menu/main_menu.xml" value="0.20677083333333332" />
       </map>
     </option>

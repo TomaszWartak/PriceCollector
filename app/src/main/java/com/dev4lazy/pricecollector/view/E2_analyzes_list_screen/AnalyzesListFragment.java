@@ -3,6 +3,8 @@ package com.dev4lazy.pricecollector.view.E2_analyzes_list_screen;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -26,6 +29,7 @@ import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel2;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.navigation.NavigationView;
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
 
@@ -49,6 +53,7 @@ public class AnalyzesListFragment extends Fragment {
 
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
+        menuSetup();
         newAnalyzesCheck();
 
         if (BuildConfig.DEBUG) {
@@ -132,6 +137,28 @@ public class AnalyzesListFragment extends Fragment {
                 if (!analyzesList.isEmpty()) {
                     recyclerView.submitAnalyzesList( analyzesList);
                 }
+            }
+        });
+    }
+
+    private void menuSetup() {
+        NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
+        Menu navigationViewMenu = navigationView.getMenu();
+        navigationViewMenu.clear();
+        navigationView.inflateMenu(R.menu.anlyzes_list_screen_menu);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // return true to display the item as the selected item
+                DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
+                drawerLayout.closeDrawers();
+                switch (item.getItemId()) {
+                    case R.id.login_screen_1:
+                        break;
+                    case R.id.login_screen_2:
+                        break;
+                }
+                return false;
             }
         });
     }

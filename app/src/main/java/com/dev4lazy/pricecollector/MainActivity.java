@@ -1,18 +1,11 @@
 package com.dev4lazy.pricecollector;
 
-import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Patterns;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,11 +14,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 
-import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.google.android.material.navigation.NavigationView;
-
-import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity /*implements NavigationView.OnNavigationItemSelectedListener*/{
 
@@ -43,43 +33,83 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity_drawer);
+        setContentView(R.layout.main_activity_with_drawer);
         setupToolbar();
+        setupDrawer();
         setupNavigation(); // todo XXX <-- ta metoda jest pusta...
         // Inicalizacja obiektu preferencji
         AppHandle.getHandle().getSettings().setPrefs( getPreferences(Context.MODE_PRIVATE) );
     }
 
     private void setupToolbar() {
-        // assigning ID of the toolbar to a variable
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        toolbar = findViewById(R.id.toolbar);
         // using toolbar as ActionBar
         setSupportActionBar(toolbar);
+        // toolbar.setDisplayHomeAsUpEnabled(true);
+    }
 
-        drawerLayout = findViewById(R.id.main_activity_layout);
+    private void setupDrawer() {
+        drawerLayout = findViewById(R.id.main_activity_with_drawer_layout);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this,
                 drawerLayout,
-                toolbar,
+                /*toolbar,*/
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close) {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle("mTitle");
+                getSupportActionBar().setTitle("PriceCollector");
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("mDrawerTitle");
+                getSupportActionBar().setTitle("");
             }
         };
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        // toolbar.setDisplayHomeAsUpEnabled(true);
+        navigationView = findViewById(R.id.navigation_view);
+        // navigationView.setNavigationItemSelectedListener(getOnNavigationItemSelectedListener());
+
+        // true - chyba jeśli klawisz back ma o jeden poziom robić
+        // false - chyba jeśli klawisz back ma wracać do home
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
+
+    /*
+    private NavigationView.OnNavigationItemSelectedListener getOnNavigationItemSelectedListener() {
+        return new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // return true to display the item as the selected item
+                drawerLayout.closeDrawers();
+                Menu nav_Menu = navigationView.getMenu();
+                switch (item.getItemId()) {
+                    case R.id.nav_1_1:
+                        nav_Menu.findItem(R.id.nav_1_1).setVisible(false);
+                        break;
+                    case R.id.nav_1_2:
+                        nav_Menu.findItem(R.id.nav_1_2).setVisible(false);
+                        break;
+                    case R.id.nav_2_1:
+                        nav_Menu.findItem(R.id.nav_2_1).setVisible(false);
+                        break;
+                    case R.id.nav_2_2:
+                        nav_Menu.findItem(R.id.nav_2_2).setVisible(false);
+                        break;
+                    case R.id.login_screen_1:
+                        break;
+                    case R.id.login_screen_2:
+                        break;
+                }
+                return false;
+            }
+        };
+    }
+    */
 
     private void setupNavigation(){
         /*toolbar = findViewById(R.id.toolbar);
@@ -151,8 +181,18 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
     }
 
      */
-    /**/
+    /*/
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    /*/
+
+    /*
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -162,9 +202,11 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
             }
             default: {
                 return super.onOptionsItemSelected(item);
+                // todo return true;
             }
         }
     }
+    */
 
     @Override
     public void onRequestPermissionsResult(
@@ -174,5 +216,14 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
         super.onRequestPermissionsResult( requestCode, permissions, grantResults );
     }
     /**/
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
 }

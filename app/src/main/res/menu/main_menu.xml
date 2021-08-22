@@ -8,7 +8,7 @@
             android:title="menu 1_1" />
         <item
             android:id="@+id/nav_1_2"
-            android:title="menu 1_3" />
+            android:title="menu 1_2" />
     </group>
 
     <item android:title="Communicate">

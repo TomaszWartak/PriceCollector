@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -13,7 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -30,6 +34,7 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
@@ -70,9 +75,9 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         });
         viewSetup(view);
         viewSubscribtion();
+        menuSetup();
         return view;
     }
-
     // todo test viewmodel
     void viewSetup(View view) {
         userLoginEditText = view.findViewById(R.id.userlogin_edit_text);
@@ -119,6 +124,29 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         });
     }
     // todo end test viewmodel
+
+
+    private void menuSetup() {
+        NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
+        Menu navigationViewMenu = navigationView.getMenu();
+        navigationViewMenu.clear();
+        navigationView.inflateMenu(R.menu.login_screen_menu);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // return true to display the item as the selected item
+                DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
+                drawerLayout.closeDrawers();
+                switch (item.getItemId()) {
+                    case R.id.login_screen_1:
+                        break;
+                    case R.id.login_screen_2:
+                        break;
+                }
+                return false;
+            }
+        });
+    }
 
     void logIn( /* todo test viemodel View view*/ ) {
         // TODO XXX pobranie danych usera (e-mail) z systemu

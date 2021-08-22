@@ -113,7 +113,6 @@
     <string name="question_about_downloading_data">Czy chcesz teraz pobrać dane?</string>
     <string name="short_permission_name_contacts">KONTAKTY</string>
     <string name="login_server_unavailable">Brak komunikacji z serwerem logowania...</string>
-    <!-- TODO: Remove or change this placeholder text -->
 
     <!-- Dla ActionBarDrawerToggle, ale po co ???-->
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>

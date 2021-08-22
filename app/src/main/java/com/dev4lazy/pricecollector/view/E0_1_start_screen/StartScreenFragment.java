@@ -292,4 +292,5 @@ public class StartScreenFragment extends Fragment {
         System.exit(0);
     }
 
+
 }
