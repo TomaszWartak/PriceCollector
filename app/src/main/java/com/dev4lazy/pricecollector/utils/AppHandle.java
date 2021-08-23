@@ -1,12 +1,16 @@
 package com.dev4lazy.pricecollector.utils;
 
 import android.app.Application;
+import android.content.DialogInterface;
 
+import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.DataRepository;
 import com.dev4lazy.pricecollector.model.db.LocalDatabase;
 import com.dev4lazy.pricecollector.model.logic.auth.AppAuthSupport;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteDatabase;
+import com.dev4lazy.pricecollector.view.E2_analyzes_list_screen.AnalyzesListFragment;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class AppHandle extends Application {
 
@@ -48,4 +52,5 @@ public class AppHandle extends Application {
         getSettings().commit();
         getAuthSupport().signOut();
     }
+
 }

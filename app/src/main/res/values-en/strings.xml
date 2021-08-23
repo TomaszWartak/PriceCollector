@@ -70,4 +70,6 @@
     <string name="caption_no">No</string>
     <string name="articles_data_ready_to_download">ITEMS DATA READY TO DOWNLOAD...</string>
     <string name="login_server_unavailable">Login server unavailable...</string>
+    <string name="logout_menu_item">Close application</string>
+    <string name="go_to_analyzes_list_menu_item">Go to Analyzes list</string>
 </resources>

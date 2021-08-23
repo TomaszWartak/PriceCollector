@@ -4,11 +4,8 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/anlyzes_list_screen_1"
-            android:title="anlyzes_list_screen_1" />
-        <item
-            android:id="@+id/anlyzes_list_screen_2"
-            android:title="anlyzes_list_screen_2" />
+            android:id="@+id/analyzes_list_screen_logout_menu_item"
+            android:title="@string/logout_menu_item" />
     </group>
 
 </menu>

@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.view.E5_article_screen;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,15 +15,19 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.dev4lazy.pricecollector.MainActivity;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
+import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCalback;
+import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticlesListFragment;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
 /**
@@ -88,13 +93,41 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                 DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
                 drawerLayout.closeDrawers();
                 switch (item.getItemId()) {
-                    case R.id.article_screen_1:
+                    case R.id.article_screen_logout_menu_item:
+                        getLogoutQuestionDialog();
                         break;
-                    case R.id.article_screen_2:
+                    case R.id.article_screen_gotoanalyzes_menu_item:
+                       // tutaj musisz dodac nowa akcję i podmienić id
+                        Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesPagerFragment_to_analyzesListFragment );
                         break;
                 }
                 return false;
             }
         });
+    }
+
+
+    private void getLogoutQuestionDialog() {
+        new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                .setTitle("")
+                .setMessage(R.string.question_close_app)
+                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                .setNegativeButton(getActivity().getString(R.string.caption_no),null)
+                .show();
+    }
+
+    private class LogOffListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            finishApp();
+        }
+    }
+
+    private void finishApp() {
+        // TODO promotor: czy to można bardziej elegancko zrobić?
+        AppHandle.getHandle().shutdown();
+        getActivity().finishAndRemoveTask();
+        System.exit(0);
     }
 }

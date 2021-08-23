@@ -75,7 +75,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         });
         viewSetup(view);
         viewSubscribtion();
-        menuSetup();
+        navigationViewMenuSetup();
         return view;
     }
     // todo test viewmodel
@@ -125,8 +125,10 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     }
     // todo end test viewmodel
 
-
-    private void menuSetup() {
+    /**
+     * for future using
+      */
+    private void navigationViewMenuSetup() {
         NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
         Menu navigationViewMenu = navigationView.getMenu();
         navigationViewMenu.clear();
@@ -138,9 +140,8 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
                 DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
                 drawerLayout.closeDrawers();
                 switch (item.getItemId()) {
-                    case R.id.login_screen_1:
-                        break;
-                    case R.id.login_screen_2:
+                    case R.id.login_screen_logout_menu_item:
+                        getLogoutQuestionDialog();
                         break;
                 }
                 return false;
@@ -225,10 +226,15 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
                     if (AppHandle.getHandle().getSettings().isLocalDatabaseNotInitialized()) {
                         LocalDataInitializer.getInstance().initializeLocalDatabase();
                     }
-                    //todo sprawdzenie, co jest w preferencjach i odtworzenie na ekranie
+                    // sprawdzenie, co jest w preferencjach i odtworzenie na ekranie
                     getSettingsInfo();
-                    // todo sprawdzenie czy na serwerze zdalnym jest nowa analiza - pobranie
+                    // sprawdzenie czy na serwerze zdalnym jest nowa analiza - pobranie
                     startRisingChain();
+                    // odblokowanie NavigationDrawer, zablokowanej w MainAcyivity
+                    DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
+                    drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED );
+                    // Przejście do AnalyzesListFragment
+                    Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
                 } else {
                     userPasswordEditText.setText("");
                     Toast.makeText(
@@ -296,7 +302,6 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         serverRepliedResult.observeForever( resultObserver );
         AnalysisDataUpdater analysisDataUpdater = getInstance();
         analysisDataUpdater.checkNewAnalysisToDownload( serverRepliedResult );
-        Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
     }
 
     @Override
@@ -313,23 +318,25 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
             Toast.LENGTH_SHORT).show();
     }
 
-    // TODO XXX LoginFragment nie obsługuje klawisza back (nie da się wyjść z aplikacji)
     private void setOnBackPressedCalback() {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
                 // Handle the back button event
-                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
-                        .setTitle("")
-                        .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
-                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                        .show();
+                getLogoutQuestionDialog();
             }
         };
         getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
+    private void getLogoutQuestionDialog() {
+        new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                .setTitle("")
+                .setMessage(R.string.question_close_app)
+                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                .setNegativeButton(getActivity().getString(R.string.caption_no),null)
+                .show();
+    }
     private class LogOffListener implements DialogInterface.OnClickListener {
 
         @Override

@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,10 +15,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
+import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.CompetitorsSlotsViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -38,7 +42,7 @@ public class AnalysisCompetitorsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.analysis_competitors_fragment, container, false);
         listViewSetup(view);
         listViewSubscribtion();
-        menuSetup();
+        navigationViewMenuSetup();
         return view;
     }
 
@@ -60,7 +64,7 @@ public class AnalysisCompetitorsListFragment extends Fragment {
         });
     }
 
-    private void menuSetup() {
+    private void navigationViewMenuSetup() {
         NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
         Menu navigationViewMenu = navigationView.getMenu();
         navigationViewMenu.clear();
@@ -72,9 +76,11 @@ public class AnalysisCompetitorsListFragment extends Fragment {
                 DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
                 drawerLayout.closeDrawers();
                 switch (item.getItemId()) {
-                    case R.id.analysis_competitors_list_screen_1:
+                    case R.id.analysis_competitors_list_screen_logout_menu_item:
+                        getLogoutQuestionDialog();
                         break;
-                    case R.id.analysis_competitors_list_screen_2:
+                    case R.id.analysis_competitors_list_screen_gotoanalyzes_menu_item:
+                        Navigation.findNavController( getView() ).navigate( R.id.action_analysisCompetitorsFragment_to_analyzesListFragment );
                         break;
                 }
                 return false;
@@ -82,4 +88,27 @@ public class AnalysisCompetitorsListFragment extends Fragment {
         });
     }
 
+    private void getLogoutQuestionDialog() {
+        new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                .setTitle("")
+                .setMessage(R.string.question_close_app)
+                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                .setNegativeButton(getActivity().getString(R.string.caption_no),null)
+                .show();
+    }
+
+    private class LogOffListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            finishApp();
+        }
+    }
+
+    private void finishApp() {
+        // TODO promotor: czy to można bardziej elegancko zrobić?
+        AppHandle.getHandle().shutdown();
+        getActivity().finishAndRemoveTask();
+        System.exit(0);
+    }
 }

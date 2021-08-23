@@ -53,7 +53,7 @@ public class AnalyzesListFragment extends Fragment {
 
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
-        menuSetup();
+        navigationViewMenuSetup();
         newAnalyzesCheck();
 
         if (BuildConfig.DEBUG) {
@@ -98,15 +98,19 @@ public class AnalyzesListFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
                 // Handle the back button event
-                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
-                        .setTitle("")
-                        .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
-                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                        .show();
+                getLogoutQuestionDialog();
             }
         };
         getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+    }
+
+    private void getLogoutQuestionDialog() {
+        new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                .setTitle("")
+                .setMessage(R.string.question_close_app)
+                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                .setNegativeButton(getActivity().getString(R.string.caption_no),null)
+                .show();
     }
 
     private class LogOffListener implements DialogInterface.OnClickListener {
@@ -141,7 +145,7 @@ public class AnalyzesListFragment extends Fragment {
         });
     }
 
-    private void menuSetup() {
+    private void navigationViewMenuSetup() {
         NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
         Menu navigationViewMenu = navigationView.getMenu();
         navigationViewMenu.clear();
@@ -153,9 +157,8 @@ public class AnalyzesListFragment extends Fragment {
                 DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
                 drawerLayout.closeDrawers();
                 switch (item.getItemId()) {
-                    case R.id.login_screen_1:
-                        break;
-                    case R.id.login_screen_2:
+                    case R.id.analyzes_list_screen_logout_menu_item:
+                        getLogoutQuestionDialog();
                         break;
                 }
                 return false;

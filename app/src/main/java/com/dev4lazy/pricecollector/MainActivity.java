@@ -70,12 +70,13 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        navigationView = findViewById(R.id.navigation_view);
+        drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_LOCKED_CLOSED );
+        // navigationView = findViewById(R.id.navigation_view);
         // navigationView.setNavigationItemSelectedListener(getOnNavigationItemSelectedListener());
 
         // true - chyba jeśli klawisz back ma o jeden poziom robić
         // false - chyba jeśli klawisz back ma wracać do home
-        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
     }
 
@@ -217,13 +218,16 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
     }
     /**/
 
+    /**/
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        if (drawerLayout!=null) {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return;
+            }
         }
+        super.onBackPressed();
     }
-
+    /**/
 }

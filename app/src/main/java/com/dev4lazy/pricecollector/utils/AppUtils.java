@@ -3,6 +3,11 @@ package com.dev4lazy.pricecollector.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
+
+import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.view.E2_analyzes_list_screen.AnalyzesListFragment;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,4 +25,5 @@ public class AppUtils {
         };
         return null;
     }
+
 }

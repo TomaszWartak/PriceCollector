@@ -117,4 +117,6 @@
     <!-- Dla ActionBarDrawerToggle, ale po co ???-->
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="logout_menu_item">Zamknij aplikację</string>
+    <string name="go_to_analyzes_list_menu_item">Przejdź do listy Badań cen</string>
 </resources>

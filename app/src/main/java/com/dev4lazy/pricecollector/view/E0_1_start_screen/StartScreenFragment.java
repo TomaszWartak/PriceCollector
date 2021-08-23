@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,7 @@ import com.dev4lazy.pricecollector.utils.AppHandle;
 
 import com.dev4lazy.pricecollector.utils.AppSettings;
 import com.dev4lazy.pricecollector.utils.PermissionsUtils;
+import com.dev4lazy.pricecollector.view.E2_analyzes_list_screen.AnalyzesListFragment;
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel2;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -39,6 +41,7 @@ public class StartScreenFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.start_screen_fragment, container, false);
+        setOnBackPressedCalback();
         if (checkAndRequestPermissions()) {
             // todo lambda
             view.findViewById(R.id.start_screen_layout).setOnClickListener(new View.OnClickListener() {
@@ -292,5 +295,32 @@ public class StartScreenFragment extends Fragment {
         System.exit(0);
     }
 
+    private void  setOnBackPressedCalback() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button event
+                getLogoutQuestionDialog();
+            }
+        };
+        getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+    }
+
+    private void getLogoutQuestionDialog() {
+        new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                .setTitle("")
+                .setMessage(R.string.question_close_app)
+                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                .setNegativeButton(getActivity().getString(R.string.caption_no),null)
+                .show();
+    }
+
+    private class LogOffListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            finishApp();
+        }
+    }
 
 }
