@@ -52,7 +52,6 @@ public class AnalysisArticlesPagerFragment extends Fragment {
         View view = inflater.inflate(R.layout.analysis_articles_pager_fragment, container, false);
         viewPagerSetup( view );
         viewPagerSubscribtion();
-        navigationViewMenuSetup();
         return view;
     }
 
@@ -81,6 +80,11 @@ public class AnalysisArticlesPagerFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navigationViewMenuSetup();
+    }
     private void navigationViewMenuSetup() {
         NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
         Menu navigationViewMenu = navigationView.getMenu();

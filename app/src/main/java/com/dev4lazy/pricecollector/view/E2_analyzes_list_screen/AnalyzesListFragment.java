@@ -53,7 +53,6 @@ public class AnalyzesListFragment extends Fragment {
 
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
-        navigationViewMenuSetup();
         newAnalyzesCheck();
 
         if (BuildConfig.DEBUG) {
@@ -233,6 +232,7 @@ public class AnalyzesListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navigationViewMenuSetup();
         AnalysisDataUpdater analysisDataUpdater = getInstance();
         if (analysisDataUpdater.isNewAnalysisReadyToDownlad()) {
             showAskUserForAnalyzesDataDownload( view );

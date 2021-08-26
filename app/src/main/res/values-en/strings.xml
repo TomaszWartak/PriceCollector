@@ -8,6 +8,7 @@
     <string name="caption_login_button">Log in</string>
     <string name="choose_competitor">Choose competitor</string>
     <string name="choose_competitor_store">Choose competitor store</string>
+    <string name="edit_competitor_store">Edit competitor store</string>
     <string name="city_null">city = null</string>
     <string name="comment_label">Comment:</string>
     <string name="competitor">Competitor</string>
@@ -72,4 +73,6 @@
     <string name="login_server_unavailable">Login server unavailable...</string>
     <string name="logout_menu_item">Close application</string>
     <string name="go_to_analyzes_list_menu_item">Go to Analyzes list</string>
+    <string name="login_data_incorrect">Login data incorrect...</string>
+    <string name="firebase_login_problem">Firebase login problem...</string>
 </resources>

@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.dev4lazy.pricecollector.MainActivity;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Store;
@@ -21,14 +20,14 @@ import com.dev4lazy.pricecollector.utils.AppUtils;
 import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 public class CompetitorsSlotsListView extends ListView {
@@ -71,6 +70,7 @@ public class CompetitorsSlotsListView extends ListView {
             textViewMenu.setVisibility(INVISIBLE);
 
             int warningColor = ContextCompat.getColor( AppHandle.getHandle().getApplicationContext(), R.color.colorWarning );
+
             if (isCompetitorNotChosen(competitorSlotFullData)) {
                 textViewCompanyName.setText( "?" );
                 textViewCompanyName.setTextColor( warningColor );
@@ -89,7 +89,9 @@ public class CompetitorsSlotsListView extends ListView {
                         textViewStoreName.setTextColor( warningColor);
                         setSlotViewOnClickListener( slotView, new SlotViewWhenNoStoreChosenOnClickListener( competitorSlotFullData ));
                     } else {
-                        textViewStoreName.setText( competitorSlotFullData.getSlot().getStoreName() );
+                        AnalysisCompetitorSlot slot = competitorSlotFullData.getSlot();
+                        competitorSlotFullData.setChosenStore( competitorSlotFullData.getStore( slot.getOtherStoreId() ) );
+                        textViewStoreName.setText( slot.getStoreName() );
                         textViewStoreName.setTextColor( ContextCompat.getColor( AppHandle.getHandle().getApplicationContext(), R.color.colorSecondaryText) );
                         setOffSlotViewOnClickListener( slotView );
                         textViewMenu.setVisibility(VISIBLE);
@@ -105,73 +107,6 @@ public class CompetitorsSlotsListView extends ListView {
             slotView.setOnClickListener(onClickListener);
         }
 
-        private void addCompetitorStore(View view, CompetitorSlotFullData competitorSlotFullData ) {
-            // todo StoreViewModel storeViewModel = new ViewModelProvider( hostFragment.getActivity() ).get( StoreViewModel.class );
-            StoreViewModel storeViewModel = new ViewModelProvider( AppUtils.getActivity(getContext()) ).get( StoreViewModel.class );
-            Store store = new Store();
-            store.setCompanyId( competitorSlotFullData.getSlot().getCompanyId() );
-            storeViewModel.setData( store );
-            /**/ storeViewModel.getData().observe( AppUtils.getActivity(getContext()) /*hostFragment.getActivity() /*mainActivity*/, new Observer<Store>() {
-                @Override
-                public void onChanged(Store modifiedStore) {
-                    if (modifiedStore.getName()!=null) {
-                        MutableLiveData<Long> storeInsertResult = new MutableLiveData<>();
-                        Observer<Long> insertingResultObserver = new Observer<Long>() {
-                            @Override
-                            public void onChanged(Long storeId) {
-                                storeInsertResult.removeObserver(this); // this = observer...
-                                if ((storeId!=null)&&(storeId>0)) {
-                                    storeViewModel.getData().removeObservers( AppUtils.getActivity(getContext()) /* hostFragment.getActivity() */ );
-                                    modifiedStore.setId(storeId.intValue());
-                                    competitorSlotFullData.getCompetitorStores().add(modifiedStore);
-                                    competitorSlotFullData.getSlot().setStoreName(modifiedStore.getName());
-                                    competitorSlotFullData.getSlot().setOtherStoreId(modifiedStore.getId());
-                                    notifyDataSetChanged();
-                                    AppHandle.getHandle().getRepository().getLocalDataRepository().updateAnalysisCompetitorSlot(competitorSlotFullData.getSlot(),null);
-                                }
-                            }
-                        };
-                        storeInsertResult.observeForever(insertingResultObserver);
-                        AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore(store,storeInsertResult);
-                    }
-                }
-            });
-            Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_addStoreDialogFragment );
-        }
-
-        private void DriveToComppetitorStore() {
-
-        }
-
-        private void setStoresListMenuListener(PopupMenu popupMenu, CompetitorSlotFullData competitorSlotFullData ) {
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    // todo kontynuuj ListView na youTube...
-
-                    AnalysisCompetitorSlot slot = competitorSlotFullData.getSlot();
-                    slot.setOtherStoreId( item.getItemId() );
-                    slot.setStoreName( competitorSlotFullData.getCompetitorStores().get( item.getOrder() ).getName() );
-                    AppHandle.getHandle().getRepository().getLocalDataRepository().updateAnalysisCompetitorSlot( slot,null );
-                    notifyDataSetChanged();
-                    return true;
-                }
-            });
-        }
-
-        private void createStoresListMenu( View view, CompetitorSlotFullData competitorSlotFullData ) {
-            PopupMenu storesListMenu = new PopupMenu(getContext(), view);
-            for (int storeNr = 0; storeNr < competitorSlotFullData.getCompetitorStores().size(); storeNr++) {
-                storesListMenu.getMenu().add(
-                    Menu.NONE,
-                    competitorSlotFullData.getCompetitorStores().get(storeNr).getId(),
-                    storeNr,
-                    competitorSlotFullData.getCompetitorStores().get(storeNr).getName());
-            }
-            storesListMenu.show();
-            setStoresListMenuListener(storesListMenu, competitorSlotFullData);
-        }
-
         private void setPopupMenuListener(PopupMenu popupMenu, View view, CompetitorSlotFullData competitorSlotFullData) {
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
@@ -182,20 +117,152 @@ public class CompetitorsSlotsListView extends ListView {
                             Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisArticlesListFragment);
                             break;
                         case R.id.driveToCompetitorStoreMenuItem:
+                            DriveToCompetitorStore();
                             break;
                         case R.id.addCompetitorStoreMenuItem:
                             addCompetitorStore( view, competitorSlotFullData );
+                            break;
+                        case R.id.editCompetitorStoreMenuItem:
+                            editCompetitorStore( view, competitorSlotFullData );
                             break;
                         case R.id.chooseCompetitorStoreMenuItem:
                             createStoresListMenu( view, competitorSlotFullData );
                             break;
                         case R.id.detachCompetitorStoreMenuItem:
+                            competitorSlotFullData.setNoChosenStore();
                             slot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
                             slot.setStoreName("");
                             notifyDataSetChanged();
                             break;
                     }
                     return false;
+                }
+            });
+        }
+
+
+        private void DriveToCompetitorStore() {
+
+        }
+
+        private void addCompetitorStore(View view, CompetitorSlotFullData competitorSlotFullData ) {
+            // todo StoreViewModel storeViewModel = new ViewModelProvider( hostFragment.getActivity() ).get( StoreViewModel.class );
+            StoreViewModel storeViewModel = new ViewModelProvider( AppUtils.getActivity(getContext()) ).get( StoreViewModel.class );
+            Store store = new Store();
+            store.setCompanyId( competitorSlotFullData.getSlot().getCompanyId() );
+            storeViewModel.setData( store );
+            /**/ storeViewModel.getData().observe( AppUtils.getActivity(getContext()) /*hostFragment.getActivity() /*mainActivity*/, new Observer<Store>() {
+                @Override
+                public void onChanged(Store newStore) {
+                    if (newStore.getName()!=null) {
+                        MutableLiveData<Long> storeInsertResult = new MutableLiveData<>();
+                        Observer<Long> insertingResultObserver = new Observer<Long>() {
+                            @Override
+                            public void onChanged(Long storeId) {
+                                storeInsertResult.removeObserver(this); // this = observer...
+                                if ((storeId!=null)&&(storeId>0)) {
+                                    storeViewModel.getData().removeObservers( AppUtils.getActivity(getContext()) /* hostFragment.getActivity() */ );
+                                    newStore.setId(storeId.intValue());
+                                    competitorSlotFullData.setChosenStore( newStore );
+                                    // competitorSlotFullData.getCompetitorStores().add(newStore);
+                                    competitorSlotFullData.addStore(newStore);
+                                    competitorSlotFullData.getSlot().setStoreName(newStore.getName());
+                                    competitorSlotFullData.getSlot().setOtherStoreId(newStore.getId());
+                                    notifyDataSetChanged();
+                                    AppHandle.getHandle().getRepository().getLocalDataRepository().updateAnalysisCompetitorSlot(competitorSlotFullData.getSlot(),null);
+                                }
+                            }
+                        };
+                        // todo xxx storeInsertResult.observeForever(insertingResultObserver);
+                        storeInsertResult.observe( AppUtils.getActivity(getContext()), insertingResultObserver);
+                        AppHandle.getHandle().getRepository().getLocalDataRepository().insertStore(store,storeInsertResult);
+                    }
+                    // TODO XXX ???
+                    storeViewModel.getData().removeObservers( AppUtils.getActivity(getContext()) );
+                }
+            });
+            Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_addStoreDialogFragment );
+        }
+
+        private void editCompetitorStore(View view, CompetitorSlotFullData competitorSlotFullData ) {
+            // todo StoreViewModel storeViewModel = new ViewModelProvider( hostFragment.getActivity() ).get( StoreViewModel.class );
+            StoreViewModel storeViewModel = new ViewModelProvider( AppUtils.getActivity(getContext()) ).get( StoreViewModel.class );
+            if (storeViewModel.getData().hasActiveObservers()) {
+                storeViewModel.getData().removeObservers(AppUtils.getActivity(getContext()));
+            }
+            Store store = competitorSlotFullData.getChosenStore();
+            storeViewModel.setData( store );
+            /**/ storeViewModel.getData().observe( AppUtils.getActivity(getContext()) /*hostFragment.getActivity() /*mainActivity*/, new Observer<Store>() {
+                @Override
+                public void onChanged(Store modifiedStore) {
+                    if (modifiedStore.getName()!=null) {
+                        MutableLiveData<Integer> storeUpdateResult = new MutableLiveData<>();
+                        Observer<Integer> updatingResultObserver = new Observer<Integer>() {
+                            @Override
+                            public void onChanged(Integer storeId) {
+                                storeUpdateResult.removeObserver(this); // this = observer...
+                                if ((storeId!=null)&&(storeId>0)) {
+                                    storeViewModel.getData().removeObservers( AppUtils.getActivity(getContext()) /* hostFragment.getActivity() */ );
+                                    competitorSlotFullData.getSlot().setStoreName(modifiedStore.getName());
+                                    notifyDataSetChanged();
+                                    AppHandle.getHandle().getRepository().getLocalDataRepository().updateAnalysisCompetitorSlot(competitorSlotFullData.getSlot(),null);
+                                }
+                            }
+                        };
+                        // todo xxxx storeUpdateResult.observeForever(updatingResultObserver);
+                        storeUpdateResult.observe( AppUtils.getActivity(getContext()), updatingResultObserver);
+                        AppHandle.getHandle().getRepository().getLocalDataRepository().updateStore(store,storeUpdateResult);
+                    }
+                    // TODO XXX ???
+                    storeViewModel.getData().removeObservers( AppUtils.getActivity(getContext()) );
+                }
+            });
+            Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_addStoreDialogFragment );
+        }
+
+        private void createStoresListMenu( View view, CompetitorSlotFullData competitorSlotFullData ) {
+            PopupMenu storesListMenu = new PopupMenu(getContext(), view);
+            /* TODO XXX
+            for (int storeNr = 0; storeNr < competitorSlotFullData.getCompetitorStores().size(); storeNr++) {
+                storesListMenu.getMenu().add(
+                        Menu.NONE,
+                        competitorSlotFullData.getCompetitorStores().get(storeNr).getId(),
+                        storeNr,
+                        competitorSlotFullData.getCompetitorStores().get(storeNr).getName());
+            }
+
+             */
+            HashMap<Integer, Store> stores = competitorSlotFullData.getCompetitorStoresMap();
+            int storePositionOnList = 0;
+            Store store;
+            for (Map.Entry<Integer, Store> entry : stores.entrySet()) {
+                store = entry.getValue();
+                storesListMenu.getMenu().add(
+                        Menu.NONE,
+                        store.getId(),
+                        storePositionOnList,
+                        store.getName());
+                storePositionOnList++;
+            }
+
+            storesListMenu.show();
+            setStoresListMenuListener(storesListMenu, competitorSlotFullData);
+        }
+
+        private void setStoresListMenuListener(PopupMenu popupMenu, CompetitorSlotFullData competitorSlotFullData ) {
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    // todo XXX Store chosenStore = competitorSlotFullData.getCompetitorStores().get( item.getOrder() );
+                    Store chosenStore = competitorSlotFullData.getStore( item.getItemId() );
+                    competitorSlotFullData.setChosenStore( chosenStore );
+                    AnalysisCompetitorSlot slot = competitorSlotFullData.getSlot();
+                    // todo usun slot.setOtherStoreId( item.getItemId() );
+                    slot.setOtherStoreId( chosenStore.getId() );
+                    slot.setStoreName( chosenStore.getName() );
+                    AppHandle.getHandle().getRepository().getLocalDataRepository().updateAnalysisCompetitorSlot( slot,null );
+                    notifyDataSetChanged();
+                    return true;
                 }
             });
         }
@@ -258,7 +325,7 @@ public class CompetitorsSlotsListView extends ListView {
         }
 
         private boolean isNoCompetitorStores( CompetitorSlotFullData competitorSlotFullData) {
-            return competitorSlotFullData.getCompetitorStores().size() == 0;
+            return competitorSlotFullData.getCompetitorStoresMap().size() == 0;
         }
 
         private void setOnTextViewMenuOnClickMenuListener(View textView, CompetitorSlotFullData competitorSlotFullData) {
@@ -280,7 +347,7 @@ public class CompetitorsSlotsListView extends ListView {
 
             @Override
             public boolean onLongClick(View v) {
-                DriveToComppetitorStore();
+                DriveToCompetitorStore();
                 return true;
             }
         }

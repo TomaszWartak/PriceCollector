@@ -71,7 +71,7 @@ public interface AuthSupport {
 
     interface LoginCallback {
         void callIfSuccessful();
-        void callIfUnsuccessful();
+        void callIfUnsuccessful( String reasonMessage );
     }
 
 }

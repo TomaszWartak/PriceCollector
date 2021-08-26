@@ -3,8 +3,10 @@ package com.dev4lazy.pricecollector.model.logic.auth;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 
+import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.utils.BroadcastReceiverWrapper;
 import com.dev4lazy.pricecollector.utils.ExternalServicesSupport;
 import com.dev4lazy.pricecollector.utils.AppHandle;
@@ -76,7 +78,7 @@ public class MockCustomTokenOwnAuthSupport
         // TODO
         // if (!externalServicesSupport.isBoundToMockAuthService()) {
         if (!externalServicesSupport.isBoundToService()) {
-            callIfUnsuccessful();
+            callIfUnsuccessful( Resources.getSystem().getString(R.string.login_server_unavailable) );
             return;
         }
         Bundle bundle = new Bundle();
@@ -125,9 +127,9 @@ public class MockCustomTokenOwnAuthSupport
     }
 
     @Override
-    public void callIfUnsuccessful() {
+    public void callIfUnsuccessful( String reasonMessage ) {
         setLoggedIn(false);
-        loginCallback.callIfUnsuccessful();
+        loginCallback.callIfUnsuccessful( reasonMessage );
     }
 
 // ---------------------------------------------------------------------------------
@@ -136,7 +138,7 @@ public class MockCustomTokenOwnAuthSupport
              firebaseAuthSupport.addCredential("TOKEN", token);
              firebaseAuthSupport.signIn();
          } else {
-             callIfUnsuccessful();
+             callIfUnsuccessful( Resources.getSystem().getString(R.string.login_data_incorrect));
          }
      }
 

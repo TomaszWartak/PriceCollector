@@ -752,8 +752,8 @@ public class LocalDataInitializer {
             }
         };
         result.observeForever(resultObserver);
-        Company bricomanCompany = companies.get(ProductionDataFeeder.getInstance().CASTORAMA_INDEX);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(bricomanCompany.getName(),result);
+        Company castoramaCompany = companies.get(ProductionDataFeeder.getInstance().CASTORAMA_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(castoramaCompany.getName(),result);
     }
 
     private void populateLocalCompetitorStores() {
@@ -802,8 +802,8 @@ public class LocalDataInitializer {
             }
         };
         result.observeForever(resultObserver);
-        Company localCompetitorCompany = companies.get( ProductionDataFeeder.getInstance().LEROY_MERLIN_INDEX );
-        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+        Company competitorCompany = companies.get( ProductionDataFeeder.getInstance().LEROY_MERLIN_INDEX );
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(competitorCompany.getName(),result);
     }
 
     // Slot nr 2 = OBI
@@ -828,11 +828,11 @@ public class LocalDataInitializer {
             }
         };
         result.observeForever(resultObserver);
-        Company localCompetitorCompany =  companies.get( ProductionDataFeeder.getInstance().OBI_INDEX);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+        Company competitorCompany =  companies.get( ProductionDataFeeder.getInstance().OBI_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(competitorCompany.getName(),result);
     }
 
-    // Slot nr 3 = BRICOMAN
+    // Slot nr 3 = CASTORAMA
     private void populateCompetitorSlotNr3() {
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
@@ -854,8 +854,8 @@ public class LocalDataInitializer {
             }
         };
         result.observeForever(resultObserver);
-        Company localCompetitorCompany = companies.get( ProductionDataFeeder.getInstance().CASTORAMA_INDEX);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+        Company competitorCompany = companies.get( ProductionDataFeeder.getInstance().CASTORAMA_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(competitorCompany.getName(),result);
     }
 
     // Slot nr 4 = Konkurent lokalny 1
@@ -880,8 +880,8 @@ public class LocalDataInitializer {
             }
         };
         result.observeForever(resultObserver);
-        Company localCompetitorCompany = companies.get( ProductionDataFeeder.getInstance().LOCAL_COMPETITOR_INDEX);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+        Company competitorCompany = companies.get( ProductionDataFeeder.getInstance().LOCAL_COMPETITOR_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(competitorCompany.getName(),result);
     }
 
     // Slot nr 5 = Konkurent lokalny 2
@@ -907,8 +907,8 @@ public class LocalDataInitializer {
             }
         };
         result.observeForever(resultObserver);
-        Company localCompetitorCompany = companies.get( ProductionDataFeeder.getInstance().LOCAL_COMPETITOR_INDEX);
-        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(localCompetitorCompany.getName(),result);
+        Company competitorCompany = companies.get( ProductionDataFeeder.getInstance().LOCAL_COMPETITOR_INDEX);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyByName(competitorCompany.getName(),result);
     }
 
     private void populateDummyFamily( ) {

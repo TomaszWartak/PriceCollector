@@ -14,6 +14,9 @@
             android:id="@+id/addCompetitorStoreMenuItem"
             android:title="@string/add_competitor_store"/>
         <item
+            android:id="@+id/editCompetitorStoreMenuItem"
+            android:title="@string/edit_competitor_store"/>
+        <item
             android:id="@+id/chooseCompetitorStoreMenuItem"
             android:title="@string/choose_competitor_store"/>
         <item

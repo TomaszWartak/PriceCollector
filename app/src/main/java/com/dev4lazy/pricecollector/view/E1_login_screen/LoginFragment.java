@@ -75,9 +75,9 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         });
         viewSetup(view);
         viewSubscribtion();
-        navigationViewMenuSetup();
         return view;
     }
+
     // todo test viewmodel
     void viewSetup(View view) {
         userLoginEditText = view.findViewById(R.id.userlogin_edit_text);
@@ -125,9 +125,12 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     }
     // todo end test viewmodel
 
-    /**
-     * for future using
-      */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navigationViewMenuSetup();
+    }
+
     private void navigationViewMenuSetup() {
         NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
         Menu navigationViewMenu = navigationView.getMenu();
@@ -305,7 +308,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     }
 
     @Override
-    public void callIfUnsuccessful() {
+    public void callIfUnsuccessful( String reasonMessage ) {
         // TODO XXX nie rozróżnia przyczyny niepowodzenia
         //  jest tylko, że serwer niedostepny, a powinno jeszcze, ze nieprawidłowe dane logowania...
         //  Może parametrem powiniwn byc komunikat,a w bardziej zaawanoswanej wersji obiekt,
@@ -314,7 +317,7 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
             // todo kumnuikat jakiś :-)
         Toast.makeText(
             getContext(),
-            R.string.login_server_unavailable,
+            reasonMessage,
             Toast.LENGTH_SHORT).show();
     }
 

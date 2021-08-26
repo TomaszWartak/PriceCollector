@@ -1,9 +1,11 @@
 package com.dev4lazy.pricecollector.model.logic.auth;
 
+import android.content.res.Resources;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.dev4lazy.pricecollector.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -34,7 +36,7 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
     public void signIn() {
         customToken = getCredential("TOKEN");
         if (customToken!=null) {
-            // TODO jak zrobić oczekiwanie przez określony czas bo czasamie wygląda tak jakby się Firebase zawieszał...
+            // TODO jak zrobić oczekiwanie przez określony czas bo czasami wygląda tak jakby się Firebase zawieszał...
             firebaseAuthServices.signInWithCustomToken(customToken)
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
@@ -57,10 +59,13 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            // If sign in fails, display a message to the user.
+                            // TODO !!! wszystkie użycia LOg zrób
+                            //  if (BuildConfig.DEBUG) {
+                            //	    Log.d( TAG, ".."+var );
+                            //  }
                             Log.w(TAG, "signInFirebase:failure", exception);
                             setLoggedIn(false);
-                            callIfUnsuccessful();
+                            callIfUnsuccessful( Resources.getSystem().getString(R.string.firebase_login_problem));
                         }
                     });
         }
@@ -101,8 +106,8 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
     }
 
     @Override
-    public void callIfUnsuccessful() {
-        loginCallbackService.callIfUnsuccessful();
+    public void callIfUnsuccessful( String reasonMessage ) {
+        loginCallbackService.callIfUnsuccessful( reasonMessage );
     }
 
 

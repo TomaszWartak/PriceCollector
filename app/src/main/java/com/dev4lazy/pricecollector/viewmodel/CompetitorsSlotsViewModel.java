@@ -4,13 +4,13 @@ import android.app.Application;
 
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Store;
-import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.model.logic.AnalysisCompetitorSlotList;
 import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
 import com.dev4lazy.pricecollector.utils.AppHandle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +30,6 @@ public class CompetitorsSlotsViewModel extends AndroidViewModel {
     }
 
     private void askForSlots() {
-        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
         MutableLiveData<List<AnalysisCompetitorSlot>> result = new MutableLiveData<>();
         Observer<List<AnalysisCompetitorSlot>> resultObserver = new Observer<List<AnalysisCompetitorSlot>>() {
             @Override
@@ -46,21 +45,27 @@ public class CompetitorsSlotsViewModel extends AndroidViewModel {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllAnalysisCompetitorSlotsSortedBySlotNr(result);
     }
 
-    private void askForCompetitorStores(
-            /* CompetitorsListView.AnalysisCompetitorsAdapter adapter, */
-            AnalysisCompetitorSlotList analysisCompetitorSlotList) {
+    private void askForCompetitorStores( AnalysisCompetitorSlotList analysisCompetitorSlotList) {
         MutableLiveData<List<Store>> result = new MutableLiveData<>();
         Observer<List<Store>> resultObserver = new Observer<List<Store>>() {
             @Override
             public void onChanged(List<Store> storesList) {
                 result.removeObserver(this); // this = observer...
                 for (CompetitorSlotFullData slotInfo : analysisCompetitorSlotList.getFullDataSlotList() ) {
-                    slotInfo.setCompetitorStores(
+                    ArrayList<Store> stores = (ArrayList<Store>)storesList;
+                    HashMap<Integer,Store> storesMap = (HashMap<Integer,Store>)stores
+                            .stream()
+                            .filter(store -> store.getCompanyId()==slotInfo.getSlot().getCompanyId())
+                            .collect( Collectors.toMap( Store::getId, store->store));
+                    slotInfo.setCompetitorStoresMap( storesMap );
+                    /* TODO XXX
+                    slotInfo.setCompetitorStores1(
                             (ArrayList<Store>)storesList
                                     .stream()
                                     .filter(store -> store.getCompanyId()==slotInfo.getSlot().getCompanyId())
-                                    .collect(Collectors.toList())
+                                    .collect( Collectors.toList() )
                     );
+                    */
                 }
                 competitorsSlotsLiveData.setValue( analysisCompetitorSlotList.getFullDataSlotList() );
                 // competitorsSlotsListView.submitCompetitorsSlotsList(analysisCompetitorSlotList.getFullDataSlotList());

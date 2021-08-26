@@ -42,7 +42,7 @@ public class AnalysisCompetitorsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.analysis_competitors_fragment, container, false);
         listViewSetup(view);
         listViewSubscribtion();
-        navigationViewMenuSetup();
+
         return view;
     }
 
@@ -56,12 +56,18 @@ public class AnalysisCompetitorsListFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(CompetitorsSlotsViewModel.class);
         viewModel.getCompetitorsSlotsLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<CompetitorSlotFullData>>() {
             @Override
-            public void onChanged(ArrayList<CompetitorSlotFullData> competitorSlotFullData) {
-                if (!competitorSlotFullData.isEmpty()) {
-                    competitorsSlotsListView.submitCompetitorsSlotsList(competitorSlotFullData);
+            public void onChanged(ArrayList<CompetitorSlotFullData> competitorSlotFullDataList) {
+                if (!competitorSlotFullDataList.isEmpty()) {
+                    competitorsSlotsListView.submitCompetitorsSlotsList(competitorSlotFullDataList);
                 }
             }
         });
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navigationViewMenuSetup();
     }
 
     private void navigationViewMenuSetup() {

@@ -45,7 +45,6 @@ public class AnalysisArticlesListFragment extends Fragment {
         View view = inflater.inflate(R.layout.analysis_articles_list_fragment, container, false);
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
-        navigationViewMenuSetup();
         return view;
     }
 
@@ -64,6 +63,12 @@ public class AnalysisArticlesListFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navigationViewMenuSetup();
     }
 
     private void navigationViewMenuSetup() {

@@ -9,9 +9,9 @@ public class AnalysisCompetitorSlotList {
 
     private ArrayList<CompetitorSlotFullData> fullDataSlotList;
 
-    public AnalysisCompetitorSlotList(List<AnalysisCompetitorSlot> slots ) {
+    public AnalysisCompetitorSlotList(List<AnalysisCompetitorSlot> competitorSlots ) {
         fullDataSlotList = new ArrayList<>();
-        for (AnalysisCompetitorSlot slot : slots) {
+        for (AnalysisCompetitorSlot slot : competitorSlots) {
             fullDataSlotList.add(new CompetitorSlotFullData(slot));
         }
     }
