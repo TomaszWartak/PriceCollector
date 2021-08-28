@@ -9,7 +9,7 @@ import android.os.Bundle;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.utils.BroadcastReceiverWrapper;
 import com.dev4lazy.pricecollector.utils.ExternalServicesSupport;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 
 /**
 Klasa obsługująca logowanie na podstawie identyfikatora użytkownika i hasła, z wykorzystaniem tokena Firebase.

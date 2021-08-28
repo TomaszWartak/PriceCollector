@@ -18,7 +18,7 @@ import com.dev4lazy.pricecollector.model.entities.UOProject;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysis;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRow;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteEanCode;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppSettings;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
 

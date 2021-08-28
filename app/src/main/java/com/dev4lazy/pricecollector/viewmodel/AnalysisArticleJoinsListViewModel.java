@@ -8,10 +8,9 @@ import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
-import com.dev4lazy.pricecollector.model.db.LocalDatabase;
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
-import com.dev4lazy.pricecollector.utils.AppHandle;
 
 public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
 

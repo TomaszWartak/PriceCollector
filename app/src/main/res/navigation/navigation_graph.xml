@@ -134,12 +134,21 @@
         <action
             android:id="@+id/action_analysisCompetitorsFragment_to_analyzesListFragment"
             app:destination="@id/analyzesListFragment" />
+        <action
+            android:id="@+id/action_analysisCompetitorsFragment_to_editStoreDialogFragment"
+            app:destination="@id/editStoreDialogFragment" />
     </fragment>
     <dialog
         android:id="@+id/addStoreDialogFragment"
         android:name="com.dev4lazy.pricecollector.view.AddStoreDialogFragment"
         android:label="AddStoreDialogFragment"
         tools:layout="@layout/add_store_fragment" />
+    <dialog
+        android:id="@+id/editStoreDialogFragment"
+        android:name="com.dev4lazy.pricecollector.view.EditStoreDialogFragment"
+        android:label="EditStoreDialogFragment"
+        tools:layout="@layout/edit_store_fragment" />
+
     <fragment
         android:id="@+id/analysisArticlesListFragment"
         android:name="com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticlesListFragment"

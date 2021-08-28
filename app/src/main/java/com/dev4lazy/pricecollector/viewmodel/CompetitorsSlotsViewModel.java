@@ -2,12 +2,11 @@ package com.dev4lazy.pricecollector.viewmodel;
 
 import android.app.Application;
 
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
 import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.model.logic.AnalysisCompetitorSlotList;
 import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
-import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
-import com.dev4lazy.pricecollector.utils.AppHandle;
 
 import java.util.ArrayList;
 import java.util.HashMap;

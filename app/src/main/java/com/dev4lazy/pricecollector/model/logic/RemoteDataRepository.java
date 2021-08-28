@@ -29,7 +29,7 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteUOProject;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteUOProjectDao;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteUserDao;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
 
 import java.util.ArrayList;

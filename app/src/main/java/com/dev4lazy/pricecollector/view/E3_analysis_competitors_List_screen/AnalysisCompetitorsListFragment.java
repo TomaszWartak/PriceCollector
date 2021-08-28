@@ -13,13 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.CompetitorsSlotsViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
@@ -64,57 +66,56 @@ public class AnalysisCompetitorsListFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    public void afterActivityON_CREATE() {
         navigationViewMenuSetup();
     }
 
-    private void navigationViewMenuSetup() {
-        NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
-        Menu navigationViewMenu = navigationView.getMenu();
-        navigationViewMenu.clear();
-        navigationView.inflateMenu(R.menu.analysis_competitors_list_screen_menu);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // return true to display the item as the selected item
-                DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
-                drawerLayout.closeDrawers();
-                switch (item.getItemId()) {
-                    case R.id.analysis_competitors_list_screen_logout_menu_item:
-                        getLogoutQuestionDialog();
-                        break;
-                    case R.id.analysis_competitors_list_screen_gotoanalyzes_menu_item:
-                        Navigation.findNavController( getView() ).navigate( R.id.action_analysisCompetitorsFragment_to_analyzesListFragment );
-                        break;
+        private void navigationViewMenuSetup() {
+            NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
+            Menu navigationViewMenu = navigationView.getMenu();
+            navigationViewMenu.clear();
+            navigationView.inflateMenu(R.menu.analysis_competitors_list_screen_menu);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    // return true to display the item as the selected item
+                    DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
+                    drawerLayout.closeDrawers();
+                    switch (item.getItemId()) {
+                        case R.id.analysis_competitors_list_screen_logout_menu_item:
+                            getLogoutQuestionDialog();
+                            break;
+                        case R.id.analysis_competitors_list_screen_gotoanalyzes_menu_item:
+                            Navigation.findNavController( getView() ).navigate( R.id.action_analysisCompetitorsFragment_to_analyzesListFragment );
+                            break;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-    }
-
-    private void getLogoutQuestionDialog() {
-        new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
-                .setTitle("")
-                .setMessage(R.string.question_close_app)
-                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
-                .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                .show();
-    }
-
-    private class LogOffListener implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            finishApp();
+            });
         }
-    }
 
-    private void finishApp() {
-        // TODO promotor: czy to można bardziej elegancko zrobić?
-        AppHandle.getHandle().shutdown();
-        getActivity().finishAndRemoveTask();
-        System.exit(0);
-    }
+            private void getLogoutQuestionDialog() {
+                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                        .setTitle("")
+                        .setMessage(R.string.question_close_app)
+                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
+                        .show();
+            }
+
+            private class LogOffListener implements DialogInterface.OnClickListener {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finishApp();
+                }
+            }
+
+            private void finishApp() {
+                // TODO promotor: czy to można bardziej elegancko zrobić?
+                AppHandle.getHandle().shutdown();
+                getActivity().finishAndRemoveTask();
+                System.exit(0);
+            }
 }

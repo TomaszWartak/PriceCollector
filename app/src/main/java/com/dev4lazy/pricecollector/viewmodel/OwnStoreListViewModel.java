@@ -8,9 +8,9 @@ import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.model.db.OwnStoreDao;
 import com.dev4lazy.pricecollector.model.entities.OwnStore;
-import com.dev4lazy.pricecollector.utils.AppHandle;
 
 public class OwnStoreListViewModel extends AndroidViewModel {
 

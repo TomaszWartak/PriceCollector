@@ -10,7 +10,7 @@ import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.model.db.DepartmentInSectorDao;
 import com.dev4lazy.pricecollector.model.entities.DepartmentInSector;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 
 public class DepartmentInSectorListViewModel extends AndroidViewModel {
 

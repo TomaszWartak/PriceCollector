@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -20,8 +22,7 @@ import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.utils.AppHandle;
-import com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen.AnalysisCompetitorsListFragment;
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
@@ -29,7 +30,7 @@ import com.google.android.material.navigation.NavigationView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AnalysisArticlesListFragment extends Fragment {
+public class AnalysisArticlesListFragment extends Fragment implements LifecycleObserver {
 
     private AnalysisArticleJoinsRecyclerView analysisArticleJoinsRecyclerView;
     private AnalysisArticleJoinsListViewModel viewModel;
@@ -43,32 +44,38 @@ public class AnalysisArticlesListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analysis_articles_list_fragment, container, false);
+        startMainActivityLifecycleObserving();
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
         return view;
     }
 
-    private void recyclerViewSetup( View view ) {
-        analysisArticleJoinsRecyclerView = view.findViewById(R.id.analysis_articles_recycler);
-        analysisArticleJoinsRecyclerView.setup();
-    }
+        // TODO XXX - zastanów się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
+        //	 onDestroyView()
+        private void startMainActivityLifecycleObserving() {
+            Lifecycle activityLifecycle = getActivity().getLifecycle();
+            activityLifecycle.addObserver(this);
+        }
+        private void recyclerViewSetup( View view ) {
+            analysisArticleJoinsRecyclerView = view.findViewById(R.id.analysis_articles_recycler);
+            analysisArticleJoinsRecyclerView.setup();
+        }
 
-    private void recyclerViewSubscribtion() {
-        viewModel = new ViewModelProvider(this).get( AnalysisArticleJoinsListViewModel.class );
-        viewModel.getAnalysisArticleJoinsListLiveData().observe( getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
-            @Override
-            public void onChanged( PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
-                if (!analysisArticlesJoins.isEmpty()) {
-                    analysisArticleJoinsRecyclerView.submitArticlesList( analysisArticlesJoins );
+        private void recyclerViewSubscribtion() {
+            viewModel = new ViewModelProvider(this).get( AnalysisArticleJoinsListViewModel.class );
+            viewModel.getAnalysisArticleJoinsListLiveData().observe( getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
+                @Override
+                public void onChanged( PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
+                    if (!analysisArticlesJoins.isEmpty()) {
+                        analysisArticleJoinsRecyclerView.submitArticlesList( analysisArticlesJoins );
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        navigationViewMenuSetup();
     }
 
     private void navigationViewMenuSetup() {

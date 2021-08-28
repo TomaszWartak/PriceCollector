@@ -13,7 +13,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 
 import java.util.List;
 

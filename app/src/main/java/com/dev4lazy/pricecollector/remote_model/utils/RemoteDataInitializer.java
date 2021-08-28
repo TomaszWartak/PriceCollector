@@ -15,7 +15,7 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteModule;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteSector;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUOProject;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 
 import java.text.ParseException;
 import java.util.ArrayList;

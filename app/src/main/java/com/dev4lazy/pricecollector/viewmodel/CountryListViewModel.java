@@ -2,9 +2,9 @@ package com.dev4lazy.pricecollector.viewmodel;
 
 import android.app.Application;
 
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.model.db.CountryDao;
 import com.dev4lazy.pricecollector.model.entities.Country;
-import com.dev4lazy.pricecollector.utils.AppHandle;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;

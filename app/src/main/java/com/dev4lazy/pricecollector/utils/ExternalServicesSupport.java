@@ -10,6 +10,8 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
+import com.dev4lazy.pricecollector.AppHandle;
+
 /**
  * Obsługuje komunikację z serwisami zewnętrznymi
  */

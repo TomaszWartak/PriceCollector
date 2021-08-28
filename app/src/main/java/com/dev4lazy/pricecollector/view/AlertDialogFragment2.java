@@ -1,21 +1,11 @@
 package com.dev4lazy.pricecollector.view;
 
-import android.app.Application;
 import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.paging.DataSource;
-import androidx.paging.LivePagedListBuilder;
-import androidx.paging.PagedList;
 
-import com.dev4lazy.pricecollector.model.db.CountryDao;
-import com.dev4lazy.pricecollector.model.entities.Country;
-import com.dev4lazy.pricecollector.utils.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel2;
 
 public class AlertDialogFragment2 extends DialogFragment {

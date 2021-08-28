@@ -2,6 +2,7 @@ package com.dev4lazy.pricecollector.view.E1_login_screen;
 
 
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,8 +20,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -31,7 +35,7 @@ import com.dev4lazy.pricecollector.model.logic.User;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
@@ -43,9 +47,10 @@ import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getIns
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends Fragment implements AuthSupport.LoginCallback {
+public class LoginFragment
+        extends Fragment
+        implements AuthSupport.LoginCallback, LifecycleObserver {
 
-    // Ten ViewModel jest używany
     private UserViewModel userViewModel;
     private EditText userLoginEditText;
     private EditText userPasswordEditText;
@@ -58,7 +63,15 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppHandle.getHandle().getAuthSupport().setLoginCallback(this);
+        startMainActivityLifecycleObserving();
     }
+
+    // TODO XXX - zastanów się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
+    //	 onDestroyView()
+        private void startMainActivityLifecycleObserving() {
+            Lifecycle activityLifecycle = getActivity().getLifecycle();
+            activityLifecycle.addObserver(this);
+        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,79 +91,111 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
         return view;
     }
 
-    // todo test viewmodel
-    void viewSetup(View view) {
-        userLoginEditText = view.findViewById(R.id.userlogin_edit_text);
-        userPasswordEditText = view.findViewById(R.id.password_edit_text);
-    }
+        private void setOnBackPressedCalback() {
+            OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+                @Override
+                public void handleOnBackPressed() {
+                    // Handle the back button event
+                    getLogoutQuestionDialog();
+                }
+            };
+            getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+        }
 
-    private void viewSubscribtion() {
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        userLoginEditTextSubscription();
-        userPasswordEditTextSubscription();
-    }
-
-    private void userLoginEditTextSubscription() {
-        userLoginEditText.addTextChangedListener(new TextWatcher() {
-             @Override
-             public void beforeTextChanged (CharSequence s,int start, int count, int after){
-             }
-
-             @Override
-             public void onTextChanged (CharSequence charSequence,int start, int before, int count){
-                 userViewModel.getUser().setLogin(charSequence.toString());
-             }
-
-             @Override
-             public void afterTextChanged (Editable s){
-             }
-         });
-    }
-
-    private void userPasswordEditTextSubscription() {
-        userPasswordEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged (CharSequence s,int start, int count, int after){
+            private void getLogoutQuestionDialog() {
+                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                        .setTitle("")
+                        .setMessage(R.string.question_close_app)
+                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
+                        .show();
             }
 
-            @Override
-            public void onTextChanged (CharSequence charSequence,int start, int before, int count){
-                userViewModel.getUser().setPassword(charSequence.toString());
+                private class LogOffListener implements DialogInterface.OnClickListener {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishApp();
+                    }
+                }
+
+                    private void finishApp() {
+                        // TODO promotor: czy to można bardziej elegancko zrobić?
+                        AppHandle.getHandle().shutdown();
+                        getActivity().finishAndRemoveTask();
+                        System.exit(0);
+                    }
+
+        void viewSetup(View view) {
+            userLoginEditText = view.findViewById(R.id.userlogin_edit_text);
+            userPasswordEditText = view.findViewById(R.id.password_edit_text);
+        }
+
+        private void viewSubscribtion() {
+            userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+            userLoginEditTextSubscription();
+            userPasswordEditTextSubscription();
+        }
+
+            private void userLoginEditTextSubscription() {
+                userLoginEditText.addTextChangedListener(new TextWatcher() {
+                     @Override
+                     public void beforeTextChanged (CharSequence s,int start, int count, int after){
+                     }
+
+                     @Override
+                     public void onTextChanged (CharSequence charSequence,int start, int before, int count){
+                         userViewModel.getUser().setLogin(charSequence.toString());
+                     }
+
+                     @Override
+                     public void afterTextChanged (Editable s){
+                     }
+                 });
             }
 
-            @Override
-            public void afterTextChanged (Editable s){
-            }
-        });
-    }
-    // todo end test viewmodel
+            private void userPasswordEditTextSubscription() {
+                userPasswordEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged (CharSequence s,int start, int count, int after){
+                    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+                    @Override
+                    public void onTextChanged (CharSequence charSequence,int start, int before, int count){
+                        userViewModel.getUser().setPassword(charSequence.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged (Editable s){
+                    }
+                });
+            }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    public void afterActivityON_CREATE() {
         navigationViewMenuSetup();
     }
 
-    private void navigationViewMenuSetup() {
-        NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
-        Menu navigationViewMenu = navigationView.getMenu();
-        navigationViewMenu.clear();
-        navigationView.inflateMenu(R.menu.login_screen_menu);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // return true to display the item as the selected item
-                DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
-                drawerLayout.closeDrawers();
-                switch (item.getItemId()) {
-                    case R.id.login_screen_logout_menu_item:
-                        getLogoutQuestionDialog();
-                        break;
+        private void navigationViewMenuSetup() {
+            NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
+            Menu navigationViewMenu = navigationView.getMenu();
+            navigationViewMenu.clear();
+            navigationView.inflateMenu(R.menu.login_screen_menu);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    // return true to display the item as the selected item
+                    DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
+                    drawerLayout.closeDrawers();
+                    switch (item.getItemId()) {
+                        case R.id.login_screen_logout_menu_item:
+                            getLogoutQuestionDialog();
+                            break;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-    }
+            });
+        }
 
     void logIn( /* todo test viemodel View view*/ ) {
         // TODO XXX pobranie danych usera (e-mail) z systemu
@@ -321,37 +366,4 @@ public class LoginFragment extends Fragment implements AuthSupport.LoginCallback
             Toast.LENGTH_SHORT).show();
     }
 
-    private void setOnBackPressedCalback() {
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-            @Override
-            public void handleOnBackPressed() {
-                // Handle the back button event
-                getLogoutQuestionDialog();
-            }
-        };
-        getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-    }
-
-    private void getLogoutQuestionDialog() {
-        new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
-                .setTitle("")
-                .setMessage(R.string.question_close_app)
-                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
-                .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                .show();
-    }
-    private class LogOffListener implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            finishApp();
-        }
-    }
-
-    private void finishApp() {
-        // TODO promotor: czy to można bardziej elegancko zrobić?
-        AppHandle.getHandle().shutdown();
-        getActivity().finishAndRemoveTask();
-        System.exit(0);
-    }
 }

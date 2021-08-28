@@ -44,7 +44,7 @@ import com.dev4lazy.pricecollector.model.entities.Sector;
 import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.model.entities.UOProject;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
 
 import java.util.ArrayList;

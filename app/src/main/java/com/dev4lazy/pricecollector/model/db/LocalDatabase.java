@@ -31,7 +31,7 @@ import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.model.entities.UOProject;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 
 @Database(
     version = 10,

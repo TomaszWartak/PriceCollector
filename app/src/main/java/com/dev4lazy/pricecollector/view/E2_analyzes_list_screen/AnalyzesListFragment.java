@@ -15,8 +15,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
@@ -25,7 +28,7 @@ import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel2;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -33,7 +36,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
 
-public class AnalyzesListFragment extends Fragment {
+public class AnalyzesListFragment extends Fragment implements LifecycleObserver {
 
     private AnalyzesListViewModel viewModel;
     private AnalyzesRecyclerView recyclerView;
@@ -48,6 +51,7 @@ public class AnalyzesListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analyzes_list_fragment, container, false);
+        startMainActivityLifecycleObserving();
 
         setOnBackPressedCalback();
 
@@ -69,101 +73,114 @@ public class AnalyzesListFragment extends Fragment {
         return view;
     }
 
-    private void newAnalyzesCheck() {
-        /*newAnalyzesReady = new MutableLiveData<>();
-        AnalysisDataUpdater analysisDataUpdater = getInstance();
-        newAnalyzesReady.setValue( analysisDataUpdater.isNewAnalysisReadyToDownlad() );
-        newAnalyzesReady.observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
-            @Override
-            public void onChanged( Boolean newAnalyzesReady  ) {
-                if (newAnalyzesReady) {
-                    showAskUserForAnalyzesDataDownload( getView() );
-                }
-            }
-        }); */
-        AnalysisDataUpdater analysisDataUpdater = getInstance();
-        analysisDataUpdater.getNewAnalysisReadyToDownladLD().observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
-            @Override
-            public void onChanged( Boolean newAnalyzesReady  ) {
-                if (newAnalyzesReady) {
-                    showAskUserForAnalyzesDataDownload( getView() );
-                }
-            }
-        });
-    }
-
-    private void  setOnBackPressedCalback() {
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-            @Override
-            public void handleOnBackPressed() {
-                // Handle the back button event
-                getLogoutQuestionDialog();
-            }
-        };
-        getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-    }
-
-    private void getLogoutQuestionDialog() {
-        new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
-                .setTitle("")
-                .setMessage(R.string.question_close_app)
-                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
-                .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                .show();
-    }
-
-    private class LogOffListener implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            finishApp();
+        // TODO XXX - zastanó się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
+        //	 onDestroyView()
+        private void startMainActivityLifecycleObserving() {
+            Lifecycle activityLifecycle = getActivity().getLifecycle();
+            activityLifecycle.addObserver(this);
         }
-    }
 
-    private void finishApp() {
-        // TODO promotor: czy to można bardziej elegancko zrobić?
-        AppHandle.getHandle().shutdown();
-        getActivity().finishAndRemoveTask();
-        System.exit(0);
-    }
-
-    private void recyclerViewSetup(View view ) {
-        recyclerView = view.findViewById( R.id.analyzes_recycler );
-        recyclerView.setup();
-    }
-
-    private void recyclerViewSubscribtion() {
-        viewModel = new ViewModelProvider(this ).get( AnalyzesListViewModel.class );
-        viewModel.getAnalyzesLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<Analysis>>() {
-            @Override
-            public void onChanged( PagedList<Analysis> analyzesList  ) {
-                if (!analyzesList.isEmpty()) {
-                    recyclerView.submitAnalyzesList( analyzesList);
+        private void  setOnBackPressedCalback() {
+            OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+                @Override
+                public void handleOnBackPressed() {
+                    // Handle the back button event
+                    getLogoutQuestionDialog();
                 }
+            };
+            getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+        }
+
+            private void getLogoutQuestionDialog() {
+                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                        .setTitle("")
+                        .setMessage(R.string.question_close_app)
+                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
+                        .show();
             }
-        });
+
+                private class LogOffListener implements DialogInterface.OnClickListener {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishApp();
+                    }
+                }
+
+                    private void finishApp() {
+                        // TODO promotor: czy to można bardziej elegancko zrobić?
+                        AppHandle.getHandle().shutdown();
+                        getActivity().finishAndRemoveTask();
+                        System.exit(0);
+                    }
+
+
+        private void recyclerViewSetup(View view ) {
+            recyclerView = view.findViewById( R.id.analyzes_recycler );
+            recyclerView.setup();
+        }
+
+        private void recyclerViewSubscribtion() {
+            viewModel = new ViewModelProvider(this ).get( AnalyzesListViewModel.class );
+            viewModel.getAnalyzesLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<Analysis>>() {
+                @Override
+                public void onChanged( PagedList<Analysis> analyzesList  ) {
+                    if (!analyzesList.isEmpty()) {
+                        recyclerView.submitAnalyzesList( analyzesList);
+                    }
+                }
+            });
+        }
+
+        private void newAnalyzesCheck() {
+            /*newAnalyzesReady = new MutableLiveData<>();
+            AnalysisDataUpdater analysisDataUpdater = getInstance();
+            newAnalyzesReady.setValue( analysisDataUpdater.isNewAnalysisReadyToDownlad() );
+            newAnalyzesReady.observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
+                @Override
+                public void onChanged( Boolean newAnalyzesReady  ) {
+                    if (newAnalyzesReady) {
+                        showAskUserForAnalyzesDataDownload( getView() );
+                    }
+                }
+            }); */
+            AnalysisDataUpdater analysisDataUpdater = getInstance();
+            analysisDataUpdater.getNewAnalysisReadyToDownladLD().observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
+                @Override
+                public void onChanged( Boolean newAnalyzesReady  ) {
+                    if (newAnalyzesReady) {
+                        showAskUserForAnalyzesDataDownload( getView() );
+                    }
+                }
+            });
+        }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    public void afterActivityON_CREATE() {
+        navigationViewMenuSetup();
     }
 
-    private void navigationViewMenuSetup() {
-        NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
-        Menu navigationViewMenu = navigationView.getMenu();
-        navigationViewMenu.clear();
-        navigationView.inflateMenu(R.menu.anlyzes_list_screen_menu);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // return true to display the item as the selected item
-                DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
-                drawerLayout.closeDrawers();
-                switch (item.getItemId()) {
-                    case R.id.analyzes_list_screen_logout_menu_item:
-                        getLogoutQuestionDialog();
-                        break;
+        private void navigationViewMenuSetup() {
+            NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
+            Menu navigationViewMenu = navigationView.getMenu();
+            navigationViewMenu.clear();
+            navigationView.inflateMenu(R.menu.anlyzes_list_screen_menu);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    // return true to display the item as the selected item
+                    DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
+                    drawerLayout.closeDrawers();
+                    switch (item.getItemId()) {
+                        case R.id.analyzes_list_screen_logout_menu_item:
+                            getLogoutQuestionDialog();
+                            break;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-    }
+            });
+        }
 
     /*
     private void setAnalysisItem(@NonNull LayoutInflater inflater, View view) {
@@ -190,56 +207,56 @@ public class AnalyzesListFragment extends Fragment {
     }
      */
 
-    private void showAskUserForAnalyzesDataDownload( View view ) {
-        AlertDialogFragmentViewModel2 alertDialogFragmentViewModel =
-                new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel2.class);
-        alertDialogFragmentViewModel.setAlertDialog( getAskUserForAnalyzesDataDownloadDialog() );
-        Navigation.findNavController( view ).navigate( R.id.action_analyzesListFragment_to_alertDialogFragment2 );
-    }
-
-    @NonNull
-    private AlertDialog getAskUserForAnalyzesDataDownloadDialog() {
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder( getContext() )
-            .setTitle( getString( R.string.basic_data_ready_to_download))
-            .setMessage( getString( R.string.question_about_downloading_data) )
-            .setPositiveButton(
-                getString( R.string.caption_yes) ,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        AnalysisDataUpdater.getInstance().downloadAnalysisBasicData();
-                        recyclerView.refresh();
-                    }
-                }
-            )
-            // .setNegativeButton( alertDialogFragmentViewModel.getNegativeButtonLabel(), alertDialogFragmentViewModel.getNegativeButtonOnClickListener() )
-            .setNegativeButton(
-                getString( R.string.caption_no),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        // todo?
-                    }
-                }
-            )
-            .setCancelable( false )
-            .create();
-        return alertDialog;
-    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        navigationViewMenuSetup();
         AnalysisDataUpdater analysisDataUpdater = getInstance();
         if (analysisDataUpdater.isNewAnalysisReadyToDownlad()) {
             showAskUserForAnalyzesDataDownload( view );
         }
     }
 
-//------------------------------------------------------------------------
+        private void showAskUserForAnalyzesDataDownload( View view ) {
+            AlertDialogFragmentViewModel2 alertDialogFragmentViewModel =
+                    new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel2.class);
+            alertDialogFragmentViewModel.setAlertDialog( getAskUserForAnalyzesDataDownloadDialog() );
+            Navigation.findNavController( view ).navigate( R.id.action_analyzesListFragment_to_alertDialogFragment2 );
+        }
+
+            @NonNull
+            private AlertDialog getAskUserForAnalyzesDataDownloadDialog() {
+                AlertDialog alertDialog = new MaterialAlertDialogBuilder( getContext() )
+                        .setTitle( getString( R.string.basic_data_ready_to_download))
+                        .setMessage( getString( R.string.question_about_downloading_data) )
+                        .setPositiveButton(
+                                getString( R.string.caption_yes) ,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        AnalysisDataUpdater.getInstance().downloadAnalysisBasicData();
+                                        recyclerView.refresh();
+                                    }
+                                }
+                        )
+                        // .setNegativeButton( alertDialogFragmentViewModel.getNegativeButtonLabel(), alertDialogFragmentViewModel.getNegativeButtonOnClickListener() )
+                        .setNegativeButton(
+                                getString( R.string.caption_no),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        // todo?
+                                    }
+                                }
+                        )
+                        .setCancelable( false )
+                        .create();
+                return alertDialog;
+            }
+
+
+    //------------------------------------------------------------------------
 // Obsługa Drawer menu
     private void menuOptionAnalyzes() {
     }

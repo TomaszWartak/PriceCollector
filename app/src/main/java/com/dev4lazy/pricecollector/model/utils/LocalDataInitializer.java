@@ -26,7 +26,7 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteMarket;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteModule;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteSector;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUOProject;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppSettings;
 
 import java.util.Date;

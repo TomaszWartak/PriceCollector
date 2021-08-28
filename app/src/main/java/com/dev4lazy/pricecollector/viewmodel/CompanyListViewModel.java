@@ -8,9 +8,9 @@ import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.model.db.CompanyDao;
 import com.dev4lazy.pricecollector.model.entities.Company;
-import com.dev4lazy.pricecollector.utils.AppHandle;
 
 public class CompanyListViewModel extends AndroidViewModel {
 

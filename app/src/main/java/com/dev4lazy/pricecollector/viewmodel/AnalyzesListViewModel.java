@@ -8,9 +8,9 @@ import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.model.db.AnalysisDao;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
-import com.dev4lazy.pricecollector.utils.AppHandle;
 
 public class AnalyzesListViewModel extends AndroidViewModel {
 

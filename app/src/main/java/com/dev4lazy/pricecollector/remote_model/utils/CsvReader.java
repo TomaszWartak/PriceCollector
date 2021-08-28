@@ -2,7 +2,7 @@ package com.dev4lazy.pricecollector.remote_model.utils;
 
 import android.os.Environment;
 
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 
 import java.io.BufferedReader;
 import java.io.File;

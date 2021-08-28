@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 
 public class SetUpPreferencesFragment extends Fragment {
 
@@ -37,8 +37,7 @@ public class SetUpPreferencesFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // todo usuń
-        Navigation.findNavController(view).navigate(R.id.action_setUpPreferencesFragment_to_loginFragment);
         super.onViewCreated(view, savedInstanceState);
+        Navigation.findNavController(view).navigate(R.id.action_setUpPreferencesFragment_to_loginFragment);
     }
 }

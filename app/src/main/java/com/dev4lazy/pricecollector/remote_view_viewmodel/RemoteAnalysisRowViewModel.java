@@ -10,7 +10,7 @@ import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRow;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteAnalysisRowDao;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 
 public class RemoteAnalysisRowViewModel extends AndroidViewModel {
 

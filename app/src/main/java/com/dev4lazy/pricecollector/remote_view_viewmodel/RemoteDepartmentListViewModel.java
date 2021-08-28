@@ -10,7 +10,7 @@ import androidx.paging.PagedList;
 
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteDepartment;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteDepartmentDao;
-import com.dev4lazy.pricecollector.utils.AppHandle;
+import com.dev4lazy.pricecollector.AppHandle;
 
 public class RemoteDepartmentListViewModel extends AndroidViewModel {
 
