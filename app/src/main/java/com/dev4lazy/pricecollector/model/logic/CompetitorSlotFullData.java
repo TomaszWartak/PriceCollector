@@ -30,10 +30,16 @@ public class CompetitorSlotFullData {
         return competitorStoresMap.get( storeId );
     }
 
+    public void removeStore( Store store ) {
+        competitorStoresMap.remove( store.getId() );
+    }
+
+    // TODO XXX
     public ArrayList<Store> getCompetitorStores1() {
         return competitorStores;
     }
 
+    // TODO XXX
     public void setCompetitorStores1(ArrayList<Store> stores) {
         this.competitorStores = stores;
     }

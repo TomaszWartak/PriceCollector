@@ -35,7 +35,7 @@ import com.google.android.material.navigation.NavigationView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AnalysisArticlesPagerFragment extends Fragment implements LifecycleObserver {
+public class AnalysisArticlesPagerFragment extends Fragment {
 
 
     private AnalysisArticleJoinsListViewModel viewModel;
@@ -51,15 +51,17 @@ public class AnalysisArticlesPagerFragment extends Fragment implements Lifecycle
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startMainActivityLifecycleObserving();
+        // TODO XXX startMainActivityLifecycleObserving();
     }
 
-        // TODO XXX - zastanów się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
+        /* TODO XXX - zastanów się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
         //	 onDestroyView()
         private void startMainActivityLifecycleObserving() {
             Lifecycle activityLifecycle = getActivity().getLifecycle();
             activityLifecycle.addObserver(this);
         }
+
+         */
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -95,10 +97,13 @@ public class AnalysisArticlesPagerFragment extends Fragment implements Lifecycle
             });
         }
 
+    /* TODO XXX
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void afterActivityON_CREATE() {
         navigationViewMenuSetup();
     }
+
+     */
 
         private void navigationViewMenuSetup() {
             NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
@@ -148,4 +153,11 @@ public class AnalysisArticlesPagerFragment extends Fragment implements Lifecycle
                         getActivity().finishAndRemoveTask();
                         System.exit(0);
                     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        navigationViewMenuSetup();
+    }
+
 }

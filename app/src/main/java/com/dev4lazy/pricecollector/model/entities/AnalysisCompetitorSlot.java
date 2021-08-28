@@ -69,4 +69,26 @@ public class AnalysisCompetitorSlot {
     public void setStoreName(String storeName) {
         this.storeName = storeName;
     }
+
+    /**
+     * Ustawia dane pustego slotu
+     * @param slotNr nr kolejny slotu (1..5)
+     * @param companyId id bazodanowy firmy
+     * @param companyName nazwa firmy
+     */
+    public void initialize( int slotNr, int companyId, String companyName) {
+        setSlotNr(slotNr);
+        setOtherStoreId( NONE );
+        setCompanyId( companyId );
+        setCompanyName( companyName );
+        setStoreName( "" );
+    }
+
+    /**
+     * Czyści slot dla danego Konkurenta
+     */
+
+    public void reset( ) {
+        initialize( getSlotNr(), getCompanyId(), getCompanyName() );
+    }
 }

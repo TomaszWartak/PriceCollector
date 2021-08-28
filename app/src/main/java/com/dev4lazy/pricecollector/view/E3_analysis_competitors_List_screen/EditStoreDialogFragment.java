@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view;
+package com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen;
 
 
 import android.app.Dialog;
@@ -10,15 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Store;
@@ -29,28 +20,37 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddStoreDialogFragment extends DialogFragment {
+public class EditStoreDialogFragment extends DialogFragment {
 
     private String validationMessage = "";
 
-    public static AddStoreDialogFragment newInstance() {
-        return new AddStoreDialogFragment();
+    public static EditStoreDialogFragment newInstance() {
+        return new EditStoreDialogFragment();
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.add_store_fragment, null);
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.edit_store_fragment, null);
 
-        EditText companyNameEditText = viewInflated.findViewById(R.id.add_store_company_name_edit_text);
-        EditText storeNameEditText = viewInflated.findViewById(R.id.add_store_name_edit_text);
-        EditText streetEditText = viewInflated.findViewById(R.id.add_store_street_edit_text);
-        EditText cityEditText = viewInflated.findViewById(R.id.add_store_city_edit_text);
-        EditText zipcodeEditText = viewInflated.findViewById(R.id.add_store_zipcode_edit_text);
+        EditText companyNameEditText = viewInflated.findViewById(R.id.edit_store_company_name_edit_text);
+        EditText storeNameEditText = viewInflated.findViewById(R.id.edit_store_name_edit_text);
+        EditText streetEditText = viewInflated.findViewById(R.id.edit_store_street_edit_text);
+        EditText cityEditText = viewInflated.findViewById(R.id.edit_store_city_edit_text);
+        EditText zipcodeEditText = viewInflated.findViewById(R.id.edit_store_zipcode_edit_text);
 
         StoreViewModel storeViewModel = new ViewModelProvider(getActivity()).get(StoreViewModel.class);
         Store store = storeViewModel.getStore();

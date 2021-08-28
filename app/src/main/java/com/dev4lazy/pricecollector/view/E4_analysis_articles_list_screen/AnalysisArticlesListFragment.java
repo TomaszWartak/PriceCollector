@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
@@ -30,7 +31,7 @@ import com.google.android.material.navigation.NavigationView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AnalysisArticlesListFragment extends Fragment implements LifecycleObserver {
+public class AnalysisArticlesListFragment extends Fragment {
 
     private AnalysisArticleJoinsRecyclerView analysisArticleJoinsRecyclerView;
     private AnalysisArticleJoinsListViewModel viewModel;
@@ -44,18 +45,21 @@ public class AnalysisArticlesListFragment extends Fragment implements LifecycleO
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analysis_articles_list_fragment, container, false);
-        startMainActivityLifecycleObserving();
+        // TODO XXXX startMainActivityLifecycleObserving();
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
         return view;
     }
 
-        // TODO XXX - zastanów się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
+        /* TODO XXX - zastanów się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
         //	 onDestroyView()
         private void startMainActivityLifecycleObserving() {
             Lifecycle activityLifecycle = getActivity().getLifecycle();
             activityLifecycle.addObserver(this);
         }
+
+         */
+
         private void recyclerViewSetup( View view ) {
             analysisArticleJoinsRecyclerView = view.findViewById(R.id.analysis_articles_recycler);
             analysisArticleJoinsRecyclerView.setup();
@@ -73,56 +77,66 @@ public class AnalysisArticlesListFragment extends Fragment implements LifecycleO
             });
         }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    /* TODO XXXX
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    public void afterActivityON_CREATE() {
+        navigationViewMenuSetup();
     }
 
-    private void navigationViewMenuSetup() {
-        NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
-        Menu navigationViewMenu = navigationView.getMenu();
-        navigationViewMenu.clear();
-        navigationView.inflateMenu(R.menu.anlysis_articles_list_screen_menu);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // return true to display the item as the selected item
-                DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
-                drawerLayout.closeDrawers();
-                switch (item.getItemId()) {
-                    case R.id.anlysis_articles_list_screen_logout_menu_item:
-                        getLogoutQuestionDialog();
-                        break;
-                    case R.id.anlysis_articles_list_screen_gotoanalyzes_menu_item:
-                        Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_analyzesListFragment );
-                        break;
+     */
+
+        private void navigationViewMenuSetup() {
+            NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
+            Menu navigationViewMenu = navigationView.getMenu();
+            navigationViewMenu.clear();
+            navigationView.inflateMenu(R.menu.anlysis_articles_list_screen_menu);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    // return true to display the item as the selected item
+                    DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
+                    drawerLayout.closeDrawers();
+                    switch (item.getItemId()) {
+                        case R.id.anlysis_articles_list_screen_logout_menu_item:
+                            getLogoutQuestionDialog();
+                            break;
+                        case R.id.anlysis_articles_list_screen_gotoanalyzes_menu_item:
+                            Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_analyzesListFragment );
+                            break;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-    }
-
-    private void getLogoutQuestionDialog() {
-        new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
-                .setTitle("")
-                .setMessage(R.string.question_close_app)
-                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
-                .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                .show();
-    }
-
-    private class LogOffListener implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            finishApp();
+            });
         }
+
+            private void getLogoutQuestionDialog() {
+                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                        .setTitle("")
+                        .setMessage(R.string.question_close_app)
+                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
+                        .show();
+            }
+
+                private class LogOffListener implements DialogInterface.OnClickListener {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishApp();
+                    }
+                }
+
+                    private void finishApp() {
+                        // TODO promotor: czy to można bardziej elegancko zrobić?
+                        AppHandle.getHandle().shutdown();
+                        getActivity().finishAndRemoveTask();
+                        System.exit(0);
+                    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        navigationViewMenuSetup();
     }
 
-    private void finishApp() {
-        // TODO promotor: czy to można bardziej elegancko zrobić?
-        AppHandle.getHandle().shutdown();
-        getActivity().finishAndRemoveTask();
-        System.exit(0);
-    }
 }

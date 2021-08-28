@@ -64,7 +64,9 @@ public class Data<D> {
         // new UpdateAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, data );
     }
 
-
+    /**
+     * W resultLD zwraca ilość usuniętych wierszy
+     */
     public void deleteData(D data, MutableLiveData<Integer> resultLD) {
         new DeleteAsyncTask(dao, resultLD).execute(data);
         // new DeleteAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, data );

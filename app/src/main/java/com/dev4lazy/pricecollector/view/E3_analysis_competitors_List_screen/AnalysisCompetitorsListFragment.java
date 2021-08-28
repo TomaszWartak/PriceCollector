@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ViewModelProvider;
@@ -48,26 +49,27 @@ public class AnalysisCompetitorsListFragment extends Fragment {
         return view;
     }
 
-    private void listViewSetup(View view) {
-        competitorsSlotsListView = view.findViewById(R.id.analysis_competitors_listview);
-        competitorsSlotsListView.setup();
-    }
+        private void listViewSetup(View view) {
+            competitorsSlotsListView = view.findViewById(R.id.analysis_competitors_listview);
+            competitorsSlotsListView.setup();
+        }
 
-    private void listViewSubscribtion() {
-        // todo askForSlots();
-        viewModel = new ViewModelProvider(this).get(CompetitorsSlotsViewModel.class);
-        viewModel.getCompetitorsSlotsLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<CompetitorSlotFullData>>() {
-            @Override
-            public void onChanged(ArrayList<CompetitorSlotFullData> competitorSlotFullDataList) {
-                if (!competitorSlotFullDataList.isEmpty()) {
-                    competitorsSlotsListView.submitCompetitorsSlotsList(competitorSlotFullDataList);
+        private void listViewSubscribtion() {
+            // todo askForSlots();
+            viewModel = new ViewModelProvider(this).get(CompetitorsSlotsViewModel.class);
+            viewModel.getCompetitorsSlotsLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<CompetitorSlotFullData>>() {
+                @Override
+                public void onChanged(ArrayList<CompetitorSlotFullData> competitorSlotFullDataList) {
+                    if (!competitorSlotFullDataList.isEmpty()) {
+                        competitorsSlotsListView.submitCompetitorsSlotsList(competitorSlotFullDataList);
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    public void afterActivityON_CREATE() {
+    @Override
+    public void onStart() {
+        super.onStart();
         navigationViewMenuSetup();
     }
 
@@ -104,18 +106,19 @@ public class AnalysisCompetitorsListFragment extends Fragment {
                         .show();
             }
 
-            private class LogOffListener implements DialogInterface.OnClickListener {
+                private class LogOffListener implements DialogInterface.OnClickListener {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finishApp();
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishApp();
+                    }
                 }
-            }
 
-            private void finishApp() {
-                // TODO promotor: czy to można bardziej elegancko zrobić?
-                AppHandle.getHandle().shutdown();
-                getActivity().finishAndRemoveTask();
-                System.exit(0);
-            }
+                    private void finishApp() {
+                        // TODO promotor: czy to można bardziej elegancko zrobić?
+                        AppHandle.getHandle().shutdown();
+                        getActivity().finishAndRemoveTask();
+                        System.exit(0);
+                    }
+
 }

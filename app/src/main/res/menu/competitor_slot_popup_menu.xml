@@ -17,6 +17,9 @@
             android:id="@+id/editCompetitorStoreMenuItem"
             android:title="@string/edit_competitor_store"/>
         <item
+            android:id="@+id/deleteCompetitorStoreMenuItem"
+            android:title="@string/delete_competitor_store"/>
+        <item
             android:id="@+id/chooseCompetitorStoreMenuItem"
             android:title="@string/choose_competitor_store"/>
         <item

@@ -137,17 +137,25 @@
         <action
             android:id="@+id/action_analysisCompetitorsFragment_to_editStoreDialogFragment"
             app:destination="@id/editStoreDialogFragment" />
+        <action
+            android:id="@+id/action_analysisCompetitorsFragment_to_deleteStoreDialogFragment"
+            app:destination="@id/deleteStoreDialogFragment" />
     </fragment>
     <dialog
         android:id="@+id/addStoreDialogFragment"
-        android:name="com.dev4lazy.pricecollector.view.AddStoreDialogFragment"
+        android:name="com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen.AddStoreDialogFragment"
         android:label="AddStoreDialogFragment"
         tools:layout="@layout/add_store_fragment" />
     <dialog
         android:id="@+id/editStoreDialogFragment"
-        android:name="com.dev4lazy.pricecollector.view.EditStoreDialogFragment"
+        android:name="com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen.EditStoreDialogFragment"
         android:label="EditStoreDialogFragment"
         tools:layout="@layout/edit_store_fragment" />
+    <dialog
+        android:id="@+id/deleteStoreDialogFragment"
+        android:name="com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen.DeleteStoreDialogFragment"
+        android:label="delete_store_fragment"
+        tools:layout="@layout/delete_store_fragment" />
 
     <fragment
         android:id="@+id/analysisArticlesListFragment"

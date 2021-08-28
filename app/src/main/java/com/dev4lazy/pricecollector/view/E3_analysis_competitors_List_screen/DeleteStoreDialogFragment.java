@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view;
+package com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen;
 
 
 import android.app.Dialog;
@@ -10,10 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Company;
 import com.dev4lazy.pricecollector.model.entities.Store;
-import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppUtils;
 import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -33,24 +33,24 @@ import androidx.lifecycle.ViewModelProvider;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditStoreDialogFragment extends DialogFragment {
+public class DeleteStoreDialogFragment extends DialogFragment {
 
     private String validationMessage = "";
 
-    public static EditStoreDialogFragment newInstance() {
-        return new EditStoreDialogFragment();
+    public static DeleteStoreDialogFragment newInstance() {
+        return new DeleteStoreDialogFragment();
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.edit_store_fragment, null);
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.delete_store_fragment, null);
 
-        EditText companyNameEditText = viewInflated.findViewById(R.id.edit_store_company_name_edit_text);
-        EditText storeNameEditText = viewInflated.findViewById(R.id.edit_store_name_edit_text);
-        EditText streetEditText = viewInflated.findViewById(R.id.edit_store_street_edit_text);
-        EditText cityEditText = viewInflated.findViewById(R.id.edit_store_city_edit_text);
-        EditText zipcodeEditText = viewInflated.findViewById(R.id.edit_store_zipcode_edit_text);
+        EditText companyNameEditText = viewInflated.findViewById(R.id.delete_store_company_name_edit_text);
+        EditText storeNameEditText = viewInflated.findViewById(R.id.delete_store_name_edit_text);
+        EditText streetEditText = viewInflated.findViewById(R.id.delete_store_street_edit_text);
+        EditText cityEditText = viewInflated.findViewById(R.id.delete_store_city_edit_text);
+        EditText zipcodeEditText = viewInflated.findViewById(R.id.delete_store_zipcode_edit_text);
 
         StoreViewModel storeViewModel = new ViewModelProvider(getActivity()).get(StoreViewModel.class);
         Store store = storeViewModel.getStore();
@@ -142,67 +142,14 @@ public class EditStoreDialogFragment extends DialogFragment {
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO Do something
-                        store.setName( storeNameEditText.getText().toString() );
-                        store.setStreet( streetEditText.getText().toString() );
-                        store.setCity( cityEditText.getText().toString() );
-                        store.setZipCode( zipcodeEditText.getText().toString() );
-                        if (isValid(store)) {
-                            dialog.dismiss();
-                            // storeViewModel.clearTemporaryData();
-                            storeViewModel.setStore(store);
-                        } else {
-                            Toast.makeText(
-                                getContext(),
-                                validationMessage,
-                                Toast.LENGTH_LONG).show();
-                        }
-
+                        dialog.dismiss();
+                        Store storeToDelete = new Store();
+                        storeToDelete.setId( store.getId() );
+                        storeViewModel.setStore(storeToDelete);
                     }
                 });
             }
         });
         return alertDialog;
-    }
-
-    private boolean isValid(Store store) {
-        validationMessage = "";
-        if (store.getCompanyId()<0) {
-            validationMessage = getString(R.string.choose_competitor);
-            return false;
-        }
-        if (store.getName()==null) {
-            validationMessage = getString(R.string.store_name_null);
-            return false;
-        }
-        if (store.getName().isEmpty()) {
-            validationMessage = getString(R.string.enter_store_name);
-            return false;
-        }
-       if (store.getStreet()==null) {
-            validationMessage = getString(R.string.street_null);
-            return false;
-        }
-        if (store.getStreet().isEmpty()) {
-            validationMessage = getString(R.string.enter_street_name);
-            return false;
-        }
-        if (store.getCity()==null) {
-            validationMessage = getString(R.string.city_null);
-            return false;
-        }
-        if (store.getCity().isEmpty()) {
-            validationMessage = getString(R.string.enter_city_name);
-            return false;
-        }
-        if (store.getZipCode()==null) {
-            validationMessage = getString(R.string.zipcode_null);
-            return false;
-        }
-        if (store.getZipCode().isEmpty()) {
-            validationMessage = getString(R.string.enter_zipcode);
-            return false;
-        }
-        return true;
     }
 }

@@ -49,7 +49,7 @@ import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getIns
  */
 public class LoginFragment
         extends Fragment
-        implements AuthSupport.LoginCallback, LifecycleObserver {
+        implements AuthSupport.LoginCallback {
 
     private UserViewModel userViewModel;
     private EditText userLoginEditText;
@@ -63,15 +63,7 @@ public class LoginFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppHandle.getHandle().getAuthSupport().setLoginCallback(this);
-        startMainActivityLifecycleObserving();
     }
-
-    // TODO XXX - zastanów się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
-    //	 onDestroyView()
-        private void startMainActivityLifecycleObserving() {
-            Lifecycle activityLifecycle = getActivity().getLifecycle();
-            activityLifecycle.addObserver(this);
-        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -171,33 +163,7 @@ public class LoginFragment
                 });
             }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    public void afterActivityON_CREATE() {
-        navigationViewMenuSetup();
-    }
-
-        private void navigationViewMenuSetup() {
-            NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
-            Menu navigationViewMenu = navigationView.getMenu();
-            navigationViewMenu.clear();
-            navigationView.inflateMenu(R.menu.login_screen_menu);
-            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    // return true to display the item as the selected item
-                    DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
-                    drawerLayout.closeDrawers();
-                    switch (item.getItemId()) {
-                        case R.id.login_screen_logout_menu_item:
-                            getLogoutQuestionDialog();
-                            break;
-                    }
-                    return false;
-                }
-            });
-        }
-
-    void logIn( /* todo test viemodel View view*/ ) {
+       void logIn( /* todo test viemodel View view*/ ) {
         // TODO XXX pobranie danych usera (e-mail) z systemu
         // TODO TEST
         // testAccounts();
@@ -278,9 +244,6 @@ public class LoginFragment
                     getSettingsInfo();
                     // sprawdzenie czy na serwerze zdalnym jest nowa analiza - pobranie
                     startRisingChain();
-                    // odblokowanie NavigationDrawer, zablokowanej w MainAcyivity
-                    DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
-                    drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED );
                     // Przejście do AnalyzesListFragment
                     Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
                 } else {
@@ -297,60 +260,60 @@ public class LoginFragment
         AppHandle.getHandle().getRepository().getRemoteDataRepository().findUserByLogin(userViewModel.getUser().getLogin(), findRemoteUserResult );
     }
 
-    private void getSettingsInfo() { // todo czy getSettingsInfo?
-        //todo
-        // język
-        // użytkownik -> sklep amcierzysty, dział ew sektor
-        // sprawdzenie co słychać w zdalnej bazie danych -> poniżej jest getNewAnalysisInfo()
-        // ew info do użytkownika
-        // zob. klasę .model.logic.AnalysisDataUpdater
-        // zob. OneNote Kodowanie / Po zalogowaniu / ??Aktualizacja AnalyzesListFragment
+        private void getSettingsInfo() { // todo czy getSettingsInfo?
+            //todo
+            // język
+            // użytkownik -> sklep amcierzysty, dział ew sektor
+            // sprawdzenie co słychać w zdalnej bazie danych -> poniżej jest getNewAnalysisInfo()
+            // ew info do użytkownika
+            // zob. klasę .model.logic.AnalysisDataUpdater
+            // zob. OneNote Kodowanie / Po zalogowaniu / ??Aktualizacja AnalyzesListFragment
 
-    }
+        }
 
-    private void startRisingChain() {
-        // TODO !!! tutaj i wszędzie gdzie jest oczkiwanie na dane trzeba zrobić ograniczenie czasowe na odpowiedź...
-        getNewAnalysisInfo();
-    }
+        private void startRisingChain() {
+            // TODO !!! tutaj i wszędzie gdzie jest oczkiwanie na dane trzeba zrobić ograniczenie czasowe na odpowiedź...
+            getNewAnalysisInfo();
+        }
 
-    // TODO XXX Jeśli serwer nir odpowie, to nie ma przejścia do listy Badań
-    //  i nie znika pleaseWaitSpinner.
-    //  A moze przejście do listy badań zrobić bezwarunkowo, a w OnChanged tylko zniknięcie spinnera?
-    //  Zrobiłem - działa. Przejście so Listy Badań zamyka (ukrywa?) spinner.
-    //  UWAGA: spinner nie zniknie, jeśli nie będzie odpowiedzi z serwera...
-    // TODO XXX jak zrobić, że w razie braku odpowiedzi jest komunikat?
-    //  Może jakiś obiekt, który wysyła zapytanie i uruchamia odliczanie w wątku(?).
-    //  Jeśli jest odpowiedź zanim odliczy - zwraca ją  do wywołującego, a wywołujący
-    //  usuwa observera.
-    //  Po odliczeniu, zwraca informację o niepowodzeniu, a wywołujący usuwa observera
-    //  i wyświetla komunikat.
-    //  Może rozszerzyć interface Observer o metodę z czasem? A może coś takiego jest?
-    //  Zobacz zakomentowaną metodę poniżej onChanged()
-    //  Zeby było ładnie, to zmiast ana sztywno, że  niepowodzenie jest tylko, gdy minie czas,
-    //  to można by stworzyć klasę warunków, w których uznaje się, że jest niepowodzenie,
-    //  której implementacją jest "TimeCondition"
-    private void getNewAnalysisInfo() {
-        ProgressBar pleaseWaitSpinner = this.getView().findViewById(R.id.please_wait_spinner);
-        MutableLiveData<Boolean> serverRepliedResult = new MutableLiveData<>();
-        Observer<Boolean> resultObserver = new Observer<Boolean>() {
-            @Override
-            public void onChanged( Boolean isServerReplied ) {
-                pleaseWaitSpinner.setVisibility(View.GONE);
-                /// Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
+            // TODO XXX Jeśli serwer nir odpowie, to nie ma przejścia do listy Badań
+            //  i nie znika pleaseWaitSpinner.
+            //  A moze przejście do listy badań zrobić bezwarunkowo, a w OnChanged tylko zniknięcie spinnera?
+            //  Zrobiłem - działa. Przejście so Listy Badań zamyka (ukrywa?) spinner.
+            //  UWAGA: spinner nie zniknie, jeśli nie będzie odpowiedzi z serwera...
+            // TODO XXX jak zrobić, że w razie braku odpowiedzi jest komunikat?
+            //  Może jakiś obiekt, który wysyła zapytanie i uruchamia odliczanie w wątku(?).
+            //  Jeśli jest odpowiedź zanim odliczy - zwraca ją  do wywołującego, a wywołujący
+            //  usuwa observera.
+            //  Po odliczeniu, zwraca informację o niepowodzeniu, a wywołujący usuwa observera
+            //  i wyświetla komunikat.
+            //  Może rozszerzyć interface Observer o metodę z czasem? A może coś takiego jest?
+            //  Zobacz zakomentowaną metodę poniżej onChanged()
+            //  Zeby było ładnie, to zmiast ana sztywno, że  niepowodzenie jest tylko, gdy minie czas,
+            //  to można by stworzyć klasę warunków, w których uznaje się, że jest niepowodzenie,
+            //  której implementacją jest "TimeCondition"
+            private void getNewAnalysisInfo() {
+                ProgressBar pleaseWaitSpinner = this.getView().findViewById(R.id.please_wait_spinner);
+                MutableLiveData<Boolean> serverRepliedResult = new MutableLiveData<>();
+                Observer<Boolean> resultObserver = new Observer<Boolean>() {
+                    @Override
+                    public void onChanged( Boolean isServerReplied ) {
+                        pleaseWaitSpinner.setVisibility(View.GONE);
+                        /// Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
+                    }
+                    /* @Override
+                    public void notHappen() {
+                        pleaseWaitSpinner.setVisibility(View.GONE);
+                        Komunikat a la "Serwer nie odpowiedział"
+                        Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
+                    }
+                    */
+                };
+                pleaseWaitSpinner.setVisibility(View.VISIBLE);
+                serverRepliedResult.observeForever( resultObserver );
+                AnalysisDataUpdater analysisDataUpdater = getInstance();
+                analysisDataUpdater.checkNewAnalysisToDownload( serverRepliedResult );
             }
-            /* @Override
-            public void notHappen() {
-                pleaseWaitSpinner.setVisibility(View.GONE);
-                Komunikat a la "Serwer nie odpowiedział"
-                Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
-            }
-            */
-        };
-        pleaseWaitSpinner.setVisibility(View.VISIBLE);
-        serverRepliedResult.observeForever( resultObserver );
-        AnalysisDataUpdater analysisDataUpdater = getInstance();
-        analysisDataUpdater.checkNewAnalysisToDownload( serverRepliedResult );
-    }
 
     @Override
     public void callIfUnsuccessful( String reasonMessage ) {
@@ -365,5 +328,34 @@ public class LoginFragment
             reasonMessage,
             Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        navigationViewMenuSetup();
+    }
+
+        private void navigationViewMenuSetup() {
+            NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
+            Menu navigationViewMenu = navigationView.getMenu();
+            navigationViewMenu.clear();
+            navigationView.inflateMenu(R.menu.login_screen_menu);
+            // odblokowanie NavigationDrawer, zablokowanej w MainAcyivity
+            DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
+            drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED );
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    // return true to display the item as the selected item
+                    drawerLayout.closeDrawers();
+                    switch (item.getItemId()) {
+                        case R.id.login_screen_logout_menu_item:
+                            getLogoutQuestionDialog();
+                            break;
+                    }
+                    return false;
+                }
+            });
+        }
 
 }

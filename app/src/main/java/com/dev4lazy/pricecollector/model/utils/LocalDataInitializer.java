@@ -791,10 +791,13 @@ public class LocalDataInitializer {
                     result.removeObserver(this); // this = observer...
                     if (companiesList != null) {
                         AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
+                        analysisCompetitorSlot.initialize( 1, companiesList.get(0).getId(), companiesList.get(0).getName() );
+                        /* TODO XXX
                         analysisCompetitorSlot.setSlotNr(1);
                         analysisCompetitorSlot.setOtherStoreId( AnalysisCompetitorSlot.NONE );
                         analysisCompetitorSlot.setCompanyId( companiesList.get(0).getId() );
                         analysisCompetitorSlot.setCompanyName( companiesList.get(0).getName() );
+                         */
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
                         populateCompetitorSlotNr2();
                     }
@@ -817,10 +820,13 @@ public class LocalDataInitializer {
                     result.removeObserver(this); // this = observer...
                     if (companiesList != null) {
                         AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
+                        analysisCompetitorSlot.initialize( 2, companiesList.get(0).getId(), companiesList.get(0).getName() );
+                        /* TODO XXX
                         analysisCompetitorSlot.setSlotNr(2);
                         analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
                         analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
                         analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
+                         */
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
                         populateCompetitorSlotNr3();
                     }
@@ -843,10 +849,13 @@ public class LocalDataInitializer {
                     result.removeObserver(this); // this = observer...
                     if (companiesList != null) {
                         AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
+                        analysisCompetitorSlot.initialize( 3, companiesList.get(0).getId(), companiesList.get(0).getName() );
+                        /* TODO XXX
                         analysisCompetitorSlot.setSlotNr(3);
                         analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
                         analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
                         analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
+                        */
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
                         populateCompetitorSlotNr4();
                     }
@@ -869,10 +878,13 @@ public class LocalDataInitializer {
                     result.removeObserver(this); // this = observer...
                     if (companiesList != null) {
                         AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
+                        analysisCompetitorSlot.initialize( 4, companiesList.get(0).getId(), companiesList.get(0).getName() );
+                        /* TODO XXX
                         analysisCompetitorSlot.setSlotNr(4);
                         analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
                         analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
                         analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
+                         */
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
                         populateCompetitorSlotNr5();
                     }
@@ -895,10 +907,13 @@ public class LocalDataInitializer {
                     result.removeObserver(this); // this = observer...
                     if (companiesList != null) {
                         AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
+                        analysisCompetitorSlot.initialize( 5, companiesList.get(0).getId(), companiesList.get(0).getName() );
+                        /* TODO XXX
                         analysisCompetitorSlot.setSlotNr(5);
                         analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
                         analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
                         analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
+                         */
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
                         AppHandle.getHandle().getSettings().saveInitialisationStage( COMPETITORS_SLOTS_INITIALIZED );
                         populateDummyFamily( );

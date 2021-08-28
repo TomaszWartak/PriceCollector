@@ -126,6 +126,9 @@ public class CompetitorsSlotsListView extends ListView {
                         case R.id.editCompetitorStoreMenuItem:
                             editCompetitorStore( view, competitorSlotFullData );
                             break;
+                        case R.id.deleteCompetitorStoreMenuItem:
+                            deleteCompetitorStore( view, competitorSlotFullData );
+                            break;
                         case R.id.chooseCompetitorStoreMenuItem:
                             createStoresListMenu( view, competitorSlotFullData );
                             break;
@@ -218,6 +221,44 @@ public class CompetitorsSlotsListView extends ListView {
                 }
             });
             Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_editStoreDialogFragment );
+        }
+
+        private void deleteCompetitorStore(View view, CompetitorSlotFullData competitorSlotFullData ) {
+            StoreViewModel storeViewModel = new ViewModelProvider( AppUtils.getActivity(getContext()) ).get( StoreViewModel.class );
+            storeViewModel.setOnChangedReactionNotAllowed();
+            Store store = competitorSlotFullData.getChosenStore();
+            storeViewModel.setStore( store );
+            storeViewModel.setActionToDo(Action.DELETE);
+            storeViewModel.getData().observe( AppUtils.getActivity(getContext()), new Observer<Store>() {
+                @Override
+                public void onChanged(Store modifiedStore) {
+                    if (storeViewModel.isOnChangedReactionAllowed()) {
+                        if (modifiedStore.getId() > -1) {
+                            MutableLiveData<Integer> storeDeleteResult = new MutableLiveData<>();
+                            // TOD XXX Observer<Integer> updatingResultObserver =
+                            storeDeleteResult.observe(AppUtils.getActivity(getContext()), new Observer<Integer>() {
+                                @Override
+                                public void onChanged(Integer deletedRows) {
+                                    storeDeleteResult.removeObserver(this); // this = observer...
+                                    if ((deletedRows != null) && (deletedRows > 0)) {
+                                        storeViewModel.getData().removeObservers(AppUtils.getActivity(getContext()) /* hostFragment.getActivity() */);
+                                        // TODO XXXX tutaj muszisz wyczyścić slot do wyświetlenia i zapisania
+                                        competitorSlotFullData.setChosenStore(null);
+                                        competitorSlotFullData.removeStore(modifiedStore);
+                                        competitorSlotFullData.getSlot().reset();
+                                        notifyDataSetChanged();
+                                        AppHandle.getHandle().getRepository().getLocalDataRepository().updateAnalysisCompetitorSlot(competitorSlotFullData.getSlot(), null);
+                                    }
+                                }
+                            });
+                            AppHandle.getHandle().getRepository().getLocalDataRepository().deleteStore(store, storeDeleteResult);
+                        }
+                    } else {
+                        storeViewModel.setOnChangedReactionAllowed();
+                    }
+                }
+            });
+            Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_deleteStoreDialogFragment );
         }
 
         private void createStoresListMenu( View view, CompetitorSlotFullData competitorSlotFullData ) {

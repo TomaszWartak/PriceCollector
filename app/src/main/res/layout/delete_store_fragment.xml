@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".view.E3_analysis_competitors_List_screen.AddStoreDialogFragment">
+    tools:context=".view.E3_analysis_competitors_List_screen.DeleteStoreDialogFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -17,14 +17,14 @@
 
         <!-- Konkurent  -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/add_store_company_name_text_input"
+            android:id="@+id/delete_store_company_name_text_input"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/competitor">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_store_company_name_edit_text"
+                android:id="@+id/delete_store_company_name_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
@@ -35,16 +35,17 @@
 
         <!-- Nazwa sklepu  -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/add_store_name_text_input"
+            android:id="@+id/delete_store_name_text_input"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/store_name">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_store_name_edit_text"
+                android:id="@+id/delete_store_name_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="false"
                 android:inputType="text"
                 android:maxLines="1" />
 
@@ -52,7 +53,7 @@
 
         <!-- Ulica  -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/add_store_street_text_input"
+            android:id="@+id/delete_store_street_text_input"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,9 +62,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_store_street_edit_text"
+                android:id="@+id/delete_store_street_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="false"
                 android:inputType="text"
                 android:maxLines="1" />
 
@@ -71,7 +73,7 @@
 
         <!-- Miejscowość  -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/add_store_city_text_input"
+            android:id="@+id/delete_store_city_text_input"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,9 +82,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_store_city_edit_text"
+                android:id="@+id/delete_store_city_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="false"
                 android:inputType="text"
                 android:maxLines="1" />
 
@@ -90,7 +93,7 @@
 
         <!-- Kod pocztowy  -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/add_store_zipcode_text_input"
+            android:id="@+id/delete_store_zipcode_text_input"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,9 +102,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_store_zipcode_edit_text"
+                android:id="@+id/delete_store_zipcode_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="false"
                 android:inputType="text"
                 android:maxLines="1" />
 

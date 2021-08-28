@@ -38,6 +38,9 @@ public interface _Dao<D> {
     int update( D data );
 
     @Delete
+    /**
+     * Zwraca ilość usuniętych wierszy
+     */
     int delete( D data );
 
     int deleteAll();

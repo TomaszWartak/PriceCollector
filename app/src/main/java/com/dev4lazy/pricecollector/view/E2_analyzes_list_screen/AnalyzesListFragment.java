@@ -36,7 +36,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
 
-public class AnalyzesListFragment extends Fragment implements LifecycleObserver {
+public class AnalyzesListFragment extends Fragment {
 
     private AnalyzesListViewModel viewModel;
     private AnalyzesRecyclerView recyclerView;
@@ -51,7 +51,7 @@ public class AnalyzesListFragment extends Fragment implements LifecycleObserver 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analyzes_list_fragment, container, false);
-        startMainActivityLifecycleObserving();
+        // TODO XXX startMainActivityLifecycleObserving();
 
         setOnBackPressedCalback();
 
@@ -75,10 +75,13 @@ public class AnalyzesListFragment extends Fragment implements LifecycleObserver 
 
         // TODO XXX - zastanó się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
         //	 onDestroyView()
+        /*
         private void startMainActivityLifecycleObserving() {
             Lifecycle activityLifecycle = getActivity().getLifecycle();
             activityLifecycle.addObserver(this);
         }
+
+         */
 
         private void  setOnBackPressedCalback() {
             OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
@@ -156,10 +159,13 @@ public class AnalyzesListFragment extends Fragment implements LifecycleObserver 
             });
         }
 
+    /* TODO XXX
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void afterActivityON_CREATE() {
         navigationViewMenuSetup();
     }
+
+     */
 
         private void navigationViewMenuSetup() {
             NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
@@ -255,6 +261,11 @@ public class AnalyzesListFragment extends Fragment implements LifecycleObserver 
                 return alertDialog;
             }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        navigationViewMenuSetup();
+    }
 
     //------------------------------------------------------------------------
 // Obsługa Drawer menu
