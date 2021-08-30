@@ -7,9 +7,11 @@ public class SearchArticlesViewModel extends AndroidViewModel {
 
     private boolean onChangedReactionAllowed;
     private String articleName;
-    private String articleEANE;
-    private String articleSKUE;
+    private String articleEAN;
+    private String articleSKU;
     private String articleAnyText;
+    private int articleSectorId;
+    private int articleDepartmentId;
 
 
     public SearchArticlesViewModel(Application application) {
@@ -25,7 +27,15 @@ public class SearchArticlesViewModel extends AndroidViewModel {
         this.onChangedReactionAllowed = true;
     }
 
-    // TODO XXX
+    public void clearAllData() {
+        setArticleName("");
+        setArticleEAN("");
+        setArticleSKU("");
+        setArticleAnyText("");
+        setArticleSectorId( 0 );
+        setArticleDepartmentId( 0 );
+    }
+
     public void setOnChangedReactionNotAllowed() {
         this.onChangedReactionAllowed = false;
     }
@@ -39,19 +49,19 @@ public class SearchArticlesViewModel extends AndroidViewModel {
     }
 
     public String getArticleEAN() {
-        return articleEANE;
+        return articleEAN;
     }
 
-    public void setArticleEANE(String articleEANE) {
-        this.articleEANE = articleEANE;
+    public void setArticleEAN(String articleEAN) {
+        this.articleEAN = articleEAN;
     }
 
     public String getArticleSKU() {
-        return articleSKUE;
+        return articleSKU;
     }
 
-    public void setArticleSKUE(String articleSKUE) {
-        this.articleSKUE = articleSKUE;
+    public void setArticleSKU(String articleSKU) {
+        this.articleSKU = articleSKU;
     }
 
     public String getArticleAnyText() {
@@ -60,5 +70,21 @@ public class SearchArticlesViewModel extends AndroidViewModel {
 
     public void setArticleAnyText(String articleAnyText) {
         this.articleAnyText = articleAnyText;
+    }
+
+    public int getArticleSectorId() {
+        return articleSectorId;
+    }
+
+    public void setArticleSectorId(int sectorId) {
+        this.articleSectorId = sectorId;
+    }
+
+    public int getArticleDepartmentId() {
+        return articleDepartmentId;
+    }
+
+    public void setArticleDepartmentId(int departmentId) {
+        this.articleDepartmentId = departmentId;
     }
 }

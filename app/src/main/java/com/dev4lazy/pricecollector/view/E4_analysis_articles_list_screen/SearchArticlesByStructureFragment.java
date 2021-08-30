@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.viewmodel.SearchArticlesViewModel;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 public class SearchArticlesByStructureFragment extends Fragment {
 
@@ -33,11 +35,15 @@ public class SearchArticlesByStructureFragment extends Fragment {
     }
 
     private void clearSearchCriteria() {
-
+        SearchArticlesViewModel searchArticlesViewModel = new ViewModelProvider( this ).get( SearchArticlesViewModel.class );
+        searchArticlesViewModel.clearAllData();
     }
 
     private void searchArticles() {
-
+        SearchArticlesViewModel searchArticlesViewModel = new ViewModelProvider( this )
+                .get( SearchArticlesViewModel.class );
+        searchArticlesViewModel.setArticleSectorId( -1 );
+        searchArticlesViewModel.setArticleDepartmentId( -2 );
     }
 
 

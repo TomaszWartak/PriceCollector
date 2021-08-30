@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.Observer;
@@ -25,6 +26,7 @@ import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
+import com.dev4lazy.pricecollector.viewmodel.SearchArticlesViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
@@ -70,10 +72,10 @@ public class AnalysisArticlesListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        navigationViewMenuSetup();
+        navigationViewMenuSetup(getView());
     }
 
-        private void navigationViewMenuSetup() {
+        private void navigationViewMenuSetup( View analysisArticlesListFragmentView ) {
             NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
             Menu navigationViewMenu = navigationView.getMenu();
             navigationViewMenu.clear();
@@ -89,6 +91,9 @@ public class AnalysisArticlesListFragment extends Fragment {
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_analyzesListFragment );
                             break;
                         case R.id.anlysis_articles_list_screen_search_menu_item:
+                            SearchArticlesViewModel searchArticlesViewModel = new ViewModelProvider(
+                                    FragmentManager.findFragment(analysisArticlesListFragmentView) )
+                                        .get( SearchArticlesViewModel.class );
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_searchArticlesFragment );
                             break;
                         case R.id.anlysis_articles_list_screen_logout_menu_item:
