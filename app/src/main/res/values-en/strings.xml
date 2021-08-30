@@ -76,4 +76,16 @@
     <string name="login_data_incorrect">Login data incorrect...</string>
     <string name="firebase_login_problem">Firebase login problem...</string>
     <string name="delete_competitor_store">Delete competitor store</string>
+    <string name="search_articles_list_menu_item">Articles search</string>
+    <string name="articles_search_tab_data_name">DATA</string>
+    <string name="articles_search_tab_structure_name">STRUCTURE</string>
+    <string name="articles_search_name">Name</string>
+    <string name="articles_search_sku">SKU</string>
+    <string name="articles_search_any_text">Any data</string>
+    <string name="articles_search_sector">Sector</string>
+    <string name="articles_search_department">Department</string>
+    <string name="caption_clear">CLEAR</string>
+    <string name="caption_search">SEARCH</string>
+    <string name="sector">Sector</string>
+    <string name="department">Department</string>
 </resources>

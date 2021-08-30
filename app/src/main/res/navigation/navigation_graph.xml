@@ -171,6 +171,9 @@
         <action
             android:id="@+id/action_analysisArticlesListFragment_to_analyzesListFragment"
             app:destination="@id/analyzesListFragment" />
+        <action
+            android:id="@+id/action_analysisArticlesListFragment_to_searchArticlesFragment"
+            app:destination="@id/searchArticlesFragment" />
     </fragment>
     <fragment
         android:id="@+id/testActionsFragment2"
@@ -255,5 +258,33 @@
         android:name="com.dev4lazy.pricecollector.view.AlertDialogFragment2"
         android:label="AlertDialogFragment2"
         tools:layout="@layout/alert_dialog_fragment2" />
+    <fragment
+        android:id="@+id/searchArticlesFragment"
+        android:name="com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.SearchArticlesFragment"
+        android:label="search_articles_fragment"
+        tools:layout="@layout/search_articles_fragment" >
+        <action
+            android:id="@+id/action_searchArticlesFragment_to_searchArticlesByDataDialogFragment"
+            app:destination="@id/searchArticlesByDataDialogFragment" />
+        <action
+            android:id="@+id/action_searchArticlesFragment_to_searchArticlesByStructureFragment"
+            app:destination="@id/searchArticlesByStructureFragment" />
+        <action
+            android:id="@+id/action_searchArticlesFragment_to_searchArticlesByDataFragment"
+            app:destination="@id/searchArticlesByDataFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/searchArticlesByDataDialogFragment"
+        android:name="com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.SearchArticlesByDataDialogFragment"
+        android:label="SearchArticlesByDataDialogFragment"
+        tools:layout="@layout/search_articles_by_data_fragment"/>
+    <fragment
+        android:id="@+id/searchArticlesByStructureFragment"
+        android:name="com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.SearchArticlesByStructureFragment"
+        android:label="SearchArticlesByStructureFragment" />
+    <fragment
+        android:id="@+id/searchArticlesByDataFragment"
+        android:name="com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.SearchArticlesByDataFragment"
+        android:label="SearchArticlesByDataFragment" />
 
 </navigation>

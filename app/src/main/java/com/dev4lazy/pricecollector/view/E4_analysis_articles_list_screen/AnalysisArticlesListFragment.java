@@ -45,20 +45,10 @@ public class AnalysisArticlesListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analysis_articles_list_fragment, container, false);
-        // TODO XXXX startMainActivityLifecycleObserving();
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
         return view;
     }
-
-        /* TODO XXX - zastanów się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
-        //	 onDestroyView()
-        private void startMainActivityLifecycleObserving() {
-            Lifecycle activityLifecycle = getActivity().getLifecycle();
-            activityLifecycle.addObserver(this);
-        }
-
-         */
 
         private void recyclerViewSetup( View view ) {
             analysisArticleJoinsRecyclerView = view.findViewById(R.id.analysis_articles_recycler);
@@ -77,13 +67,11 @@ public class AnalysisArticlesListFragment extends Fragment {
             });
         }
 
-    /* TODO XXXX
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    public void afterActivityON_CREATE() {
+    @Override
+    public void onStart() {
+        super.onStart();
         navigationViewMenuSetup();
     }
-
-     */
 
         private void navigationViewMenuSetup() {
             NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
@@ -97,11 +85,14 @@ public class AnalysisArticlesListFragment extends Fragment {
                     DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
                     drawerLayout.closeDrawers();
                     switch (item.getItemId()) {
-                        case R.id.anlysis_articles_list_screen_logout_menu_item:
-                            getLogoutQuestionDialog();
-                            break;
                         case R.id.anlysis_articles_list_screen_gotoanalyzes_menu_item:
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_analyzesListFragment );
+                            break;
+                        case R.id.anlysis_articles_list_screen_search_menu_item:
+                            Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_searchArticlesFragment );
+                            break;
+                        case R.id.anlysis_articles_list_screen_logout_menu_item:
+                            getLogoutQuestionDialog();
                             break;
                     }
                     return false;
@@ -132,11 +123,5 @@ public class AnalysisArticlesListFragment extends Fragment {
                         getActivity().finishAndRemoveTask();
                         System.exit(0);
                     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        navigationViewMenuSetup();
-    }
 
 }

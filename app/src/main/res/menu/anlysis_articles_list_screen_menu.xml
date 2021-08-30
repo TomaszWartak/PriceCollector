@@ -6,6 +6,9 @@
         <item
             android:id="@+id/anlysis_articles_list_screen_gotoanalyzes_menu_item"
             android:title="@string/go_to_analyzes_list_menu_item" />
+        <item
+            android:id="@+id/anlysis_articles_list_screen_search_menu_item"
+            android:title="@string/search_articles_list_menu_item" />
     </group>
     <item android:title="">
         <menu>

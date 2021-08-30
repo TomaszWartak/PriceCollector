@@ -23,6 +23,8 @@
     <string name="access_denied">Dostęp nie przyznany</string>
     <string name="hint_userlogin">Identyfikator użytkownika</string>
     <string name="hint_password">Hasło</string>
+    <string name="login_data_incorrect">Dane logowania nieprawidłowe...</string>
+    <string name="firebase_login_problem">Problem z logowaniem do Firebase...</string>
 
     <!-- for analysis item -->
     <string name="label_analysis_header">ANALIZA </string>
@@ -119,11 +121,24 @@
     <!-- Dla ActionBarDrawerToggle, ale po co ???-->
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+    <!-- opcje menu -->
     <string name="logout_menu_item">Zamknij aplikację</string>
     <string name="go_to_analyzes_list_menu_item">Przejdź do listy Badań cen</string>
+    <string name="search_articles_list_menu_item">Wyszukaj artykuły</string>
 
-
-    <string name="login_data_incorrect">Dane logowania nieprawidłowe...</string>
-    <string name="firebase_login_problem">Problem z logowaniem do Firebase...</string>
+    <!-- Dla wyszukiwania artykułów -->
+    <string name="articles_search_tab_data_name">DANE</string>
+    <string name="articles_search_tab_structure_name">STRUKTURA</string>
+    <string name="articles_search_name">Nazwa</string>
+    <string name="articles_search_ean" translatable="false">EAN</string>
+    <string name="articles_search_sku">Kod</string>
+    <string name="articles_search_any_text">Dowolne dane</string>
+    <string name="articles_search_sector">Sektor</string>
+    <string name="articles_search_department">Dział</string>
+    <string name="caption_clear">WYCZYŚĆ</string>
+    <string name="caption_search">SZUKAJ</string>
+    <string name="sector">Sektor</string>
+    <string name="department">Dział</string>
 
 </resources>
