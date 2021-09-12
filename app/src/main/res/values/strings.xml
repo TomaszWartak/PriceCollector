@@ -141,4 +141,7 @@
     <string name="sector">Sektor</string>
     <string name="department">Dział</string>
 
+    <!-- Dla edycji Artykułu strategicznego -->
+    <string name="clear_competitor_article_data">Wyczyść dane artykułu</string>
+
 </resources>

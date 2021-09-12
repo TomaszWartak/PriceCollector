@@ -1,18 +1,14 @@
-package com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen;
+package com.dev4lazy.pricecollector.unused;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.entities.Store;
-import com.dev4lazy.pricecollector.utils.AppUtils;
-import com.dev4lazy.pricecollector.viewmodel.SearchArticlesViewModel;
-import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
+import com.dev4lazy.pricecollector.viewmodel.SearchArticlesCriteriaViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import androidx.annotation.NonNull;
@@ -21,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+// TODO XXX to chyba nie potrzebne
 public class SearchArticlesByDataDialogFragment extends DialogFragment {
 
     public static SearchArticlesByDataDialogFragment newInstance() {
@@ -37,15 +34,15 @@ public class SearchArticlesByDataDialogFragment extends DialogFragment {
         EditText articleSKUEditText = viewInflated.findViewById(R.id.search_articles_sku_edit_text);
         EditText articleAnyTextEditText = viewInflated.findViewById(R.id.search_articles_any_text_edit_text);
 
-        SearchArticlesViewModel searchArticlesViewModel = new ViewModelProvider(getActivity()).get(SearchArticlesViewModel.class);
-        articleNameEditText.setText( searchArticlesViewModel.getArticleName() );
-        articleEANEditText.setText( searchArticlesViewModel.getArticleEAN() );
-        articleSKUEditText.setText( searchArticlesViewModel.getArticleSKU()) ;
-        articleAnyTextEditText.setText( searchArticlesViewModel.getArticleAnyText() );
+        SearchArticlesCriteriaViewModel searchArticlesCriteriaViewModel = new ViewModelProvider(getActivity()).get(SearchArticlesCriteriaViewModel.class);
+        articleNameEditText.setText( searchArticlesCriteriaViewModel.getArticleName() );
+        articleEANEditText.setText( searchArticlesCriteriaViewModel.getArticleEAN() );
+        articleSKUEditText.setText( searchArticlesCriteriaViewModel.getArticleSKU()) ;
+        articleAnyTextEditText.setText( searchArticlesCriteriaViewModel.getArticleAnyText() );
 
         return getSearchArticlesByDataDialog(
                 viewInflated,
-                searchArticlesViewModel,
+                searchArticlesCriteriaViewModel,
                 articleEANEditText,
                 articleSKUEditText,
                 articleAnyTextEditText );
@@ -54,7 +51,7 @@ public class SearchArticlesByDataDialogFragment extends DialogFragment {
     @NonNull
     private AlertDialog getSearchArticlesByDataDialog(
             View viewInflated,
-            SearchArticlesViewModel searchArticlesViewModel,
+            SearchArticlesCriteriaViewModel searchArticlesCriteriaViewModel,
             EditText articleEANEditText,
             EditText articleSKUEditText,
             EditText articleAnyTextEditText) {

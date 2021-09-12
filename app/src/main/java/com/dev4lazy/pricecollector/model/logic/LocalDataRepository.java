@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.db.AnalysisArticleDao;
 import com.dev4lazy.pricecollector.model.db.AnalysisCompetitorSlotDao;
@@ -184,8 +185,12 @@ public class LocalDataRepository {
         analysisArticles.getAllData( result );
     }
 
-    public DataSource.Factory<Integer, AnalysisArticleJoin> getAllAnalysisArticlesJoin() {
-        return ((AnalysisArticleDao)analysisArticles.getDao()).getAllAnalysisArticlesJoin();
+    public DataSource.Factory<Integer, AnalysisArticleJoin> getAllAnalysisArticlesJoin( int analysisId ) {
+        return ((AnalysisArticleDao)analysisArticles.getDao()).getAllAnalysisArticlesJoin( analysisId );
+    }
+
+    public DataSource.Factory<Integer, AnalysisArticleJoin> getAnalysisArticlesJoinViaQueryPaged( SimpleSQLiteQuery query) {
+        return ((AnalysisArticleDao)analysisArticles.getDao()).getAnalysisArticlesJoinViaQueryPaged( query );
     }
 
     public void findAnalysisArticleById( int id, MutableLiveData<List<AnalysisArticle>> result ) {

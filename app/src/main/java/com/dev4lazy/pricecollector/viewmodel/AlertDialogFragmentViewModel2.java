@@ -5,6 +5,8 @@ import android.app.Application;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
 
+// TODO XXX jest AlertDialogFragmentViewModel i AlertDialogFragmentViewModel2
+//  oba są potrzebne?
 public class AlertDialogFragmentViewModel2 extends AndroidViewModel {
 
     private AlertDialog alertDialog;

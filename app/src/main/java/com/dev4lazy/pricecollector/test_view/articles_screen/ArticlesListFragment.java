@@ -56,7 +56,7 @@ public class ArticlesListFragment extends Fragment {
     }
 
     private void recyclerSetup() {
-        analysisArticleAdapter = new ArticleAdapter(new ArticleDiffCalback());
+        analysisArticleAdapter = new ArticleAdapter(new ArticleDiffCallback());
         //analysisArticleJoinAdapter = new ArticleJoinAdapter(new ArticleJoinDiffCalback());
         recyclerView = getView().findViewById(R.id.articles_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????

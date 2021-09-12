@@ -15,11 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
@@ -38,8 +35,8 @@ import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getIns
 
 public class AnalyzesListFragment extends Fragment {
 
-    private AnalyzesListViewModel viewModel;
-    private AnalyzesRecyclerView recyclerView;
+    private AnalyzesListViewModel analyzesListViewModel;
+    private AnalyzesRecyclerView analyzesRecyclerView;
     private MutableLiveData<Boolean> newAnalyzesReady; // todo usunąć?
 
     public static AnalyzesListFragment newInstance() {
@@ -53,7 +50,7 @@ public class AnalyzesListFragment extends Fragment {
         View view = inflater.inflate(R.layout.analyzes_list_fragment, container, false);
         // TODO XXX startMainActivityLifecycleObserving();
 
-        setOnBackPressedCalback();
+        setOnBackPressedCallback();
 
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
@@ -83,7 +80,7 @@ public class AnalyzesListFragment extends Fragment {
 
          */
 
-        private void  setOnBackPressedCalback() {
+        private void setOnBackPressedCallback() {
             OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
                 @Override
                 public void handleOnBackPressed() {
@@ -120,17 +117,17 @@ public class AnalyzesListFragment extends Fragment {
 
 
         private void recyclerViewSetup(View view ) {
-            recyclerView = view.findViewById( R.id.analyzes_recycler );
-            recyclerView.setup();
+            analyzesRecyclerView = view.findViewById( R.id.analyzes_recycler );
+            analyzesRecyclerView.setup();
         }
 
         private void recyclerViewSubscribtion() {
-            viewModel = new ViewModelProvider(this ).get( AnalyzesListViewModel.class );
-            viewModel.getAnalyzesLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<Analysis>>() {
+            analyzesListViewModel = new ViewModelProvider( getActivity() ).get( AnalyzesListViewModel.class );
+            analyzesListViewModel.getAnalyzesLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<Analysis>>() {
                 @Override
                 public void onChanged( PagedList<Analysis> analyzesList  ) {
                     if (!analyzesList.isEmpty()) {
-                        recyclerView.submitAnalyzesList( analyzesList);
+                        analyzesRecyclerView.submitAnalyzesList( analyzesList);
                     }
                 }
             });
@@ -241,7 +238,7 @@ public class AnalyzesListFragment extends Fragment {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                         AnalysisDataUpdater.getInstance().downloadAnalysisBasicData();
-                                        recyclerView.refresh();
+                                        analyzesRecyclerView.refresh();
                                     }
                                 }
                         )

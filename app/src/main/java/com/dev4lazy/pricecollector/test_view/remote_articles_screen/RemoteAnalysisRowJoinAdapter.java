@@ -14,11 +14,11 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRowJoin;
 
 public class RemoteAnalysisRowJoinAdapter extends PagedListAdapter<RemoteAnalysisRowJoin, RemoteAnalysisRowJoinAdapter.RemoteAnalysisRowJoinViewHolder> {
 
-    private RemoteAnalysisRowJoinDiffCalback remoteAnalysisRowJoinDiffCalback = null;
+    private RemoteAnalysisRowJoinDiffCallback remoteAnalysisRowJoinDiffCallback = null;
 
-    public RemoteAnalysisRowJoinAdapter(RemoteAnalysisRowJoinDiffCalback remoteAnalysisRowJoinDiffCalback){
-        super(remoteAnalysisRowJoinDiffCalback);
-        this.remoteAnalysisRowJoinDiffCalback = remoteAnalysisRowJoinDiffCalback;
+    public RemoteAnalysisRowJoinAdapter(RemoteAnalysisRowJoinDiffCallback remoteAnalysisRowJoinDiffCallback){
+        super(remoteAnalysisRowJoinDiffCallback);
+        this.remoteAnalysisRowJoinDiffCallback = remoteAnalysisRowJoinDiffCallback;
     }
 
     @Override

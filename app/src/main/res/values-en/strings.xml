@@ -88,4 +88,5 @@
     <string name="caption_search">SEARCH</string>
     <string name="sector">Sector</string>
     <string name="department">Department</string>
+    <string name="clear_competitor_article_data">Clear article data</string>
 </resources>

@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
+            <!-- Zdjęcie artykułu strategicznego -->
             <ImageView
                 android:id="@+id/analysisArticleFragment_imageArticle"
                 android:layout_width="85dp"
@@ -25,6 +25,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- Nazwa artykułu strategicznego -->
             <TextView
                 android:id="@+id/analysisArticleFragment_articleName"
                 android:layout_width="wrap_content"
@@ -34,6 +35,26 @@
                 android:text="TextView"
                 app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_imageArticle"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- id użytkownika -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/userlogin_text_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:hint="@string/hint_userlogin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userlogin_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/analysisArticleFragment_ownCode"
@@ -65,6 +86,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_imageArticle" />
 
+            <EditText
+                android:id="@+id/analysisArticleFragment_competitorPrice"
+                android:layout_width="231dp"
+                android:layout_height="77dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:ems="10"
+                android:inputType="number"
+                app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_labelCompetitorPrice"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_eanCode" />
+
             <TextView
                 android:id="@+id/analysisArticleFragment_labelComment"
                 android:layout_width="wrap_content"
@@ -86,17 +118,6 @@
                 android:inputType="textMultiLine"
                 app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_labelComment"
                 app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_competitorPrice" />
-
-            <EditText
-                android:id="@+id/analysisArticleFragment_competitorPrice"
-                android:layout_width="231dp"
-                android:layout_height="77dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="40dp"
-                android:ems="10"
-                android:inputType="number"
-                app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_labelCompetitorPrice"
-                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_eanCode" />
 
             <View
                 android:id="@+id/analysisArticleFragment_divider"
@@ -127,6 +148,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_headerRefArticle" />
 
+
+            <EditText
+                android:id="@+id/analysisArticleFragment_refArticleName"
+                android:layout_width="209dp"
+                android:layout_height="33dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="44dp"
+                android:ems="10"
+                app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_labelRefArticleName"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_divider" />
+
             <TextView
                 android:id="@+id/analysisArticleFragment_labelRefArticleEan"
                 android:layout_width="wrap_content"
@@ -136,6 +168,16 @@
                 android:text="@string/ean_code_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_labelRefArticleName" />
+
+            <EditText
+                android:id="@+id/analysisArticleFragment_refArticleEan"
+                android:layout_width="209dp"
+                android:layout_height="33dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="80dp"
+                android:ems="10"
+                app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_labelRefArticleEan"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_divider" />
 
             <ImageView
                 android:id="@+id/analysisArticleFragment_imageRefArticle"
@@ -168,6 +210,7 @@
                 android:inputType="textMultiLine"
                 app:layout_constraintStart_toEndOf="@+id/analysisArticleFragment_labelRefArticleComment"
                 app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_labelRefArticleEan" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

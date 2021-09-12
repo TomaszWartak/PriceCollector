@@ -40,7 +40,7 @@ public class StartScreenFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.start_screen_fragment, container, false);
-        setOnBackPressedCalback();
+        setOnBackPressedCallback();
         if (checkAndRequestPermissions()) {
             // todo lambda
             view.findViewById(R.id.start_screen_layout).setOnClickListener(new View.OnClickListener() {
@@ -53,7 +53,7 @@ public class StartScreenFragment extends Fragment {
         return view;
     }
 
-    private void  setOnBackPressedCalback() {
+    private void setOnBackPressedCallback() {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {

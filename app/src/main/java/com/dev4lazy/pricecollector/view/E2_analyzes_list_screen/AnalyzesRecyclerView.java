@@ -12,8 +12,10 @@ import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.utils.AppUtils;
 import com.dev4lazy.pricecollector.view.ProgressBarPresenter;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
+import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 
 import java.util.Date;
 
@@ -21,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
@@ -52,7 +55,7 @@ public class AnalyzesRecyclerView extends RecyclerView {
         getAdapter().notifyDataSetChanged();
     }
 
-    public static class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.AnalysisViewHolder> {
+    public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.AnalysisViewHolder> {
 
         private final DateConverter dateConverter;
 
@@ -97,8 +100,10 @@ public class AnalyzesRecyclerView extends RecyclerView {
                 textViewAnalysisDataReadyToDownload = view.findViewById(R.id.analysis_item__data_to_download );
             }
 
-            private void openCompetitorSlots( View view) {
+            private void openCompetitorSlots( View view, Analysis analysis ) {
                 // TODO XXX sloty muszą się otworzyć dla konkretnej analizy, więc jakoś (ViewModel) trzeba przekazać info o analizie
+                AnalyzesListViewModel analyzesListViewModel = new ViewModelProvider( AppUtils.getActivity( getContext() ) ).get( AnalyzesListViewModel.class );
+                analyzesListViewModel.setChosenAnalysisId( analysis.getId() );
                 Navigation.findNavController( view ).navigate(R.id.action_analyzesListFragment_to_analysisCompetitorsFragment);
             }
 
@@ -150,7 +155,7 @@ public class AnalyzesRecyclerView extends RecyclerView {
                         textViewAnalysisDataReadyToDownload.setVisibility(GONE);
                     }
                     itemView.setOnClickListener( (View v) -> {
-                        openCompetitorSlots( v );
+                        openCompetitorSlots( v, analysis );
                     });
                 }
             }

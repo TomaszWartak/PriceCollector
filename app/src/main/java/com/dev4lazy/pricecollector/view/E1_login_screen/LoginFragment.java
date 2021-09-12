@@ -2,7 +2,6 @@ package com.dev4lazy.pricecollector.view.E1_login_screen;
 
 
 import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,13 +17,13 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -69,7 +68,7 @@ public class LoginFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_fragment, container, false);
-        setOnBackPressedCalback();
+        setOnBackPressedCallback();
         if (BuildConfig.DEBUG) {
             view.findViewById(R.id.login_fragment_layout).setOnClickListener((View v) -> {
                 Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_testActionsFragment2);
@@ -83,7 +82,7 @@ public class LoginFragment
         return view;
     }
 
-        private void setOnBackPressedCalback() {
+        private void setOnBackPressedCallback() {
             OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
                 @Override
                 public void handleOnBackPressed() {
@@ -124,9 +123,11 @@ public class LoginFragment
         }
 
         private void viewSubscribtion() {
-            userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-            userLoginEditTextSubscription();
+            // userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+            // Gdyby wartość nie było trzymane w ViewModelu to znikał
+            /* userLoginEditTextSubscription();
             userPasswordEditTextSubscription();
+            */
         }
 
             private void userLoginEditTextSubscription() {
@@ -163,7 +164,7 @@ public class LoginFragment
                 });
             }
 
-       void logIn( /* todo test viemodel View view*/ ) {
+        void logIn( /* todo test viemodel View view*/ ) {
         // TODO XXX pobranie danych usera (e-mail) z systemu
         // TODO TEST
         // testAccounts();
@@ -174,10 +175,13 @@ public class LoginFragment
         // todo end test viewmodel
         // todo zrób tu test jak login i hasło przeżywają bez viewmodelu i z viewmodelem
         // todo test viewmodel
-        /* User user = new User();
+        /**/ User user = new User();
         user.setLogin( userLoginEditText.getText().toString() );
         user.setLogin("nowak_j");
-        userViewModel.setUser( user ); */
+        user.setPassword( userPasswordEditText.getText().toString() );
+        user.setPassword("nowak");
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel.setUser( user ); /**/
         // todo end test viewmodel
         AuthSupport authSupport = AppHandle.getHandle().getAuthSupport();
         authSupport.addCredential("USER_ID", userViewModel.getUser().getLogin() );
@@ -332,10 +336,46 @@ public class LoginFragment
     @Override
     public void onStart() {
         super.onStart();
-        navigationViewMenuSetup();
+        setupDrawer();
+        setupNavigationViewMenu();
     }
 
-        private void navigationViewMenuSetup() {
+        private void setupDrawer() {
+            DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
+            Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+            // TODO XXX ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
+                    getActivity(),
+                    drawerLayout,
+                    /**/toolbar,/**/
+                    R.string.navigation_drawer_open,
+                    R.string.navigation_drawer_close) {
+
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    // TODO XXX ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PriceCollector");
+                }
+
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    // TODO XXX ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
+                }
+            };
+            drawerLayout.addDrawerListener(drawerToggle);
+            // Hamburger icon on
+            drawerToggle.setDrawerIndicatorEnabled(true);
+            drawerToggle.syncState();
+
+            drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_LOCKED_CLOSED );
+            // navigationView = findViewById(R.id.navigation_view);
+            // navigationView.setNavigationItemSelectedListener(getOnNavigationItemSelectedListener());
+
+            // true - chyba jeśli klawisz back ma o jeden poziom robić
+            // false - chyba jeśli klawisz back ma wracać do home
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+
+        private void setupNavigationViewMenu() {
             NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
             Menu navigationViewMenu = navigationView.getMenu();
             navigationViewMenu.clear();
@@ -343,6 +383,11 @@ public class LoginFragment
             // odblokowanie NavigationDrawer, zablokowanej w MainAcyivity
             DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
             drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED );
+            /* Hamburger icon on
+            DrawerToggle drawerToggle = ???
+            drawerToggle.setDrawerIndicatorEnabled(true);
+            drawerToggle.syncState();
+            */
             navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {

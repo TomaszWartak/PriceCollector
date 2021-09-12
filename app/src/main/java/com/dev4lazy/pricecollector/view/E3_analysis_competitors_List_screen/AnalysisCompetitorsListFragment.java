@@ -9,20 +9,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.CompetitorsSlotsViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
@@ -32,7 +31,7 @@ import java.util.ArrayList;
 public class AnalysisCompetitorsListFragment extends Fragment {
 
     private CompetitorsSlotsListView competitorsSlotsListView;
-    private CompetitorsSlotsViewModel viewModel;
+    private CompetitorsSlotsViewModel competitorsSlotsViewModel;
 
     public static AnalysisCompetitorsListFragment newInstance() {
         return new AnalysisCompetitorsListFragment();
@@ -43,11 +42,22 @@ public class AnalysisCompetitorsListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analysis_competitors_fragment, container, false);
+        setOnBackPressedCallback();
         listViewSetup(view);
         listViewSubscribtion();
 
         return view;
     }
+
+        private void setOnBackPressedCallback() {
+            OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+                @Override
+                public void handleOnBackPressed() {
+                    Navigation.findNavController(getView()).navigate(R.id.action_analysisCompetitorsFragment_to_analyzesListFragment);
+                }
+            };
+            getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+        }
 
         private void listViewSetup(View view) {
             competitorsSlotsListView = view.findViewById(R.id.analysis_competitors_listview);
@@ -56,8 +66,8 @@ public class AnalysisCompetitorsListFragment extends Fragment {
 
         private void listViewSubscribtion() {
             // todo askForSlots();
-            viewModel = new ViewModelProvider(this).get(CompetitorsSlotsViewModel.class);
-            viewModel.getCompetitorsSlotsLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<CompetitorSlotFullData>>() {
+            competitorsSlotsViewModel = new ViewModelProvider(this).get( CompetitorsSlotsViewModel.class);
+            competitorsSlotsViewModel.getCompetitorsSlotsLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<CompetitorSlotFullData>>() {
                 @Override
                 public void onChanged(ArrayList<CompetitorSlotFullData> competitorSlotFullDataList) {
                     if (!competitorSlotFullDataList.isEmpty()) {

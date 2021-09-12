@@ -31,6 +31,11 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteUserDao;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
+import com.healthmarketscience.sqlbuilder.CustomSql;
+import com.healthmarketscience.sqlbuilder.FunctionCall;
+import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.healthmarketscience.sqlbuilder.dbspec.Table;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -189,28 +194,21 @@ public class RemoteDataRepository {
     public void countAnalyzesNewerThen( Date lastCheckDate, MutableLiveData<Integer> result ) {
         List<Object> queryArguments = new ArrayList<>();
         queryArguments.add( lastCheckDate.getTime() );
-        // todo posprzątaj to
-        // queryArguments.add( "0" );
-        // queryArguments.add( "analyzes" );
-        SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT COUNT() FROM analyzes WHERE creation_date > ?"  /**/, queryArguments.toArray() /**/ );
-        // todo test
-        // String queryString = query.getSql();
-        // int pc = query.getArgCount();
-        // todo end test
+        String queryStr = new SelectQuery()
+                .addCustomColumns(FunctionCall.countAll())
+                .addCustomFromTable("analyzes")
+                .addCondition( BinaryCondition.greaterThan(new CustomSql("creation_date"), new CustomSql("?") ) )
+                .validate()
+                .toString();
+                                                            // SELECT COUNT(*) FROM analyzes WHERE (creation_date > ?)
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery( queryStr, queryArguments.toArray() );
         analyzes.getNumberOfData( query, result);
     }
 
     public void findAnalyzesNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result ) {
         List<Object> queryArguments = new ArrayList<>();
         queryArguments.add( lastCheckDate.getTime() );
-        // todo posprzątaj to
-        // queryArguments.add( "0" );
-        // queryArguments.add( "analyzes" );
         SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT * FROM analyzes WHERE creation_date > ?"  /**/, queryArguments.toArray() /**/ );
-        // todo test
-        // String queryString = query.getSql();
-        // int pc = query.getArgCount();
-        // todo end test
         analyzes.getViaQuery( query, result);
     }
 

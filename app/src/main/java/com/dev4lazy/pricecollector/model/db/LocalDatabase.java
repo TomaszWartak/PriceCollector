@@ -211,6 +211,7 @@ public abstract class LocalDatabase extends RoomDatabase {
     private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
 
     public abstract AnalysisArticleDao analysisArticleDao();
+    // TODO USUN public abstract AnalysisArticleJoinDao analysisArticleJoinDao();
     public abstract AnalysisCompetitorSlotDao analysisCompetitorSlotDao();
     public abstract AnalysisDao analysisDao();
     public abstract ArticleDao articleDao();

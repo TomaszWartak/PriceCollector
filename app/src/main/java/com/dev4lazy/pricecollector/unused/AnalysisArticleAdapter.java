@@ -14,11 +14,11 @@ import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
 
 public class AnalysisArticleAdapter extends PagedListAdapter<AnalysisArticle, AnalysisArticleAdapter.AnalysisArticleViewHolder> {
 
-    private AnalysisArticleDiffCalback analysisArticleDiffCalback = null;
+    private AnalysisArticleDiffCallback analysisArticleDiffCallback = null;
 
-    public AnalysisArticleAdapter(AnalysisArticleDiffCalback analysisArticleDiffCalback){
-        super(analysisArticleDiffCalback);
-        this.analysisArticleDiffCalback = analysisArticleDiffCalback;
+    public AnalysisArticleAdapter(AnalysisArticleDiffCallback analysisArticleDiffCallback){
+        super(analysisArticleDiffCallback);
+        this.analysisArticleDiffCallback = analysisArticleDiffCallback;
 
     }
 

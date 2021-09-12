@@ -33,9 +33,9 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
     }
 
     public void setup() {
-        setLayoutManager( new LinearLayoutManager(getContext())); // todo ????
+        setLayoutManager( new LinearLayoutManager(getContext()));
         addItemDecoration( new DividerItemDecoration(getContext(), VERTICAL));
-        setAdapter( new AnalysisArticleJoinAdapter(new AnalysisArticleJoinDiffCalback()) );
+        setAdapter( new AnalysisArticleJoinAdapter(new AnalysisArticleJoinDiffCallback()) );
     }
 
     public void submitArticlesList( PagedList<AnalysisArticleJoin> analysisArticlesJoins ) {
@@ -44,8 +44,8 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
 
     private class AnalysisArticleJoinAdapter extends PagedListAdapter<AnalysisArticleJoin, AnalysisArticleJoinAdapter.AnalysisArticleJoinViewHolder> {
 
-        public AnalysisArticleJoinAdapter(AnalysisArticleJoinDiffCalback analysisArticleJoinDiffCalback ){
-            super( analysisArticleJoinDiffCalback );
+        public AnalysisArticleJoinAdapter(AnalysisArticleJoinDiffCallback analysisArticleJoinDiffCallback){
+            super(analysisArticleJoinDiffCallback);
         }
 
         @Override

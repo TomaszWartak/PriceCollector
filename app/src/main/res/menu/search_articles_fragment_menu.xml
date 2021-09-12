@@ -4,16 +4,13 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/article_screen_gotoanalyzes_menu_item"
+            android:id="@+id/search_articles_gotoanalyzes_menu_item"
             android:title="@string/go_to_analyzes_list_menu_item" />
-        <item
-            android:id="@+id/article_screen_clear_competitor_article_data_item"
-            android:title="@string/clear_competitor_article_data" />
     </group>
     <item android:title="">
         <menu>
             <item
-                android:id="@+id/article_screen_logout_menu_item"
+                android:id="@+id/search_articles_logout_menu_item"
                 android:title="@string/logout_menu_item" />
         </menu>
     </item>

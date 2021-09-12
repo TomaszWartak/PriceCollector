@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 
-public class AnalysisArticleJoinDiffCalback extends DiffUtil.ItemCallback<AnalysisArticleJoin>{
+public class AnalysisArticleJoinDiffCallback extends DiffUtil.ItemCallback<AnalysisArticleJoin>{
 
     @Override
     public boolean areItemsTheSame(@NonNull AnalysisArticleJoin oldItem, @NonNull AnalysisArticleJoin newItem) {

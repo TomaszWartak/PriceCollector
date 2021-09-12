@@ -3,9 +3,11 @@ package com.dev4lazy.pricecollector.viewmodel;
 import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 
-public class SearchArticlesViewModel extends AndroidViewModel {
+// TODO XXX to chyba do nczego nie jest potrzebne
+public class SearchArticlesCriteriaViewModel extends AndroidViewModel {
 
     private boolean onChangedReactionAllowed;
+    private boolean filterSet;
     private String articleName;
     private String articleEAN;
     private String articleSKU;
@@ -14,9 +16,10 @@ public class SearchArticlesViewModel extends AndroidViewModel {
     private int articleDepartmentId;
 
 
-    public SearchArticlesViewModel(Application application) {
+    public SearchArticlesCriteriaViewModel(Application application) {
         super(application);
         setOnChangedReactionNotAllowed();
+        clearAllData();
     }
 
     public boolean isOnChangedReactionAllowed() {
@@ -25,6 +28,10 @@ public class SearchArticlesViewModel extends AndroidViewModel {
 
     public void setOnChangedReactionAllowed() {
         this.onChangedReactionAllowed = true;
+    }
+
+    public void setOnChangedReactionNotAllowed() {
+        this.onChangedReactionAllowed = false;
     }
 
     public void clearAllData() {
@@ -36,8 +43,23 @@ public class SearchArticlesViewModel extends AndroidViewModel {
         setArticleDepartmentId( 0 );
     }
 
-    public void setOnChangedReactionNotAllowed() {
-        this.onChangedReactionAllowed = false;
+    public boolean isFilterSet() {
+        return filterSet;
+    }
+
+    public void setFilterSet(boolean filterSet) {
+        this.filterSet = filterSet;
+    }
+
+    public boolean areCriteriaSet() {
+        boolean result =
+            ( getArticleName()!="") &&
+            ( getArticleEAN()!="" ) &&
+            ( getArticleSKU()!="" ) &&
+            ( getArticleAnyText()!="" ) &&
+            ( getArticleSectorId()!=0 ) &&
+            ( getArticleDepartmentId()!=0 );
+        return result;
     }
 
     public String getArticleName() {

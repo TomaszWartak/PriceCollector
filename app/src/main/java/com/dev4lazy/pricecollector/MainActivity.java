@@ -1,13 +1,8 @@
 package com.dev4lazy.pricecollector;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -34,7 +29,7 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity_with_drawer);
         setupToolbar();
-        setupDrawer();
+        setDrawerHidden();
         setupNavigation(); // todo XXX <-- ta metoda jest pusta...
         // Inicalizacja obiektu preferencji
         AppHandle.getHandle().getSettings().setPrefs( getPreferences(Context.MODE_PRIVATE) );
@@ -44,15 +39,17 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
         toolbar = findViewById(R.id.toolbar);
         // using toolbar as ActionBar
         setSupportActionBar(toolbar);
+        toolbar.setTitle("PriceCollector");
         // toolbar.setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setupDrawer() {
+    private void setDrawerHidden() {
         drawerLayout = findViewById(R.id.main_activity_with_drawer_layout);
+        /* TODO XXX
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this,
                 drawerLayout,
-                /*toolbar,*/
+                toolbar,
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close) {
 
@@ -67,7 +64,10 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
             }
         };
         drawerLayout.addDrawerListener(drawerToggle);
+        // Hamburger icon off
+        drawerToggle.setDrawerIndicatorEnabled(false);
         drawerToggle.syncState();
+        */
 
         drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_LOCKED_CLOSED );
         // navigationView = findViewById(R.id.navigation_view);
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
 
         // true - chyba jeśli klawisz back ma o jeden poziom robić
         // false - chyba jeśli klawisz back ma wracać do home
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        // TODO XXX getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
     }
 
@@ -112,7 +112,8 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
     */
 
     private void setupNavigation(){
-        /*toolbar = findViewById(R.id.toolbar);
+        /* TODO XXX
+        toolbar = findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);

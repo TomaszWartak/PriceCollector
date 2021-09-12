@@ -1,5 +1,6 @@
 package com.dev4lazy.pricecollector.model.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -47,5 +48,11 @@ public class Department {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getName();
     }
 }

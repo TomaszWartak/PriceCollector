@@ -22,15 +22,14 @@ public interface _Dao<D> {
 
     LiveData<Integer> getNumberOfLiveData();
 
-    // TODO ??? wyciąłem stąd i przeniosłem do CountryDao: @Insert(onConflict = OnConflictStrategy.IGNORE)
+    // TODO XXXXXX ??? wyciąłem stąd i przeniosłem do CountryDao: @Insert(onConflict = OnConflictStrategy.IGNORE)
     // Ale wkleiłem z powrotem...
     // jeśli to działa, to przenieś również @Update i @Delete do wszystkich Dao, <-- chyba nie...
     // albo zrób interface Room_Dao, który będzie używany zamiast _Dao. TO CHYBA NAJLEPSZY POMYSŁ
     // Zrefaktoryzuj _Dao na Room_Dao, gdzie będą tylko metody z adnotacjami Room, a wszystkie będą w _dao
     // Zobacz też OneNote Studia/ .. / Kodowanie/!! Współpraca z biblioteką Room/Stworzenie DAO/!! Przykład  uniwersalnego abstrakcyjnego DAO
 
-    // @Insert(onConflict = OnConflictStrategy.IGNORE) - domyślnie jest ABORT
-    @Insert( onConflict = OnConflictStrategy.IGNORE )
+    @Insert( onConflict = OnConflictStrategy.IGNORE ) // <-- domyślnie jest OnConflictStrategy.ABORT
     Long insert( D data );
 
     // todo Czy dać tutaj metodę insertAll, updateAll?
@@ -51,11 +50,12 @@ public interface _Dao<D> {
 
     DataSource.Factory<Integer, D> getAllPaged();
 
-    // todo @RawQuery
     List<D> getViaQuery( SimpleSQLiteQuery query );
 
-    // todo @RawQuery
     LiveData<List<D>> getViaQueryLiveData( SimpleSQLiteQuery query );
+
+    // TODO Jeśli chcesz używać tej metody, to musisz ją zaimplementować w kazdym DAO
+    // DataSource.Factory<Integer, D> getViaQueryPaged( SimpleSQLiteQuery query );
 
     List<D> findById(int id);
 

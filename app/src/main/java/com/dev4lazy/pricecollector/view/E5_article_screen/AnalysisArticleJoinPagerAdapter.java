@@ -11,13 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCalback;
+import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCallback;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 
 public class AnalysisArticleJoinPagerAdapter extends PagedListAdapter<AnalysisArticleJoin, AnalysisArticleJoinPagerAdapter.AnalysisArticleJoinPagerViewHolder> {
 
-    public AnalysisArticleJoinPagerAdapter(AnalysisArticleJoinDiffCalback analysisArticleJoinDiffCalback ){
-        super( analysisArticleJoinDiffCalback );
+    public AnalysisArticleJoinPagerAdapter(AnalysisArticleJoinDiffCallback analysisArticleJoinDiffCallback){
+        super(analysisArticleJoinDiffCallback);
+    }
+
+    @NonNull
+    @Override
+    public AnalysisArticleJoinPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article, parent, false);
+        return new AnalysisArticleJoinPagerViewHolder( view );
     }
 
     @Override
@@ -30,22 +37,16 @@ public class AnalysisArticleJoinPagerAdapter extends PagedListAdapter<AnalysisAr
         }
     }
 
-    @NonNull
-    @Override
-    public AnalysisArticleJoinPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.analysis_article, parent, false);
-        return new AnalysisArticleJoinPagerViewHolder( view );
-    }
-
     class AnalysisArticleJoinPagerViewHolder extends RecyclerView.ViewHolder {
 
-        // todo usuń AnalysisArticleJoin analysisArticleJoin;
-        private AnalysisArticleJoinViewModel analysisArticleJoinViewModel; // todo ???
+        // todo XXX usuń AnalysisArticleJoin analysisArticleJoin;
+        private AnalysisArticleJoinViewModel analysisArticleJoinViewModel; // todo xxx ???
         private TextView textViewArticleName;
         private TextView textViewOwnCode;
         private TextView textViewEanCode;
         private TextView textViewArticleComment;
         private TextView textViewCompetitorPrice;
+        private TextView textViewCompetitorArticleComment;
 
         public AnalysisArticleJoinPagerViewHolder(View view ) {
             super(view);
@@ -53,25 +54,21 @@ public class AnalysisArticleJoinPagerAdapter extends PagedListAdapter<AnalysisAr
         }
 
         private void setView( View view ) {
+            // Own Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
             textViewArticleName  = view.findViewById( R.id.analysisArticleFragment_articleName );
             textViewOwnCode = view.findViewById( R.id.analysisArticleFragment_ownCode );
             textViewEanCode  = view.findViewById( R.id.analysisArticleFragment_eanCode );
             textViewArticleComment  = view.findViewById( R.id.analysisArticleFragment_articleComment );
             textViewCompetitorPrice  = view.findViewById( R.id.analysisArticleFragment_competitorPrice );
-
+            // Ref Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
-            // todo TextView textView = view.findViewById( R.id.analysisArticleFragment_refArticleComment );
-            // todo textView.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().get
+            textViewCompetitorArticleComment = view.findViewById( R.id.analysisArticleFragment_refArticleComment );
+
         }
 
         protected void bind( AnalysisArticleJoin analysisArticleJoin ) {
-            /*textViewArticleName.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getArticleName() );
-            textViewOwnCode.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getOwnCode() );
-            textViewEanCode.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getEanCode() );
-            textViewArticleComment.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getComments() );
-            Double competitorStorePrice = analysisArticleJoinViewModel.getAnalysisArticleJoin().getCompetitorStorePrice();
-             */
+            // Own Article
             textViewArticleName.setText( analysisArticleJoin.getArticleName() );
             textViewOwnCode.setText( analysisArticleJoin.getOwnCode() );
             textViewEanCode.setText( analysisArticleJoin.getEanCode() );
@@ -82,15 +79,19 @@ public class AnalysisArticleJoinPagerAdapter extends PagedListAdapter<AnalysisAr
             } else {
                 textViewCompetitorPrice.setText( competitorStorePrice.toString() );
             }
+            // Ref Article
+            textViewCompetitorArticleComment.setText( analysisArticleJoin.getRefArticleComment() );
         }
 
         protected void clear() {
+            // Own Article
             textViewArticleName.setText( null );
             textViewOwnCode.setText( null );
             textViewEanCode.setText( null );
             textViewArticleComment.setText( null );
             textViewCompetitorPrice.setText( null );
-        }
+            // Ref Article
+       }
 
     }
 }

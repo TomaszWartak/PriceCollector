@@ -18,12 +18,14 @@ public class AnalysisArticleJoin {
     @ColumnInfo(name = "article_new_price")
     private Double articleNewPrice; // from AnalysisArticle.
     @ColumnInfo(name = "competitor_store_id")
+    private String comments; // from AnalysisArticle.
     private int competitorStoreId; // from CompetitorPrice.
     @ColumnInfo(name = "competitor_store_price")
     private Double competitorStorePrice; // from CompetitorPrice.
     @ColumnInfo(name = "reference_article_id")
     private int referenceArticleId; // from CompetitorPrice.
-    private String comments; // from AnalysisArticle.
+    @ColumnInfo(name = "description")
+    private String refArticleComment; // from Article.description
     @ColumnInfo(name = "name")
     private String articleName; // from Article.name by AnalysisArticle.articleId
     private String ownCode; // kod briko from OwnArticleInfo. by AnalysisArticle.articleId
@@ -136,6 +138,14 @@ public class AnalysisArticleJoin {
 
     public void setReferenceArticleId(int referenceArticleId) {
         this.referenceArticleId = referenceArticleId;
+    }
+
+    public String getRefArticleComment() {
+        return refArticleComment;
+    }
+
+    public void setRefArticleComment(String refArticleComment) {
+        this.refArticleComment = refArticleComment;
     }
 
     public String getArticleName() {

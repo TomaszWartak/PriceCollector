@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRow;
 
-public class RemoteAnalysisRowDiffCalback extends DiffUtil.ItemCallback<RemoteAnalysisRow>{
+public class RemoteAnalysisRowDiffCallback extends DiffUtil.ItemCallback<RemoteAnalysisRow>{
 
     @Override
     public boolean areItemsTheSame(@NonNull RemoteAnalysisRow oldItem, @NonNull RemoteAnalysisRow newItem) {
