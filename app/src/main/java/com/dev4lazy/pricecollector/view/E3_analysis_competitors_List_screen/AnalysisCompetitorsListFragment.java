@@ -45,7 +45,6 @@ public class AnalysisCompetitorsListFragment extends Fragment {
         setOnBackPressedCallback();
         listViewSetup(view);
         listViewSubscribtion();
-
         return view;
     }
 

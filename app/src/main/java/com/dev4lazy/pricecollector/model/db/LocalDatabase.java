@@ -76,9 +76,9 @@ public abstract class LocalDatabase extends RoomDatabase {
                     instance = Room.databaseBuilder(context.getApplicationContext(),
                             LocalDatabase.class, DATABASE_NAME )
                             //.addCallback(roomDatabaseCallback)
-                            // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to od komentuj .falback...
+                            // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to od komentuj .fallback...
                             // i za komentuj .addMigrations
-                            //.fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
+                            // .fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
                             /**/
                             .addMigrations(MIGRATION_1_2)
                             .addMigrations(MIGRATION_2_3)
@@ -211,7 +211,6 @@ public abstract class LocalDatabase extends RoomDatabase {
     private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
 
     public abstract AnalysisArticleDao analysisArticleDao();
-    // TODO USUN public abstract AnalysisArticleJoinDao analysisArticleJoinDao();
     public abstract AnalysisCompetitorSlotDao analysisCompetitorSlotDao();
     public abstract AnalysisDao analysisDao();
     public abstract ArticleDao articleDao();

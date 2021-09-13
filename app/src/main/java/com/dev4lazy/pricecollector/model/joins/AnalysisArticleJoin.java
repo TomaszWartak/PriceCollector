@@ -18,14 +18,12 @@ public class AnalysisArticleJoin {
     @ColumnInfo(name = "article_new_price")
     private Double articleNewPrice; // from AnalysisArticle.
     @ColumnInfo(name = "competitor_store_id")
-    private String comments; // from AnalysisArticle.
     private int competitorStoreId; // from CompetitorPrice.
     @ColumnInfo(name = "competitor_store_price")
     private Double competitorStorePrice; // from CompetitorPrice.
     @ColumnInfo(name = "reference_article_id")
     private int referenceArticleId; // from CompetitorPrice.
-    @ColumnInfo(name = "description")
-    private String refArticleComment; // from Article.description
+    private String comments; // from AnalysisArticle.
     @ColumnInfo(name = "name")
     private String articleName; // from Article.name by AnalysisArticle.articleId
     private String ownCode; // kod briko from OwnArticleInfo. by AnalysisArticle.articleId
@@ -33,6 +31,8 @@ public class AnalysisArticleJoin {
     private String eanCode; // from OwnArticleInfo. by AnalysisArticle.articleId
     private String referenceArticleName; // from Article. by AnalysisArticle.referenceArticleId
     private String referenceArticleEan; // from Article. by AnalysisArticle.referenceArticleId
+    @ColumnInfo(name = "description")
+    private String referenceArticleDescription; // from Article. by AnalysisArticle.referenceArticleId
 
     /*
     QUERY:
@@ -140,14 +140,6 @@ public class AnalysisArticleJoin {
         this.referenceArticleId = referenceArticleId;
     }
 
-    public String getRefArticleComment() {
-        return refArticleComment;
-    }
-
-    public void setRefArticleComment(String refArticleComment) {
-        this.refArticleComment = refArticleComment;
-    }
-
     public String getArticleName() {
         return articleName;
     }
@@ -194,6 +186,14 @@ public class AnalysisArticleJoin {
 
     public void setReferenceArticleEan(String referenceArticleEan) {
         this.referenceArticleEan = referenceArticleEan;
+    }
+
+    public String getReferenceArticleDescription() {
+        return referenceArticleDescription;
+    }
+
+    public void setReferenceArticleDescription(String referenceArticleDescription) {
+        this.referenceArticleDescription = referenceArticleDescription;
     }
 
     @Override

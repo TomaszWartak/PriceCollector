@@ -105,11 +105,6 @@
 
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="dummy_string" translatable="false">dummy</string>
-    <string name="competitor_price_label">Cena konkurenta:</string>
-    <string name="comment_label">Komentarz:</string>
-    <string name="reference_article_label">Artykuł referencyjny</string>
-    <string name="name_label">Nazwa:</string>
-    <string name="ean_code_label" translatable="false">EAN:</string>
 
     <!-- dialog dotyczący pobrania danych analizy -->
     <string name="basic_data_ready_to_download">DANE PODSTAWOWE BADAŃ CEN - GOTOWE DO POBRANIA...</string>
@@ -143,5 +138,11 @@
 
     <!-- Dla edycji Artykułu strategicznego -->
     <string name="clear_competitor_article_data">Wyczyść dane artykułu</string>
+    <string name="name_label">Nazwa</string>
+    <string name="sku_label" translatable="false">SKU</string>
+    <string name="ean_code_label" translatable="false">EAN</string>
+    <string name="competitor_price_label">Cena konkurenta</string>
+    <string name="reference_article_label">ARTYKUŁ REFERENCYJNY</string>
+    <string name="article_description_label">Opis artykułu</string>
 
 </resources>

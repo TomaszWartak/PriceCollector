@@ -86,7 +86,7 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
                 analysisArticleJoinViewModel = new ViewModelProvider( (MainActivity)itemView.getContext() ).get( AnalysisArticleJoinViewModel.class );
                 analysisArticleJoinViewModel.setAnalysisArticleJoin( getItem( getAdapterPosition() ) );
                 analysisArticleJoinViewModel.setRecyclerViewPosition( getAdapterPosition() );
-                Navigation.findNavController( view ).navigate(R.id.action_analysisFragment_to_analysisArticlesPagerFragment);
+                Navigation.findNavController( view ).navigate(R.id.action_analysisArticlesListFragment_to_analysisArticlesPagerFragment);
             }
 
             protected void bind( AnalysisArticleJoin analysisArticleJoin ) {

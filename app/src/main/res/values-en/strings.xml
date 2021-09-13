@@ -10,7 +10,6 @@
     <string name="choose_competitor_store">Choose competitor store</string>
     <string name="edit_competitor_store">Edit competitor store</string>
     <string name="city_null">city = null</string>
-    <string name="comment_label">Comment:</string>
     <string name="competitor">Competitor</string>
     <string name="competitor_price_label">Competitor price:</string>
     <string name="basic_data_ready_to_download">BASIC DATA READY TO DOWNLOAD...</string>
@@ -28,7 +27,7 @@
     <string name="label_analysis_due_date">Planned date for completion:\u00A0</string>
     <string name="label_analysis_finish_date">Date taken:\u00A0</string>
     <string name="label_analysis_header">ANALYSIS</string>
-    <string name="name_label">Name:</string>
+    <string name="name_label">Name</string>
     <string name="nedded_permissions_message_go_to_settings">Go to Settings and give consent.</string>
     <string name="nedded_permissions_message_line1">This application needs permission to access</string>
     <string name="nedded_permissions_message_line2">to the following resources:</string>
@@ -48,7 +47,7 @@
     <string name="yes_i_want_to_allow_message">Yes - I want to agree</string>
     <string name="yes_i_want_to_go_to_settings">Yes - I want to go to Settings</string>
     <string name="zipcode_null">zip code = null</string>
-    <string name="reference_article_label">Reference article</string>
+    <string name="reference_article_label">REFERENCE ARTICLE</string>
     <string name="sok_sector_name">Cashiers</string>
     <string name="sbud_sector_name">Building</string>
     <string name="sdek_sector_name">Decorating</string>
@@ -89,4 +88,5 @@
     <string name="sector">Sector</string>
     <string name="department">Department</string>
     <string name="clear_competitor_article_data">Clear article data</string>
+    <string name="article_description_label">Description</string>
 </resources>

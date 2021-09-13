@@ -23,6 +23,7 @@ import androidx.paging.PagedList;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -34,7 +35,9 @@ import com.google.android.material.navigation.NavigationView;
 public class AnalysisArticlesListFragment extends Fragment {
 
     private AnalysisArticleJoinsRecyclerView analysisArticleJoinsRecyclerView;
+
     private AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel;
+    private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
 
     public static AnalysisArticlesListFragment newInstance() {
         return new AnalysisArticlesListFragment();
@@ -45,23 +48,28 @@ public class AnalysisArticlesListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analysis_articles_list_fragment, container, false);
+        viewModelsSetup();
         setOnBackPressedCallback();
-        analysisArticleJoinsListViewModel =
-                new ViewModelProvider( getActivity() ).get( AnalysisArticleJoinsListViewModel.class );
         setToolbarText();
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
         return view;
     }
 
+        private void viewModelsSetup() {
+            analysisArticleJoinsListViewModel =
+                    new ViewModelProvider( getActivity() )
+                            .get( AnalysisArticleJoinsListViewModel.class );
+            analysisArticleJoinViewModel =
+                    new ViewModelProvider( getActivity() )
+                            .get( AnalysisArticleJoinViewModel.class );
+        }
+
         private void setOnBackPressedCallback() {
             OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
                 @Override
                 public void handleOnBackPressed() {
-                    new ViewModelProvider( getActivity() )
-                            .get( AnalysisArticleJoinsListViewModel.class )
-                            .getSearchArticlesCriteria()
-                            .clearAll();
+                    analysisArticleJoinsListViewModel.getSearchArticlesCriteria().clearAll();
                     Navigation.findNavController(getView()).navigate(R.id.action_analysisArticlesListFragment_to_analysisCompetitorsFragment);
                 }
             };
@@ -91,6 +99,7 @@ public class AnalysisArticlesListFragment extends Fragment {
                 public void onChanged( PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                     if (!analysisArticlesJoins.isEmpty()) {
                         analysisArticleJoinsRecyclerView.submitArticlesList( analysisArticlesJoins );
+                        analysisArticleJoinsRecyclerView.scrollToPosition( analysisArticleJoinViewModel.getRecyclerViewPosition() );
                     }
                 }
             });
@@ -115,6 +124,7 @@ public class AnalysisArticlesListFragment extends Fragment {
                     drawerLayout.closeDrawers();
                     switch (item.getItemId()) {
                         case R.id.anlysis_articles_list_screen_gotoanalyzes_menu_item:
+                            analysisArticleJoinsListViewModel.getSearchArticlesCriteria().clearAll();
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_analyzesListFragment );
                             break;
                         case R.id.anlysis_articles_list_screen_search_menu_item:

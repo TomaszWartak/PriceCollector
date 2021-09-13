@@ -163,10 +163,10 @@
         android:label="analysis_fragment"
         tools:layout="@layout/analysis_articles_list_fragment" >
         <action
-            android:id="@+id/action_analysisFragment_to_analysisArticleFragment"
+            android:id="@+id/action_analysisArticlesListFragment_to_analysisArticleFragment"
             app:destination="@id/analysisArticleFragment" />
         <action
-            android:id="@+id/action_analysisFragment_to_analysisArticlesPagerFragment"
+            android:id="@+id/action_analysisArticlesListFragment_to_analysisArticlesPagerFragment"
             app:destination="@id/analysisArticlesPagerFragment" />
         <action
             android:id="@+id/action_analysisArticlesListFragment_to_analyzesListFragment"

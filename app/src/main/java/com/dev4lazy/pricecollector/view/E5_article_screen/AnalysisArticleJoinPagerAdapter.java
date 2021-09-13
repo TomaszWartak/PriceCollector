@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,13 +40,16 @@ public class AnalysisArticleJoinPagerAdapter extends PagedListAdapter<AnalysisAr
 
     class AnalysisArticleJoinPagerViewHolder extends RecyclerView.ViewHolder {
 
-        // todo XXX usuń AnalysisArticleJoin analysisArticleJoin;
         private AnalysisArticleJoinViewModel analysisArticleJoinViewModel; // todo xxx ???
-        private TextView textViewArticleName;
+        // Own Article
+        // todo XXX to ma byc w toolbarze -> private TextView textViewArticleName;
         private TextView textViewOwnCode;
         private TextView textViewEanCode;
         private TextView textViewArticleComment;
         private TextView textViewCompetitorPrice;
+        // Ref Article
+        private TextView textViewCompetitorArticleName;
+        private TextView textViewCompetitorArticleEAN;
         private TextView textViewCompetitorArticleComment;
 
         public AnalysisArticleJoinPagerViewHolder(View view ) {
@@ -56,20 +60,22 @@ public class AnalysisArticleJoinPagerAdapter extends PagedListAdapter<AnalysisAr
         private void setView( View view ) {
             // Own Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
-            textViewArticleName  = view.findViewById( R.id.analysisArticleFragment_articleName );
-            textViewOwnCode = view.findViewById( R.id.analysisArticleFragment_ownCode );
-            textViewEanCode  = view.findViewById( R.id.analysisArticleFragment_eanCode );
-            textViewArticleComment  = view.findViewById( R.id.analysisArticleFragment_articleComment );
-            textViewCompetitorPrice  = view.findViewById( R.id.analysisArticleFragment_competitorPrice );
-            // Ref Article
+            // todo XXX to ma byc w toolbarze -> textViewArticleName  = view.findViewById( R.id.ana );
+            textViewOwnCode = view.findViewById( R.id.analysis_article_OwnCode_editText );
+            textViewEanCode = view.findViewById( R.id.analysis_article_EAN_editText );
+            textViewArticleComment = view.findViewById( R.id.analysis_article_ArticleComment_editText );
+            textViewCompetitorPrice = view.findViewById( R.id.analysis_article_CompetitorPrice_editText );
+                // Ref Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
-            textViewCompetitorArticleComment = view.findViewById( R.id.analysisArticleFragment_refArticleComment );
+            textViewCompetitorArticleName = view.findViewById( R.id.analysis_article_refArticleName_editText );
+            textViewCompetitorArticleEAN = view.findViewById( R.id.analysis_article_refArticleEAN_editText );
+            textViewCompetitorArticleComment = view.findViewById( R.id.analysis_article_refArticleComment_editText );
 
         }
 
         protected void bind( AnalysisArticleJoin analysisArticleJoin ) {
             // Own Article
-            textViewArticleName.setText( analysisArticleJoin.getArticleName() );
+            // todo XXX to ma byc w toolbarze -> textViewArticleName.setText( analysisArticleJoin.getArticleName() );
             textViewOwnCode.setText( analysisArticleJoin.getOwnCode() );
             textViewEanCode.setText( analysisArticleJoin.getEanCode() );
             textViewArticleComment.setText( analysisArticleJoin.getComments() );
@@ -80,18 +86,23 @@ public class AnalysisArticleJoinPagerAdapter extends PagedListAdapter<AnalysisAr
                 textViewCompetitorPrice.setText( competitorStorePrice.toString() );
             }
             // Ref Article
-            textViewCompetitorArticleComment.setText( analysisArticleJoin.getRefArticleComment() );
+            textViewCompetitorArticleName.setText( analysisArticleJoin.getReferenceArticleName() );
+            textViewCompetitorArticleEAN.setText( analysisArticleJoin.getReferenceArticleEan() );
+            textViewCompetitorArticleComment.setText( analysisArticleJoin.getReferenceArticleDescription() );
         }
 
         protected void clear() {
             // Own Article
-            textViewArticleName.setText( null );
+            // todo XXX to ma byc w toolbarze -> textViewArticleName.setText( null );
             textViewOwnCode.setText( null );
             textViewEanCode.setText( null );
             textViewArticleComment.setText( null );
             textViewCompetitorPrice.setText( null );
             // Ref Article
-       }
+            textViewCompetitorArticleName.setText( null );
+            textViewCompetitorArticleEAN.setText( null );
+            textViewCompetitorArticleComment.setText( null );
+        }
 
     }
 }

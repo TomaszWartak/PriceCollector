@@ -19,6 +19,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_articles_article_name_text_input"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:endIconMode="clear_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/articles_search_name">
@@ -36,6 +37,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_articles_ean_text_input"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:endIconMode="clear_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/articles_search_ean">
@@ -53,6 +55,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_articles_sku_text_input"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:endIconMode="clear_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/articles_search_sku"
@@ -72,6 +75,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_articles_any_text_text_input"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:endIconMode="clear_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/articles_search_any_text"

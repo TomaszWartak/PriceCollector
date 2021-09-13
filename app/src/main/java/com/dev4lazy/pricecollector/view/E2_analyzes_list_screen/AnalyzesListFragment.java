@@ -13,6 +13,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
@@ -49,9 +50,8 @@ public class AnalyzesListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analyzes_list_fragment, container, false);
         // TODO XXX startMainActivityLifecycleObserving();
-
+        setToolbarText("PriceCollector");
         setOnBackPressedCallback();
-
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
         newAnalyzesCheck();
@@ -79,6 +79,10 @@ public class AnalyzesListFragment extends Fragment {
         }
 
          */
+
+        private void setToolbarText( String toolbarText ) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(toolbarText);
+        }
 
         private void setOnBackPressedCallback() {
             OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {

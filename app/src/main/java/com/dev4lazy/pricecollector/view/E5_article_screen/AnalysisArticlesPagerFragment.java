@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.paging.PagedList;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -37,6 +39,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
 
 
     private AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel;
+    private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
     // Niestety nie da się dziedziczyc po ViewPager2, bo jest final.
     // Dlatego implementacja Adaptera została tutaj.
     private ViewPager2 analysisArticlesViewPager;
@@ -66,28 +69,61 @@ public class AnalysisArticlesPagerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analysis_articles_pager_fragment, container, false);
-        AnalysisArticleJoinViewModel analysisArticleJoinViewModel =
-                new ViewModelProvider( (MainActivity) analysisArticlesViewPager.getContext() ).get( AnalysisArticleJoinViewModel.class );
-        setToolbarText( analysisArticleJoinViewModel );
+        viewModelsSetup();
         viewPagerSetup( view );
+        // TODO XXX setOnBackPressedCallback();
+        setToolbarText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getArticleName() );
         viewPagerSubscribtion( analysisArticleJoinViewModel );
         return view;
     }
 
-        private void setToolbarText( AnalysisArticleJoinViewModel analysisArticleJoinViewModel ) {
-            String analysisArticleName = analysisArticleJoinViewModel.getAnalysisArticleJoin().getArticleName();
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(analysisArticleName);
+
+        private void viewModelsSetup() {
+            analysisArticleJoinsListViewModel =
+                    new ViewModelProvider( getActivity() )
+                            .get( AnalysisArticleJoinsListViewModel.class );
+            analysisArticleJoinViewModel =
+                    new ViewModelProvider( getActivity() )
+                            .get( AnalysisArticleJoinViewModel.class );
         }
 
         private void viewPagerSetup( View view ) {
             analysisArticlesViewPager = view.findViewById(R.id.analysis_articles_pager);
             analysisArticleJoinPagerAdapter = new AnalysisArticleJoinPagerAdapter( new AnalysisArticleJoinDiffCallback() );
             analysisArticlesViewPager.setAdapter(analysisArticleJoinPagerAdapter);
-            // TODO analysisArticlesViewPager.registerOnPageChangeCallback( ??? );
+            analysisArticlesViewPager.registerOnPageChangeCallback( new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    // AnalysisArticleJoin analysisArticleJoin = analysisArticlesViewPager.getCurrentItem();
+                    AnalysisArticleJoin analysisArticleJoin = analysisArticleJoinPagerAdapter.getCurrentList().get(position);
+                    setToolbarText( analysisArticleJoin.getArticleName() );
+                    analysisArticleJoinViewModel.setAnalysisArticleJoin( analysisArticleJoin );
+                    analysisArticleJoinViewModel.setRecyclerViewPosition( position );
+                }
+            });
         }
 
+        private void setToolbarText( String toolbarText ) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(toolbarText);
+        }
+
+        /* TODO XXX
+        private void setOnBackPressedCallback() {
+            OnBackPressedCallback callback = new OnBackPressedCallback(true ) {
+                @Override
+                public void handleOnBackPressed() {
+                    analysisArticleJoinPagerAdapter.getCurrentList().get( analysisArticleJoinViewModel.getRecyclerViewPosition() )
+                    analysisArticleJoinViewModel.setAnalysisArticleJoin( getItem( getAdapterPosition() ) );
+                    analysisArticleJoinViewModel.setRecyclerViewPosition( getAdapterPosition() );
+                    NavHostFragment.findNavController(ge).navigateUp();
+                }
+            };
+            getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+        }
+        */
+
         private void viewPagerSubscribtion( AnalysisArticleJoinViewModel analysisArticleJoinViewModel ) {
-            analysisArticleJoinsListViewModel = new ViewModelProvider( getActivity() ).get(AnalysisArticleJoinsListViewModel.class);
             analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
                 @Override
                 public void onChanged(PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
@@ -123,15 +159,15 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                     DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
                     drawerLayout.closeDrawers();
                     switch (item.getItemId()) {
-                        case R.id.article_screen_logout_menu_item:
-                            getLogoutQuestionDialog();
-                            break;
                         case R.id.article_screen_clear_competitor_article_data_item:
                             clearCompetitorArticleData();
                             break;
                         case R.id.article_screen_gotoanalyzes_menu_item:
-                           // tutaj musisz dodac nowa akcję i podmienić id
+                            analysisArticleJoinsListViewModel.getSearchArticlesCriteria().clearAll();
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesPagerFragment_to_analyzesListFragment );
+                            break;
+                        case R.id.article_screen_logout_menu_item:
+                            getLogoutQuestionDialog();
                             break;
                     }
                     return false;
