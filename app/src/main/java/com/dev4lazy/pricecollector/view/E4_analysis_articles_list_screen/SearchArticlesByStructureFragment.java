@@ -217,6 +217,7 @@ public class SearchArticlesByStructureFragment extends Fragment {
         return new Department();
     }
 
+    // TODO XXX
     @Override
     public void onPause() {
         super.onPause();
@@ -239,11 +240,17 @@ public class SearchArticlesByStructureFragment extends Fragment {
         }
 
         private void setToolbarText() {
-            if (searchArticlesCriteria.isFilterSet()) {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PriceCollector *");
-            } else {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PriceCollector");
+            String toolbarText = ((AppCompatActivity) getActivity()).getSupportActionBar().getTitle().toString();
+            int maxLength = toolbarText.length();
+            if (maxLength>24) {
+                maxLength=24;
             }
+            toolbarText = toolbarText.substring(0,maxLength);
+            String filtered = " *";
+            if (searchArticlesCriteria.isFilterSet()) {
+                toolbarText = toolbarText + filtered;
+            }
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle( toolbarText );
         }
 
     @Override

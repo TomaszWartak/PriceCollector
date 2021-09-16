@@ -14,7 +14,7 @@ import com.dev4lazy.pricecollector.model.utils.DateConverter;
 public class AnalysisArticle {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    @ColumnInfo(name = "analysis_id")
+    @ColumnInfo(name = "analysis_id") // , defaultValue = "-1"
     private int analysisId;
     @ColumnInfo(name = "article_id")
     private int articleId;
@@ -32,6 +32,9 @@ public class AnalysisArticle {
     private Double articleNewPrice;
     @ColumnInfo(name = "reference_article_id")
     private int referenceArticleId; // todo?? usuń z bazy bo jest CompetitorPrice
+    // TODO !!! dodałeś pole - uwzględnij w pracy
+    @ColumnInfo(name = "competitor_store_price_id")
+    private int competitorStorePriceId; // from CompetitorPrice.
 
     private String comments;
 
@@ -121,6 +124,14 @@ public class AnalysisArticle {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public int getCompetitorStorePriceId() {
+        return competitorStorePriceId;
+    }
+
+    public void setCompetitorStorePriceId(int competitorStorePriceId) {
+        this.competitorStorePriceId = competitorStorePriceId;
     }
 
     @Override

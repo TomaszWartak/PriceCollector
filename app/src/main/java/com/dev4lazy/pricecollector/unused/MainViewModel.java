@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.viewmodel;
+package com.dev4lazy.pricecollector.unused;
 
 import androidx.lifecycle.ViewModel;
 

@@ -34,7 +34,7 @@ import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 import com.dev4lazy.pricecollector.AppHandle;
 
 @Database(
-    version = 10,
+    version = 11,
     entities = {
         AnalysisCompetitorSlot.class,
         Analysis.class,
@@ -64,9 +64,27 @@ import com.dev4lazy.pricecollector.AppHandle;
 public abstract class LocalDatabase extends RoomDatabase {
 
     private final static String DATABASE_NAME = "price_collector_local_database";
-
     private static volatile LocalDatabase instance;
+    private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
 
+    public abstract AnalysisArticleDao analysisArticleDao();
+    public abstract AnalysisCompetitorSlotDao analysisCompetitorSlotDao();
+    public abstract AnalysisDao analysisDao();
+    public abstract ArticleDao articleDao();
+    public abstract CompanyDao companyDao();
+    public abstract CompetitorPriceDao competitorPriceDao();
+    public abstract CountryDao countryDao();
+    public abstract DepartmentDao departmentDao();
+    public abstract DepartmentInSectorDao departmentInSectorDao();
+    public abstract EanCodeDao eanCodeDao();
+    public abstract FamilyDao familyDao();
+    public abstract MarketDao marketDao();
+    public abstract ModuleDao moduleDao();
+    public abstract OwnArticleInfoDao ownArticleInfoDao();
+    public abstract OwnStoreDao ownStoreDao();
+    public abstract SectorDao sectorDao();
+    public abstract StoreDao storeDao();
+    public abstract UOProjectDao uoProjectDao();
 
     public static LocalDatabase getInstance() {
         if (instance == null) {
@@ -76,7 +94,7 @@ public abstract class LocalDatabase extends RoomDatabase {
                     instance = Room.databaseBuilder(context.getApplicationContext(),
                             LocalDatabase.class, DATABASE_NAME )
                             //.addCallback(roomDatabaseCallback)
-                            // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to od komentuj .fallback...
+                            // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to odkomentuj .fallback...
                             // i za komentuj .addMigrations
                             // .fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
                             /**/
@@ -89,6 +107,7 @@ public abstract class LocalDatabase extends RoomDatabase {
                             .addMigrations(MIGRATION_7_8)
                             .addMigrations(MIGRATION_8_9)
                             .addMigrations(MIGRATION_9_10)
+                            .addMigrations(MIGRATION_10_11)
                             /**/
                             .build();
                     instance.updateDatabaseCreated(context);
@@ -204,30 +223,16 @@ public abstract class LocalDatabase extends RoomDatabase {
     static final Migration MIGRATION_9_10 = new Migration(9, 10) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE analyzes ADD COLUMN dataDownloaded INTEGER NOT NULL DEFAULT 0"); // true to 1 and false to 0
+            database.execSQL("ALTER TABLE analyzes ADD COLUMN dataDownloaded INTEGER NOT NULL DEFAULT 0");
         }
     };
 
-    private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>();
-
-    public abstract AnalysisArticleDao analysisArticleDao();
-    public abstract AnalysisCompetitorSlotDao analysisCompetitorSlotDao();
-    public abstract AnalysisDao analysisDao();
-    public abstract ArticleDao articleDao();
-    public abstract CompanyDao companyDao();
-    public abstract CompetitorPriceDao competitorPriceDao();
-    public abstract CountryDao countryDao();
-    public abstract DepartmentDao departmentDao();
-    public abstract DepartmentInSectorDao departmentInSectorDao();
-    public abstract EanCodeDao eanCodeDao();
-    public abstract FamilyDao familyDao();
-    public abstract MarketDao marketDao();
-    public abstract ModuleDao moduleDao();
-    public abstract OwnArticleInfoDao ownArticleInfoDao();
-    public abstract OwnStoreDao ownStoreDao();
-    public abstract SectorDao sectorDao();
-    public abstract StoreDao storeDao();
-    public abstract UOProjectDao uoProjectDao();
+    static final Migration MIGRATION_10_11 = new Migration(10, 11) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE analysis_articles ADD COLUMN competitor_store_price_id INTEGER NOT NULL DEFAULT -1");
+        }
+    };
 
     private void updateDatabaseCreated(final Context context) {
         if (context.getDatabasePath(DATABASE_NAME).exists()) {

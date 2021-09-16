@@ -50,7 +50,7 @@ public class AnalyzesListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analyzes_list_fragment, container, false);
         // TODO XXX startMainActivityLifecycleObserving();
-        setToolbarText("PriceCollector");
+        setToolbarText(getString(R.string.analyzes_toolbar_text));
         setOnBackPressedCallback();
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
@@ -81,6 +81,11 @@ public class AnalyzesListFragment extends Fragment {
          */
 
         private void setToolbarText( String toolbarText ) {
+            int maxLength = toolbarText.length();
+            if (maxLength>24) {
+                maxLength=24;
+            }
+            toolbarText = toolbarText.substring(0,maxLength);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(toolbarText);
         }
 
@@ -269,7 +274,7 @@ public class AnalyzesListFragment extends Fragment {
     }
 
     //------------------------------------------------------------------------
-// Obsługa Drawer menu
+// TODO XXX Obsługa Drawer menu
     private void menuOptionAnalyzes() {
     }
 

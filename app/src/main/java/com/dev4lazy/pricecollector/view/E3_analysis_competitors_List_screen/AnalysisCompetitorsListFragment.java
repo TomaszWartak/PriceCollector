@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -23,6 +24,7 @@ import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.CompetitorsSlotsViewModel;
+import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
@@ -42,11 +44,16 @@ public class AnalysisCompetitorsListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analysis_competitors_fragment, container, false);
+        setToolbarText(getString(R.string.competitors_toolbar_text));
         setOnBackPressedCallback();
         listViewSetup(view);
         listViewSubscribtion();
         return view;
     }
+
+        private void setToolbarText( String toolbarText ) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(toolbarText);
+        }
 
         private void setOnBackPressedCallback() {
             OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
@@ -60,7 +67,7 @@ public class AnalysisCompetitorsListFragment extends Fragment {
 
         private void listViewSetup(View view) {
             competitorsSlotsListView = view.findViewById(R.id.analysis_competitors_listview);
-            competitorsSlotsListView.setup();
+            competitorsSlotsListView.setup( new ViewModelProvider( getActivity() ).get( StoreViewModel.class) );
         }
 
         private void listViewSubscribtion() {

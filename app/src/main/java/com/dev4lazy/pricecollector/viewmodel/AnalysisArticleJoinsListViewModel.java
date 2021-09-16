@@ -37,23 +37,29 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
                             new CustomSql( "aa1.id" ),
                             new CustomSql( "aa1.analysis_id" ),
                             new CustomSql( "aa1.article_id" ),
-                            new CustomSql( "aa1.competitor_store_id" ),
+                            new CustomSql( "aa1.own_article_info_id" ),
                             new CustomSql( "aa1.article_store_price" ),
                             new CustomSql( "aa1.article_ref_price" ),
                             new CustomSql( "aa1.article_new_price" ),
+                            new CustomSql( "IFNULL (aa1.competitor_store_id, '-1'), " ),
+                            new CustomSql( "IFNULL (aa1.competitor_store_price_id, '-1'), " ),
+                            new CustomSql( "cp.competitor_store_price" ),
+                            new CustomSql( "IFNULL (aa1.reference_article_id, '-1'), " ),
+                            new CustomSql( "aa1.comments" ),
                             new CustomSql( "a1.name name" ),
                             new CustomSql( "own_articles_infos.ownCode" ),
+                            new CustomSql( "ec1.value" ),
                             new CustomSql( "own_articles_infos.sector_id" ),
                             new CustomSql( "own_articles_infos.department_id" ),
-                            new CustomSql( "ec1.value" ),
-                            new CustomSql( "aa1.reference_article_id" ),
+                            new CustomSql( "a2.name referenceArticleName" ),
                             new CustomSql( "ec2.value referenceArticleEan" ),
-                            new CustomSql( "a2.name referenceArticleName" )
+                            new CustomSql( "a2.description" )
                     )
                     .addCustomFromTable("analysis_articles aa1")
                     .addCustomJoin(" INNER JOIN articles a1 ON (a1.id = aa1.article_id)")
                     .addCustomJoin(" INNER JOIN own_articles_infos ON (own_articles_infos.article_id = aa1.article_id)" )
                     .addCustomJoin(" INNER JOIN ean_codes ec1 ON (ec1.article_id = aa1.article_id)" )
+                    .addCustomJoin(" LEFT OUTER JOIN competitors_prices cp ON (cp.id = aa1.competitor_store_price_id)" )
                     .addCustomJoin(" LEFT OUTER JOIN articles a2 ON (a2.id = aa1.reference_article_id)" )
                     .addCustomJoin(" LEFT OUTER JOIN ean_codes ec2 ON (ec2.article_id = aa1.reference_article_id)" )
                     .addCondition( BinaryCondition.equalTo( new CustomSql( "aa1.analysis_id" ), analysisId ) );

@@ -26,6 +26,7 @@ import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
+import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
@@ -36,6 +37,7 @@ public class AnalysisArticlesListFragment extends Fragment {
 
     private AnalysisArticleJoinsRecyclerView analysisArticleJoinsRecyclerView;
 
+    private StoreViewModel storeViewModel;
     private AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel;
     private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
 
@@ -57,6 +59,9 @@ public class AnalysisArticlesListFragment extends Fragment {
     }
 
         private void viewModelsSetup() {
+            storeViewModel =
+                    new ViewModelProvider( getActivity() )
+                        .get( StoreViewModel.class );
             analysisArticleJoinsListViewModel =
                     new ViewModelProvider( getActivity() )
                             .get( AnalysisArticleJoinsListViewModel.class );
@@ -77,11 +82,12 @@ public class AnalysisArticlesListFragment extends Fragment {
         }
 
         private void setToolbarText() {
+            String title = storeViewModel.getStore().getName();
+            String filtered = " *";
             if (analysisArticleJoinsListViewModel.getSearchArticlesCriteria().isFilterSet()) {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PriceCollector *");
-            } else {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PriceCollector");
+                title = title + filtered;
             }
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
         }
 
         private void recyclerViewSetup( View view ) {
@@ -99,7 +105,7 @@ public class AnalysisArticlesListFragment extends Fragment {
                 public void onChanged( PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                     if (!analysisArticlesJoins.isEmpty()) {
                         analysisArticleJoinsRecyclerView.submitArticlesList( analysisArticlesJoins );
-                        analysisArticleJoinsRecyclerView.scrollToPosition( analysisArticleJoinViewModel.getRecyclerViewPosition() );
+                        analysisArticleJoinsRecyclerView.scrollToPosition( analysisArticleJoinViewModel.getAnalysisArticleJoinsRecyclerViewPosition() );
                     }
                 }
             });

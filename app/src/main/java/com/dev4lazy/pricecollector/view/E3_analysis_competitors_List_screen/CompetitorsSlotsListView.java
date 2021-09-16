@@ -33,7 +33,9 @@ import androidx.navigation.Navigation;
 
 public class CompetitorsSlotsListView extends ListView {
 
-    public CompetitorsSlotsListView(Context context) {
+    private StoreViewModel storeViewModel;
+
+    public CompetitorsSlotsListView(Context context ) {
         super(context);
     }
 
@@ -41,7 +43,8 @@ public class CompetitorsSlotsListView extends ListView {
         super( context, attrs);
     }
 
-    public void setup() {
+    public void setup(  StoreViewModel storeViewModel ) {
+        this.storeViewModel = storeViewModel;
         ArrayList<CompetitorSlotFullData> emptyList = new ArrayList<>();
         AnalysisCompetitorsAdapter adapter = new AnalysisCompetitorsAdapter( getContext(),/* todo this ,*/ emptyList );
         setAdapter( adapter );
@@ -51,7 +54,7 @@ public class CompetitorsSlotsListView extends ListView {
         ((AnalysisCompetitorsAdapter)getAdapter()).addAll( competitorsSlotsList );
     }
 
-    public static class AnalysisCompetitorsAdapter extends ArrayAdapter<CompetitorSlotFullData> {
+    public class AnalysisCompetitorsAdapter extends ArrayAdapter<CompetitorSlotFullData> {
 
         public AnalysisCompetitorsAdapter(Context context, ArrayList<CompetitorSlotFullData> slots) {
             super(context, 0, slots);
@@ -97,7 +100,10 @@ public class CompetitorsSlotsListView extends ListView {
                         setOffSlotViewOnClickListener( slotView );
                         textViewMenu.setVisibility(VISIBLE);
                         setOnTextViewMenuOnClickMenuListener( textViewMenu, competitorSlotFullData);
-                        setSlotViewOnClickListener( slotView, new SlotViewWhenStoreChosenOnClickListener( competitorSlotFullData ));
+                        setSlotViewOnClickListener(
+                                slotView,
+                                new SlotViewWhenStoreChosenOnClickListener( competitorSlotFullData )
+                        );
                     }
                 }
             }
@@ -351,6 +357,7 @@ public class CompetitorsSlotsListView extends ListView {
 
             @Override
             public void onClick(View view) {
+                storeViewModel.setStore(competitorSlotFullData.getChosenStore());
                 Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisArticlesListFragment);
                 //todo ? Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisArticlesPagerFragment );
             }

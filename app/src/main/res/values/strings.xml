@@ -144,5 +144,7 @@
     <string name="competitor_price_label">Cena konkurenta</string>
     <string name="reference_article_label">ARTYKUŁ REFERENCYJNY</string>
     <string name="article_description_label">Opis artykułu</string>
+    <string name="analyzes_toolbar_text">Badania</string>
+    <string name="competitors_toolbar_text">Konkurenci</string>
 
 </resources>

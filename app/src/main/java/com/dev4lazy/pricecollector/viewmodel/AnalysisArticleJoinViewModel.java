@@ -9,11 +9,12 @@ import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 public class AnalysisArticleJoinViewModel extends AndroidViewModel {
 
     private AnalysisArticleJoin analysisArticleJoin;
-
-    private int recyclerViewPosition;
+    private int AnalysisArticleJoinsRecyclerViewPosition;
+    private boolean analysisArticleJoinNeedToSave;
 
     public AnalysisArticleJoinViewModel(Application application) {
         super(application);
+        analysisArticleJoinNeedToSave = false;
     }
 
     public void setAnalysisArticleJoin( AnalysisArticleJoin analysisArticleJoin ) {
@@ -24,12 +25,23 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
         return analysisArticleJoin;
     }
 
-    public void setRecyclerViewPosition(int recyclerViewPosition) {
-        this.recyclerViewPosition = recyclerViewPosition;
+    public void setAnalysisArticleJoinsRecyclerViewPosition(int analysisArticleJoinsRecyclerViewPosition) {
+        this.AnalysisArticleJoinsRecyclerViewPosition = analysisArticleJoinsRecyclerViewPosition;
     }
 
-    public int getRecyclerViewPosition() {
-        return recyclerViewPosition;
+    public int getAnalysisArticleJoinsRecyclerViewPosition() {
+        return AnalysisArticleJoinsRecyclerViewPosition;
     }
 
+    public boolean isAnalysisArticleJoinNeedToSave() {
+        return analysisArticleJoinNeedToSave;
+    }
+
+    public boolean isAnalysisArticleJoinNotModified() {
+        return !analysisArticleJoinNeedToSave;
+    }
+
+    public void setAnalysisArticleJoinNeedToSave(boolean analysisArticleJoinNeedToSave) {
+        this.analysisArticleJoinNeedToSave = analysisArticleJoinNeedToSave;
+    }
 }

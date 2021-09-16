@@ -11,6 +11,8 @@ public class AnalysisArticleJoin {
     private int analysisId; // from AnalysisArticle.
     @ColumnInfo(name = "article_id")
     private int articleId; // from AnalysisArticle.
+    @ColumnInfo(name = "own_article_info_id")
+    private int ownArticleInfoId; // from AnalysisArticle.
     @ColumnInfo(name = "article_store_price")
     private Double articleStorePrice; // from AnalysisArticle.
     @ColumnInfo(name = "article_ref_price")
@@ -18,11 +20,13 @@ public class AnalysisArticleJoin {
     @ColumnInfo(name = "article_new_price")
     private Double articleNewPrice; // from AnalysisArticle.
     @ColumnInfo(name = "competitor_store_id")
-    private int competitorStoreId; // from CompetitorPrice.
+    private Integer competitorStoreId; // from CompetitorPrice.
+    @ColumnInfo(name = "competitor_store_price_id")
+    private Integer competitorStorePriceId; // from CompetitorPrice.
     @ColumnInfo(name = "competitor_store_price")
     private Double competitorStorePrice; // from CompetitorPrice.
     @ColumnInfo(name = "reference_article_id")
-    private int referenceArticleId; // from CompetitorPrice.
+    private Integer referenceArticleId; // from CompetitorPrice.
     private String comments; // from AnalysisArticle.
     @ColumnInfo(name = "name")
     private String articleName; // from Article.name by AnalysisArticle.articleId
@@ -34,39 +38,11 @@ public class AnalysisArticleJoin {
     @ColumnInfo(name = "description")
     private String referenceArticleDescription; // from Article. by AnalysisArticle.referenceArticleId
 
-    /*
-    QUERY:
-    +id,
-    analysis_id,
-    article_id,
-    competitor_store_id,
-    competitor_store_price,
-    +article_store_price,
-    +article_ref_price,
-    +article_new_price,
-    reference_article_id,
-    comments,
-    name,
-    ownCode,
-    -id,
-    -remote_id,
-    -value,
-    article_id.
-
-    Fields in com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin:
-    -analysis_articles.id,
-    analysis_id,
-    article_id,
-    competitor_store_id,
-    competitor_store_price,
-    reference_article_id,
-    comments,
-    name,
-    ownCode,
-    -eanCode,
-    -referenceArticleName,
-    -referenceArticleEan
-     */
+    public AnalysisArticleJoin() {
+        competitorStoreId = -1;
+        competitorStorePriceId=-1;
+        referenceArticleId=-1;
+    }
 
     public int getAnalysisArticleId() {
         return analysisArticleId;
@@ -90,6 +66,14 @@ public class AnalysisArticleJoin {
 
     public void setArticleId(int article_Id) {
         this.articleId = article_Id;
+    }
+
+    public int getOwnArticleInfoId() {
+        return ownArticleInfoId;
+    }
+
+    public void setOwnArticleInfoId(int ownArticleInfoId) {
+        this.ownArticleInfoId = ownArticleInfoId;
     }
 
     public Double getArticleStorePrice() {
@@ -120,8 +104,20 @@ public class AnalysisArticleJoin {
         return competitorStoreId;
     }
 
+    public boolean isCompetitorStoreIdNotSet() {
+        return competitorStoreId<0;
+    }
+
     public void setCompetitorStoreId(int competitorStoreId) {
         this.competitorStoreId = competitorStoreId;
+    }
+
+    public int getCompetitorStorePriceId() {
+        return competitorStorePriceId;
+    }
+
+    public void setCompetitorStorePriceId(int competitorStorePriceId) {
+        this.competitorStorePriceId = competitorStorePriceId;
     }
 
     public Double getCompetitorStorePrice() {

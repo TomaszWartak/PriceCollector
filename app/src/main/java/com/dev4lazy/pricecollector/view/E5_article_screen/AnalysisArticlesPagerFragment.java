@@ -9,35 +9,40 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.paging.PagedList;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.dev4lazy.pricecollector.MainActivity;
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
+import com.dev4lazy.pricecollector.model.entities.Article;
+import com.dev4lazy.pricecollector.model.entities.CompetitorPrice;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
 import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCallback;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
+import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AnalysisArticlesPagerFragment extends Fragment {
 
-
+    private StoreViewModel competitorStoreViewModel;
     private AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel;
     private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
     // Niestety nie da się dziedziczyc po ViewPager2, bo jest final.
@@ -79,6 +84,9 @@ public class AnalysisArticlesPagerFragment extends Fragment {
 
 
         private void viewModelsSetup() {
+            competitorStoreViewModel =
+                    new ViewModelProvider( getActivity() )
+                            .get( StoreViewModel.class );
             analysisArticleJoinsListViewModel =
                     new ViewModelProvider( getActivity() )
                             .get( AnalysisArticleJoinsListViewModel.class );
@@ -89,9 +97,28 @@ public class AnalysisArticlesPagerFragment extends Fragment {
 
         private void viewPagerSetup( View view ) {
             analysisArticlesViewPager = view.findViewById(R.id.analysis_articles_pager);
-            analysisArticleJoinPagerAdapter = new AnalysisArticleJoinPagerAdapter( new AnalysisArticleJoinDiffCallback() );
+            analysisArticleJoinPagerAdapter =
+                    new AnalysisArticleJoinPagerAdapter(
+                            new AnalysisArticleJoinDiffCallback(),
+                            analysisArticleJoinViewModel
+                    );
             analysisArticlesViewPager.setAdapter(analysisArticleJoinPagerAdapter);
             analysisArticlesViewPager.registerOnPageChangeCallback( new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                    // TODO i tutaj jest kicha bo na ekranie wpisałeś cenę, ale ona nie została wpisana do AnalysisArticleJoin...
+                    //  w Pager Adapter trzeba ustawić listenery
+                    if (analysisArticleJoinViewModel.isAnalysisArticleJoinNeedToSave() ) {
+                        analysisArticleJoinViewModel.setAnalysisArticleJoinNeedToSave(false);
+                        AnalysisArticleJoin analysisArticleJoin = analysisArticleJoinPagerAdapter.getCurrentList().get(position);
+                        if (analysisArticleJoin.isCompetitorStoreIdNotSet()) {
+                            analysisArticleJoin.setCompetitorStoreId( competitorStoreViewModel.getStore().getId() );
+                        }
+                        startSavingDataChain( analysisArticleJoin );
+                    }
+                }
+
                 @Override
                 public void onPageSelected(int position) {
                     super.onPageSelected(position);
@@ -99,12 +126,176 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                     AnalysisArticleJoin analysisArticleJoin = analysisArticleJoinPagerAdapter.getCurrentList().get(position);
                     setToolbarText( analysisArticleJoin.getArticleName() );
                     analysisArticleJoinViewModel.setAnalysisArticleJoin( analysisArticleJoin );
-                    analysisArticleJoinViewModel.setRecyclerViewPosition( position );
+                    analysisArticleJoinViewModel.setAnalysisArticleJoinsRecyclerViewPosition( position );
                 }
             });
         }
+            private void startSavingDataChain(AnalysisArticleJoin analysisArticleJoin ) {
+                // TODO !!! najpierw zapisz referenceArticle, bo id jest potrzebne w Competitor price
+                // TODO XXX saveReferenceArticle( analysisArticleJoin );
+                saveCompetitorPrice( analysisArticleJoin );
+                // TODO XXX saveAnalysisArticle( analysisArticleJoin );
+            }
 
-        private void setToolbarText( String toolbarText ) {
+                private void saveAnalysisArticle( AnalysisArticleJoin analysisArticleJoin ) {
+                    // TODO Pobierz AnalysisArticle
+                    //  CHyba bue trzeba bo mamy komplet danych - wystarczy zaktualizować
+                    // TODO Uaktualnij AnalysisArticle
+                    AnalysisArticle analysisArticle = getAnalysisArticle( analysisArticleJoin );
+                    // TODO Zapisz AnalysisArticle
+                    MutableLiveData<Integer> result = new MutableLiveData<>();
+                    Observer<Integer> resultObserver = new Observer<Integer>() {
+                        @Override
+                        public void onChanged(Integer updateResult) {
+                            int i = 1;
+                        }
+                    };
+                    result.observeForever(resultObserver);
+                    AppHandle.getHandle().getRepository().getLocalDataRepository().updateAnalysisArticle( analysisArticle, result );
+                }
+
+                private AnalysisArticle getAnalysisArticle( AnalysisArticleJoin analysisArticleJoin ) {
+                    // todo trzeba pobrać AnalysisArticle i uzupełnić
+                    AnalysisArticle analysisArticle = new AnalysisArticle();
+                    analysisArticle.setId( analysisArticleJoin.getAnalysisArticleId());
+                    analysisArticle.setAnalysisId( analysisArticleJoin.getAnalysisId() );
+                    analysisArticle.setArticleId( analysisArticleJoin.getArticleId() );
+                    analysisArticle.setOwnArticleInfoId( analysisArticleJoin.getOwnArticleInfoId() );
+                    // analysisArticle.setArticleStorePrice( null );
+                    // analysisArticle.setArticleRefPrice( null );
+                    analysisArticle.setArticleNewPrice( null );
+                    analysisArticle.setCompetitorStorePriceId( analysisArticleJoin.getCompetitorStorePriceId() );
+                    return analysisArticle;
+                }
+
+                private void saveArticle( AnalysisArticleJoin analysisArticleJoin ) {
+                    Article article = getArticle( analysisArticleJoin );
+                    // TODO Pobierz Article
+                    // TODO Uaktualnij Article
+                    // TODO Zapisz Article
+                }
+
+                private Article getArticle( AnalysisArticleJoin analysisArticleJoin ) {
+                    // todo trzeba pobrać Article i uzupełnić
+                    Article article = new Article();
+                    return article;
+                }
+                private void saveCompetitorPrice( AnalysisArticleJoin analysisArticleJoin ) {
+                    if ( wasCompetitorStorePriceCreatedBefore(analysisArticleJoin) ) {
+                        if ( isCompetitorStorePriceSet(analysisArticleJoin) ) {
+                            // Pobierz, uaktualnij i zapisz cenę
+                            startCompetitorPriceUpdatingChain( analysisArticleJoin );
+                        }
+                    } else {
+                        if ( isCompetitorStorePriceSet(analysisArticleJoin) ) {
+                            // Przygotuj i zapisz cenę
+                            CompetitorPrice competitorPrice = prepareCompetitorPriceData( analysisArticleJoin );
+                            insertCompetitorPrice( competitorPrice, analysisArticleJoin );
+                        }
+                    }
+
+                }
+
+                    private boolean wasCompetitorStorePriceCreatedBefore(AnalysisArticleJoin analysisArticleJoin ) {
+                        return analysisArticleJoin.getCompetitorStorePriceId()>-1;
+                    }
+
+                    private boolean isCompetitorStorePriceSet( AnalysisArticleJoin analysisArticleJoin ) {
+                        Double price = analysisArticleJoin.getCompetitorStorePrice();
+                        if (price==null) {
+                            return false;
+                        }
+                        return (0.0-price)<0;
+                    }
+
+                    private void startCompetitorPriceUpdatingChain( AnalysisArticleJoin analysisArticleJoin) {
+                        readCompetitorPrice( analysisArticleJoin );
+                    };
+
+                        private void readCompetitorPrice( AnalysisArticleJoin analysisArticleJoin ) {
+                            MutableLiveData<List<CompetitorPrice>> readResult = new MutableLiveData<>();
+                            Observer<List<CompetitorPrice>> readingResultObserver = new Observer<List<CompetitorPrice>>() {
+                                @Override
+                                public void onChanged(List<CompetitorPrice> competitorPricesList) {
+                                    if ((competitorPricesList != null)&&(!competitorPricesList.isEmpty())) {
+                                        readResult.removeObserver(this); // this = observer...
+                                        CompetitorPrice competitorPrice = competitorPricesList.get(0);
+                                        // TODO uaktualnij cenę
+                                        updateCompetitorPriceData( competitorPrice, analysisArticleJoin );
+                                        analysisArticleJoin.setCompetitorStorePriceId( competitorPrice.getId() );
+                                        // TODO Zapisz cenę
+                                        updateCompetitorPrice( competitorPrice );
+                                    }
+                                }
+                            };
+                            readResult.observeForever(readingResultObserver);
+                            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+                            localDataRepository.findCompetitorPriceById( analysisArticleJoin.getCompetitorStorePriceId(), readResult );
+                        }
+
+                            private CompetitorPrice updateCompetitorPriceData(
+                                    CompetitorPrice competitorPrice,
+                                    AnalysisArticleJoin analysisArticleJoin ) {
+                                competitorPrice.setCompetitorStorePrice( analysisArticleJoin.getCompetitorStorePrice() );
+                                competitorPrice.setReferenceArticleId( analysisArticleJoin.getReferenceArticleId() );
+                                return competitorPrice;
+                            }
+
+                        private void updateCompetitorPrice( CompetitorPrice competitorPrice ) {
+                            MutableLiveData<Integer> updateResult = new MutableLiveData<>();
+                            Observer<Integer> updatingResultObserver = new Observer<Integer>() {
+                                @Override
+                                public void onChanged(Integer intResult /* TODO nazwa */) {
+                                    // TODO co to za wartośc w intResult?
+                                    updateResult.removeObserver(this); // this = observer...
+                                    // TODO !!!! to musisz przenieść dalej - na koniec łańcucha
+                                    analysisArticleJoinViewModel.setAnalysisArticleJoinNeedToSave(false);
+                                    // TODO Kolej na AnalysisArticle
+                                }
+                            };
+                            updateResult.observeForever(updatingResultObserver);
+                            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+                            localDataRepository.updateCompetitorPrice( competitorPrice, updateResult );
+
+                        }
+
+                        private void insertCompetitorPrice(
+                                CompetitorPrice competitorPrice,
+                                AnalysisArticleJoin analysisArticleJoin) {
+                            MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                            Observer<Long> insertingResultObserver = new Observer<Long>() {
+                                @Override
+                                public void onChanged(Long lastAddedOwnArticleInfoId /* TODO nazwa? */) {
+                                    // TODO co to za wartośc w lastAddedOwnArticleInfoId? czy na pewno ID?
+                                    insertResult.removeObserver(this); // this = observer...
+                                    // TODO Uaktualnij analysisArticleJoin
+                                    analysisArticleJoin.setCompetitorStorePriceId( lastAddedOwnArticleInfoId.intValue() );
+                                    // TODO Kolej na AnalysisArticle
+                                }
+                            };
+                            insertResult.observeForever(insertingResultObserver);
+                            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+                            localDataRepository.insertCompetitorPrice( competitorPrice, insertResult );
+
+                        }
+
+                        private CompetitorPrice prepareCompetitorPriceData(AnalysisArticleJoin analysisArticleJoin ) {
+                            CompetitorPrice competitorPrice = new CompetitorPrice();
+                            competitorPrice.setAnalysisId( analysisArticleJoin.getAnalysisId() );
+                            competitorPrice.setAnalysisArticleId( analysisArticleJoin.getAnalysisArticleId() );
+                            competitorPrice.setOwnArticleInfoId( analysisArticleJoin.getOwnArticleInfoId() );
+                            competitorPrice.setCompetitorStoreId( analysisArticleJoin.getCompetitorStoreId() );
+                            competitorPrice.setCompetitorStorePrice( analysisArticleJoin.getCompetitorStorePrice() );
+                            competitorPrice.setReferenceArticleId( analysisArticleJoin.getReferenceArticleId() );
+                            return competitorPrice;
+                        }
+
+    private void setToolbarText( String toolbarText ) {
+            int maxLength = toolbarText.length();
+            if (maxLength>24) {
+                maxLength=24;
+            }
+            toolbarText = toolbarText.substring(0,maxLength);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(toolbarText);
         }
 
@@ -131,7 +322,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                         analysisArticleJoinPagerAdapter.submitList(analysisArticlesJoins);
                         // TODO ??? jeśli pojawi się zmiana na liście, to będzie się ustawiac w tym miejscu?
                         analysisArticlesViewPager.setCurrentItem(
-                                analysisArticleJoinViewModel.getRecyclerViewPosition(),
+                                analysisArticleJoinViewModel.getAnalysisArticleJoinsRecyclerViewPosition(),
                                 false
                         );
                     }
@@ -176,7 +367,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
         }
 
         private void clearCompetitorArticleData() {
-            // TODO analysisArticlesViewPager.getAdapter().getItemId()
+            ((AnalysisArticleJoinPagerAdapter)analysisArticlesViewPager.getAdapter()).cleanArticleAddedData();
         }
 
              private void getLogoutQuestionDialog() {
@@ -209,4 +400,9 @@ public class AnalysisArticlesPagerFragment extends Fragment {
         navigationViewMenuSetup();
     }
 
+    /* TODO XXX
+    interface ArticleAddedDataCleaner {
+        void cleanArticleAddedData();
+    }
+    */
 }
