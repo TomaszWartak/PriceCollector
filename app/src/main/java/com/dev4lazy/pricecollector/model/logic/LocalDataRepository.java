@@ -185,8 +185,8 @@ public class LocalDataRepository {
         analysisArticles.getAllData( result );
     }
 
-    public DataSource.Factory<Integer, AnalysisArticleJoin> getAllAnalysisArticlesJoin( int analysisId ) {
-        return ((AnalysisArticleDao)analysisArticles.getDao()).getAllAnalysisArticlesJoin( analysisId );
+    public DataSource.Factory<Integer, AnalysisArticleJoin> getAllAnalysisArticlesJoin( int analysisId, int storeId ) {
+        return ((AnalysisArticleDao)analysisArticles.getDao()).getAllAnalysisArticlesJoin2( analysisId, storeId );
     }
 
     public DataSource.Factory<Integer, AnalysisArticleJoin> getAnalysisArticlesJoinViaQueryPaged( SimpleSQLiteQuery query) {

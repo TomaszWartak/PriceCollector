@@ -14,8 +14,10 @@ import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
 import com.dev4lazy.pricecollector.model.logic.SearchArticlesCriteria;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
+import com.healthmarketscience.sqlbuilder.ComboCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.healthmarketscience.sqlbuilder.UnaryCondition;
 
 public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
 
@@ -28,7 +30,7 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
         // TODO XXX buildAnalysisiArticleJoinsPagedList();
     }
 
-    public void buildAnalysisiArticleJoinsPagedList( int analysisId ) {
+    public void buildAnalysisiArticleJoinsPagedList( int analysisId, int storeId ) {
         LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
         DataSource.Factory<Integer, AnalysisArticleJoin> factory;
         if ( searchArticlesCriteria.isFilterSet() ) {
@@ -41,10 +43,13 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
                             new CustomSql( "aa1.article_store_price" ),
                             new CustomSql( "aa1.article_ref_price" ),
                             new CustomSql( "aa1.article_new_price" ),
-                            new CustomSql( "IFNULL (aa1.competitor_store_id, '-1'), " ),
-                            new CustomSql( "IFNULL (aa1.competitor_store_price_id, '-1'), " ),
+                            // TODO XXX new CustomSql( "IFNULL (aa1.competitor_store_id, '-1'), " ),
+                            new CustomSql( "IFNULL (cp.competitor_store_id, '-1'), " ),
+                            // TODO XXX new CustomSql( "IFNULL (aa1.competitor_store_price_id, '-1'), " ),
+                            new CustomSql( "IFNULL (cp.id, '-1'), " ),
                             new CustomSql( "cp.competitor_store_price" ),
-                            new CustomSql( "IFNULL (aa1.reference_article_id, '-1'), " ),
+                            // TODO XXX new CustomSql( "IFNULL (aa1.reference_article_id, '-1'), " ),
+                            new CustomSql( "IFNULL (cp.reference_article_id, '-1'), " ),
                             new CustomSql( "aa1.comments" ),
                             new CustomSql( "a1.name name" ),
                             new CustomSql( "own_articles_infos.ownCode" ),
@@ -59,15 +64,21 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
                     .addCustomJoin(" INNER JOIN articles a1 ON (a1.id = aa1.article_id)")
                     .addCustomJoin(" INNER JOIN own_articles_infos ON (own_articles_infos.article_id = aa1.article_id)" )
                     .addCustomJoin(" INNER JOIN ean_codes ec1 ON (ec1.article_id = aa1.article_id)" )
-                    .addCustomJoin(" LEFT OUTER JOIN competitors_prices cp ON (cp.id = aa1.competitor_store_price_id)" )
+                    .addCustomJoin(" LEFT OUTER JOIN competitors_prices cp ON (cp.analysis_article_id = aa1.id)" )
                     .addCustomJoin(" LEFT OUTER JOIN articles a2 ON (a2.id = aa1.reference_article_id)" )
                     .addCustomJoin(" LEFT OUTER JOIN ean_codes ec2 ON (ec2.article_id = aa1.reference_article_id)" )
-                    .addCondition( BinaryCondition.equalTo( new CustomSql( "aa1.analysis_id" ), analysisId ) );
+                    .addCondition( BinaryCondition.equalTo( new CustomSql( "aa1.analysis_id" ), analysisId ) )
+                    .addCondition( ComboCondition.or(
+                            BinaryCondition.equalTo( new CustomSql( "cp.competitor_store_id" ), storeId ),
+                            UnaryCondition.isNull( new CustomSql( "cp.competitor_store_id" ) ) )
+                    );
+            // TODO XXX "WHERE (aa1.analysis_id= :analysisId) AND ((cp.competitor_store_id=:storeId ) OR (cp.competitor_store_id IS NULL))
+
             selectQuery = addSearchCriteriaToQuery( selectQuery );
             String queryString = selectQuery.validate().toString();
             factory = localDataRepository.getAnalysisArticlesJoinViaQueryPaged( new SimpleSQLiteQuery( queryString ) );
         } else {
-            factory = localDataRepository.getAllAnalysisArticlesJoin( analysisId );
+            factory = localDataRepository.getAllAnalysisArticlesJoin( analysisId, storeId );
         }
         LivePagedListBuilder<Integer, AnalysisArticleJoin> pagedListBuilder = new LivePagedListBuilder<Integer, AnalysisArticleJoin>(factory, 50);
         analysisRowsLiveData = pagedListBuilder.build();

@@ -38,11 +38,12 @@ public class AnalysisArticleJoin {
     @ColumnInfo(name = "description")
     private String referenceArticleDescription; // from Article. by AnalysisArticle.referenceArticleId
 
+    /* TODO XXX
     public AnalysisArticleJoin() {
         competitorStoreId = -1;
         competitorStorePriceId=-1;
         referenceArticleId=-1;
-    }
+    }*/
 
     public int getAnalysisArticleId() {
         return analysisArticleId;
@@ -100,11 +101,21 @@ public class AnalysisArticleJoin {
         this.articleNewPrice = articleNewPrice;
     }
 
-    public int getCompetitorStoreId() {
+    public Integer getCompetitorStoreId() {
         return competitorStoreId;
     }
 
+    public int getCompetitorStoreIdInt() {
+        if (competitorStoreId==null) {
+            return -1;
+        }
+        return competitorStoreId.intValue();
+    }
+
     public boolean isCompetitorStoreIdNotSet() {
+        if (competitorStoreId==null) {
+            return true;
+        }
         return competitorStoreId<0;
     }
 
@@ -112,8 +123,15 @@ public class AnalysisArticleJoin {
         this.competitorStoreId = competitorStoreId;
     }
 
-    public int getCompetitorStorePriceId() {
+    public Integer getCompetitorStorePriceId() {
         return competitorStorePriceId;
+    }
+
+    public int getCompetitorStorePriceIdInt() {
+        if (competitorStorePriceId==null) {
+            return -1;
+        }
+        return competitorStorePriceId.intValue();
     }
 
     public void setCompetitorStorePriceId(int competitorStorePriceId) {
@@ -128,8 +146,23 @@ public class AnalysisArticleJoin {
         this.competitorStorePrice = competitorStorePrice;
     }
 
-    public int getReferenceArticleId() {
+    public boolean isCompetitorStorePriceSet() {
+        Double price = getCompetitorStorePrice();
+        if (price==null) {
+            return false;
+        }
+        return (0.0-price)<0;
+    }
+
+    public Integer getReferenceArticleId() {
         return referenceArticleId;
+    }
+
+    public int getReferenceArticleIdInt() {
+        if (referenceArticleId==null) {
+            return -1;
+        }
+        return referenceArticleId.intValue();
     }
 
     public void setReferenceArticleId(int referenceArticleId) {
@@ -168,12 +201,24 @@ public class AnalysisArticleJoin {
         this.comments = comments;
     }
 
+    public boolean areCommentsSet() {
+        if (getComments()==null)
+            return false;
+        return !getComments().isEmpty();
+    }
+
     public String getReferenceArticleName() {
         return referenceArticleName;
     }
 
     public void setReferenceArticleName(String referenceArticleName) {
         this.referenceArticleName = referenceArticleName;
+    }
+
+    public boolean isReferenceArticleNameSet() {
+        if (getReferenceArticleName()==null)
+            return false;
+        return !getReferenceArticleName().isEmpty();
     }
 
     public String getReferenceArticleEan() {
@@ -184,6 +229,12 @@ public class AnalysisArticleJoin {
         this.referenceArticleEan = referenceArticleEan;
     }
 
+    public boolean isReferenceArticleEanSet() {
+        if (getReferenceArticleEan()==null)
+            return false;
+        return !getReferenceArticleEan().isEmpty();
+    }
+
     public String getReferenceArticleDescription() {
         return referenceArticleDescription;
     }
@@ -191,6 +242,13 @@ public class AnalysisArticleJoin {
     public void setReferenceArticleDescription(String referenceArticleDescription) {
         this.referenceArticleDescription = referenceArticleDescription;
     }
+
+    public boolean isReferenceArticleDescriptionSet() {
+        if (getReferenceArticleDescription()==null)
+            return false;
+        return !getReferenceArticleDescription().isEmpty();
+    }
+
 
     @Override
     public boolean equals(Object o) {

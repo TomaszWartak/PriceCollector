@@ -96,8 +96,8 @@ public abstract class LocalDatabase extends RoomDatabase {
                             //.addCallback(roomDatabaseCallback)
                             // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to odkomentuj .fallback...
                             // i za komentuj .addMigrations
-                            // .fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
-                            /**/
+                             .fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
+                            /*/
                             .addMigrations(MIGRATION_1_2)
                             .addMigrations(MIGRATION_2_3)
                             .addMigrations(MIGRATION_3_4)

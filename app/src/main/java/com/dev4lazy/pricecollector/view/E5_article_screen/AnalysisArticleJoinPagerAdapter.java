@@ -84,7 +84,17 @@ public class AnalysisArticleJoinPagerAdapter
             ownCodeTextView = view.findViewById( R.id.analysis_article_OwnCode_editText );
             eanCodeTextView = view.findViewById( R.id.analysis_article_EAN_editText );
             competitorPriceEditText = view.findViewById( R.id.analysis_article_CompetitorPrice_editText );
-            competitorPriceEditText.addTextChangedListener(new TextWatcher() {
+            competitorPriceEditText.addTextChangedListener( new CompetitorPriceEditTextWatcher() );
+            articleCommentEditText = view.findViewById( R.id.analysis_article_ArticleComment_editText );
+            articleCommentEditText.addTextChangedListener( new ArticleCommentEditTextWatcher() );
+            // Ref Article
+            // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
+            competitorArticleNameEditText = view.findViewById( R.id.analysis_article_refArticleName_editText );
+            competitorArticleEANEditText = view.findViewById( R.id.analysis_article_refArticleEAN_editText );
+            competitorArticleCommentEditText = view.findViewById( R.id.analysis_article_refArticleComment_editText );
+        }
+
+            class CompetitorPriceEditTextWatcher implements TextWatcher  {
                 @Override
                 public void beforeTextChanged (CharSequence s,int start, int count, int after){
                 }
@@ -102,42 +112,78 @@ public class AnalysisArticleJoinPagerAdapter
                     Double priceFromAnalysisArticleJoin = analysisArticleJoin.getCompetitorStorePrice();
                     if (arePricesNotEqual( priceFromInput, priceFromAnalysisArticleJoin )) {
                         analysisArticleJoin.setCompetitorStorePrice(priceFromInput);
+                        analysisArticleJoinViewModel.setNeedToSave(true);
+                        // TODO czy to niżej jest potrzebne do czegoś?
                         analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
-                        analysisArticleJoinViewModel.setAnalysisArticleJoinNeedToSave(true);
                     }
                 }
 
-                    private boolean arePricesNotEqual( Double price1, Double price2 ) {
-                        if (price1==null) {
-                            return !(price2==null);
-                        }
-                        if (price2==null) {
-                            return true;
-                        }
-                        return !(price1.equals(price2));
+                private boolean arePricesNotEqual( Double price1, Double price2 ) {
+                    if (price1==null) {
+                        return !(price2==null);
                     }
+                    if (price2==null) {
+                        return true;
+                    }
+                    return !(price1.equals(price2));
+                }
 
                 @Override
                 public void afterTextChanged (Editable s){
                 }
-            });
-            /* textViewCompetitorPrice.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            }
+
+            class ArticleCommentEditTextWatcher implements TextWatcher  {
                 @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        Double price = Double.parseDouble(textViewCompetitorPrice.getText().toString());
-                        // analysisArticleJoinViewModel.getAnalysisArticleJoin().setCompetitorStorePrice( price );
+                public void beforeTextChanged (CharSequence s,int start, int count, int after){
+                }
+
+                @Override
+                public void onTextChanged (CharSequence charSequence,int start, int before, int count){
+                    String commentsFromInput = articleCommentEditText.getText().toString();
+                    AnalysisArticleJoin analysisArticleJoin = getItem( getAbsoluteAdapterPosition() );
+                    String commentsFromAnalysisArticleJoin = analysisArticleJoin.getComments();
+                    /* TODO test
+                    boolean result = isEmptyOrNull( null ); // true
+                    result = isEmptyOrNull( "" ); // true
+                    result = isEmptyOrNull( "1" ); // false
+                    result = areCommentsNotEqual( null, null ); // false
+                    result = areCommentsNotEqual( null, "" ); // false
+                    result = areCommentsNotEqual( "", null ); // false
+                    result = areCommentsNotEqual( "", "" ); // false
+                    result = areCommentsNotEqual( null, "1" ); // true
+                    result = areCommentsNotEqual( "1", null ); // true
+                    result = areCommentsNotEqual( "", "1" ); // true
+                    result = areCommentsNotEqual( "1", "" ); // true
+                    result = areCommentsNotEqual( "1", "1" ); // false
+                    */
+                    if (areCommentsNotEqual( commentsFromInput, commentsFromAnalysisArticleJoin )) {
+                        analysisArticleJoin.setComments(commentsFromInput);
+                        analysisArticleJoinViewModel.setNeedToSave(true);
+                        // TODO czy wiersz niżej jest potrzebne do czegoś?
+                        analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
                     }
                 }
-            });
-            */
-            articleCommentEditText = view.findViewById( R.id.analysis_article_ArticleComment_editText );
-            // Ref Article
-            // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
-            competitorArticleNameEditText = view.findViewById( R.id.analysis_article_refArticleName_editText );
-            competitorArticleEANEditText = view.findViewById( R.id.analysis_article_refArticleEAN_editText );
-            competitorArticleCommentEditText = view.findViewById( R.id.analysis_article_refArticleComment_editText );
-        }
+
+                private boolean areCommentsNotEqual(String comments1, String comments2 ) {
+                    if (isEmptyOrNull( comments1 )) {
+                        return isNotEmptyOrNotNull( comments2 );
+                    }
+                    return !(comments1.equals(comments2));
+                }
+
+                private boolean isEmptyOrNull( String string ) {
+                    return (string==null) || (string.isEmpty());
+                }
+
+                private boolean isNotEmptyOrNotNull(String string ) {
+                    return !isEmptyOrNull(string);
+                }
+
+                @Override
+                public void afterTextChanged (Editable s){
+                }
+            }
 
         protected void bind( AnalysisArticleJoin analysisArticleJoin ) {
             // Own Article

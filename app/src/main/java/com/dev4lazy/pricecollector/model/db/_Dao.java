@@ -30,10 +30,16 @@ public interface _Dao<D> {
     // Zobacz też OneNote Studia/ .. / Kodowanie/!! Współpraca z biblioteką Room/Stworzenie DAO/!! Przykład  uniwersalnego abstrakcyjnego DAO
 
     @Insert( onConflict = OnConflictStrategy.IGNORE ) // <-- domyślnie jest OnConflictStrategy.ABORT
+    /**
+     * Zwraca id zapisanej danej
+     */
     Long insert( D data );
 
     // todo Czy dać tutaj metodę insertAll, updateAll?
     @Update
+    /**
+     * Zwraca ilość zaktualizowanych wierszy
+     */
     int update( D data );
 
     @Delete

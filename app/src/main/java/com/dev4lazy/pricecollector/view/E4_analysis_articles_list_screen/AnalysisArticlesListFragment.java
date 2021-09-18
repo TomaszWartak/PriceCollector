@@ -98,7 +98,9 @@ public class AnalysisArticlesListFragment extends Fragment {
         private void recyclerViewSubscribtion() {
             AnalyzesListViewModel analyzesListViewModel
                     = new ViewModelProvider( getActivity() ).get( AnalyzesListViewModel.class );
-            analysisArticleJoinsListViewModel.buildAnalysisiArticleJoinsPagedList( analyzesListViewModel.getChosenAnalysisId() );
+            analysisArticleJoinsListViewModel.buildAnalysisiArticleJoinsPagedList(
+                    analyzesListViewModel.getChosenAnalysisId(),
+                    storeViewModel.getStore().getId() );
             analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().observe(
                     getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
                 @Override

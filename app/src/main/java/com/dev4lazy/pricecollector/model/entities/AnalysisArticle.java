@@ -32,7 +32,10 @@ public class AnalysisArticle {
     private Double articleNewPrice;
     @ColumnInfo(name = "reference_article_id")
     private int referenceArticleId; // todo?? usuń z bazy bo jest CompetitorPrice
-    // TODO !!! dodałeś pole - uwzględnij w pracy
+    // TODO !!! dodałeś pole - uwzględnij w pracy. NIE - zob niżej todo
+    // todo?? usuń z bazy bo jest realacja 1-n pomiedzy AnalysisArticle a CompetitorPrice
+    // TODO XXX, to nie może być tutaj
+    //  todo bo dla jednego AA moze być wiele (tyle ile sklepów) competitorprice...
     @ColumnInfo(name = "competitor_store_price_id")
     private int competitorStorePriceId; // from CompetitorPrice.
 
