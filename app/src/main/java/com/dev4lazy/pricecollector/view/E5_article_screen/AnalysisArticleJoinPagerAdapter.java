@@ -111,8 +111,9 @@ public class AnalysisArticleJoinPagerAdapter
                     AnalysisArticleJoin analysisArticleJoin = getItem( getAbsoluteAdapterPosition() );
                     Double priceFromAnalysisArticleJoin = analysisArticleJoin.getCompetitorStorePrice();
                     if (arePricesNotEqual( priceFromInput, priceFromAnalysisArticleJoin )) {
-                        analysisArticleJoin.setCompetitorStorePrice(priceFromInput);
-                        analysisArticleJoinViewModel.setNeedToSave(true);
+                        analysisArticleJoinViewModel.getChangeInformer().setCompetitorStorePrice(priceFromInput);
+                        //analysisArticleJoin.getCh setCompetitorStorePrice(priceFromInput);
+                        //analysisArticleJoinViewModel.setNeedToSave(true);
                         // TODO czy to niżej jest potrzebne do czegoś?
                         analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
                     }
@@ -120,6 +121,7 @@ public class AnalysisArticleJoinPagerAdapter
 
                 private boolean arePricesNotEqual( Double price1, Double price2 ) {
                     if (price1==null) {
+                        // TODO czy nie miałobyc tak że jak jest pusty stringi null to sa równe?
                         return !(price2==null);
                     }
                     if (price2==null) {
@@ -158,8 +160,9 @@ public class AnalysisArticleJoinPagerAdapter
                     result = areCommentsNotEqual( "1", "1" ); // false
                     */
                     if (areCommentsNotEqual( commentsFromInput, commentsFromAnalysisArticleJoin )) {
-                        analysisArticleJoin.setComments(commentsFromInput);
-                        analysisArticleJoinViewModel.setNeedToSave(true);
+                        analysisArticleJoinViewModel.getChangeInformer().setComments( commentsFromInput );
+                        // TODO XXX analysisArticleJoin.setComments(commentsFromInput);
+                        // TODO XXX  analysisArticleJoinViewModel.getChangeInformer().setFlagNeedToSave(true);
                         // TODO czy wiersz niżej jest potrzebne do czegoś?
                         analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
                     }

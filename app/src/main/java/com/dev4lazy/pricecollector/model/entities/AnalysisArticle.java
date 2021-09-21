@@ -20,25 +20,28 @@ public class AnalysisArticle {
     private int articleId;
     @ColumnInfo(name = "own_article_info_id")
     private int ownArticleInfoId;
+    // todo?? usuń z bazy bo jest CompetitorPrice
     @ColumnInfo(name = "competitor_store_id")
-    private int competitorStoreId; // todo?? usuń z bazy bo jest CompetitorPrice
+    private int competitorStoreId;
+    // todo?? usuń z bazy bo jest CompetitorPrice
     @ColumnInfo(name = "competitor_store_price")
-    private Double competitorStorePrice; // todo?? usuń z bazy bo jest CompetitorPrice
+    private Double competitorStorePrice;
     @ColumnInfo(name = "article_store_price")
     private Double articleStorePrice;
     @ColumnInfo(name = "article_ref_price")
     private Double articleRefPrice;
     @ColumnInfo(name = "article_new_price")
     private Double articleNewPrice;
+    // todo?? usuń z bazy bo jest w CompetitorPrice
+    //  Musi być w CompetitorPrice, bo w każdym sklepie konkurenta, może byc inny art ref
     @ColumnInfo(name = "reference_article_id")
-    private int referenceArticleId; // todo?? usuń z bazy bo jest CompetitorPrice
+    private int referenceArticleId;
     // TODO !!! dodałeś pole - uwzględnij w pracy. NIE - zob niżej todo
     // todo?? usuń z bazy bo jest realacja 1-n pomiedzy AnalysisArticle a CompetitorPrice
     // TODO XXX, to nie może być tutaj
     //  todo bo dla jednego AA moze być wiele (tyle ile sklepów) competitorprice...
     @ColumnInfo(name = "competitor_store_price_id")
     private int competitorStorePriceId; // from CompetitorPrice.
-
     private String comments;
 
     public int getId() {

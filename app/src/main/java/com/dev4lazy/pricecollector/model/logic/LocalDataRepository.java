@@ -186,7 +186,7 @@ public class LocalDataRepository {
     }
 
     public DataSource.Factory<Integer, AnalysisArticleJoin> getAllAnalysisArticlesJoin( int analysisId, int storeId ) {
-        return ((AnalysisArticleDao)analysisArticles.getDao()).getAllAnalysisArticlesJoin2( analysisId, storeId );
+        return ((AnalysisArticleDao)analysisArticles.getDao()).getAllAnalysisArticlesJoin3( analysisId, storeId );
     }
 
     public DataSource.Factory<Integer, AnalysisArticleJoin> getAnalysisArticlesJoinViaQueryPaged( SimpleSQLiteQuery query) {
@@ -202,14 +202,21 @@ public class LocalDataRepository {
     private final ArticleDao articleDao = AppHandle.getHandle().getLocalDatabase().articleDao();
     private final Data<Article> articles = new Data<>(articleDao);
 
+    public void insertArticle( Article article, MutableLiveData<Long> result ) {
+        articles.insertData( article,result);
+    }
+
     public void insertArticles( ArrayList<Article> articlesList, ProgressPresenter progressPresenter) {
         articles.insertDataList( articlesList, progressPresenter );
+    }
+
+    public void updateArticle( Article article, MutableLiveData<Integer> result ) {
+        articles.updateData( article, result );
     }
 
     public void getAllArticles( MutableLiveData<List<Article>> result ) {
         articles.getAllData( result );
     }
-
 
 //-----------------------------------------------------------------------
 // Company
@@ -217,7 +224,7 @@ public class LocalDataRepository {
     private final Data<Company> companies = new Data<>(companyDao);
 
     public void insertCompany( Company company, MutableLiveData<Long> result ) {
-        companies.insertData(company,result);
+        companies.insertData( company,result);
     }
 
     public void updateCompany( Company company, MutableLiveData<Integer> result  ) {

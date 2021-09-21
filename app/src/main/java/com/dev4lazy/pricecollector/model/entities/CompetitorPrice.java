@@ -37,6 +37,7 @@ public class CompetitorPrice {
     @ColumnInfo(name = "competitor_store_price")
     private double competitorStorePrice;
 
+    //  TODO Musi być w CompetitorPrice, bo w każdym sklepie konkurenta, może byc inny art ref
     @ColumnInfo(name = "reference_article_id")
     private int referenceArticleId;
 

@@ -42,7 +42,7 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
     @PrimaryKey(autoGenerate = true)
     private int id;
     private Integer analysisId;
-    private Integer articleCode; // kod briko
+    private Integer articleCode; // kod briko 6 cyfr
     private Integer storeId;
     private String articleName;
     private Double articleStorePrice;

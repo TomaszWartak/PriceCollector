@@ -42,6 +42,18 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
         ((AnalysisArticleJoinAdapter)getAdapter()).submitList(analysisArticlesJoins);
     }
 
+    public void scrollToItem( int position ) {
+        // TODO setItemHighlited( position )
+        //  if (itemIsNotOnScreen( position ) {
+        //     scrollToCenterOfPage( int position )
+        //  }
+
+    }
+
+    public void scrollToCenterOfPage( int position ) {
+        // https://stackoverflow.com/questions/37270265/how-to-center-the-clicked-position-in-the-recyclerview/44854796
+    }
+
     private class AnalysisArticleJoinAdapter extends PagedListAdapter<AnalysisArticleJoin, AnalysisArticleJoinAdapter.AnalysisArticleJoinViewHolder> {
 
         public AnalysisArticleJoinAdapter(AnalysisArticleJoinDiffCallback analysisArticleJoinDiffCallback){
@@ -85,7 +97,7 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
             private void openAnalysisArticle( View view) {
                 analysisArticleJoinViewModel = new ViewModelProvider( (MainActivity)itemView.getContext() ).get( AnalysisArticleJoinViewModel.class );
                 analysisArticleJoinViewModel.setAnalysisArticleJoin( getItem( getAdapterPosition() ) );
-                analysisArticleJoinViewModel.setAnalysisArticleJoinsRecyclerViewPosition( getAdapterPosition() );
+                analysisArticleJoinViewModel.setPositionOnList( getAdapterPosition() );
                 Navigation.findNavController( view ).navigate(R.id.action_analysisArticlesListFragment_to_analysisArticlesPagerFragment);
             }
 

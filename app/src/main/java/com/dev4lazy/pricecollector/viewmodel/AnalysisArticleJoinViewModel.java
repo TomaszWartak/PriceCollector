@@ -8,7 +8,7 @@ import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 
 public class AnalysisArticleJoinViewModel extends AndroidViewModel {
 
-    private int AnalysisArticleJoinsRecyclerViewPosition;
+    private int positionOnList;
     private AnalysisArticleJoin analysisArticleJoin;
     private ChangeInformer changeInformer;
     private boolean needToSave;
@@ -29,31 +29,33 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
         return analysisArticleJoin;
     }
 
-    public void setAnalysisArticleJoinsRecyclerViewPosition(int analysisArticleJoinsRecyclerViewPosition) {
-        this.AnalysisArticleJoinsRecyclerViewPosition = analysisArticleJoinsRecyclerViewPosition;
+    public void setPositionOnList(int positionOnList) {
+        this.positionOnList = positionOnList;
     }
 
-    public int getAnalysisArticleJoinsRecyclerViewPosition() {
-        return AnalysisArticleJoinsRecyclerViewPosition;
+    public int getPositionOnList() {
+        return positionOnList;
     }
+
 
     public boolean isAnalysisArticleJoinNotModified() {
         return changeInformer.isNotAnyValueChanged();
     }
 
-    public void setNeedToSave( boolean valueToSet ) {
-        changeInformer.setNeedToSaveFlag( valueToSet );
-    }
-
-    public boolean isNeedToSave() {
-        return changeInformer.isAnyFlagSet();
-    }
 
     public ChangeInformer getChangeInformer() {
         return changeInformer;
     }
 
-    class ChangeInformer {
+    public void clearNeedToSave( ) {
+        changeInformer.setFlagNeedToSave( false );
+    }
+
+    public boolean isNeedToSave() {
+        return changeInformer.isNeedToSaveFlagSet();
+    }
+
+    public class ChangeInformer {
 
         ChangeInformer() {
             clearFlags();
@@ -66,59 +68,104 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
             referenceArticleChanged = false;
         };
 
-        private void setNeedToSaveFlag(boolean valueToSet ) {
+        private void setFlagNeedToSave(boolean valueToSet ) {
             needToSave = valueToSet;
         }
 
-        private boolean isAnyFlagSet() {
+        private boolean isNeedToSaveFlagSet() {
             return needToSave;
         }
 
-        private boolean isNotAnyFlagSet() {
-            return needToSave;
+        private boolean isNeedToSaveFlagNotSet() {
+            return !needToSave;
         }
 
-        private void setFlagPriceChanged( boolean valueToSet ) {
+        public void clearFlagPriceChanged() {
+            setFlagPriceChanged( false );
+        }
+
+        public void setFlagPriceChanged( boolean valueToSet ) {
             priceChanged = valueToSet;
         }
 
-        private boolean isPriceChangedFlagSet() {
+        public boolean isPriceChangedFlagSet() {
             return priceChanged;
         }
 
-        private boolean isPriceChangedFlagNotSet() {
+        public boolean isPriceChangedFlagNotSet() {
             return !priceChanged;
         }
 
-        private void setPrice( Double price ) {
+        public void setCompetitorStorePrice( Double price ) {
             analysisArticleJoin.setCompetitorStorePrice( price );
-            if (isNotAnyFlagSet()) {
-                setNeedToSaveFlag( false );
+            setFlagPriceChanged(true);
+            if (isNeedToSaveFlagNotSet()) {
+                setFlagNeedToSave(true);
             }
         }
 
-        private void setFlagComments( boolean valueToSet ) {
+        public void clearFlagCommentsChanged() {
+            setFlagCommentsChanged( false );
+        }
+
+        public void setFlagCommentsChanged(boolean valueToSet ) {
             commentsChanged = valueToSet;
         }
 
-        private boolean isCommentsChangedFlagSet() {
+        public boolean isCommentsChangedFlagSet() {
             return commentsChanged;
         }
 
-        private boolean isCommentsChangedFlagNotSet() {
+        public boolean isCommentsChangedFlagNotSet() {
             return !commentsChanged;
+        }
+
+        public void setComments( String comments ) {
+            analysisArticleJoin.setComments( comments );
+            setFlagCommentsChanged(true);
+            if (isNeedToSaveFlagNotSet()) {
+                setFlagNeedToSave(true);
+            }
+        }
+
+        public void clearFlagReferenceArticleChanged() {
+            setFlagReferenceArticleChanged( false );
         }
 
         private void setFlagReferenceArticleChanged( boolean valueToSet ) {
             referenceArticleChanged = valueToSet;
         }
 
-        private boolean isReferenceArticleChangedFlagSet() {
+        public boolean isReferenceArticleChangedFlagSet() {
             return referenceArticleChanged;
         }
 
-        private boolean isReferenceArticleChangedFlagNotSet() {
+        public boolean isReferenceArticleChangedFlagNotSet() {
             return !referenceArticleChanged;
+        }
+
+        public void setReferenceArticleName( String name ) {
+            analysisArticleJoin.setReferenceArticleName( name );
+            setFlagReferenceArticleChanged(true);
+            if (isNeedToSaveFlagNotSet()) {
+                setFlagNeedToSave(true);
+            }
+        }
+
+        public void setReferenceArticleEan( String ean ) {
+            analysisArticleJoin.setReferenceArticleEan( ean );
+            setFlagReferenceArticleChanged(true);
+            if (isNeedToSaveFlagNotSet()) {
+                setFlagNeedToSave(true);
+            }
+        }
+
+        public void setReferenceArticleDescription( String description ) {
+            analysisArticleJoin.setReferenceArticleEan( description );
+            setFlagReferenceArticleChanged(true);
+            if (isNeedToSaveFlagNotSet()) {
+                setFlagNeedToSave(true);
+            }
         }
 
         private boolean isAnyValueChanged() {
@@ -132,13 +179,12 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
             return !isAnyValueChanged();
         }
 
-
-
         private boolean isReferenceArticleDataChanged() {
             return
                     analysisArticleJoin.isReferenceArticleNameSet() ||
-                            analysisArticleJoin.isReferenceArticleEanSet() ||
-                            analysisArticleJoin.isReferenceArticleDescriptionSet();
+                    analysisArticleJoin.isReferenceArticleEanSet() ||
+                    analysisArticleJoin.isReferenceArticleDescriptionSet();
         }
+
     }
 }

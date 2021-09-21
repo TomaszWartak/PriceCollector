@@ -74,11 +74,16 @@ public class AnalysisArticlesListFragment extends Fragment {
             OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
                 @Override
                 public void handleOnBackPressed() {
-                    analysisArticleJoinsListViewModel.getSearchArticlesCriteria().clearAll();
+                    resetViewModels();
                     Navigation.findNavController(getView()).navigate(R.id.action_analysisArticlesListFragment_to_analysisCompetitorsFragment);
                 }
             };
             getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+        }
+
+        private void resetViewModels() {
+            analysisArticleJoinsListViewModel.getSearchArticlesCriteria().clearAll();
+            analysisArticleJoinViewModel.setPositionOnList(0);
         }
 
         private void setToolbarText() {
@@ -107,7 +112,16 @@ public class AnalysisArticlesListFragment extends Fragment {
                 public void onChanged( PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                     if (!analysisArticlesJoins.isEmpty()) {
                         analysisArticleJoinsRecyclerView.submitArticlesList( analysisArticlesJoins );
-                        analysisArticleJoinsRecyclerView.scrollToPosition( analysisArticleJoinViewModel.getAnalysisArticleJoinsRecyclerViewPosition() );
+                        // TODO XXX przewinęcie RecyclerView do pozycji ustawionej w ViewPagerze powinno sie inaczej odbywać...
+                        //  Bo za każdym razem gdy wychodzę z ViewPagera, to item jest u samej góry, a ja się spodziwewam go
+                        //  w innym miejscu (tam gdzie go kliknąłem).
+                        //  Natomiast trzeba ustalić zachowanie RecyclerView, kiedy w ViewPager wyjdziesz poza stronę,
+                        //  z której otwierałeś Item.
+                        //  Proponuję:
+                        //  - jesli jestem na tej samej stronie - podświetlić po prostu Itewm, który był wyświetlony w ViewPagerze
+                        //  - jesli na innej stronie - podświetlić Item, który był wyświetlony w ViewPagerze i ustawić go na śrdku strony
+                        // TODO wypełnij metodę AnalysisArticleJoinsRecyclerView.scrollToItem()
+                        analysisArticleJoinsRecyclerView.scrollToPosition( analysisArticleJoinViewModel.getPositionOnList() );
                     }
                 }
             });
@@ -132,7 +146,7 @@ public class AnalysisArticlesListFragment extends Fragment {
                     drawerLayout.closeDrawers();
                     switch (item.getItemId()) {
                         case R.id.anlysis_articles_list_screen_gotoanalyzes_menu_item:
-                            analysisArticleJoinsListViewModel.getSearchArticlesCriteria().clearAll();
+                            resetViewModels();
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_analyzesListFragment );
                             break;
                         case R.id.anlysis_articles_list_screen_search_menu_item:
@@ -170,5 +184,6 @@ public class AnalysisArticlesListFragment extends Fragment {
                         getActivity().finishAndRemoveTask();
                         System.exit(0);
                     }
+
 
 }

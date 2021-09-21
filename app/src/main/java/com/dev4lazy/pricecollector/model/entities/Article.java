@@ -34,7 +34,7 @@ import java.util.Objects;
 public class Article {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int remote_id; // klucz głowny w bazie zdalnej; tutaj briko...
+    private int remote_id; // klucz głowny w bazie zdalnej; tutaj kod briko (6 cyfr) ...
     private String name;
     private String description;
     // todo ??? picture;
