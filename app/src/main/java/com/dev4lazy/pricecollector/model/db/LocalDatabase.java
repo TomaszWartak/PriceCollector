@@ -34,7 +34,7 @@ import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 import com.dev4lazy.pricecollector.AppHandle;
 
 @Database(
-    version = 11,
+    version = 14,
     entities = {
         AnalysisCompetitorSlot.class,
         Analysis.class,
@@ -96,8 +96,8 @@ public abstract class LocalDatabase extends RoomDatabase {
                             //.addCallback(roomDatabaseCallback)
                             // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to odkomentuj .fallback...
                             // i za komentuj .addMigrations
-                             .fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
-                            /*/
+                            // .fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
+                            /**/
                             .addMigrations(MIGRATION_1_2)
                             .addMigrations(MIGRATION_2_3)
                             .addMigrations(MIGRATION_3_4)
@@ -108,6 +108,8 @@ public abstract class LocalDatabase extends RoomDatabase {
                             .addMigrations(MIGRATION_8_9)
                             .addMigrations(MIGRATION_9_10)
                             .addMigrations(MIGRATION_10_11)
+                            .addMigrations(MIGRATION_11_12)
+                            .addMigrations(MIGRATION_13_14)
                             /**/
                             .build();
                     instance.updateDatabaseCreated(context);
@@ -231,6 +233,23 @@ public abstract class LocalDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE analysis_articles ADD COLUMN competitor_store_price_id INTEGER NOT NULL DEFAULT -1");
+        }
+    };
+
+    static final Migration MIGRATION_11_12 = new Migration(11, 12) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("DROP INDEX index_articles_remote_id");
+            database.execSQL("DROP INDEX index_ean_codes_remote_id");
+            database.execSQL("CREATE INDEX index_articles_remote_id ON articles (remote_id)" );
+            database.execSQL("CREATE INDEX index_ean_codes_remote_id ON ean_codes (remote_id)" );
+        }
+    };
+
+    static final Migration MIGRATION_13_14 = new Migration(13, 14) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE competitors_prices ADD COLUMN reference_article_ean_id INTEGER NOT NULL DEFAULT 0");
         }
     };
 

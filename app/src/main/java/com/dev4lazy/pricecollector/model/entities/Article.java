@@ -10,8 +10,8 @@ import java.util.Objects;
         tableName = "articles",
         indices = {
                 @Index(
-                        value = "remote_id",
-                        unique = true
+                        value = "remote_id" /* ,
+                        unique = true */
                 ),
         }
 ) // [dbo].[DCT_Article]

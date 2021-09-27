@@ -57,6 +57,7 @@ public class SearchArticlesFragment extends Fragment {
             getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         }
 
+        // TODO XXX
         private void setToolbarText() {
             if (analysisArticleJoinsListViewModel.getSearchArticlesCriteria().isFilterSet()) {
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PriceCollector *");

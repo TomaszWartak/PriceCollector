@@ -4,6 +4,7 @@ import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
 import com.dev4lazy.pricecollector.model.entities.Article;
 import com.dev4lazy.pricecollector.model.entities.CompetitorPrice;
+import com.dev4lazy.pricecollector.model.entities.EanCode;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.paging.DataSource;
+import androidx.room.ColumnInfo;
 
 public class AnalysisArticleJoinDataUpdater {
     // TODO XXX private final AnalysisArticlesPagerFragment analysisArticlesPagerFragment;
@@ -33,233 +35,6 @@ public class AnalysisArticleJoinDataUpdater {
     public void setTaskChain(TaskChain taskChain) {
         this.taskChain = taskChain;
     }
-
-    /* TODO XXX
-    void saveReferenceArticle(
-            AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
-        changeInformer.clearFlagReferenceArticleChanged();
-        if (isReferenceArticleInDB(analysisArticleJoin)) {
-            if (analysisArticleJoin.isReferenceArticleDescriptionSet()) {
-                Article referenceArticle = prepareReferenceArticleData(analysisArticleJoin);
-                updateReferenceArticle(referenceArticle, analysisArticleJoin, changeInformer);
-            }
-        } else {
-            if (analysisArticleJoin.isReferenceArticleDescriptionSet()) {
-                Article referenceArticle = prepareReferenceArticleData(analysisArticleJoin);
-                insertReferenceArticle(referenceArticle, analysisArticleJoin, changeInformer);
-            }
-        }
-    }
-
-    boolean isReferenceArticleInDB(AnalysisArticleJoin analysisArticleJoin) {
-        if (analysisArticleJoin.getReferenceArticleId() == null) {
-            return false;
-        }
-        return analysisArticleJoin.getReferenceArticleId() > -1;
-    }
-
-    Article prepareReferenceArticleData(AnalysisArticleJoin analysisArticleJoin) {
-        Article article = new Article();
-        article.setId(analysisArticleJoin.getReferenceArticleIdInt());
-        article.setRemote_id(-1); // Artykuł referencyjny nie ma odpowiednika w zdalnej bazie danych
-        article.setName(analysisArticleJoin.getReferenceArticleName());
-        article.setDescription(analysisArticleJoin.getReferenceArticleDescription());
-        // TODO ??? co z kodem kreskowym artykułu referencyjnego
-        return article;
-    }
-
-    void updateReferenceArticle(
-            Article referenceArticle,
-            AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
-        MutableLiveData<Integer> updateResult = new MutableLiveData<Integer>();
-        Observer<Integer> updatingResultObserver = new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer updatedCount) {
-                updateResult.removeObserver(this); // this = observer...
-                DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
-                dataSource.invalidate();
-                if (changeInformer.isPriceChangedFlagSet()) {
-                    saveCompetitorPrice(analysisArticleJoin, changeInformer);
-                }else {
-                    if ( changeInformer.isCommentsChangedFlagSet() ) {
-                        saveAnalysisArticle( analysisArticleJoin, changeInformer );
-                    }
-                }
-            }
-        };
-        updateResult.observeForever(updatingResultObserver);
-        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-        localDataRepository.updateArticle(referenceArticle, updateResult);
-    }
-
-    void insertReferenceArticle(
-            Article referenceArticle,
-            AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
-        MutableLiveData<Long> insertResult = new MutableLiveData<Long>();
-        Observer<Long> insertingResultObserver = new Observer<Long>() {
-            @Override
-            public void onChanged(Long insertedReferenceArticleId) {
-                insertResult.removeObserver(this); // this = observer...
-                analysisArticleJoin.setAnalysisArticleId(insertedReferenceArticleId.intValue());
-                // TODO XXX analysisArticlesPagerFragment.getAnalysisArticlesViewPager().getAdapter().notifyDataSetChanged();
-                // TODO !!! Kolej na CompetitorPrice i zapisanie zmian w niej.
-                //  Czyli jak nie było zmian w CompetitorPrice to nie ma potrezeby zapisu..
-                //  Ale wtedy nie zostanie wywołany zapis AnalysisArticle, który jest wołany po zapisie ceny...
-                //  Czyli w saveCompetitorprice, trzeba sprawdzić, czy była w niej zmiana i jesli nie było
-                //  to wywoałać saveAnalysisArticle...
-                DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
-                dataSource.invalidate();
-                if ( changeInformer.isPriceChangedFlagSet() ){
-                    saveCompetitorPrice(analysisArticleJoin, changeInformer);
-                } else {
-                    if ( changeInformer.isCommentsChangedFlagSet() ) {
-                        saveAnalysisArticle( analysisArticleJoin, changeInformer );
-                    }
-                }
-            }
-        };
-        insertResult.observeForever(insertingResultObserver);
-        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-        localDataRepository.insertArticle(referenceArticle, insertResult);
-    }
-
-    void saveCompetitorPrice(
-            AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
-        changeInformer.clearFlagPriceChanged();
-        if (isCompetitorStorePriceInDB(analysisArticleJoin)) {
-            // TODO chyba bez sensu jest sprawdzanie, czy cena została ustawiona,
-            //  bo mogła byc wykasowana i trzeba to zapisać, a nie zostanie zapisane
-            //  bo nie wykasowana
-            if (true ) {
-                // Pobierz, uaktualnij i zapisz cenę <- nie trzeba pobierać - dane CompetitorPrice
-                // można skompletoweć z analysisArticleJoin.
-                // startCompetitorPriceUpdatingChain( analysisArticleJoin );
-                CompetitorPrice competitorPrice = prepareCompetitorPriceData(analysisArticleJoin);
-                updateCompetitorPrice(competitorPrice, analysisArticleJoin, changeInformer);
-            }
-        } else {
-            // TODO chyba bez sensu jest sprawdzanie, czy cena została ustawiona,
-            //  bo mogła byc wykasowana i trzeba to zapisać, a nie zostanie zapisane
-            //  bo nie wykasowana
-            if (true ) {
-                // Przygotuj i zapisz cenę
-                CompetitorPrice competitorPrice = prepareCompetitorPriceData(analysisArticleJoin);
-                insertCompetitorPrice(competitorPrice, analysisArticleJoin, changeInformer);
-            }
-        }
-
-    }
-
-    boolean isCompetitorStorePriceInDB(AnalysisArticleJoin analysisArticleJoin) {
-        if (analysisArticleJoin.getCompetitorStorePriceId() == null) {
-            return false;
-        }
-        return analysisArticleJoin.getCompetitorStorePriceId() > -1;
-    }
-
-    void updateCompetitorPrice(
-            CompetitorPrice competitorPrice,
-            AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
-        MutableLiveData<Integer> updateResult = new MutableLiveData<Integer>();
-        Observer<Integer> updatingResultObserver = new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer updatedCount) {
-                updateResult.removeObserver(this); // this = observer...
-                DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
-                dataSource.invalidate();
-                if (changeInformer.isCommentsChangedFlagSet() ) {
-                    saveAnalysisArticle(analysisArticleJoin, changeInformer);
-                }
-            }
-        };
-        updateResult.observeForever(updatingResultObserver);
-        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-        localDataRepository.updateCompetitorPrice(competitorPrice, updateResult);
-
-    }
-
-    CompetitorPrice prepareCompetitorPriceData(AnalysisArticleJoin analysisArticleJoin) {
-        CompetitorPrice competitorPrice = new CompetitorPrice();
-        int id = analysisArticleJoin.getCompetitorStorePriceId();
-        if (id<0) {
-            id=0;
-        }
-        competitorPrice.setId( id );
-        competitorPrice.setAnalysisId( analysisArticleJoin.getAnalysisId() );
-        competitorPrice.setAnalysisArticleId( analysisArticleJoin.getAnalysisArticleId() );
-        competitorPrice.setOwnArticleInfoId( analysisArticleJoin.getOwnArticleInfoId() );
-        competitorPrice.setCompetitorStoreId( analysisArticleJoin.getCompetitorStoreIdInt() );
-        competitorPrice.setCompetitorStorePrice( analysisArticleJoin.getCompetitorStorePrice());
-        competitorPrice.setReferenceArticleId( analysisArticleJoin.getReferenceArticleIdInt());
-        return competitorPrice;
-    }
-
-    void insertCompetitorPrice(
-            CompetitorPrice competitorPrice,
-            AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
-        MutableLiveData<Long> insertResult = new MutableLiveData<Long>();
-        Observer<Long> insertingResultObserver = new Observer<Long>() {
-            @Override
-            public void onChanged(Long insertedCompetitorPriceId) {
-                insertResult.removeObserver(this); // this = observer...
-                analysisArticleJoin.setCompetitorStorePriceId(insertedCompetitorPriceId.intValue());
-                DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
-                dataSource.invalidate();
-                if (changeInformer.isCommentsChangedFlagSet()) {
-                    saveAnalysisArticle(analysisArticleJoin, changeInformer);
-                }
-            }
-        };
-        insertResult.observeForever(insertingResultObserver);
-        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-        localDataRepository.insertCompetitorPrice(competitorPrice, insertResult);
-    }
-
-    void saveAnalysisArticle(
-            AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
-        changeInformer.clearFlagCommentsChanged();
-        AnalysisArticle analysisArticle = prepareAnalysisArticleData(analysisArticleJoin);
-        updateAnalysisArticle(analysisArticle);
-    }
-
-    AnalysisArticle prepareAnalysisArticleData(AnalysisArticleJoin analysisArticleJoin) {
-        AnalysisArticle analysisArticle = new AnalysisArticle();
-        analysisArticle.setId(analysisArticleJoin.getAnalysisArticleId());
-        analysisArticle.setAnalysisId(analysisArticleJoin.getAnalysisId());
-        analysisArticle.setArticleId(analysisArticleJoin.getArticleId());
-        analysisArticle.setOwnArticleInfoId(analysisArticleJoin.getOwnArticleInfoId());
-        analysisArticle.setArticleStorePrice(analysisArticleJoin.getArticleStorePrice());
-        analysisArticle.setArticleRefPrice(analysisArticleJoin.getArticleRefPrice());
-        // analysisArticle.setArticleNewPrice( null );
-        analysisArticle.setReferenceArticleId(analysisArticleJoin.getReferenceArticleIdInt());
-        // analysisArticle.setCompetitorStorePriceId( analysisArticleJoin.getCompetitorStorePriceId() );
-        analysisArticle.setComments(analysisArticleJoin.getComments());
-        return analysisArticle;
-    }
-
-    void updateAnalysisArticle(AnalysisArticle analysisArticle) {
-        MutableLiveData<Integer> updateResult = new MutableLiveData<Integer>();
-        Observer<Integer> updatingResultObserver = new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer updatedCount) {
-                updateResult.removeObserver(this); // this = observer...
-                DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
-                dataSource.invalidate();
-            }
-        };
-        updateResult.observeForever(updatingResultObserver);
-        LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-        localDataRepository.updateAnalysisArticle(analysisArticle, updateResult);
-    }
-
-     */
 
     class TaskChain {
 
@@ -330,7 +105,7 @@ public class AnalysisArticleJoinDataUpdater {
     class AnalysisArticleJoinUpdater extends TaskLink {
 
         protected AnalysisArticleJoin aAJ;
-        protected AnalysisArticleJoinViewModel.ChangeInformer cI;
+        protected AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder cI;
 
         public AnalysisArticleJoinUpdater(TaskChain taskChain ) {
             super(taskChain);
@@ -342,7 +117,7 @@ public class AnalysisArticleJoinDataUpdater {
         @Override
         public void takeData(Object... data) {
             aAJ = (AnalysisArticleJoin)data[0];
-            cI = (AnalysisArticleJoinViewModel.ChangeInformer)data[1];
+            cI = (AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder)data[1];
         }
 
     }
@@ -352,10 +127,10 @@ public class AnalysisArticleJoinDataUpdater {
         public ReferenceArticleUpdater(
                 TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             super(taskChain);
             aAJ = analysisArticleJoin;
-            cI = changeInformer;
+            cI = valuesStateHolder;
         }
 
         @Override
@@ -365,18 +140,13 @@ public class AnalysisArticleJoinDataUpdater {
 
         void saveReferenceArticle(
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
-            changeInformer.clearFlagReferenceArticleChanged();
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            valuesStateHolder.clearFlagReferenceArticleChanged();
+            Article referenceArticle = prepareReferenceArticleData(analysisArticleJoin);
             if (isReferenceArticleInDB(analysisArticleJoin)) {
-                if (analysisArticleJoin.isReferenceArticleDescriptionSet()) {
-                    Article referenceArticle = prepareReferenceArticleData(analysisArticleJoin);
-                    updateReferenceArticle(referenceArticle, analysisArticleJoin, changeInformer);
-                }
+                updateReferenceArticle(referenceArticle, analysisArticleJoin, valuesStateHolder);
             } else {
-                if (analysisArticleJoin.isReferenceArticleDescriptionSet()) {
-                    Article referenceArticle = prepareReferenceArticleData(analysisArticleJoin);
-                    insertReferenceArticle(referenceArticle, analysisArticleJoin, changeInformer);
-                }
+                insertReferenceArticle(referenceArticle, analysisArticleJoin, valuesStateHolder);
             }
         }
 
@@ -384,23 +154,26 @@ public class AnalysisArticleJoinDataUpdater {
             if (analysisArticleJoin.getReferenceArticleId() == null) {
                 return false;
             }
-            return analysisArticleJoin.getReferenceArticleId() > -1;
+            return analysisArticleJoin.getReferenceArticleId() > 0;
         }
 
         Article prepareReferenceArticleData(AnalysisArticleJoin analysisArticleJoin) {
             Article article = new Article();
-            article.setId(analysisArticleJoin.getReferenceArticleIdInt());
-            article.setRemote_id(-1); // Artykuł referencyjny nie ma odpowiednika w zdalnej bazie danych
+            int id = analysisArticleJoin.getReferenceArticleIdInt();
+            if (id<0) {
+                id=0;
+            }
+            article.setId( id );
+            article.setRemote_id(-1); // -1 = Artykuł referencyjny nie ma odpowiednika w zdalnej bazie danych
             article.setName(analysisArticleJoin.getReferenceArticleName());
             article.setDescription(analysisArticleJoin.getReferenceArticleDescription());
-            // TODO ??? co z kodem kreskowym artykułu referencyjnego
             return article;
         }
 
         void updateReferenceArticle(
                 Article referenceArticle,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Integer> updateResult = new MutableLiveData<Integer>();
             Observer<Integer> updatingResultObserver = new Observer<Integer>() {
                 @Override
@@ -408,7 +181,7 @@ public class AnalysisArticleJoinDataUpdater {
                     updateResult.removeObserver(this); // this = observer...
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
-                    runNextTaskLink( analysisArticleJoin, changeInformer );
+                    runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                     /* TODO XXX
                     if (getNextLink()!=null) {
                         getNextLink().takeData( analysisArticleJoin, changeInformer );
@@ -425,28 +198,16 @@ public class AnalysisArticleJoinDataUpdater {
         void insertReferenceArticle(
                 Article referenceArticle,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Long> insertResult = new MutableLiveData<Long>();
             Observer<Long> insertingResultObserver = new Observer<Long>() {
                 @Override
                 public void onChanged(Long insertedReferenceArticleId) {
                     insertResult.removeObserver(this); // this = observer...
-                    analysisArticleJoin.setAnalysisArticleId(insertedReferenceArticleId.intValue());
-                    // TODO XXX analysisArticlesPagerFragment.getAnalysisArticlesViewPager().getAdapter().notifyDataSetChanged();
-                    // TODO !!! Kolej na CompetitorPrice i zapisanie zmian w niej.
-                    //  Czyli jak nie było zmian w CompetitorPrice to nie ma potrezeby zapisu..
-                    //  Ale wtedy nie zostanie wywołany zapis AnalysisArticle, który jest wołany po zapisie ceny...
-                    //  Czyli w saveCompetitorprice, trzeba sprawdzić, czy była w niej zmiana i jesli nie było
-                    //  to wywoałać saveAnalysisArticle...
+                    analysisArticleJoin.setReferenceArticleId(insertedReferenceArticleId.intValue());
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
-                    runNextTaskLink( analysisArticleJoin, changeInformer );
-                    /* TODO XXX
-                    if (getNextLink()!=null) {
-                        getNextLink().takeData( analysisArticleJoin, changeInformer );
-                        getNextLink().doIt();
-                    }
-                    */
+                    runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };
             insertResult.observeForever(insertingResultObserver);
@@ -461,10 +222,10 @@ public class AnalysisArticleJoinDataUpdater {
         public CompetitorPriceUpdater(
                 TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             super( taskChain );
             aAJ = analysisArticleJoin;
-            cI = changeInformer;
+            cI = valuesStateHolder;
         }
 
         @Override
@@ -474,28 +235,13 @@ public class AnalysisArticleJoinDataUpdater {
 
         void saveCompetitorPrice(
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
-            changeInformer.clearFlagPriceChanged();
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            valuesStateHolder.clearFlagPriceChanged();
+            CompetitorPrice competitorPrice = prepareCompetitorPriceData(analysisArticleJoin);
             if (isCompetitorStorePriceInDB(analysisArticleJoin)) {
-                // TODO chyba bez sensu jest sprawdzanie, czy cena została ustawiona,
-                //  bo mogła byc wykasowana i trzeba to zapisać, a nie zostanie zapisane
-                //  bo nie wykasowana
-                if (true /*TODO XXX  analysisArticleJoin.isCompetitorStorePriceSet()*/) {
-                    // Pobierz, uaktualnij i zapisz cenę <- nie trzeba pobierać - dane CompetitorPrice
-                    // można skompletoweć z analysisArticleJoin.
-                    // startCompetitorPriceUpdatingChain( analysisArticleJoin );
-                    CompetitorPrice competitorPrice = prepareCompetitorPriceData(analysisArticleJoin);
-                    updateCompetitorPrice(competitorPrice, analysisArticleJoin, changeInformer);
-                }
+                updateCompetitorPrice(competitorPrice, analysisArticleJoin, valuesStateHolder);
             } else {
-                // TODO chyba bez sensu jest sprawdzanie, czy cena została ustawiona,
-                //  bo mogła byc wykasowana i trzeba to zapisać, a nie zostanie zapisane
-                //  bo nie wykasowana
-                if (true /*TODO XXX analysisArticleJoin.isCompetitorStorePriceSet()*/) {
-                    // Przygotuj i zapisz cenę
-                    CompetitorPrice competitorPrice = prepareCompetitorPriceData(analysisArticleJoin);
-                    insertCompetitorPrice(competitorPrice, analysisArticleJoin, changeInformer);
-                }
+                insertCompetitorPrice(competitorPrice, analysisArticleJoin, valuesStateHolder);
             }
 
         }
@@ -504,13 +250,13 @@ public class AnalysisArticleJoinDataUpdater {
             if (analysisArticleJoin.getCompetitorStorePriceId() == null) {
                 return false;
             }
-            return analysisArticleJoin.getCompetitorStorePriceId() > -1;
+            return analysisArticleJoin.getCompetitorStorePriceId() > 0;
         }
 
         void updateCompetitorPrice(
                 CompetitorPrice competitorPrice,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Integer> updateResult = new MutableLiveData<Integer>();
             Observer<Integer> updatingResultObserver = new Observer<Integer>() {
                 @Override
@@ -518,13 +264,7 @@ public class AnalysisArticleJoinDataUpdater {
                     updateResult.removeObserver(this); // this = observer...
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
-                    runNextTaskLink( analysisArticleJoin, changeInformer );
-                    /* TODO XXX
-                    if (getNextLink()!=null) {
-                        getNextLink().takeData( analysisArticleJoin, changeInformer );
-                        getNextLink().doIt();
-                    }
-                    */
+                    runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };
             updateResult.observeForever(updatingResultObserver);
@@ -535,24 +275,35 @@ public class AnalysisArticleJoinDataUpdater {
 
         CompetitorPrice prepareCompetitorPriceData(AnalysisArticleJoin analysisArticleJoin) {
             CompetitorPrice competitorPrice = new CompetitorPrice();
-            int id = analysisArticleJoin.getCompetitorStorePriceId();
-            if (id<0) {
-                id=0;
-            }
-            competitorPrice.setId( id );
+            competitorPrice.setId( getProperId( analysisArticleJoin.getCompetitorStorePriceId() ) );
             competitorPrice.setAnalysisId( analysisArticleJoin.getAnalysisId() );
             competitorPrice.setAnalysisArticleId( analysisArticleJoin.getAnalysisArticleId() );
             competitorPrice.setOwnArticleInfoId( analysisArticleJoin.getOwnArticleInfoId() );
             competitorPrice.setCompetitorStoreId( analysisArticleJoin.getCompetitorStoreIdInt() );
             competitorPrice.setCompetitorStorePrice( analysisArticleJoin.getCompetitorStorePrice());
             competitorPrice.setReferenceArticleId( analysisArticleJoin.getReferenceArticleIdInt());
+            competitorPrice.setReferenceArticleEanCodeId( getProperId( analysisArticleJoin.getReferenceArticleEanCodeId() ) );
             return competitorPrice;
+        }
+
+        private int getProperId( Integer id ) {
+            int properId;
+            if (idIsNotSet(id)) {
+                properId=0;
+            } else {
+                properId = id.intValue();
+            }
+            return properId;
+        }
+
+        private boolean idIsNotSet( Integer id ) {
+            return ((id==null) || (id<1));
         }
 
         void insertCompetitorPrice(
                 CompetitorPrice competitorPrice,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Long> insertResult = new MutableLiveData<Long>();
             Observer<Long> insertingResultObserver = new Observer<Long>() {
                 @Override
@@ -561,13 +312,7 @@ public class AnalysisArticleJoinDataUpdater {
                     analysisArticleJoin.setCompetitorStorePriceId( insertedCompetitorPriceId.intValue() );
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
-                    runNextTaskLink( analysisArticleJoin, changeInformer );
-                    /* TODO XXX
-                    if (getNextLink()!=null) {
-                        getNextLink().takeData( analysisArticleJoin, changeInformer );
-                        getNextLink().doIt();
-                    }
-                    */
+                    runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };
             insertResult.observeForever(insertingResultObserver);
@@ -581,10 +326,10 @@ public class AnalysisArticleJoinDataUpdater {
         public AnalysisArticleUpdater(
                 TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             super( taskChain );
             aAJ = analysisArticleJoin;
-            cI = changeInformer;
+            cI = valuesStateHolder;
         }
 
         @Override
@@ -594,10 +339,10 @@ public class AnalysisArticleJoinDataUpdater {
 
         void saveAnalysisArticle(
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer) {
-            changeInformer.clearFlagCommentsChanged();
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            valuesStateHolder.clearFlagCommentsChanged();
             AnalysisArticle analysisArticle = prepareAnalysisArticleData(analysisArticleJoin);
-            updateAnalysisArticle( analysisArticle, analysisArticleJoin, changeInformer );
+            updateAnalysisArticle( analysisArticle, analysisArticleJoin, valuesStateHolder);
         }
 
         AnalysisArticle prepareAnalysisArticleData(AnalysisArticleJoin analysisArticleJoin) {
@@ -618,7 +363,7 @@ public class AnalysisArticleJoinDataUpdater {
         void updateAnalysisArticle(
                 AnalysisArticle analysisArticle,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Integer> updateResult = new MutableLiveData<Integer>();
             Observer<Integer> updatingResultObserver = new Observer<Integer>() {
                 @Override
@@ -626,14 +371,83 @@ public class AnalysisArticleJoinDataUpdater {
                     updateResult.removeObserver(this); // this = observer...
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
-                    runNextTaskLink( analysisArticleJoin, changeInformer );
+                    runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };
             updateResult.observeForever(updatingResultObserver);
             LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
             localDataRepository.updateAnalysisArticle(analysisArticle, updateResult);
-
         }
+    }
+
+    class ReferenceArticleEanUpdater extends AnalysisArticleJoinUpdater {
+
+        public ReferenceArticleEanUpdater(
+                TaskChain taskChain,
+                AnalysisArticleJoin analysisArticleJoin,
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            super( taskChain );
+            aAJ = analysisArticleJoin;
+            cI = valuesStateHolder;
+        }
+
+        @Override
+        public void doIt() {
+            saveReferenceArticleEan(aAJ, cI);
+        }
+
+        void saveReferenceArticleEan(
+                AnalysisArticleJoin analysisArticleJoin,
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            valuesStateHolder.clearFlagReferenceArticleEanChanged();
+            EanCode eanCode = prepareEanCodeData( analysisArticleJoin );
+            insertEanCode( eanCode, analysisArticleJoin, valuesStateHolder );
+        }
+
+        EanCode prepareEanCodeData( AnalysisArticleJoin analysisArticleJoin ) {
+            EanCode eanCode = new EanCode();
+            // todo
+            //  id pobrać z refernceArticle? - nie... bo tam nie ma id EAN
+            //  Trzeba ew. pobrać cały obiekt na podstawie article_id z ref Article.
+            //  Jesli jest zmieniany, to znaczy, że to jest inny Ean do tego samego artykułu...?
+            //  Czy założyć, że jeden artykuł, to jeden EAN <-- NIE...
+            //  OK. Zakładamy, że jest wiele Eanów do jednego artykułu.
+            //  - zmiana wartrości ean -> dodanie noiwego kodu ean
+            //  - jesli jest wiele eanów -> który wyświetlić przy art ref i analysis article?
+            //      - pierwszy
+            //  - jak się zachowa query do joina przy wielu eanach do jednego artykułu?
+            //  - generalnie nie obsługuję nigdzie wielu eanach do jednego artykułu
+            //  Może dodac pole idEan do Joina, to będzie łatwiej może
+            eanCode.setId( analysisArticleJoin.getReferenceArticleEanCodeIdInt() );
+            // todo remote_id ustawić na -1
+            eanCode.setRemote_id(-1);
+            // todo skopiowac z Join
+            eanCode.setValue( analysisArticleJoin.getReferenceArticleEan() );
+            // todo skopiowac z ref Article
+            eanCode.setArticleId( analysisArticleJoin.getReferenceArticleId() );
+            return eanCode;
+        }
+
+        private void insertEanCode(
+                EanCode eanCode,
+                AnalysisArticleJoin analysisArticleJoin,
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            MutableLiveData<Long> insertResult = new MutableLiveData<Long>();
+            Observer<Long> insertingResultObserver = new Observer<Long>() {
+                @Override
+                public void onChanged(Long insertedEanCodeId) {
+                    insertResult.removeObserver(this); // this = observer...
+                    analysisArticleJoin.setReferenceArticleEanCodeId( insertedEanCodeId.intValue() );
+                    DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
+                    dataSource.invalidate();
+                    runNextTaskLink( analysisArticleJoin, valuesStateHolder);
+                }
+            };
+            insertResult.observeForever(insertingResultObserver);
+            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+            localDataRepository.insertEanCode( eanCode, insertResult);
+        }
+
     }
 
 }

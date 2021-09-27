@@ -10,15 +10,16 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
 
     private int positionOnList;
     private AnalysisArticleJoin analysisArticleJoin;
-    private ChangeInformer changeInformer;
+    private AnalysisArticleJoinValuesStateHolder valuesStateHolder;
     private boolean needToSave;
     private boolean priceChanged;
     private boolean commentsChanged;
     private boolean referenceArticleChanged;
+    private boolean referenceArticleEanChanged;
 
     public AnalysisArticleJoinViewModel(Application application) {
         super(application);
-        changeInformer = new ChangeInformer();
+        valuesStateHolder = new AnalysisArticleJoinValuesStateHolder();
     }
 
     public void setAnalysisArticleJoin( AnalysisArticleJoin analysisArticleJoin ) {
@@ -39,25 +40,25 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
 
 
     public boolean isAnalysisArticleJoinNotModified() {
-        return changeInformer.isNotAnyValueChanged();
+        return valuesStateHolder.isNotAnyValueChanged();
     }
 
 
-    public ChangeInformer getChangeInformer() {
-        return changeInformer;
+    public AnalysisArticleJoinValuesStateHolder getValuesStateHolder() {
+        return valuesStateHolder;
     }
 
     public void clearNeedToSave( ) {
-        changeInformer.setFlagNeedToSave( false );
+        valuesStateHolder.setFlagNeedToSave( false );
     }
 
     public boolean isNeedToSave() {
-        return changeInformer.isNeedToSaveFlagSet();
+        return valuesStateHolder.isNeedToSaveFlagSet();
     }
 
-    public class ChangeInformer {
+    public class AnalysisArticleJoinValuesStateHolder {
 
-        ChangeInformer() {
+        AnalysisArticleJoinValuesStateHolder() {
             clearFlags();
         }
 
@@ -66,6 +67,7 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
             priceChanged = false;
             commentsChanged = false;
             referenceArticleChanged = false;
+            referenceArticleEanChanged = false;
         };
 
         private void setFlagNeedToSave(boolean valueToSet ) {
@@ -155,13 +157,31 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
         public void setReferenceArticleEan( String ean ) {
             analysisArticleJoin.setReferenceArticleEan( ean );
             setFlagReferenceArticleChanged(true);
+            setFlagReferenceArticleEanChanged(true);
             if (isNeedToSaveFlagNotSet()) {
                 setFlagNeedToSave(true);
             }
         }
 
+        public void clearFlagReferenceArticleEanChanged() {
+            setFlagReferenceArticleEanChanged( false );
+        }
+
+        public void setFlagReferenceArticleEanChanged( boolean valueToSet ) {
+            referenceArticleEanChanged = valueToSet;
+        }
+
+
+        public boolean isReferenceArticleEanChangedFlagSet() {
+            return referenceArticleEanChanged;
+        }
+
+        public boolean isReferenceArticleEanChangedFlagNotSet() {
+            return !referenceArticleEanChanged;
+        }
+
         public void setReferenceArticleDescription( String description ) {
-            analysisArticleJoin.setReferenceArticleEan( description );
+            analysisArticleJoin.setReferenceArticleDescription( description );
             setFlagReferenceArticleChanged(true);
             if (isNeedToSaveFlagNotSet()) {
                 setFlagNeedToSave(true);

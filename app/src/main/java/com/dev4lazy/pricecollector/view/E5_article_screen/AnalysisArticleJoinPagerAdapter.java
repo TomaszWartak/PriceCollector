@@ -69,9 +69,9 @@ public class AnalysisArticleJoinPagerAdapter
         private EditText articleCommentEditText;
         // Ref Article
         // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
-        private EditText competitorArticleNameEditText;
-        private EditText competitorArticleEANEditText;
-        private EditText competitorArticleCommentEditText;
+        private EditText referenceArticleNameEditText;
+        private EditText referenceArticleEANEditText;
+        private EditText referenceArticleDescriptionEditText;
 
         public AnalysisArticleJoinPagerViewHolder(View view ) {
             super(view);
@@ -83,15 +83,23 @@ public class AnalysisArticleJoinPagerAdapter
             // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
             ownCodeTextView = view.findViewById( R.id.analysis_article_OwnCode_editText );
             eanCodeTextView = view.findViewById( R.id.analysis_article_EAN_editText );
+
             competitorPriceEditText = view.findViewById( R.id.analysis_article_CompetitorPrice_editText );
             competitorPriceEditText.addTextChangedListener( new CompetitorPriceEditTextWatcher() );
+
             articleCommentEditText = view.findViewById( R.id.analysis_article_ArticleComment_editText );
             articleCommentEditText.addTextChangedListener( new ArticleCommentEditTextWatcher() );
+
             // Ref Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
-            competitorArticleNameEditText = view.findViewById( R.id.analysis_article_refArticleName_editText );
-            competitorArticleEANEditText = view.findViewById( R.id.analysis_article_refArticleEAN_editText );
-            competitorArticleCommentEditText = view.findViewById( R.id.analysis_article_refArticleComment_editText );
+            referenceArticleNameEditText = view.findViewById( R.id.analysis_article_refArticleName_editText );
+            referenceArticleNameEditText.addTextChangedListener( new ReferenceArticleNameEditTextWatcher() );
+
+            referenceArticleEANEditText = view.findViewById( R.id.analysis_article_refArticleEAN_editText );
+            referenceArticleEANEditText.addTextChangedListener( new ReferenceArticleEanEditTextWatcher() );
+
+            referenceArticleDescriptionEditText = view.findViewById( R.id.analysis_article_refArticleComment_editText );
+            referenceArticleDescriptionEditText.addTextChangedListener( new ReferenceArticleDescriptionEditTextWatcher() );
         }
 
             class CompetitorPriceEditTextWatcher implements TextWatcher  {
@@ -111,7 +119,7 @@ public class AnalysisArticleJoinPagerAdapter
                     AnalysisArticleJoin analysisArticleJoin = getItem( getAbsoluteAdapterPosition() );
                     Double priceFromAnalysisArticleJoin = analysisArticleJoin.getCompetitorStorePrice();
                     if (arePricesNotEqual( priceFromInput, priceFromAnalysisArticleJoin )) {
-                        analysisArticleJoinViewModel.getChangeInformer().setCompetitorStorePrice(priceFromInput);
+                        analysisArticleJoinViewModel.getValuesStateHolder().setCompetitorStorePrice(priceFromInput);
                         //analysisArticleJoin.getCh setCompetitorStorePrice(priceFromInput);
                         //analysisArticleJoinViewModel.setNeedToSave(true);
                         // TODO czy to niżej jest potrzebne do czegoś?
@@ -159,8 +167,8 @@ public class AnalysisArticleJoinPagerAdapter
                     result = areCommentsNotEqual( "1", "" ); // true
                     result = areCommentsNotEqual( "1", "1" ); // false
                     */
-                    if (areCommentsNotEqual( commentsFromInput, commentsFromAnalysisArticleJoin )) {
-                        analysisArticleJoinViewModel.getChangeInformer().setComments( commentsFromInput );
+                    if (areTextsNotEqual( commentsFromInput, commentsFromAnalysisArticleJoin )) {
+                        analysisArticleJoinViewModel.getValuesStateHolder().setComments( commentsFromInput );
                         // TODO XXX analysisArticleJoin.setComments(commentsFromInput);
                         // TODO XXX  analysisArticleJoinViewModel.getChangeInformer().setFlagNeedToSave(true);
                         // TODO czy wiersz niżej jest potrzebne do czegoś?
@@ -168,25 +176,133 @@ public class AnalysisArticleJoinPagerAdapter
                     }
                 }
 
-                private boolean areCommentsNotEqual(String comments1, String comments2 ) {
-                    if (isEmptyOrNull( comments1 )) {
-                        return isNotEmptyOrNotNull( comments2 );
-                    }
-                    return !(comments1.equals(comments2));
-                }
-
-                private boolean isEmptyOrNull( String string ) {
-                    return (string==null) || (string.isEmpty());
-                }
-
-                private boolean isNotEmptyOrNotNull(String string ) {
-                    return !isEmptyOrNull(string);
-                }
-
                 @Override
                 public void afterTextChanged (Editable s){
                 }
             }
+
+        class ReferenceArticleNameEditTextWatcher implements TextWatcher  {
+            @Override
+            public void beforeTextChanged (CharSequence s,int start, int count, int after){
+            }
+
+            @Override
+            public void onTextChanged (CharSequence charSequence,int start, int before, int count){
+                String nameFromInput = referenceArticleNameEditText.getText().toString();
+                AnalysisArticleJoin analysisArticleJoin = getItem( getAbsoluteAdapterPosition() );
+                String nameFromAnalysisArticleJoin = analysisArticleJoin.getReferenceArticleName();
+                    /* TODO test
+                    boolean result = isEmptyOrNull( null ); // true
+                    result = isEmptyOrNull( "" ); // true
+                    result = isEmptyOrNull( "1" ); // false
+                    result = areNamesNotEqual( null, null ); // false
+                    result = areNamesNotEqual( null, "" ); // false
+                    result = areNamesNotEqual( "", null ); // false
+                    result = areNamesNotEqual( "", "" ); // false
+                    result = areNamesNotEqual( null, "1" ); // true
+                    result = areNamesNotEqual( "1", null ); // true
+                    result = areNamesNotEqual( "", "1" ); // true
+                    result = areNamesNotEqual( "1", "" ); // true
+                    result = areNamesNotEqual( "1", "1" ); // false
+                    /*/
+                if (areTextsNotEqual( nameFromInput, nameFromAnalysisArticleJoin )) {
+                    analysisArticleJoinViewModel.getValuesStateHolder().setReferenceArticleName( nameFromInput );
+                    // TODO czy wiersz niżej jest potrzebne do czegoś?
+                    analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
+                }
+            }
+
+            @Override
+            public void afterTextChanged (Editable s){
+            }
+        }
+
+        class ReferenceArticleEanEditTextWatcher implements TextWatcher  {
+            @Override
+            public void beforeTextChanged (CharSequence s,int start, int count, int after){
+            }
+
+            @Override
+            public void onTextChanged (CharSequence charSequence,int start, int before, int count){
+                String eanFromInput = referenceArticleEANEditText.getText().toString();
+                AnalysisArticleJoin analysisArticleJoin = getItem( getAbsoluteAdapterPosition() );
+                String eanFromAnalysisArticleJoin = analysisArticleJoin.getReferenceArticleEan();
+                    /* TODO test
+                    boolean result = isEmptyOrNull( null ); // true
+                    result = isEmptyOrNull( "" ); // true
+                    result = isEmptyOrNull( "1" ); // false
+                    result = areNamesNotEqual( null, null ); // false
+                    result = areNamesNotEqual( null, "" ); // false
+                    result = areNamesNotEqual( "", null ); // false
+                    result = areNamesNotEqual( "", "" ); // false
+                    result = areNamesNotEqual( null, "1" ); // true
+                    result = areNamesNotEqual( "1", null ); // true
+                    result = areNamesNotEqual( "", "1" ); // true
+                    result = areNamesNotEqual( "1", "" ); // true
+                    result = areNamesNotEqual( "1", "1" ); // false
+                    /*/
+                if (areTextsNotEqual( eanFromInput, eanFromAnalysisArticleJoin )) {
+                    analysisArticleJoinViewModel.getValuesStateHolder().setReferenceArticleEan( eanFromInput );
+                    // TODO czy wiersz niżej jest potrzebne do czegoś?
+                    analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
+                }
+            }
+
+            @Override
+            public void afterTextChanged (Editable s){
+            }
+        }
+
+        class ReferenceArticleDescriptionEditTextWatcher implements TextWatcher  {
+            @Override
+            public void beforeTextChanged (CharSequence s,int start, int count, int after){
+            }
+
+            @Override
+            public void onTextChanged (CharSequence charSequence,int start, int before, int count){
+                String descriptionFromInput = referenceArticleDescriptionEditText.getText().toString();
+                AnalysisArticleJoin analysisArticleJoin = getItem( getAbsoluteAdapterPosition() );
+                String descriptionFromAnalysisArticleJoin = analysisArticleJoin.getReferenceArticleDescription();
+                    /* TODO test
+                    boolean result = isEmptyOrNull( null ); // true
+                    result = isEmptyOrNull( "" ); // true
+                    result = isEmptyOrNull( "1" ); // false
+                    result = areNamesNotEqual( null, null ); // false
+                    result = areNamesNotEqual( null, "" ); // false
+                    result = areNamesNotEqual( "", null ); // false
+                    result = areNamesNotEqual( "", "" ); // false
+                    result = areNamesNotEqual( null, "1" ); // true
+                    result = areNamesNotEqual( "1", null ); // true
+                    result = areNamesNotEqual( "", "1" ); // true
+                    result = areNamesNotEqual( "1", "" ); // true
+                    result = areNamesNotEqual( "1", "1" ); // false
+                    /*/
+                if (areTextsNotEqual( descriptionFromInput, descriptionFromAnalysisArticleJoin )) {
+                    analysisArticleJoinViewModel.getValuesStateHolder().setReferenceArticleDescription( descriptionFromInput );
+                    // TODO czy wiersz niżej jest potrzebne do czegoś?
+                    analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
+                }
+            }
+
+            @Override
+            public void afterTextChanged (Editable s){
+            }
+        }
+
+        private boolean areTextsNotEqual(String text1, String text2 ) {
+            if (isEmptyOrNull( text1 )) {
+                return isNotEmptyOrNotNull( text2 );
+            }
+            return !(text1.equals(text2));
+        }
+
+        private boolean isEmptyOrNull( String string ) {
+            return (string==null) || (string.isEmpty());
+        }
+
+        private boolean isNotEmptyOrNotNull(String string ) {
+            return !isEmptyOrNull(string);
+        }
 
         protected void bind( AnalysisArticleJoin analysisArticleJoin ) {
             // Own Article
@@ -202,9 +318,9 @@ public class AnalysisArticleJoinPagerAdapter
             articleCommentEditText.setText( analysisArticleJoin.getComments() );
             // Ref Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
-            competitorArticleNameEditText.setText( analysisArticleJoin.getReferenceArticleName() );
-            competitorArticleEANEditText.setText( analysisArticleJoin.getReferenceArticleEan() );
-            competitorArticleCommentEditText.setText( analysisArticleJoin.getReferenceArticleDescription() );
+            referenceArticleNameEditText.setText( analysisArticleJoin.getReferenceArticleName() );
+            referenceArticleEANEditText.setText( analysisArticleJoin.getReferenceArticleEan() );
+            referenceArticleDescriptionEditText.setText( analysisArticleJoin.getReferenceArticleDescription() );
         }
 
         protected void clear() {
@@ -216,9 +332,9 @@ public class AnalysisArticleJoinPagerAdapter
             articleCommentEditText.setText( null );
             // Ref Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
-            competitorArticleNameEditText.setText( null );
-            competitorArticleEANEditText.setText( null );
-            competitorArticleCommentEditText.setText( null );
+            referenceArticleNameEditText.setText( null );
+            referenceArticleEANEditText.setText( null );
+            referenceArticleDescriptionEditText.setText( null );
         }
 
         protected void cleanArticleAddedData() {
@@ -228,9 +344,9 @@ public class AnalysisArticleJoinPagerAdapter
             articleCommentEditText.setText( "" );
             // Ref Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
-            competitorArticleNameEditText.setText( "" );
-            competitorArticleEANEditText.setText( "" );
-            competitorArticleCommentEditText.setText( "" );
+            referenceArticleNameEditText.setText( "" );
+            referenceArticleEANEditText.setText( "" );
+            referenceArticleDescriptionEditText.setText( "" );
             notifyDataSetChanged();
             // Own Article
             AnalysisArticleJoin analysisArticleJoin = analysisArticleJoinViewModel.getAnalysisArticleJoin();

@@ -133,28 +133,72 @@ public class AnalysisArticlesPagerFragment extends Fragment {
             });
         }
             private void startSavingDataChain(AnalysisArticleJoin analysisArticleJoin ) {
-                AnalysisArticleJoinViewModel.ChangeInformer changeInformer = analysisArticleJoinViewModel.getChangeInformer();
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder = analysisArticleJoinViewModel.getValuesStateHolder();
                 AnalysisArticleJoinDataUpdater.TaskChain taskChain = analysisArticleJoinDataUpdater.getTaskChain();
-                if (changeInformer.isReferenceArticleChangedFlagSet() ) {
+                if (valuesStateHolder.isReferenceArticleChangedFlagSet() ) {
                     taskChain.addTaskLink(
                             analysisArticleJoinDataUpdater.new ReferenceArticleUpdater(
                                     taskChain,
                                     analysisArticleJoin,
-                                    changeInformer ));
+                                    valuesStateHolder
+                            )
+                    );
+                    if (valuesStateHolder.isReferenceArticleEanChangedFlagSet()) {
+                        taskChain.addTaskLink(
+                                analysisArticleJoinDataUpdater.new ReferenceArticleEanUpdater(
+                                        taskChain,
+                                        analysisArticleJoin,
+                                        valuesStateHolder
+                                )
+                        );
+                        taskChain.addTaskLink(
+                                analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
+                                        taskChain,
+                                        analysisArticleJoin,
+                                        valuesStateHolder
+                                )
+                        );
+                    } else {
+                        if (isReferenceArticleNotInDB(analysisArticleJoin)) {
+                            taskChain.addTaskLink(
+                                    analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
+                                            taskChain,
+                                            analysisArticleJoin,
+                                            valuesStateHolder
+                                    )
+                            );
+                        } else {
+                            if (valuesStateHolder.isPriceChangedFlagSet()) {
+                                taskChain.addTaskLink(
+                                    analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
+                                            taskChain,
+                                            analysisArticleJoin,
+                                            valuesStateHolder
+                                    )
+                                );
+                            }
+                        }
+                    }
+                } else {
+                    if (valuesStateHolder.isPriceChangedFlagSet()) {
+                        taskChain.addTaskLink(
+                                analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
+                                        taskChain,
+                                        analysisArticleJoin,
+                                        valuesStateHolder
+                                )
+                        );
+                    }
                 }
-                if (changeInformer.isPriceChangedFlagSet()) {
-                    taskChain.addTaskLink(
-                            analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                                    taskChain,
-                                    analysisArticleJoin,
-                                    changeInformer ));
-                }
-                if (changeInformer.isCommentsChangedFlagSet()) {
+                if (valuesStateHolder.isCommentsChangedFlagSet()) {
                     taskChain.addTaskLink(
                             analysisArticleJoinDataUpdater.new AnalysisArticleUpdater(
                                     taskChain,
                                     analysisArticleJoin,
-                                    changeInformer ));
+                                    valuesStateHolder
+                            )
+
+                    );
                 }
                 /*
                 if (changeInformer.isReferenceArticleChangedFlagSet() ) {
@@ -249,6 +293,13 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                         analysisArticleJoinDataUpdater.updateAnalysisArticle(analysisArticle);
                     }
                  */
+
+        boolean isReferenceArticleNotInDB(AnalysisArticleJoin analysisArticleJoin) {
+            if (analysisArticleJoin.getReferenceArticleId() == null) {
+                return true;
+            }
+            return analysisArticleJoin.getReferenceArticleId() < 1;
+        }
 
         private void setToolbarText( String toolbarText ) {
             int maxLength = toolbarText.length();

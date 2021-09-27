@@ -1,5 +1,6 @@
 package com.dev4lazy.pricecollector.model.entities;
 
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -35,11 +36,15 @@ public class CompetitorPrice {
     private int competitorStoreId;
 
     @ColumnInfo(name = "competitor_store_price")
-    private double competitorStorePrice;
+    private Double competitorStorePrice;
 
-    //  TODO Musi być w CompetitorPrice, bo w każdym sklepie konkurenta, może byc inny art ref
+    // Musi być w CompetitorPrice, bo w każdym sklepie konkurenta, może byc inny art ref
     @ColumnInfo(name = "reference_article_id")
     private int referenceArticleId;
+
+    @ColumnInfo(name = "reference_article_ean_id")
+    @Nullable
+    private int referenceArticleEanCodeId;
 
     public int getId() {
         return id;
@@ -81,11 +86,11 @@ public class CompetitorPrice {
         this.competitorStoreId = competitorStoreId;
     }
 
-    public double getCompetitorStorePrice() {
+    public Double getCompetitorStorePrice() {
         return competitorStorePrice;
     }
 
-    public void setCompetitorStorePrice(double competitorStorePrice) {
+    public void setCompetitorStorePrice(Double competitorStorePrice) {
         this.competitorStorePrice = competitorStorePrice;
     }
 
@@ -97,4 +102,11 @@ public class CompetitorPrice {
         this.referenceArticleId = referenceArticleId;
     }
 
+    public int getReferenceArticleEanCodeId() {
+        return referenceArticleEanCodeId;
+    }
+
+    public void setReferenceArticleEanCodeId(int referenceArticleEanCodeId) {
+        this.referenceArticleEanCodeId = referenceArticleEanCodeId;
+    }
 }

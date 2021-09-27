@@ -352,6 +352,9 @@ public class LocalDataRepository {
     private final EanCodeDao eanCodeDao = AppHandle.getHandle().getLocalDatabase().eanCodeDao();
     private final Data<EanCode> eanCodes = new Data<EanCode>(eanCodeDao);
 
+    public void insertEanCode(EanCode eanCode, MutableLiveData<Long> result ) {
+        eanCodes.insertData( eanCode, result );
+    }
     public void insertEanCodes( ArrayList<EanCode> eanCodeList, ProgressPresenter progressPresenter) {
         eanCodes.insertDataList( eanCodeList, progressPresenter );
     }

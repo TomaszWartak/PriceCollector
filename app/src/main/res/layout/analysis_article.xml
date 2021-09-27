@@ -92,12 +92,13 @@
                     android:layout_height="match_parent"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
+                    android:textColor="@color/colorValue"
                     tools:layout_editor_absoluteX="138dp"
                     tools:layout_editor_absoluteY="478dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Opis artykułu -->
+            <!-- Uwagi  -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/analysis_article_ArticleComment_textInput"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -107,7 +108,7 @@
                 android:layout_marginTop="@dimen/distance"
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
-                android:hint="@string/article_description_label"
+                android:hint="@string/article_remarks_label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysis_article_CompetitorPrice_textInput">
@@ -118,6 +119,7 @@
                     android:layout_height="match_parent"
                     android:inputType="textMultiLine"
                     android:maxLines="4"
+                    android:textColor="@color/colorValue"
                     android:gravity="top"
                     tools:layout_editor_absoluteX="138dp"
                     tools:layout_editor_absoluteY="478dp" />
@@ -176,6 +178,7 @@
                     android:layout_height="match_parent"
                     android:inputType="text"
                     android:maxLines="1"
+                    android:textColor="@color/colorValue"
                     tools:layout_editor_absoluteX="138dp"
                     tools:layout_editor_absoluteY="478dp" />
 
@@ -200,6 +203,7 @@
                     android:layout_height="match_parent"
                     android:inputType="number"
                     android:maxLines="1"
+                    android:textColor="@color/colorValue"
                     tools:layout_editor_absoluteX="138dp"
                     tools:layout_editor_absoluteY="478dp" />
 
@@ -215,7 +219,7 @@
                 android:layout_marginTop="@dimen/distance"
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
-                android:hint="@string/article_description_label"
+                android:hint="@string/article_remarks_label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysis_article_refArticleEAN_textInput">
@@ -226,6 +230,7 @@
                     android:layout_height="match_parent"
                     android:inputType="textMultiLine"
                     android:maxLines="4"
+                    android:textColor="@color/colorValue"
                     android:gravity="top"
                     tools:layout_editor_absoluteX="138dp"
                     tools:layout_editor_absoluteY="478dp" />

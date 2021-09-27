@@ -9,6 +9,8 @@ import android.widget.EditText;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.SearchArticlesCriteria;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
+import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
+import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +26,9 @@ public class SearchArticlesByDataFragment extends Fragment {
     EditText articleAnyTextEditText = null;
 
     AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel = null;
+    StoreViewModel storeViewModel = null;
     SearchArticlesCriteria searchArticlesCriteria = null;
+
 
     public static SearchArticlesByDataFragment newInstance() {
         return new SearchArticlesByDataFragment();
@@ -34,11 +38,17 @@ public class SearchArticlesByDataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_articles_by_data_fragment, container, false);
-        analysisArticleJoinsListViewModel =
-                new ViewModelProvider( getActivity() ).get( AnalysisArticleJoinsListViewModel.class );
+        viewModelsSetup();
         searchArticlesCriteria = analysisArticleJoinsListViewModel.getSearchArticlesCriteria();
         viewSetup( view );
         return view;
+    }
+
+    private void viewModelsSetup() {
+        analysisArticleJoinsListViewModel =
+                new ViewModelProvider( getActivity() ).get( AnalysisArticleJoinsListViewModel.class );
+        storeViewModel =
+                new ViewModelProvider( getActivity() ).get( StoreViewModel.class );
     }
 
     private void viewSetup(View view) {
@@ -157,17 +167,17 @@ public class SearchArticlesByDataFragment extends Fragment {
             setToolbarText();
         }
 
-            private void searchArticles( ) {
-                setSearchByDataCriteria();
-                Navigation.findNavController( getView() ).navigate( R.id.action_searchArticlesFragment_to_analysisArticlesListFragment );
-            }
+        private void searchArticles( ) {
+            setSearchByDataCriteria();
+            Navigation.findNavController( getView() ).navigate( R.id.action_searchArticlesFragment_to_analysisArticlesListFragment );
+        }
 
-                private void setSearchByDataCriteria() {
-                    searchArticlesCriteria.setArticleName( articleNameEditText.getText().toString() );
-                    searchArticlesCriteria.setArticleEAN( articleEANEditText.getText().toString() );
-                    searchArticlesCriteria.setArticleSKU( articleSKUEditText.getText().toString() );
-                    searchArticlesCriteria.setArticleAnyText( articleAnyTextEditText.getText().toString() );
-                }
+            private void setSearchByDataCriteria() {
+                searchArticlesCriteria.setArticleName( articleNameEditText.getText().toString() );
+                searchArticlesCriteria.setArticleEAN( articleEANEditText.getText().toString() );
+                searchArticlesCriteria.setArticleSKU( articleSKUEditText.getText().toString() );
+                searchArticlesCriteria.setArticleAnyText( articleAnyTextEditText.getText().toString() );
+            }
 
     // TODO XXX
     @Override
@@ -193,7 +203,8 @@ public class SearchArticlesByDataFragment extends Fragment {
         }
 
         private void setToolbarText() {
-            String toolbarText = ((AppCompatActivity) getActivity()).getSupportActionBar().getTitle().toString();
+            // TODO XXX String toolbarText = ((AppCompatActivity) getActivity()).getSupportActionBar().getTitle().toString();
+            String toolbarText = storeViewModel.getStore().getName();
             int maxLength = toolbarText.length();
             if (maxLength>24) {
                 maxLength=24;

@@ -33,10 +33,12 @@ public class AnalysisArticleJoin {
     private String ownCode; // kod briko from OwnArticleInfo. by AnalysisArticle.articleId
     @ColumnInfo(name = "value")
     private String eanCode; // from OwnArticleInfo. by AnalysisArticle.articleId
-    private String referenceArticleName; // from Article. by AnalysisArticle.referenceArticleId
-    private String referenceArticleEan; // from Article. by AnalysisArticle.referenceArticleId
+    private String referenceArticleName; // from Article by CompetitorPrice.referenceArticleId
+    @ColumnInfo(name = "reference_article_ean_id")
+    private Integer referenceArticleEanCodeId; // id Ean from EanCode by CompetitorPrice.referenceArticleEanCodeId
+    private String referenceArticleEan; // from EanCode by CompetitorPrice.referenceArticleId
     @ColumnInfo(name = "description")
-    private String referenceArticleDescription; // from Article. by AnalysisArticle.referenceArticleId
+    private String referenceArticleDescription; // from Article by CompetitorPrice.referenceArticleId
 
     /* TODO XXX
     public AnalysisArticleJoin() {
@@ -107,7 +109,7 @@ public class AnalysisArticleJoin {
 
     public int getCompetitorStoreIdInt() {
         if (competitorStoreId==null) {
-            return -1;
+            return 0;
         }
         return competitorStoreId.intValue();
     }
@@ -116,7 +118,7 @@ public class AnalysisArticleJoin {
         if (competitorStoreId==null) {
             return true;
         }
-        return competitorStoreId<0;
+        return competitorStoreId<1;
     }
 
     public void setCompetitorStoreId(int competitorStoreId) {
@@ -129,7 +131,7 @@ public class AnalysisArticleJoin {
 
     public int getCompetitorStorePriceIdInt() {
         if (competitorStorePriceId==null) {
-            return -1;
+            return 0;
         }
         return competitorStorePriceId.intValue();
     }
@@ -160,7 +162,7 @@ public class AnalysisArticleJoin {
 
     public int getReferenceArticleIdInt() {
         if (referenceArticleId==null) {
-            return -1;
+            return 0;
         }
         return referenceArticleId.intValue();
     }
@@ -219,6 +221,21 @@ public class AnalysisArticleJoin {
         if (getReferenceArticleName()==null)
             return false;
         return !getReferenceArticleName().isEmpty();
+    }
+
+    public Integer getReferenceArticleEanCodeId() {
+        return referenceArticleEanCodeId;
+    }
+
+    public int getReferenceArticleEanCodeIdInt() {
+        if (referenceArticleEanCodeId==null) {
+            return 0;
+        }
+        return referenceArticleId.intValue();
+    }
+
+    public void setReferenceArticleEanCodeId(Integer referenceArticleEanCodeId) {
+        this.referenceArticleEanCodeId = referenceArticleEanCodeId;
     }
 
     public String getReferenceArticleEan() {
