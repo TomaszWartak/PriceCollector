@@ -34,7 +34,7 @@ import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 import com.dev4lazy.pricecollector.AppHandle;
 
 @Database(
-    version = 14,
+    version = 15,
     entities = {
         AnalysisCompetitorSlot.class,
         Analysis.class,
@@ -110,6 +110,7 @@ public abstract class LocalDatabase extends RoomDatabase {
                             .addMigrations(MIGRATION_10_11)
                             .addMigrations(MIGRATION_11_12)
                             .addMigrations(MIGRATION_13_14)
+                            .addMigrations(MIGRATION_14_15)
                             /**/
                             .build();
                     instance.updateDatabaseCreated(context);
@@ -250,6 +251,13 @@ public abstract class LocalDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE competitors_prices ADD COLUMN reference_article_ean_id INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
+    static final Migration MIGRATION_14_15 = new Migration(14, 15) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE UNIQUE INDEX index_ean_codes_value ON ean_codes (value)" );
         }
     };
 

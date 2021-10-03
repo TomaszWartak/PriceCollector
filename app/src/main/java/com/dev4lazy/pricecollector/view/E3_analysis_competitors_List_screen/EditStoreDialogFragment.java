@@ -97,7 +97,7 @@ public class EditStoreDialogFragment extends DialogFragment {
         result.observeForever(resultObserver);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyById(store.getCompanyId(),result);
 
-        return getAddStoreDialog(
+        return getEditStoreDialog(
                 viewInflated,
                 storeViewModel,
                 store,
@@ -109,7 +109,7 @@ public class EditStoreDialogFragment extends DialogFragment {
     }
 
     @NonNull
-    private AlertDialog getAddStoreDialog(
+    private AlertDialog getEditStoreDialog(
             View viewInflated,
             StoreViewModel storeViewModel,
             Store store,

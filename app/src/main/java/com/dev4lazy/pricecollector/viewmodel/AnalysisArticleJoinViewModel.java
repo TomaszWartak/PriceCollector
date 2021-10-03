@@ -155,8 +155,8 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
         }
 
         public void setReferenceArticleEan( String ean ) {
-            analysisArticleJoin.setReferenceArticleEan( ean );
-            setFlagReferenceArticleChanged(true);
+            analysisArticleJoin.setReferenceArticleEanCodeValue( ean );
+            // TODO XXX setFlagReferenceArticleChanged(true);
             setFlagReferenceArticleEanChanged(true);
             if (isNeedToSaveFlagNotSet()) {
                 setFlagNeedToSave(true);

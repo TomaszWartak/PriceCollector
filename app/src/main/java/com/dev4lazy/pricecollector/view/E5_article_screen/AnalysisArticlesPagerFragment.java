@@ -23,6 +23,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.utils.TaskChain;
 import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCallback;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
@@ -134,32 +135,36 @@ public class AnalysisArticlesPagerFragment extends Fragment {
         }
             private void startSavingDataChain(AnalysisArticleJoin analysisArticleJoin ) {
                 AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder = analysisArticleJoinViewModel.getValuesStateHolder();
-                AnalysisArticleJoinDataUpdater.TaskChain taskChain = analysisArticleJoinDataUpdater.getTaskChain();
-                if (valuesStateHolder.isReferenceArticleChangedFlagSet() ) {
-                    taskChain.addTaskLink(
-                            analysisArticleJoinDataUpdater.new ReferenceArticleUpdater(
-                                    taskChain,
-                                    analysisArticleJoin,
-                                    valuesStateHolder
-                            )
-                    );
-                    if (valuesStateHolder.isReferenceArticleEanChangedFlagSet()) {
-                        taskChain.addTaskLink(
-                                analysisArticleJoinDataUpdater.new ReferenceArticleEanUpdater(
-                                        taskChain,
-                                        analysisArticleJoin,
-                                        valuesStateHolder
-                                )
-                        );
-                        taskChain.addTaskLink(
-                                analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                                        taskChain,
-                                        analysisArticleJoin,
-                                        valuesStateHolder
-                                )
-                        );
-                    } else {
-                        if (isReferenceArticleNotInDB(analysisArticleJoin)) {
+                TaskChain taskChain = analysisArticleJoinDataUpdater.getTaskChain();
+                /*
+                A. Jeśli dane artykułu referencyjnego (nazwa, opis) (Article) zostały zmienione, trzeba:
+                    1. zapisać go lub uaktualnić.
+                    2. Sprawdzić, czy przy tej okazji został zmieniony jego kod EAN (EanCode)
+                        Jeśli tak i :
+                        a) nie ma ustawionej wartości, to trzeba go usunąć z BD, jeśli jest w DB
+                        b) ma ustawiną wartość - należy ean zapisać i zarejestrowac tą zmianę w cenie (CompetitorPrice).
+                    3. Jeśli Ean nie był zmienioeny, to trzeba sprawdzić, czy cena była zmieniana i
+                        a) jesli była zmieniana, i jeśli tak, to zapisać ją
+                        b) jeśli nie była zmieniana, to w sytuacji, gdy artykuł referencyjny jeszcze nie istnieje w BD,
+                        to trzeba jego id zapisać w cenie - czyli trzeba ją tak, czy siak, zapisać
+                B. Jeśli dane artykułu referencyjnego (nazwa, opis) (Article) nie zostały zmienione, trzeba:
+                    1. Sprawdzić, czy został zmieniony kod EAN (EanCode). Jeśli został zmieniony, to
+                        a) gdy nie ma ustawionej wartości, to trzeba go usunąć z BD (jeśli jest w DB)
+                        Gdy ma ustawioną wartość, to:
+                        b) jeśli artykuł referencyjny jeszcze nie istnieje w BD, to trzeba go zapisać
+                        c) zapisać ean
+                        d) i zaktualizować id art ref i ean w cenie (CompetitorPrice).
+                    2. Jeśli Ean nie był zmieniony, to
+                        a) trzeba sprawdzićż czy cena była zmieniona i zapisać ją
+                C. Jeśli został zmieniony Artykuł Strategiczny (AnalysisArticle) to trzeba go zapisać.
+                */
+        /*A*/   if (valuesStateHolder.isReferenceArticleChangedFlagSet() ) {
+                    savingChangesOfReferenceArticle( analysisArticleJoin, valuesStateHolder, taskChain);
+        /*B*/   } else {
+            /*B1*/  if (valuesStateHolder.isReferenceArticleEanChangedFlagSet()) { /**/
+                        savingChangesOfRefArtEanIfRefArtIsNotChanged(analysisArticleJoin, valuesStateHolder, taskChain);
+            /*B2*/  } else {
+                /*B2a*/ if (valuesStateHolder.isPriceChangedFlagSet()) {
                             taskChain.addTaskLink(
                                     analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
                                             taskChain,
@@ -167,30 +172,10 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                                             valuesStateHolder
                                     )
                             );
-                        } else {
-                            if (valuesStateHolder.isPriceChangedFlagSet()) {
-                                taskChain.addTaskLink(
-                                    analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                                            taskChain,
-                                            analysisArticleJoin,
-                                            valuesStateHolder
-                                    )
-                                );
-                            }
                         }
                     }
-                } else {
-                    if (valuesStateHolder.isPriceChangedFlagSet()) {
-                        taskChain.addTaskLink(
-                                analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                                        taskChain,
-                                        analysisArticleJoin,
-                                        valuesStateHolder
-                                )
-                        );
-                    }
                 }
-                if (valuesStateHolder.isCommentsChangedFlagSet()) {
+          /*C*/ if (valuesStateHolder.isCommentsChangedFlagSet()) {
                     taskChain.addTaskLink(
                             analysisArticleJoinDataUpdater.new AnalysisArticleUpdater(
                                     taskChain,
@@ -200,106 +185,158 @@ public class AnalysisArticlesPagerFragment extends Fragment {
 
                     );
                 }
-                /*
-                if (changeInformer.isReferenceArticleChangedFlagSet() ) {
-                    analysisArticleJoinDataUpdater.saveReferenceArticle(analysisArticleJoin, changeInformer);
-                } else {
-                    if (changeInformer.isPriceChangedFlagSet()) {
-                        analysisArticleJoinDataUpdater.saveCompetitorPrice(analysisArticleJoin, changeInformer);
-                    } else {
-                        if (changeInformer.isCommentsChangedFlagSet()) {
-                            analysisArticleJoinDataUpdater.saveAnalysisArticle(analysisArticleJoin, changeInformer);
-                        }
-                    }
-                }
-                 */
                 analysisArticleJoinDataUpdater.getTaskChain().startIt();
             }
 
-                /* TODO XXX
-                private void saveReferenceArticle(
-                        AnalysisArticleJoin analysisArticleJoin,
-                        AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
-                    analysisArticleJoinDataUpdater.saveReferenceArticle(analysisArticleJoin, changeInformer);
-                }
-
-                    private boolean isReferenceArticleInDB(AnalysisArticleJoin analysisArticleJoin ) {
-                        return analysisArticleJoinDataUpdater.isReferenceArticleInDB(analysisArticleJoin);
-                    }
-
-                    private Article prepareReferenceArticleData( AnalysisArticleJoin analysisArticleJoin ) {
-                        // TODO ??? co z kodem kreskowym artykułu referencyjnego
-                        return analysisArticleJoinDataUpdater.prepareReferenceArticleData(analysisArticleJoin);
-                    }
-
-                    private void updateReferenceArticle(
-                            Article referenceArticle,
-                            AnalysisArticleJoin analysisArticleJoin,
-                            AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
-                        analysisArticleJoinDataUpdater.updateReferenceArticle(referenceArticle, analysisArticleJoin, changeInformer);
-                    }
-
-                    private void insertReferenceArticle(
-                            Article referenceArticle,
-                            AnalysisArticleJoin analysisArticleJoin,
-                            AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
-                        analysisArticleJoinDataUpdater.insertReferenceArticle(referenceArticle, analysisArticleJoin, changeInformer);
-                    }
-
-                private void saveCompetitorPrice(
-                        AnalysisArticleJoin analysisArticleJoin,
-                        AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
-
-                    analysisArticleJoinDataUpdater.saveCompetitorPrice(analysisArticleJoin, changeInformer);
-                }
-
-                    private boolean isCompetitorStorePriceInDB(AnalysisArticleJoin analysisArticleJoin ) {
-                        return analysisArticleJoinDataUpdater.isCompetitorStorePriceInDB(analysisArticleJoin);
-                    }
-
-
-                        private void updateCompetitorPrice(
-                                CompetitorPrice competitorPrice,
-                                AnalysisArticleJoin analysisArticleJoin,
-                                AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
-
-                            analysisArticleJoinDataUpdater.updateCompetitorPrice(competitorPrice, analysisArticleJoin, changeInformer);
-                        }
-
-                        private CompetitorPrice prepareCompetitorPriceData(AnalysisArticleJoin analysisArticleJoin ) {
-                            return analysisArticleJoinDataUpdater.prepareCompetitorPriceData(analysisArticleJoin);
-                        }
-
-                        private void insertCompetitorPrice(
-                                CompetitorPrice competitorPrice,
-                                AnalysisArticleJoin analysisArticleJoin,
-                                AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
-                            analysisArticleJoinDataUpdater.insertCompetitorPrice(competitorPrice, analysisArticleJoin, changeInformer);
-                        }
-
-                private void saveAnalysisArticle(
-                        AnalysisArticleJoin analysisArticleJoin,
-                        AnalysisArticleJoinViewModel.ChangeInformer changeInformer ) {
-                    analysisArticleJoinDataUpdater.saveAnalysisArticle(analysisArticleJoin, changeInformer);
-                }
-
-                    private AnalysisArticle prepareAnalysisArticleData(AnalysisArticleJoin analysisArticleJoin ) {
-                        // analysisArticle.setArticleNewPrice( null );
-                        // analysisArticle.setCompetitorStorePriceId( analysisArticleJoin.getCompetitorStorePriceId() );
-                        return analysisArticleJoinDataUpdater.prepareAnalysisArticleData(analysisArticleJoin);
-                    }
-
-                    private void updateAnalysisArticle(AnalysisArticle analysisArticle ) {
-                        analysisArticleJoinDataUpdater.updateAnalysisArticle(analysisArticle);
-                    }
-                 */
-
-        boolean isReferenceArticleNotInDB(AnalysisArticleJoin analysisArticleJoin) {
-            if (analysisArticleJoin.getReferenceArticleId() == null) {
-                return true;
-            }
-            return analysisArticleJoin.getReferenceArticleId() < 1;
+    private void savingChangesOfReferenceArticle(
+            AnalysisArticleJoin analysisArticleJoin,
+            AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder,
+            TaskChain taskChain) {
+ /*A1*/ taskChain.addTaskLink(
+            analysisArticleJoinDataUpdater.new ReferenceArticleUpdater(
+                taskChain,
+                analysisArticleJoin,
+                valuesStateHolder
+            )
+        );
+        if (valuesStateHolder.isReferenceArticleEanChangedFlagSet()) {
+     /*A2*/ savingChangesOfRefArtEanIfRefArtIsChanged( analysisArticleJoin, valuesStateHolder, taskChain );
+        } else {
+     /*A3*/ savingChangesOfCompetitorPriceIfRefArtIsChanged( analysisArticleJoin, valuesStateHolder, taskChain );
         }
+    }
+
+    private void /*A2*/ savingChangesOfRefArtEanIfRefArtIsChanged(
+            AnalysisArticleJoin analysisArticleJoin,
+            AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder,
+            TaskChain taskChain) {
+/*A2a*/ if (isReferenceArticleEanCleared(analysisArticleJoin)) {
+            if (isReferenceArticleEanInDB(analysisArticleJoin)) {
+                taskChain.addTaskLink(
+                        analysisArticleJoinDataUpdater.new ReferenceArticleEanDeleter(
+                                taskChain,
+                                analysisArticleJoin,
+                                valuesStateHolder
+                        )
+                );
+                taskChain.addTaskLink(
+                        analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
+                                taskChain,
+                                analysisArticleJoin,
+                                valuesStateHolder
+                        )
+                );
+            }
+/*A2b*/} else {
+            taskChain.addTaskLink(
+                    analysisArticleJoinDataUpdater.new ReferenceArticleEanUpdater(
+                            taskChain,
+                            analysisArticleJoin,
+                            valuesStateHolder
+                    )
+            );
+            taskChain.addTaskLink(
+                    analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
+                            taskChain,
+                            analysisArticleJoin,
+                            valuesStateHolder
+                    )
+            );
+        }
+    }
+
+    private void /*A3*/ savingChangesOfCompetitorPriceIfRefArtIsChanged(
+            AnalysisArticleJoin analysisArticleJoin,
+            AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder,
+            TaskChain taskChain) {
+/*A3a*/ if (valuesStateHolder.isPriceChangedFlagSet()) {
+            taskChain.addTaskLink(
+                    analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
+                            taskChain,
+                            analysisArticleJoin,
+                            valuesStateHolder
+                    )
+            );
+        } else {
+    /*A3b*/  if (isReferenceArticleNotInDB(analysisArticleJoin)) {
+                taskChain.addTaskLink(
+                        analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
+                                taskChain,
+                                analysisArticleJoin,
+                                valuesStateHolder
+                        )
+                );
+            }
+        }
+    }
+
+    private void savingChangesOfRefArtEanIfRefArtIsNotChanged(
+            AnalysisArticleJoin analysisArticleJoin,
+            AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder,
+            TaskChain taskChain) {
+/*B1a*/ if (isReferenceArticleEanCleared(analysisArticleJoin)) {
+            if (isReferenceArticleEanInDB(analysisArticleJoin)) {
+                taskChain.addTaskLink(
+                        analysisArticleJoinDataUpdater.new ReferenceArticleEanDeleter(
+                                taskChain,
+                                analysisArticleJoin,
+                                valuesStateHolder
+                        )
+                );
+                taskChain.addTaskLink(
+                        analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
+                                taskChain,
+                                analysisArticleJoin,
+                                valuesStateHolder
+                        )
+                );
+            }
+         } else {
+     /*B1b*/ if (isReferenceArticleNotInDB(analysisArticleJoin)) {
+                 taskChain.addTaskLink(
+                         analysisArticleJoinDataUpdater.new ReferenceArticleUpdater(
+                                 taskChain,
+                                 analysisArticleJoin,
+                                 valuesStateHolder
+                         )
+                 );
+             }
+     /*B1c*/ taskChain.addTaskLink(
+                     analysisArticleJoinDataUpdater.new ReferenceArticleEanUpdater(
+                             taskChain,
+                             analysisArticleJoin,
+                             valuesStateHolder
+                     )
+             );
+     /*B1d*/ taskChain.addTaskLink(
+                     analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
+                             taskChain,
+                             analysisArticleJoin,
+                             valuesStateHolder
+                     )
+             );
+         }
+/*B1b*/
+    }
+
+                private boolean isReferenceArticleEanCleared(AnalysisArticleJoin analysisArticleJoin) {
+                    return analysisArticleJoin.isReferenceArticleEanNotSet();
+                }
+
+
+                boolean isReferenceArticleEanInDB(AnalysisArticleJoin analysisArticleJoin) {
+                    if (analysisArticleJoin.getReferenceArticleEanCodeId() == null) {
+                        return false;
+                    }
+                    return analysisArticleJoin.getReferenceArticleEanCodeId() > 0;
+                }
+
+                boolean isReferenceArticleNotInDB(AnalysisArticleJoin analysisArticleJoin) {
+                        if (analysisArticleJoin.getReferenceArticleId() == null) {
+                            return true;
+                        }
+                        return analysisArticleJoin.getReferenceArticleId() < 1;
+                }
 
         private void setToolbarText( String toolbarText ) {
             int maxLength = toolbarText.length();

@@ -64,8 +64,8 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
                             new CustomSql( "own_articles_infos.sector_id" ),
                             new CustomSql( "own_articles_infos.department_id" ),
                             new CustomSql( "a2.name referenceArticleName" ),
-                            new CustomSql( "ec2.id referenceArticleEanCodeId" ),
-                            new CustomSql( "ec2.value referenceArticleEan" ),
+                            new CustomSql( "ec2.id reference_article_ean_id" ),
+                            new CustomSql( "ec2.value referenceArticleEanCodeValue" ),
                             new CustomSql( "a2.description" )
                     )
                     .addCustomFromTable("analysis_articles aa1")

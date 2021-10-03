@@ -226,7 +226,7 @@ public class AnalysisArticleJoinPagerAdapter
             public void onTextChanged (CharSequence charSequence,int start, int before, int count){
                 String eanFromInput = referenceArticleEANEditText.getText().toString();
                 AnalysisArticleJoin analysisArticleJoin = getItem( getAbsoluteAdapterPosition() );
-                String eanFromAnalysisArticleJoin = analysisArticleJoin.getReferenceArticleEan();
+                String eanFromAnalysisArticleJoin = analysisArticleJoin.getReferenceArticleEanCodeValue();
                     /* TODO test
                     boolean result = isEmptyOrNull( null ); // true
                     result = isEmptyOrNull( "" ); // true
@@ -319,7 +319,7 @@ public class AnalysisArticleJoinPagerAdapter
             // Ref Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
             referenceArticleNameEditText.setText( analysisArticleJoin.getReferenceArticleName() );
-            referenceArticleEANEditText.setText( analysisArticleJoin.getReferenceArticleEan() );
+            referenceArticleEANEditText.setText( analysisArticleJoin.getReferenceArticleEanCodeValue() );
             referenceArticleDescriptionEditText.setText( analysisArticleJoin.getReferenceArticleDescription() );
         }
 
@@ -354,7 +354,7 @@ public class AnalysisArticleJoinPagerAdapter
             analysisArticleJoin.setCompetitorStorePrice( null );
             // Ref Article
             analysisArticleJoin.setReferenceArticleName( "" );
-            analysisArticleJoin.setReferenceArticleEan( "" );
+            analysisArticleJoin.setReferenceArticleEanCodeValue( "" );
             analysisArticleJoin.setReferenceArticleDescription( "" );
         }
     }

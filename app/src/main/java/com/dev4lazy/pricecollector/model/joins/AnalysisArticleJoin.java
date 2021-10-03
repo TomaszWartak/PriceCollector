@@ -36,7 +36,7 @@ public class AnalysisArticleJoin {
     private String referenceArticleName; // from Article by CompetitorPrice.referenceArticleId
     @ColumnInfo(name = "reference_article_ean_id")
     private Integer referenceArticleEanCodeId; // id Ean from EanCode by CompetitorPrice.referenceArticleEanCodeId
-    private String referenceArticleEan; // from EanCode by CompetitorPrice.referenceArticleId
+    private String referenceArticleEanCodeValue; // from EanCode by CompetitorPrice.referenceArticleId
     @ColumnInfo(name = "description")
     private String referenceArticleDescription; // from Article by CompetitorPrice.referenceArticleId
 
@@ -231,25 +231,29 @@ public class AnalysisArticleJoin {
         if (referenceArticleEanCodeId==null) {
             return 0;
         }
-        return referenceArticleId.intValue();
+        return referenceArticleEanCodeId.intValue();
     }
 
     public void setReferenceArticleEanCodeId(Integer referenceArticleEanCodeId) {
         this.referenceArticleEanCodeId = referenceArticleEanCodeId;
     }
 
-    public String getReferenceArticleEan() {
-        return referenceArticleEan;
+    public String getReferenceArticleEanCodeValue() {
+        return referenceArticleEanCodeValue;
     }
 
-    public void setReferenceArticleEan(String referenceArticleEan) {
-        this.referenceArticleEan = referenceArticleEan;
+    public void setReferenceArticleEanCodeValue(String referenceArticleEanCodeValue) {
+        this.referenceArticleEanCodeValue = referenceArticleEanCodeValue;
     }
 
     public boolean isReferenceArticleEanSet() {
-        if (getReferenceArticleEan()==null)
+        if (getReferenceArticleEanCodeValue()==null)
             return false;
-        return !getReferenceArticleEan().isEmpty();
+        return !getReferenceArticleEanCodeValue().isEmpty();
+    }
+
+    public boolean isReferenceArticleEanNotSet() {
+        return !isReferenceArticleEanSet();
     }
 
     public String getReferenceArticleDescription() {

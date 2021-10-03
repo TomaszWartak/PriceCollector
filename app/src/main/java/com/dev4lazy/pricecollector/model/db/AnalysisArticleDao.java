@@ -214,9 +214,10 @@ public interface AnalysisArticleDao extends _Dao<AnalysisArticle> {
             "a1.name name, " +
             "own_articles_infos.ownCode, " +
             "ec1.value, " +
-            "ec2.id referenceArticleEanCodeId, " +
             "a2.name referenceArticleName, " +
-            "ec2.value referenceArticleEan, " +
+            "ec2.id reference_article_ean_id, " + // referenceArticleEanCodeId
+            // TODO XXX "cp.reference_article_ean_id referenceArticleEanCodeId, " +
+            "ec2.value referenceArticleEanCodeValue, " +
             "a2.description " +
             "FROM analysis_articles aa1 " +
             "INNER JOIN articles a1 ON a1.id = aa1.article_id  " +

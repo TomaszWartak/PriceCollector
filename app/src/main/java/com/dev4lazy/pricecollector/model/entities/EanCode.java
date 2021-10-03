@@ -17,7 +17,8 @@ import androidx.room.PrimaryKey;
     },
     indices = {
         @Index( value = "article_id" ),
-        @Index( value = "remote_id" /*, unique = true */ )
+        @Index( value = "remote_id" /*, unique = true */ ),
+        @Index( value = "value", unique = true  )
     }
 )
 public class EanCode {

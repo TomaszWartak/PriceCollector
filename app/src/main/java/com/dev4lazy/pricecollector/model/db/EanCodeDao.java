@@ -22,6 +22,12 @@ public interface EanCodeDao extends _Dao<EanCode>{
     @Query("SELECT COUNT(*) FROM ean_codes")
     LiveData<Integer> getNumberOfLiveData();
 
+    /*
+    @Override
+    @Query("DELETE FROM ean_codes WHERE id= :id")
+    int deleteById(int id);
+    */
+
     @Override
     @Query("DELETE FROM ean_codes")
     int deleteAll();

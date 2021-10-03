@@ -244,9 +244,9 @@ public class CompetitorsSlotsListView extends ListView {
                             // TOD XXX Observer<Integer> updatingResultObserver =
                             storeDeleteResult.observe(AppUtils.getActivity(getContext()), new Observer<Integer>() {
                                 @Override
-                                public void onChanged(Integer deletedRows) {
+                                public void onChanged(Integer deletedCount) {
                                     storeDeleteResult.removeObserver(this); // this = observer...
-                                    if ((deletedRows != null) && (deletedRows > 0)) {
+                                    if ((deletedCount != null) && (deletedCount > 0)) {
                                         storeViewModel.getData().removeObservers(AppUtils.getActivity(getContext()) /* hostFragment.getActivity() */);
                                         // TODO XXXX tutaj muszisz wyczyścić slot do wyświetlenia i zapisania
                                         competitorSlotFullData.setChosenStore(null);

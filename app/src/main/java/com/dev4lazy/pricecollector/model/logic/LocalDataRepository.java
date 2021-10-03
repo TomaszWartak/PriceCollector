@@ -355,11 +355,17 @@ public class LocalDataRepository {
     public void insertEanCode(EanCode eanCode, MutableLiveData<Long> result ) {
         eanCodes.insertData( eanCode, result );
     }
+
     public void insertEanCodes( ArrayList<EanCode> eanCodeList, ProgressPresenter progressPresenter) {
         eanCodes.insertDataList( eanCodeList, progressPresenter );
     }
 
-//-----------------------------------------------------------------------
+    public void deleteEanCode(EanCode eanCode, MutableLiveData<Integer> result ) {
+        eanCodes.deleteData( eanCode, result );
+    }
+
+
+    //-----------------------------------------------------------------------
 // Family
     private final FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
     private final Data<Family> families = new Data<>( familyDao );

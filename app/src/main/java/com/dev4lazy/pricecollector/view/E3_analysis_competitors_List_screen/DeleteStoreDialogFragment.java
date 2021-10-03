@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.R;
@@ -97,7 +96,7 @@ public class DeleteStoreDialogFragment extends DialogFragment {
         result.observeForever(resultObserver);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyById(store.getCompanyId(),result);
 
-        return getAddStoreDialog(
+        return getDeleteStoreDialog(
                 viewInflated,
                 storeViewModel,
                 store,
@@ -109,7 +108,7 @@ public class DeleteStoreDialogFragment extends DialogFragment {
     }
 
     @NonNull
-    private AlertDialog getAddStoreDialog(
+    private AlertDialog getDeleteStoreDialog(
             View viewInflated,
             StoreViewModel storeViewModel,
             Store store,

@@ -7,15 +7,14 @@ import com.dev4lazy.pricecollector.model.entities.CompetitorPrice;
 import com.dev4lazy.pricecollector.model.entities.EanCode;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
+import com.dev4lazy.pricecollector.utils.TaskChain;
+import com.dev4lazy.pricecollector.utils.TaskLink;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
-
-import java.util.ArrayList;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.paging.DataSource;
-import androidx.room.ColumnInfo;
 
 public class AnalysisArticleJoinDataUpdater {
     // TODO XXX private final AnalysisArticlesPagerFragment analysisArticlesPagerFragment;
@@ -34,72 +33,6 @@ public class AnalysisArticleJoinDataUpdater {
 
     public void setTaskChain(TaskChain taskChain) {
         this.taskChain = taskChain;
-    }
-
-    class TaskChain {
-
-        private ArrayList<TaskLink> chain;
-
-        TaskChain() {
-            chain = new ArrayList<>();
-        }
-
-        void addTaskLink( TaskLink taskLink ) {
-            if (!chain.isEmpty()) {
-                chain.get(chain.size()-1).setNextTaskLink(taskLink);
-            }
-            chain.add( taskLink );
-        }
-
-        void startIt() {
-            if (!chain.isEmpty()) {
-                chain.get(0).doIt();
-            }
-        }
-    }
-
-    abstract class TaskLink {
-
-        private TaskChain taskChain;
-        private TaskLink nextTaskLink;
-
-        public TaskLink(TaskChain taskChain) {
-            this.taskChain = taskChain;
-        }
-
-        protected TaskLink getNextTaskLink() {
-            return nextTaskLink;
-        }
-
-        protected void setNextTaskLink(TaskLink nextTaskLink) {
-            this.nextTaskLink = nextTaskLink;
-        }
-
-        /**
-         * Uruchamia następny TaskLink (jeśli jest) z danymi potrzebnymi do wykonania.
-         * Musi byc unmieszczona jako ostatnia instrukcja w kodzie każdego TaskLink.
-         * @param data (Object...) - dane do przekazania do nastęnego TaskLink.
-         */
-        public void runNextTaskLink(Object... data ) {
-            if (getNextTaskLink()!=null) {
-                getNextTaskLink().takeData( data );
-                getNextTaskLink().doIt();
-            } else {
-                taskChain.chain.clear();
-            }
-        }
-
-        /**
-         * Przekazuje dane potrzebne do wykonania następnego TaskLink.
-         * @param data (Object...) - dane do przekazania do nastęnego TaskLink.
-         */
-        abstract protected void takeData(Object... data);
-
-        /**
-         * Wywołuje kod do wykonania.
-         */
-        abstract protected void doIt();
-
     }
 
     class AnalysisArticleJoinUpdater extends TaskLink {
@@ -159,11 +92,7 @@ public class AnalysisArticleJoinDataUpdater {
 
         Article prepareReferenceArticleData(AnalysisArticleJoin analysisArticleJoin) {
             Article article = new Article();
-            int id = analysisArticleJoin.getReferenceArticleIdInt();
-            if (id<0) {
-                id=0;
-            }
-            article.setId( id );
+            article.setId( getProperId( analysisArticleJoin.getReferenceArticleId()) );
             article.setRemote_id(-1); // -1 = Artykuł referencyjny nie ma odpowiednika w zdalnej bazie danych
             article.setName(analysisArticleJoin.getReferenceArticleName());
             article.setDescription(analysisArticleJoin.getReferenceArticleDescription());
@@ -182,12 +111,6 @@ public class AnalysisArticleJoinDataUpdater {
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
                     runNextTaskLink( analysisArticleJoin, valuesStateHolder);
-                    /* TODO XXX
-                    if (getNextLink()!=null) {
-                        getNextLink().takeData( analysisArticleJoin, changeInformer );
-                        getNextLink().doIt();
-                    }
-                    */
                 }
             };
             updateResult.observeForever(updatingResultObserver);
@@ -213,6 +136,135 @@ public class AnalysisArticleJoinDataUpdater {
             insertResult.observeForever(insertingResultObserver);
             LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
             localDataRepository.insertArticle(referenceArticle, insertResult);
+        }
+
+    }
+
+    class ReferenceArticleEanUpdater extends AnalysisArticleJoinUpdater {
+
+        public ReferenceArticleEanUpdater(
+                TaskChain taskChain,
+                AnalysisArticleJoin analysisArticleJoin,
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            super( taskChain );
+            aAJ = analysisArticleJoin;
+            cI = valuesStateHolder;
+        }
+
+        @Override
+        public void doIt() {
+            saveReferenceArticleEan(aAJ, cI);
+        }
+
+        void saveReferenceArticleEan(
+                AnalysisArticleJoin analysisArticleJoin,
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            valuesStateHolder.clearFlagReferenceArticleEanChanged();
+            EanCode eanCode = prepareEanCodeData( analysisArticleJoin );
+            insertEanCode( eanCode, analysisArticleJoin, valuesStateHolder );
+        }
+
+        EanCode prepareEanCodeData( AnalysisArticleJoin analysisArticleJoin ) {
+            EanCode eanCode = new EanCode();
+            // todo
+            //  id pobrać z refernceArticle? - nie... bo tam nie ma id EAN
+            //  Trzeba ew. pobrać cały obiekt na podstawie article_id z ref Article.
+            //  Jesli jest zmieniany, to znaczy, że to jest inny Ean do tego samego artykułu...?
+            //  Czy założyć, że jeden artykuł, to jeden EAN <-- NIE...
+            //  OK. Zakładamy, że jest wiele Eanów do jednego artykułu.
+            //  - zmiana wartrości ean -> dodanie noiwego kodu ean
+            //  - jesli jest wiele eanów -> który wyświetlić przy art ref i analysis article?
+            //      - pierwszy
+            //  - jak się zachowa query do joina przy wielu eanach do jednego artykułu?
+            //  - generalnie nie obsługuję nigdzie wielu eanach do jednego artykułu
+            //  Może dodac pole idEan do Joina, to będzie łatwiej może
+            eanCode.setId( analysisArticleJoin.getReferenceArticleEanCodeIdInt() );
+            // todo remote_id ustawić na -1
+            eanCode.setRemote_id(-1);
+            // todo skopiowac z Join
+            eanCode.setValue( analysisArticleJoin.getReferenceArticleEanCodeValue() );
+            // todo skopiowac z ref Article
+            eanCode.setArticleId( analysisArticleJoin.getReferenceArticleId() );
+            return eanCode;
+        }
+
+        private void insertEanCode(
+                EanCode eanCode,
+                AnalysisArticleJoin analysisArticleJoin,
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            MutableLiveData<Long> insertResult = new MutableLiveData<Long>();
+            Observer<Long> insertingResultObserver = new Observer<Long>() {
+                @Override
+                public void onChanged(Long insertedEanCodeId) {
+                    insertResult.removeObserver(this); // this = observer...
+                    analysisArticleJoin.setReferenceArticleEanCodeId( insertedEanCodeId.intValue() );
+                    DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
+                    dataSource.invalidate();
+                    runNextTaskLink( analysisArticleJoin, valuesStateHolder);
+                }
+            };
+            insertResult.observeForever(insertingResultObserver);
+            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+            localDataRepository.insertEanCode( eanCode, insertResult);
+        }
+
+    }
+
+    class ReferenceArticleEanDeleter extends AnalysisArticleJoinUpdater {
+
+        public ReferenceArticleEanDeleter(
+                TaskChain taskChain,
+                AnalysisArticleJoin analysisArticleJoin,
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            super( taskChain );
+            aAJ = analysisArticleJoin;
+            cI = valuesStateHolder;
+        }
+
+        @Override
+        public void doIt() {
+            deleteReferenceArticleEan(aAJ, cI);
+        }
+
+        void deleteReferenceArticleEan(
+                AnalysisArticleJoin analysisArticleJoin,
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            valuesStateHolder.clearFlagReferenceArticleEanChanged();
+            EanCode eanCode = prepareEanCodeData( analysisArticleJoin );
+            deleteEanCode( eanCode, analysisArticleJoin, valuesStateHolder );
+        }
+
+        EanCode prepareEanCodeData( AnalysisArticleJoin analysisArticleJoin ) {
+            EanCode eanCode = new EanCode();
+            eanCode.setId( analysisArticleJoin.getReferenceArticleEanCodeIdInt() );
+            eanCode.setArticleId( analysisArticleJoin.getReferenceArticleId() );
+            eanCode.setValue( analysisArticleJoin.getEanCode() );
+            eanCode.setRemote_id(-1); // -1 = w zdalnej bazie danych nie ma takiego kodu
+            return eanCode;
+        }
+
+        private void deleteEanCode(
+                EanCode eanCode,
+                AnalysisArticleJoin analysisArticleJoin,
+                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            MutableLiveData<Integer> deleteResult = new MutableLiveData<>();
+            Observer<Integer> deletingResultObserver = new Observer<Integer>() {
+                @Override
+                public void onChanged(Integer deletedCount) {
+                    deleteResult.removeObserver(this); // this = observer...
+                    // TODO !!! trzeba zaktualizowac dane w join i Competitor price
+                    // join .referenceArticleEanCodeId i .referenceArticleEan
+                    // CP .referenceArticleEanCodeId
+                    analysisArticleJoin.setReferenceArticleEanCodeId( null );
+                    analysisArticleJoin.setReferenceArticleEanCodeValue( null );
+                    DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
+                    dataSource.invalidate();
+                    runNextTaskLink( analysisArticleJoin, valuesStateHolder);
+                }
+            };
+            deleteResult.observeForever(deletingResultObserver);
+            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+            localDataRepository.deleteEanCode( eanCode, deleteResult);
         }
 
     }
@@ -284,20 +336,6 @@ public class AnalysisArticleJoinDataUpdater {
             competitorPrice.setReferenceArticleId( analysisArticleJoin.getReferenceArticleIdInt());
             competitorPrice.setReferenceArticleEanCodeId( getProperId( analysisArticleJoin.getReferenceArticleEanCodeId() ) );
             return competitorPrice;
-        }
-
-        private int getProperId( Integer id ) {
-            int properId;
-            if (idIsNotSet(id)) {
-                properId=0;
-            } else {
-                properId = id.intValue();
-            }
-            return properId;
-        }
-
-        private boolean idIsNotSet( Integer id ) {
-            return ((id==null) || (id<1));
         }
 
         void insertCompetitorPrice(
@@ -380,74 +418,18 @@ public class AnalysisArticleJoinDataUpdater {
         }
     }
 
-    class ReferenceArticleEanUpdater extends AnalysisArticleJoinUpdater {
-
-        public ReferenceArticleEanUpdater(
-                TaskChain taskChain,
-                AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
-            super( taskChain );
-            aAJ = analysisArticleJoin;
-            cI = valuesStateHolder;
+    private int getProperId( Integer id ) {
+        int properId;
+        if (idIsNotSet(id)) {
+            properId=0;
+        } else {
+            properId = id.intValue();
         }
+        return properId;
+    }
 
-        @Override
-        public void doIt() {
-            saveReferenceArticleEan(aAJ, cI);
-        }
-
-        void saveReferenceArticleEan(
-                AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
-            valuesStateHolder.clearFlagReferenceArticleEanChanged();
-            EanCode eanCode = prepareEanCodeData( analysisArticleJoin );
-            insertEanCode( eanCode, analysisArticleJoin, valuesStateHolder );
-        }
-
-        EanCode prepareEanCodeData( AnalysisArticleJoin analysisArticleJoin ) {
-            EanCode eanCode = new EanCode();
-            // todo
-            //  id pobrać z refernceArticle? - nie... bo tam nie ma id EAN
-            //  Trzeba ew. pobrać cały obiekt na podstawie article_id z ref Article.
-            //  Jesli jest zmieniany, to znaczy, że to jest inny Ean do tego samego artykułu...?
-            //  Czy założyć, że jeden artykuł, to jeden EAN <-- NIE...
-            //  OK. Zakładamy, że jest wiele Eanów do jednego artykułu.
-            //  - zmiana wartrości ean -> dodanie noiwego kodu ean
-            //  - jesli jest wiele eanów -> który wyświetlić przy art ref i analysis article?
-            //      - pierwszy
-            //  - jak się zachowa query do joina przy wielu eanach do jednego artykułu?
-            //  - generalnie nie obsługuję nigdzie wielu eanach do jednego artykułu
-            //  Może dodac pole idEan do Joina, to będzie łatwiej może
-            eanCode.setId( analysisArticleJoin.getReferenceArticleEanCodeIdInt() );
-            // todo remote_id ustawić na -1
-            eanCode.setRemote_id(-1);
-            // todo skopiowac z Join
-            eanCode.setValue( analysisArticleJoin.getReferenceArticleEan() );
-            // todo skopiowac z ref Article
-            eanCode.setArticleId( analysisArticleJoin.getReferenceArticleId() );
-            return eanCode;
-        }
-
-        private void insertEanCode(
-                EanCode eanCode,
-                AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
-            MutableLiveData<Long> insertResult = new MutableLiveData<Long>();
-            Observer<Long> insertingResultObserver = new Observer<Long>() {
-                @Override
-                public void onChanged(Long insertedEanCodeId) {
-                    insertResult.removeObserver(this); // this = observer...
-                    analysisArticleJoin.setReferenceArticleEanCodeId( insertedEanCodeId.intValue() );
-                    DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
-                    dataSource.invalidate();
-                    runNextTaskLink( analysisArticleJoin, valuesStateHolder);
-                }
-            };
-            insertResult.observeForever(insertingResultObserver);
-            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-            localDataRepository.insertEanCode( eanCode, insertResult);
-        }
-
+    private boolean idIsNotSet( Integer id ) {
+        return ((id==null) || (id<1));
     }
 
 }

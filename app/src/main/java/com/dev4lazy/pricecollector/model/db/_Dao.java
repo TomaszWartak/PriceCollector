@@ -6,6 +6,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.RawQuery;
 import androidx.sqlite.db.SimpleSQLiteQuery;
@@ -47,6 +48,11 @@ public interface _Dao<D> {
      * Zwraca ilość usuniętych wierszy
      */
     int delete( D data );
+
+    /*
+    @Delete
+    int deleteById(int id);
+    */
 
     int deleteAll();
 
