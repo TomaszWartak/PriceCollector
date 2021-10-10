@@ -25,6 +25,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.model.logic.AnalysisArticleJoinValuesStateHolder;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
 import com.dev4lazy.pricecollector.utils.TaskChain;
 import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCallback;
@@ -52,22 +53,6 @@ public class AnalysisArticlesPagerFragment extends Fragment {
         return new AnalysisArticlesPagerFragment();
     }
 
-    // TODO XXX ?
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO XXX startMainActivityLifecycleObserving();
-    }
-
-        /* TODO XXX - zastanów się, czy nie trzeba  gdzies zakończyc obserwacji (onPause(), onStop(),
-        //	 onDestroyView()
-        private void startMainActivityLifecycleObserving() {
-            Lifecycle activityLifecycle = getActivity().getLifecycle();
-            activityLifecycle.addObserver(this);
-        }
-
-         */
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -75,7 +60,6 @@ public class AnalysisArticlesPagerFragment extends Fragment {
         viewModelsSetup();
         analysisArticleJoinDataUpdater = new AnalysisArticleJoinDataUpdater( analysisArticleJoinsListViewModel );
         viewPagerSetup( view );
-        // TODO XXX setOnBackPressedCallback();
         setToolbarText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getArticleName() );
         viewPagerSubscribtion( analysisArticleJoinViewModel );
         return view;
@@ -179,10 +163,10 @@ public class AnalysisArticlesPagerFragment extends Fragment {
 
     public void restoreReferenceArticleEanCodeValue() {
         analysisArticleJoinViewModel.restoreReferenceArticleEanCodeValue();
-        AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder =
+        AnalysisArticleJoinValuesStateHolder valuesStateHolder =
                 analysisArticleJoinViewModel.getValuesStateHolder();
         valuesStateHolder.clearFlagReferenceArticleEanChanged();
-        ustawienie need to save jeśli inne flagi sa na true
+        valuesStateHolder.setFlagNeedToSave( valuesStateHolder.isAnyDataChangedFlagSet() );
     }
 
     public void refreshPagerAdapter() {
@@ -194,7 +178,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
     private void validateAndStartSavingDataScroledFrom(
                     AnalysisArticleJoin analysisArticleJoin,
                     int positionToBack ) {
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder =
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder =
                         analysisArticleJoinViewModel.getValuesStateHolder();
                 if (valuesStateHolder.isReferenceArticleEanChangedFlagSet()) {
                     checkEanCodeForDuplication_IfNot_StartSavingDataChain(
@@ -210,7 +194,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
             int positionToBack) {
         AnalysisArticleJoin tempAnalysisArticleJoinToRestore =
                 analysisArticleJoinViewModel.getCopyOfAnalysisArticleJoinForRestore();
-        AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder tempAnalysisArticleJoinValuesStateHolder =
+        AnalysisArticleJoinValuesStateHolder tempAnalysisArticleJoinValuesStateHolder =
                 analysisArticleJoinViewModel.getCopyOfValuesStateHolder();
         MutableLiveData<Integer> countEanCodeWithValueResult = new MutableLiveData<>();
         Observer<Integer> resultObserver = new Observer<Integer>() {
@@ -220,23 +204,14 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                 // Czyli nie można dodać tego Eana...
                 if (eanCodesCount>0) {
                     String duplicationMessage =
-                        "Kod EAN "+
-                        analysisArticleJoin.getReferenceArticleEanCodeValue()+
-                        "\r\n"+
+                        "DANE NIE ZOSTAŁY ZAPISANE" + "\r\n"+
+                        "Kod EAN "+ analysisArticleJoin.getReferenceArticleEanCodeValue() + "\r\n"+
                         " jest już przypisany do innego artykułu"; // TODO Hardcoded
                     showMessage( duplicationMessage );
-                    /* TODO XXX
-                    DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
-                    dataSource.invalidate();
-                    analysisArticleJoinPagerAdapter.notifyDataSetChanged();
-                    analysisArticleJoinPagerAdapter.notifyItemChanged(positionToBack);
-                    */
                     analysisArticleJoinViewModel.setToRestoreAfterEanValueDupliaction( true );
-                    // todo ???? tempAnalysisArticleJoinValuesStateHolder.setFlagReferenceArticleEanChanged( false );
                     analysisArticleJoinViewModel.setValuesStateHolder( tempAnalysisArticleJoinValuesStateHolder );
                     analysisArticleJoinViewModel.setAnalysisArticleJoinForRestore( tempAnalysisArticleJoinToRestore );
                     backToPage(positionToBack);
-                    // TODO Miło byłoby ustawic kolor ean na czerwony?
                 } else {
                     startSavingDataChain( analysisArticleJoin );
                 }
@@ -262,7 +237,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
             };
 
             private void startSavingDataChain(AnalysisArticleJoin analysisArticleJoin ) {
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder = analysisArticleJoinViewModel.getValuesStateHolder();
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder = analysisArticleJoinViewModel.getValuesStateHolder();
                 TaskChain taskChain = analysisArticleJoinDataUpdater.getTaskChain();
                 /*
                 A. Jeśli dane artykułu referencyjnego (nazwa, opis) (Article) zostały zmienione, trzeba:
@@ -292,7 +267,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
             /*B1*/  if (valuesStateHolder.isReferenceArticleEanChangedFlagSet()) { /**/
                         savingChangesOfRefArtEanIfRefArtIsNotChanged(analysisArticleJoin, valuesStateHolder, taskChain);
             /*B2*/  } else {
-                /*B2a*/ if (valuesStateHolder.isPriceChangedFlagSet()) {
+                /*B2a*/ if (valuesStateHolder.isCompetitorPriceChangedFlagSet()) {
                             taskChain.addTaskLink(
                                     analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
                                             taskChain,
@@ -318,7 +293,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
 
     private void savingChangesOfReferenceArticle(
             AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder,
+            AnalysisArticleJoinValuesStateHolder valuesStateHolder,
             TaskChain taskChain) {
  /*A1*/ taskChain.addTaskLink(
             analysisArticleJoinDataUpdater.new ReferenceArticleUpdater(
@@ -336,7 +311,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
 
     private void /*A2*/ savingChangesOfRefArtEanIfRefArtIsChanged(
             AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder,
+            AnalysisArticleJoinValuesStateHolder valuesStateHolder,
             TaskChain taskChain) {
 /*A2a*/ if (isReferenceArticleEanCleared(analysisArticleJoin)) {
             if (isReferenceArticleEanInDB(analysisArticleJoin)) {
@@ -375,9 +350,9 @@ public class AnalysisArticlesPagerFragment extends Fragment {
 
     private void /*A3*/ savingChangesOfCompetitorPriceIfRefArtIsChanged(
             AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder,
+            AnalysisArticleJoinValuesStateHolder valuesStateHolder,
             TaskChain taskChain) {
-/*A3a*/ if (valuesStateHolder.isPriceChangedFlagSet()) {
+/*A3a*/ if (valuesStateHolder.isCompetitorPriceChangedFlagSet()) {
             taskChain.addTaskLink(
                     analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
                             taskChain,
@@ -400,7 +375,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
 
     private void savingChangesOfRefArtEanIfRefArtIsNotChanged(
             AnalysisArticleJoin analysisArticleJoin,
-            AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder,
+            AnalysisArticleJoinValuesStateHolder valuesStateHolder,
             TaskChain taskChain) {
 /*B1a*/ if (isReferenceArticleEanCleared(analysisArticleJoin)) {
             if (isReferenceArticleEanInDB(analysisArticleJoin)) {
@@ -474,21 +449,6 @@ public class AnalysisArticlesPagerFragment extends Fragment {
             toolbarText = toolbarText.substring(0,maxLength);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(toolbarText);
         }
-
-        /* TODO XXX
-        private void setOnBackPressedCallback() {
-            OnBackPressedCallback callback = new OnBackPressedCallback(true ) {
-                @Override
-                public void handleOnBackPressed() {
-                    analysisArticleJoinPagerAdapter.getCurrentList().get( analysisArticleJoinViewModel.getRecyclerViewPosition() )
-                    analysisArticleJoinViewModel.setAnalysisArticleJoin( getItem( getAdapterPosition() ) );
-                    analysisArticleJoinViewModel.setRecyclerViewPosition( getAdapterPosition() );
-                    NavHostFragment.findNavController(ge).navigateUp();
-                }
-            };
-            getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-        }
-        */
 
         private void viewPagerSubscribtion( AnalysisArticleJoinViewModel analysisArticleJoinViewModel ) {
             analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().observe(getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {

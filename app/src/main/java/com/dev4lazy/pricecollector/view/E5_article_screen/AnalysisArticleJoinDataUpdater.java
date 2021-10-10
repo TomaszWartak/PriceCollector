@@ -6,10 +6,10 @@ import com.dev4lazy.pricecollector.model.entities.Article;
 import com.dev4lazy.pricecollector.model.entities.CompetitorPrice;
 import com.dev4lazy.pricecollector.model.entities.EanCode;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
+import com.dev4lazy.pricecollector.model.logic.AnalysisArticleJoinValuesStateHolder;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
 import com.dev4lazy.pricecollector.utils.TaskChain;
 import com.dev4lazy.pricecollector.utils.TaskLink;
-import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 
 import androidx.lifecycle.MutableLiveData;
@@ -38,7 +38,7 @@ public class AnalysisArticleJoinDataUpdater {
     class AnalysisArticleJoinUpdater extends TaskLink {
 
         protected AnalysisArticleJoin aAJ;
-        protected AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder cI;
+        protected AnalysisArticleJoinValuesStateHolder cI;
 
         public AnalysisArticleJoinUpdater(TaskChain taskChain ) {
             super(taskChain);
@@ -50,7 +50,7 @@ public class AnalysisArticleJoinDataUpdater {
         @Override
         public void takeData(Object... data) {
             aAJ = (AnalysisArticleJoin)data[0];
-            cI = (AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder)data[1];
+            cI = (AnalysisArticleJoinValuesStateHolder)data[1];
         }
 
     }
@@ -60,7 +60,7 @@ public class AnalysisArticleJoinDataUpdater {
         public ReferenceArticleUpdater(
                 TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             super(taskChain);
             aAJ = analysisArticleJoin;
             cI = valuesStateHolder;
@@ -73,7 +73,7 @@ public class AnalysisArticleJoinDataUpdater {
 
         void saveReferenceArticle(
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             valuesStateHolder.clearFlagReferenceArticleChanged();
             Article referenceArticle = prepareReferenceArticleData(analysisArticleJoin);
             if (isReferenceArticleInDB(analysisArticleJoin)) {
@@ -102,7 +102,7 @@ public class AnalysisArticleJoinDataUpdater {
         void updateReferenceArticle(
                 Article referenceArticle,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Integer> updateResult = new MutableLiveData<Integer>();
             Observer<Integer> updatingResultObserver = new Observer<Integer>() {
                 @Override
@@ -121,7 +121,7 @@ public class AnalysisArticleJoinDataUpdater {
         void insertReferenceArticle(
                 Article referenceArticle,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Long> insertResult = new MutableLiveData<Long>();
             Observer<Long> insertingResultObserver = new Observer<Long>() {
                 @Override
@@ -145,7 +145,7 @@ public class AnalysisArticleJoinDataUpdater {
         public ReferenceArticleEanUpdater(
                 TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             super( taskChain );
             aAJ = analysisArticleJoin;
             cI = valuesStateHolder;
@@ -158,7 +158,7 @@ public class AnalysisArticleJoinDataUpdater {
 
         void saveReferenceArticleEan(
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             valuesStateHolder.clearFlagReferenceArticleEanChanged();
             EanCode eanCode = prepareEanCodeData( analysisArticleJoin );
             insertEanCode( eanCode, analysisArticleJoin, valuesStateHolder );
@@ -191,7 +191,7 @@ public class AnalysisArticleJoinDataUpdater {
         private void insertEanCode(
                 EanCode eanCode,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Long> insertResult = new MutableLiveData<Long>();
             Observer<Long> insertingResultObserver = new Observer<Long>() {
                 @Override
@@ -215,7 +215,7 @@ public class AnalysisArticleJoinDataUpdater {
         public ReferenceArticleEanDeleter(
                 TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             super( taskChain );
             aAJ = analysisArticleJoin;
             cI = valuesStateHolder;
@@ -228,7 +228,7 @@ public class AnalysisArticleJoinDataUpdater {
 
         void deleteReferenceArticleEan(
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             valuesStateHolder.clearFlagReferenceArticleEanChanged();
             EanCode eanCode = prepareEanCodeData( analysisArticleJoin );
             deleteEanCode( eanCode, analysisArticleJoin, valuesStateHolder );
@@ -246,7 +246,7 @@ public class AnalysisArticleJoinDataUpdater {
         private void deleteEanCode(
                 EanCode eanCode,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Integer> deleteResult = new MutableLiveData<>();
             Observer<Integer> deletingResultObserver = new Observer<Integer>() {
                 @Override
@@ -274,7 +274,7 @@ public class AnalysisArticleJoinDataUpdater {
         public CompetitorPriceUpdater(
                 TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             super( taskChain );
             aAJ = analysisArticleJoin;
             cI = valuesStateHolder;
@@ -287,8 +287,8 @@ public class AnalysisArticleJoinDataUpdater {
 
         void saveCompetitorPrice(
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
-            valuesStateHolder.clearFlagPriceChanged();
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+            valuesStateHolder.clearFlagCompetitorPriceChanged();
             CompetitorPrice competitorPrice = prepareCompetitorPriceData(analysisArticleJoin);
             if (isCompetitorStorePriceInDB(analysisArticleJoin)) {
                 updateCompetitorPrice(competitorPrice, analysisArticleJoin, valuesStateHolder);
@@ -308,7 +308,7 @@ public class AnalysisArticleJoinDataUpdater {
         void updateCompetitorPrice(
                 CompetitorPrice competitorPrice,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Integer> updateResult = new MutableLiveData<Integer>();
             Observer<Integer> updatingResultObserver = new Observer<Integer>() {
                 @Override
@@ -341,7 +341,7 @@ public class AnalysisArticleJoinDataUpdater {
         void insertCompetitorPrice(
                 CompetitorPrice competitorPrice,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Long> insertResult = new MutableLiveData<Long>();
             Observer<Long> insertingResultObserver = new Observer<Long>() {
                 @Override
@@ -364,7 +364,7 @@ public class AnalysisArticleJoinDataUpdater {
         public AnalysisArticleUpdater(
                 TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             super( taskChain );
             aAJ = analysisArticleJoin;
             cI = valuesStateHolder;
@@ -377,7 +377,7 @@ public class AnalysisArticleJoinDataUpdater {
 
         void saveAnalysisArticle(
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             valuesStateHolder.clearFlagCommentsChanged();
             AnalysisArticle analysisArticle = prepareAnalysisArticleData(analysisArticleJoin);
             updateAnalysisArticle( analysisArticle, analysisArticleJoin, valuesStateHolder);
@@ -401,7 +401,7 @@ public class AnalysisArticleJoinDataUpdater {
         void updateAnalysisArticle(
                 AnalysisArticle analysisArticle,
                 AnalysisArticleJoin analysisArticleJoin,
-                AnalysisArticleJoinViewModel.AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
+                AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
             MutableLiveData<Integer> updateResult = new MutableLiveData<Integer>();
             Observer<Integer> updatingResultObserver = new Observer<Integer>() {
                 @Override
