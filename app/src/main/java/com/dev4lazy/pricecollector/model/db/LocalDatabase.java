@@ -96,7 +96,7 @@ public abstract class LocalDatabase extends RoomDatabase {
                             //.addCallback(roomDatabaseCallback)
                             // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to odkomentuj .fallback...
                             // i za komentuj .addMigrations
-                            // .fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
+                            //.fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
                             /**/
                             .addMigrations(MIGRATION_1_2)
                             .addMigrations(MIGRATION_2_3)
@@ -260,6 +260,15 @@ public abstract class LocalDatabase extends RoomDatabase {
             database.execSQL("CREATE UNIQUE INDEX index_ean_codes_value ON ean_codes (value)" );
         }
     };
+
+    /*/ W tej wersji SQLite DROP COLUMN nie nie jest obsługiwane...
+    static final Migration MIGRATION_15_16 = new Migration(15, 16) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE analysis_articles DROP COLUMN competitor_store_id");
+        }
+    };
+    /*/
 
     private void updateDatabaseCreated(final Context context) {
         if (context.getDatabasePath(DATABASE_NAME).exists()) {

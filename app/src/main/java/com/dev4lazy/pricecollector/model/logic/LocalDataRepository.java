@@ -47,6 +47,10 @@ import com.dev4lazy.pricecollector.model.entities.UOProject;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
+import com.healthmarketscience.sqlbuilder.CustomSql;
+import com.healthmarketscience.sqlbuilder.FunctionCall;
+import com.healthmarketscience.sqlbuilder.SelectQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -351,6 +355,23 @@ public class LocalDataRepository {
 // EanCode
     private final EanCodeDao eanCodeDao = AppHandle.getHandle().getLocalDatabase().eanCodeDao();
     private final Data<EanCode> eanCodes = new Data<EanCode>(eanCodeDao);
+
+    public void askEanCodeNumberOf( MutableLiveData<Integer> result ) {
+        eanCodes.getNumberOfData( result );
+    }
+
+    public void countEanCodesWithValue( String eanValue, MutableLiveData<Integer> eanCodesCountResult) {
+        List<Object> queryArguments = new ArrayList<>();
+        queryArguments.add( eanValue );
+        String queryStr = new SelectQuery()
+                .addCustomColumns(FunctionCall.countAll())
+                .addCustomFromTable("ean_codes")
+                .addCondition(BinaryCondition.equalTo(new CustomSql("value"), new CustomSql("?")))
+                .validate()
+                .toString();
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery( queryStr, queryArguments.toArray() );
+        eanCodes.getNumberOfData( query, eanCodesCountResult);
+    }
 
     public void insertEanCode(EanCode eanCode, MutableLiveData<Long> result ) {
         eanCodes.insertData( eanCode, result );

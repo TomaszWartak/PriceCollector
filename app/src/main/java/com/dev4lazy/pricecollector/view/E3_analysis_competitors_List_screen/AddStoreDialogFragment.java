@@ -167,7 +167,7 @@ public class AddStoreDialogFragment extends DialogFragment {
 
     private boolean isValid(Store store) {
         validationMessage = "";
-        if (store.getCompanyId()<0) {
+        if (store.getCompanyId()<1) {
             validationMessage = getString(R.string.choose_competitor);
             return false;
         }

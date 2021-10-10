@@ -121,7 +121,7 @@ public class AnalysisArticleJoin {
         return competitorStoreId<1;
     }
 
-    public void setCompetitorStoreId(int competitorStoreId) {
+    public void setCompetitorStoreId(Integer competitorStoreId) {
         this.competitorStoreId = competitorStoreId;
     }
 
@@ -136,7 +136,7 @@ public class AnalysisArticleJoin {
         return competitorStorePriceId.intValue();
     }
 
-    public void setCompetitorStorePriceId(int competitorStorePriceId) {
+    public void setCompetitorStorePriceId(Integer competitorStorePriceId) {
         this.competitorStorePriceId = competitorStorePriceId;
     }
 
@@ -167,7 +167,7 @@ public class AnalysisArticleJoin {
         return referenceArticleId.intValue();
     }
 
-    public void setReferenceArticleId(int referenceArticleId) {
+    public void setReferenceArticleId(Integer referenceArticleId) {
         this.referenceArticleId = referenceArticleId;
     }
 

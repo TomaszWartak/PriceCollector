@@ -49,17 +49,16 @@ public class AnalysisArticleJoinPagerAdapter
         if (analysisArticleJoin == null) {
             holder.clear();
         } else {
-            holder.bind(analysisArticleJoin);
+            holder.bind( analysisArticleJoin );
         }
     }
 
     /* TODO XXX @Override */
-    public void cleanArticleAddedData() {
-        holder.cleanArticleAddedData();
+    public void clearCompetitorArticleDataOnScreen() {
+        holder.clearCompetitorArticleDataOnScreen();
     }
 
-    class AnalysisArticleJoinPagerViewHolder
-            extends RecyclerView.ViewHolder {
+    class AnalysisArticleJoinPagerViewHolder extends RecyclerView.ViewHolder {
 
         // Own Article
         // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
@@ -244,7 +243,7 @@ public class AnalysisArticleJoinPagerAdapter
                 if (areTextsNotEqual( eanFromInput, eanFromAnalysisArticleJoin )) {
                     analysisArticleJoinViewModel.getValuesStateHolder().setReferenceArticleEan( eanFromInput );
                     // TODO czy wiersz niżej jest potrzebne do czegoś?
-                    analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
+                    // analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
                 }
             }
 
@@ -304,7 +303,7 @@ public class AnalysisArticleJoinPagerAdapter
             return !isEmptyOrNull(string);
         }
 
-        protected void bind( AnalysisArticleJoin analysisArticleJoin ) {
+        protected void bind(AnalysisArticleJoin analysisArticleJoin ) {
             // Own Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
             ownCodeTextView.setText( analysisArticleJoin.getOwnCode() );
@@ -337,7 +336,7 @@ public class AnalysisArticleJoinPagerAdapter
             referenceArticleDescriptionEditText.setText( null );
         }
 
-        protected void cleanArticleAddedData() {
+        protected void clearCompetitorArticleDataOnScreen() {
             // Own Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
             competitorPriceEditText.setText( "" );
@@ -348,15 +347,8 @@ public class AnalysisArticleJoinPagerAdapter
             referenceArticleEANEditText.setText( "" );
             referenceArticleDescriptionEditText.setText( "" );
             notifyDataSetChanged();
-            // Own Article
-            AnalysisArticleJoin analysisArticleJoin = analysisArticleJoinViewModel.getAnalysisArticleJoin();
-            analysisArticleJoin.setComments( "" );
-            analysisArticleJoin.setCompetitorStorePrice( null );
-            // Ref Article
-            analysisArticleJoin.setReferenceArticleName( "" );
-            analysisArticleJoin.setReferenceArticleEanCodeValue( "" );
-            analysisArticleJoin.setReferenceArticleDescription( "" );
         }
+
     }
 
 }
