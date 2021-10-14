@@ -146,5 +146,7 @@
     <string name="article_remarks_label">Uwagi</string>
     <string name="analyzes_toolbar_text">Badania</string>
     <string name="competitors_toolbar_text">Konkurenci</string>
+    <string name="ean_duplication_message_part1">DANE NIE ZOSTAŁY ZAPISANE\nKod EAN</string>
+    <string name="ean_duplication_message_part2">\njest już przypisany do innego artykułu</string>
 
 </resources>

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
-import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
+import com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppUtils;
@@ -165,7 +165,7 @@ public class AnalyzesRecyclerView extends RecyclerView {
             }
 
             public void updateArticlesAllData( MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
-                AnalysisDataUpdater.getInstance().insertArticles( analysis, finalResult, progressPresenter );
+                AnalysisDataDownloader.getInstance().insertArticles( analysis, finalResult, progressPresenter );
             }
 
             protected void clear() {

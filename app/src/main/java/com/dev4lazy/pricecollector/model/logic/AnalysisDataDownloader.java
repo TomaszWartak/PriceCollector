@@ -30,20 +30,20 @@ import java.util.List;
 import static com.dev4lazy.pricecollector.view.ProgressPresenter.NO_PROGRESS_PRESENTER;
 
 /**
- * AnalysisDataUpdater
+ * AnalysisDataDownloader
  *
  * Służy do aktualizacji danych związanych z analizą konkurencji.
- * - po zalogowaniu sprawdza, czy na serwerze danych są jakieś dane do pobrania
+ * - po zalogowaniu sprawdza, czy na serwerze zdalnym są jakieś dane do pobrania
  * - jeśli tak, sygnalizuje UI, że istnieje konieczność aktualizacji
  * - Jeśli użytkownik podejmie decyzję o aktualizacji, aktualizuje dane przez repozytorium
  */
-public class AnalysisDataUpdater {
+public class AnalysisDataDownloader {
 
 //----------------------------------------------------------------
 // Obsługa singletona
-    private static final String TAG = "AnalysisDataUpdater";
+    private static final String TAG = "AnalysisDataDownloader";
 
-    private static AnalysisDataUpdater instance;
+    private static AnalysisDataDownloader instance;
 
     private ArrayList<RemoteAnalysisRow> classScopeRemoteAnalysisRowsList;
     private HashMap<Integer, Article> classScopeArticleMap; // Article.getRemote_id()
@@ -56,15 +56,15 @@ public class AnalysisDataUpdater {
     private HashMap<Integer, OwnArticleInfo> classScopeOwnArticleInfoMap; // OwnArticleInfo.getArticleId()
 
 
-    private AnalysisDataUpdater() {
+    private AnalysisDataDownloader() {
         newAnalysisReadyToDownload.setValue(false);
     }
 
-    public static AnalysisDataUpdater getInstance() {
+    public static AnalysisDataDownloader getInstance() {
         if (instance == null) {
-            synchronized (AnalysisDataUpdater.class) {
+            synchronized (AnalysisDataDownloader.class) {
                 if (instance == null) {
-                    instance = new AnalysisDataUpdater();
+                    instance = new AnalysisDataDownloader();
                 }
             }
         }
@@ -135,14 +135,14 @@ public class AnalysisDataUpdater {
     }
 
     /*
-    Zapisuje dane podstawowe analizy analysisBasicData w bazie lokalnej
+    todo ??? Zapisuje dane podstawowe analizy analysisBasicData w bazie lokalnej
      */
     public void saveAnalysisBasicData() {
         // todo
     }
 
     /*
-    Odczytuje dane podstawowe analizy z bazy lokalnej
+    todo ??? Odczytuje dane podstawowe analizy z bazy lokalnej
     Efekt uboczny: Ustawia wartość analysisBasicData
      */
     public void readAnalysisBasicData() {

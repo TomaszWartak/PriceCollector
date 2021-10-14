@@ -91,4 +91,6 @@
     <string name="article_remarks_label">Remarks</string>
     <string name="analyzes_toolbar_text">Analyzes</string>
     <string name="competitors_toolbar_text">Competitors</string>
+    <string name="ean_duplication_message_part1">DATA NOT SAVED\nEAN code</string>
+    <string name="ean_duplication_message_part2">\nis is assigned to a other article</string>
 </resources>

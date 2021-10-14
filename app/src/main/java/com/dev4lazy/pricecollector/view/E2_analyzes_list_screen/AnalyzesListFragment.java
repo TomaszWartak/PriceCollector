@@ -25,14 +25,14 @@ import androidx.paging.PagedList;
 import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
-import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
+import com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel2;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
-import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
+import static com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader.getInstance;
 
 public class AnalyzesListFragment extends Fragment {
 
@@ -144,8 +144,8 @@ public class AnalyzesListFragment extends Fragment {
 
         private void newAnalyzesCheck() {
             /*newAnalyzesReady = new MutableLiveData<>();
-            AnalysisDataUpdater analysisDataUpdater = getInstance();
-            newAnalyzesReady.setValue( analysisDataUpdater.isNewAnalysisReadyToDownlad() );
+            AnalysisDataDownloader analysisDataDownloader = getInstance();
+            newAnalyzesReady.setValue( analysisDataDownloader.isNewAnalysisReadyToDownlad() );
             newAnalyzesReady.observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
                 @Override
                 public void onChanged( Boolean newAnalyzesReady  ) {
@@ -154,8 +154,8 @@ public class AnalyzesListFragment extends Fragment {
                     }
                 }
             }); */
-            AnalysisDataUpdater analysisDataUpdater = getInstance();
-            analysisDataUpdater.getNewAnalysisReadyToDownladLD().observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
+            AnalysisDataDownloader analysisDataDownloader = getInstance();
+            analysisDataDownloader.getNewAnalysisReadyToDownladLD().observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
                 @Override
                 public void onChanged( Boolean newAnalyzesReady  ) {
                     if (newAnalyzesReady) {
@@ -210,7 +210,7 @@ public class AnalyzesListFragment extends Fragment {
 
 
     public void updateArticlesAllData( ProgressPresenter progressPresenter ) {
-        AnalysisDataUpdater.getInstance().insertArticles( progressPresenter );
+        AnalysisDataDownloader.getInstance().insertArticles( progressPresenter );
     }
 
     //todo test
@@ -222,8 +222,8 @@ public class AnalyzesListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AnalysisDataUpdater analysisDataUpdater = getInstance();
-        if (analysisDataUpdater.isNewAnalysisReadyToDownlad()) {
+        AnalysisDataDownloader analysisDataDownloader = getInstance();
+        if (analysisDataDownloader.isNewAnalysisReadyToDownlad()) {
             showAskUserForAnalyzesDataDownload( view );
         }
     }
@@ -246,7 +246,7 @@ public class AnalyzesListFragment extends Fragment {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        AnalysisDataUpdater.getInstance().downloadAnalysisBasicData();
+                                        AnalysisDataDownloader.getInstance().downloadAnalysisBasicData();
                                         analyzesRecyclerView.refresh();
                                     }
                                 }

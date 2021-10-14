@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.view.E5_article_screen;
+package com.dev4lazy.pricecollector.model.logic;
 
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
@@ -22,7 +22,7 @@ public class AnalysisArticleJoinDataUpdater {
 
     private TaskChain taskChain;
 
-    public AnalysisArticleJoinDataUpdater(AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel ) {
+    public AnalysisArticleJoinDataUpdater( AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel ) {
        this.analysisArticleJoinsListViewModel = analysisArticleJoinsListViewModel;
        taskChain = new TaskChain();
     }

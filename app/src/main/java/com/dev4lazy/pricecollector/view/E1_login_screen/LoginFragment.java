@@ -29,7 +29,7 @@ import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater;
+import com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader;
 import com.dev4lazy.pricecollector.model.logic.User;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
@@ -41,7 +41,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
-import static com.dev4lazy.pricecollector.model.logic.AnalysisDataUpdater.getInstance;
+import static com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader.getInstance;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -270,7 +270,7 @@ public class LoginFragment
             // użytkownik -> sklep amcierzysty, dział ew sektor
             // sprawdzenie co słychać w zdalnej bazie danych -> poniżej jest getNewAnalysisInfo()
             // ew info do użytkownika
-            // zob. klasę .model.logic.AnalysisDataUpdater
+            // zob. klasę .model.logic.AnalysisDataDownloader
             // zob. OneNote Kodowanie / Po zalogowaniu / ??Aktualizacja AnalyzesListFragment
 
         }
@@ -315,8 +315,8 @@ public class LoginFragment
                 };
                 pleaseWaitSpinner.setVisibility(View.VISIBLE);
                 serverRepliedResult.observeForever( resultObserver );
-                AnalysisDataUpdater analysisDataUpdater = getInstance();
-                analysisDataUpdater.checkNewAnalysisToDownload( serverRepliedResult );
+                AnalysisDataDownloader analysisDataDownloader = getInstance();
+                analysisDataDownloader.checkNewAnalysisToDownload( serverRepliedResult );
             }
 
     @Override
