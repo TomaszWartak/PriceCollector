@@ -5,16 +5,35 @@ public abstract class TaskLink {
     private TaskChain taskChain;
     private TaskLink nextTaskLink;
 
-    public TaskLink(TaskChain taskChain) {
+    // TODO !!! usuń konstruktor, bo rozbiłes metodę setTaskChain, która jest wołana w TaskChain
+    //  i nie trzeba nic ektra robić. Po usunieciu konstruktora trzeba będzie skorygowac użyci
+    //  TaskLink w zapsie cen na ekranie 5
+    /*public TaskLink(TaskChain taskChain) {
         this.taskChain = taskChain;
     }
 
+     */
+
+    protected void setTaskChain( TaskChain taskChain ) {
+        this.taskChain = taskChain;
+    }
+
+    public TaskChain getTaskChain() {
+        return taskChain;
+    }
+
+    /* TODO XXX
     private TaskLink getNextTaskLink() {
         return nextTaskLink;
     }
+     */
 
     protected void setNextTaskLink(TaskLink nextTaskLink) {
         this.nextTaskLink = nextTaskLink;
+    }
+
+    protected TaskLink getNextTaskLink() {
+        return nextTaskLink;
     }
 
     /**
@@ -23,25 +42,50 @@ public abstract class TaskLink {
      *
      * @param data (Object...) - dane do przekazania do nastęnego TaskLink.
      */
-    public void runNextTaskLink(Object... data) {
-        if (getNextTaskLink() != null) {
-            getNextTaskLink().takeData(data);
-            getNextTaskLink().doIt();
-        } else {
-            taskChain.getChain().clear();
+    protected void runNextTaskLink( Object... data ) {
+        if (taskChain.isNotSuspended()) {
+            if (isNextTaskLink()) {
+                if (needToBeSuspendedAfterThis()) {
+                    taskChain.suspend( );
+                } else {
+                    // TODO XXX nextTaskLink.takeData(data);
+                    nextTaskLink.doIt( data );
+                }
+            } else {
+                TaskLink afterAllToDo = taskChain.getAfterAllToDoTask();
+                if (isAfterAllToDoTask(afterAllToDo)) {
+                    // TODO XXX afterToDo.takeData(data);
+                    afterAllToDo.doIt( data );
+                    taskChain.setAfterAllToDoTask( null );
+                }
+                taskChain.getChain().clear();
+            }
         }
     }
 
+    private boolean isNextTaskLink() {
+        return nextTaskLink != null;
+    }
+
+    private boolean needToBeSuspendedAfterThis() {
+        return this == taskChain.getSuspendAfterTask();
+    }
+
+
+    private boolean isAfterAllToDoTask(TaskLink afterToDo) {
+        return afterToDo != null;
+    }
+
     /**
-     * Przekazuje dane potrzebne do wykonania następnego TaskLink.
+     * Odbiera dane potrzebne do wykonania, od poprzedniego TaskLink.
      *
-     * @param data (Object...) - dane do przekazania do nastęnego TaskLink.
+     * @param data (Object...) - dane do odebrania od poprzedniego TaskLink.
      */
-    abstract protected void takeData(Object... data);
+    // TODO XXX abstract protected void takeData(Object... data);
 
     /**
      * Wywołuje kod do wykonania.
      */
-    abstract protected void doIt();
+    abstract protected void doIt(Object... data);
 
 }

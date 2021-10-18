@@ -18,7 +18,6 @@ import com.healthmarketscience.sqlbuilder.ComboCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.InCondition;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
-import com.healthmarketscience.sqlbuilder.UnaryCondition;
 import com.healthmarketscience.sqlbuilder.UnionQuery;
 
 import static com.healthmarketscience.sqlbuilder.SetOperationQuery.Type.UNION;
@@ -151,7 +150,7 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
 
             factory = localDataRepository.getAnalysisArticlesJoinViaQueryPaged( new SimpleSQLiteQuery( unionQueryString ) );
         } else {
-            factory = localDataRepository.getAllAnalysisArticlesJoin( analysisId, storeId );
+            factory = localDataRepository.getAllAnalysisArticlesJoinPaged( analysisId, storeId );
         }
         LivePagedListBuilder<Integer, AnalysisArticleJoin> pagedListBuilder = new LivePagedListBuilder<Integer, AnalysisArticleJoin>(factory, 50);
         analysisRowsLiveData = pagedListBuilder.build();

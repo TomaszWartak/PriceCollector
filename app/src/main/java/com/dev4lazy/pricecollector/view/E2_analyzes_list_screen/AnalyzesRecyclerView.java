@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.view.E2_analyzes_list_screen;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -87,23 +89,23 @@ public class AnalyzesRecyclerView extends RecyclerView {
             private Analysis analysis;
             private final TextView textViewAnalysisCreationDate;
             private final TextView textViewAnalysisDueDate;
-            private final TextView textViewAnalysisFinishDate;
-            private final TextView textViewAnalysisConfirmationDate;
+            private final TextView textViewAnalysisLastDataSentDate;
+            // TODO XXX private final TextView textViewAnalysisConfirmationDate;
             private final TextView textViewAnalysisDataReadyToDownload;
 
             public AnalysisViewHolder( View view ) {
                 super(view);
                 textViewAnalysisCreationDate = view.findViewById( R.id.analysis_item__creation_date);
                 textViewAnalysisDueDate = view.findViewById( R.id.analysis_Item__due_date);
-                textViewAnalysisFinishDate = view.findViewById( R.id.analysis_item__finish_date);
-                textViewAnalysisConfirmationDate = view.findViewById( R.id.analysis_item__confirmation_date );
+                textViewAnalysisLastDataSentDate = view.findViewById( R.id.analysis_item__finish_date);
+                // TODO XXX textViewAnalysisConfirmationDate = view.findViewById( R.id.analysis_item__confirmation_date );
                 textViewAnalysisDataReadyToDownload = view.findViewById(R.id.analysis_item__data_to_download );
             }
 
             private void openCompetitorSlots( View view, Analysis analysis ) {
                 // TODO XXX sloty muszą się otworzyć dla konkretnej analizy, więc jakoś (ViewModel) trzeba przekazać info o analizie
                 AnalyzesListViewModel analyzesListViewModel = new ViewModelProvider( AppUtils.getActivity( getContext() ) ).get( AnalyzesListViewModel.class );
-                analyzesListViewModel.setChosenAnalysisId( analysis.getId() );
+                analyzesListViewModel.setChosenAnalysis( analysis );
                 Navigation.findNavController( view ).navigate(R.id.action_analyzesListFragment_to_analysisCompetitorsFragment);
             }
 
@@ -115,16 +117,21 @@ public class AnalyzesRecyclerView extends RecyclerView {
                 }
                 date = analysis.getDueDate();
                 if ( dateIsCorrect( date ) ) {
+                    if (date.before( new Date() )) {
+                        textViewAnalysisDueDate.setTextColor( ContextCompat.getColor( getContext(), R.color.colorWarning) );
+                    }
                     textViewAnalysisDueDate.setText( dateConverter.date2String( date ) );
                 }
                 date = analysis.getFinishDate();
                 if ( dateIsCorrect( date ) ) {
-                    textViewAnalysisFinishDate.setText( dateConverter.date2String( date ) );
+                    textViewAnalysisLastDataSentDate.setText( dateConverter.date2String( date ) );
                 }
+                /* TODO XXX
                 date = analysis.getConfirmationDate();
                 if ( dateIsCorrect( date ) ) {
                     textViewAnalysisConfirmationDate.setText( dateConverter.date2String( date ) );
                 }
+                */
                 int visibility = textViewAnalysisDataReadyToDownload.getVisibility();
                 if ( analysis.isDataNotDownloaded() ) {
                     if (visibility!= VISIBLE) {
@@ -171,8 +178,8 @@ public class AnalyzesRecyclerView extends RecyclerView {
             protected void clear() {
                 textViewAnalysisCreationDate.setText( null );
                 textViewAnalysisDueDate.setText( null );
-                textViewAnalysisFinishDate.setText( null );
-                textViewAnalysisConfirmationDate.setText( null );
+                textViewAnalysisLastDataSentDate.setText( null );
+                // TODO XXX textViewAnalysisConfirmationDate.setText( null );
                 textViewAnalysisDataReadyToDownload.setText( null );
             }
 

@@ -23,12 +23,18 @@ import androidx.paging.PagedList;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.model.logic.AnalysisArticleJoinSaver;
+import com.dev4lazy.pricecollector.model.logic.AnalysisArticleJoinValuesStateHolder;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -145,14 +151,17 @@ public class AnalysisArticlesListFragment extends Fragment {
                     DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
                     drawerLayout.closeDrawers();
                     switch (item.getItemId()) {
-                        case R.id.anlysis_articles_list_screen_gotoanalyzes_menu_item:
+                        case R.id.analysis_articles_list_screen_gotoanalyzes_menu_item:
                             resetViewModels();
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_analyzesListFragment );
                             break;
-                        case R.id.anlysis_articles_list_screen_search_menu_item:
+                        case R.id.analysis_articles_list_screen_search_menu_item:
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_searchArticlesFragment );
                             break;
-                        case R.id.anlysis_articles_list_screen_logout_menu_item:
+                        case R.id.analysis_articles_list_screen_populate_data:
+                            populateTestData();
+                            break;
+                        case R.id.analysis_articles_list_screen_logout_menu_item:
                             getLogoutQuestionDialog();
                             break;
                     }
@@ -160,6 +169,153 @@ public class AnalysisArticlesListFragment extends Fragment {
                 }
             });
         }
+
+    // TODO !!! tego nie skończyłeś...
+    private void populateTestData() {
+        /*
+        - pobierz pierwsze 10 joinów
+        - wypełnij danymi
+        - zapisz
+         */
+        ArrayList<AnalysisArticleJoin> analysisArticleJoinList =
+                (ArrayList<AnalysisArticleJoin>)analysisArticleJoinsListViewModel
+                        .getAnalysisArticleJoinsListLiveData()
+                        .getValue()
+                        .stream()
+                        .limit(10)
+                        .collect(Collectors.toList());
+        Random random = new Random();
+        for (int joinIndex = 0; joinIndex<analysisArticleJoinList.size(); joinIndex++ ) {
+            AnalysisArticleJoin analysisArticleJoin = analysisArticleJoinList.get(joinIndex);
+            if (analysisArticleJoin.isCompetitorStoreIdNotSet()) {
+                analysisArticleJoin.setCompetitorStoreId(storeViewModel.getStore().getId());
+            }
+            AnalysisArticleJoinValuesStateHolder valuesStateHolder = new AnalysisArticleJoinValuesStateHolder( );
+            // TODO musisz sprawdzić czy id sklepu konkurenta jest ustawione
+            // może listę Holderów zrobić i dodawac przy każdym?
+            switch (joinIndex) {
+                case 0:
+                    if (random.nextBoolean()) {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 10.0 );
+                    } else {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 11.0 );
+                    }
+                    break;
+                case 1:
+                    if (random.nextBoolean()) {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 21.0 )
+                                .setComments( "Uwagi 21" )
+                                .setReferenceArticleName( "Nazwa Ref 21")
+                                .setReferenceArticleEanCodeValue( "2000000000001");
+                    } else {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 20.0 )
+                                .setComments( "Uwagi 20" )
+                                .setReferenceArticleName( "Nazwa Ref 20")
+                                .setReferenceArticleEanCodeValue( "2000000000000");
+                    }
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    if (random.nextBoolean()) {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 40.0 )
+                                .setReferenceArticleName( "Nazwa Ref 40")
+                                .setReferenceArticleEanCodeValue( "4000000000000");
+                    } else {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 41.0 )
+                                .setReferenceArticleName( "Nazwa Ref 41")
+                                .setReferenceArticleEanCodeValue( "40000000000010");
+                    }
+                    break;
+                case 4:
+                    if (random.nextBoolean()) {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 50.0 )
+                                .setReferenceArticleName( "Nazwa Ref 50")
+                                .setReferenceArticleEanCodeValue( "5000000000000")
+                                .setReferenceArticleDescription( "Uwagi ref 50");
+                    } else {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 51.0 )
+                                .setReferenceArticleName( "Nazwa Ref 51")
+                                .setReferenceArticleEanCodeValue( "5000000000001")
+                                .setReferenceArticleDescription( "Uwagi ref 51");
+                    }
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    if (random.nextBoolean()) {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 71.0 )
+                                .setReferenceArticleName( "Nazwa Ref 71")
+                                .setReferenceArticleEanCodeValue( "7000000000001");
+                    } else {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 71.0 )
+                                .setReferenceArticleName( "Nazwa Ref 71")
+                                .setReferenceArticleEanCodeValue( "7000000000001");
+                    }
+                    break;
+                case 7:
+                    if (random.nextBoolean()) {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 80.0 )
+                                .setReferenceArticleName( "Nazwa Ref 80")
+                                .setReferenceArticleEanCodeValue( "8000000000000");
+                    } else {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 81.0 )
+                                .setReferenceArticleName( "Nazwa Ref 81")
+                                .setReferenceArticleEanCodeValue( "8000000000001");
+                    }
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    if (random.nextBoolean()) {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 101.0 )
+                                .setReferenceArticleName( "Nazwa Ref 101")
+                                .setReferenceArticleEanCodeValue( "100_000000001");
+                    } else {
+                        valuesStateHolder
+                                .setAnalysisArticleJoin( analysisArticleJoin )
+                                .setCompetitorStorePrice( 100.0 )
+                                .setReferenceArticleName( "Nazwa Ref 100")
+                                .setReferenceArticleEanCodeValue( "100_000000000");
+                    }
+                    break;
+                default:
+            }
+            new AnalysisArticleJoinSaver(
+                    analysisArticleJoinsListViewModel,
+                    valuesStateHolder
+            ).startSavingDataChain( analysisArticleJoin );
+        }
+        for (int joinIndex = 0; joinIndex<analysisArticleJoinList.size(); joinIndex++ ) {
+
+        }
+    }
 
             private void getLogoutQuestionDialog() {
                 new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */

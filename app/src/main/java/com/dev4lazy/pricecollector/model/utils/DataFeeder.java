@@ -9,6 +9,13 @@ import java.util.List;
 
 public interface DataFeeder {
 
+    String[] COMPANIES_NAMES = {"BRIKO", "Leroy Merlin", "OBI", "Castorama", "Konkurent lokalny"};
+    int BRIKO_INDEX = 0;
+    int LEROY_MERLIN_INDEX = 1;
+    int OBI_INDEX = 2;
+    int CASTORAMA_INDEX = 3;
+    int LOCAL_COMPETITOR_INDEX = 4;
+
     List<Country> getCountriesInitialList();
 
     List<Company> getCompaniesInitialList();

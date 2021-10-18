@@ -21,6 +21,10 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteEanCode;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppSettings;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
+import com.healthmarketscience.sqlbuilder.ComboCondition;
+import com.healthmarketscience.sqlbuilder.CustomSql;
+import com.healthmarketscience.sqlbuilder.SelectQuery;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -296,7 +300,18 @@ public class AnalysisDataDownloader {
             }
         };
         result.observeForever(resultObserver);
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllAnalysisRows(result);
+        // TODO XXX AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllAnalysisRows(result);
+        String remoteAnalysisRowQueryString = getQuery( analysis.getRemote_id() );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getRemoteAnalysisRowViaQuery( remoteAnalysisRowQueryString, result );
+    }
+
+    private String getQuery( int remoteAnalysisId ) {
+        SelectQuery analysisArticlesJoinWithPricesQuery = new SelectQuery()
+                .addAllColumns( )
+                .addCustomFromTable("analysis_rows")
+                .addCondition( BinaryCondition.equalTo( new CustomSql( "analysis_rows.analysisId" ), remoteAnalysisId ) );
+        analysisArticlesJoinWithPricesQuery = analysisArticlesJoinWithPricesQuery.validate();
+        return analysisArticlesJoinWithPricesQuery.toString();
     }
 
     /**

@@ -2,42 +2,28 @@ package com.dev4lazy.pricecollector.model.logic;
 
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.utils.TaskChain;
-import com.dev4lazy.pricecollector.view.E5_article_screen.AnalysisArticlesPagerFragment;
-import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
+import com.dev4lazy.pricecollector.utils.TaskLink;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
+
+import androidx.paging.DataSource;
 
 public class AnalysisArticleJoinSaver {
 
+    // TODO XXX private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
+    private AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel;
     private AnalysisArticleJoinDataUpdater analysisArticleJoinDataUpdater;
-    private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
+    private AnalysisArticleJoinValuesStateHolder valuesStateHolder;
 
     public AnalysisArticleJoinSaver(
             AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel,
-            AnalysisArticleJoinViewModel analysisArticleJoinViewModel ) {
-        analysisArticleJoinDataUpdater = new AnalysisArticleJoinDataUpdater( analysisArticleJoinsListViewModel );
-        this.analysisArticleJoinViewModel = analysisArticleJoinViewModel;
-    }
-
-    public boolean isReferenceArticleNotInDB(AnalysisArticleJoin analysisArticleJoin) {
-        if (analysisArticleJoin.getReferenceArticleId() == null) {
-            return true;
-        }
-        return analysisArticleJoin.getReferenceArticleId() < 1;
-    }
-
-    public boolean isReferenceArticleEanInDB(AnalysisArticleJoin analysisArticleJoin) {
-        if (analysisArticleJoin.getReferenceArticleEanCodeId() == null) {
-            return false;
-        }
-        return analysisArticleJoin.getReferenceArticleEanCodeId() > 0;
-    }
-
-    public boolean isReferenceArticleEanCleared(AnalysisArticleJoin analysisArticleJoin) {
-        return analysisArticleJoin.isReferenceArticleEanNotSet();
+            AnalysisArticleJoinValuesStateHolder valuesStateHolder ) {
+        this.analysisArticleJoinsListViewModel = analysisArticleJoinsListViewModel;
+        this.valuesStateHolder = valuesStateHolder;
+        analysisArticleJoinDataUpdater = new AnalysisArticleJoinDataUpdater( /* TODO ??? analysisArticleJoinsListViewModel */ );
     }
 
     public void startSavingDataChain( AnalysisArticleJoin analysisArticleJoin ) {
-        AnalysisArticleJoinValuesStateHolder valuesStateHolder = analysisArticleJoinViewModel.getValuesStateHolder();
+        // TODO XXX AnalysisArticleJoinValuesStateHolder valuesStateHolder = analysisArticleJoinViewModel.getValuesStateHolder();
         TaskChain taskChain = analysisArticleJoinDataUpdater.getTaskChain();
         /*
         A. Jeśli dane artykułu referencyjnego (nazwa, opis) (Article) zostały zmienione, trzeba:
@@ -69,10 +55,11 @@ public class AnalysisArticleJoinSaver {
     /*B2*/  } else {
         /*B2a*/ if (valuesStateHolder.isCompetitorPriceChangedFlagSet()) {
                     taskChain.addTaskLink(
-                            analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                                    taskChain,
+                            analysisArticleJoinDataUpdater.new CompetitorPriceUpdater( /*
+                                    // TODO XXX taskChain,
                                     analysisArticleJoin,
                                     valuesStateHolder
+                                    */
                             )
                     );
                 }
@@ -80,15 +67,31 @@ public class AnalysisArticleJoinSaver {
         }
   /*C*/ if (valuesStateHolder.isCommentsChangedFlagSet()) {
             taskChain.addTaskLink(
-                    analysisArticleJoinDataUpdater.new AnalysisArticleUpdater(
-                            taskChain,
+                    analysisArticleJoinDataUpdater.new AnalysisArticleUpdater( /*
+                            // TODO XXX taskChain,
                             analysisArticleJoin,
                             valuesStateHolder
+                            */
                     )
-
             );
         }
-        analysisArticleJoinDataUpdater.getTaskChain().startIt();
+        analysisArticleJoinDataUpdater.getTaskChain().setAfterAllToDoTask( new DataSourceInvalidator() );
+        analysisArticleJoinDataUpdater.getTaskChain().startIt( analysisArticleJoin, valuesStateHolder);
+    }
+
+    private class DataSourceInvalidator extends TaskLink {
+        /*
+        @Override
+        protected void takeData(Object... data) {
+        }
+
+
+         */
+        @Override
+        protected void doIt(Object... data) {
+            DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
+            dataSource.invalidate();
+        }
     }
 
     public void savingChangesOfReferenceArticle(
@@ -96,10 +99,11 @@ public class AnalysisArticleJoinSaver {
             AnalysisArticleJoinValuesStateHolder valuesStateHolder,
             TaskChain taskChain ) {
  /*A1*/ taskChain.addTaskLink(
-            analysisArticleJoinDataUpdater.new ReferenceArticleUpdater(
-                taskChain,
+            analysisArticleJoinDataUpdater.new ReferenceArticleUpdater( /*
+                    // TODO XXX taskChain,
                 analysisArticleJoin,
                 valuesStateHolder
+                */
             )
         );
         if (valuesStateHolder.isReferenceArticleEanChangedFlagSet()) {
@@ -116,33 +120,36 @@ public class AnalysisArticleJoinSaver {
 /*A2a*/ if (isReferenceArticleEanCleared(analysisArticleJoin)) {
             if (isReferenceArticleEanInDB(analysisArticleJoin)) {
                 taskChain.addTaskLink(
-                        analysisArticleJoinDataUpdater.new ReferenceArticleEanDeleter(
-                                taskChain,
+                        analysisArticleJoinDataUpdater.new ReferenceArticleEanDeleter( /*
+                                // TODO XXX taskChain,
                                 analysisArticleJoin,
-                                valuesStateHolder
+                                valuesStateHolder */
                         )
                 );
                 taskChain.addTaskLink(
-                        analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                                taskChain,
+                        analysisArticleJoinDataUpdater.new CompetitorPriceUpdater( /*
+                                // TODO XXX taskChain,
                                 analysisArticleJoin,
                                 valuesStateHolder
+                                */
                         )
                 );
             }
 /*A2b*/} else {
             taskChain.addTaskLink(
-                    analysisArticleJoinDataUpdater.new ReferenceArticleEanUpdater(
-                            taskChain,
+                    analysisArticleJoinDataUpdater.new ReferenceArticleEanUpdater( /*
+                            // TODO XXX taskChain,
                             analysisArticleJoin,
                             valuesStateHolder
+                            */
                     )
             );
             taskChain.addTaskLink(
-                    analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                            taskChain,
+                    analysisArticleJoinDataUpdater.new CompetitorPriceUpdater( /*
+                            // TODO XXX taskChain,
                             analysisArticleJoin,
                             valuesStateHolder
+                            */
                     )
             );
         }
@@ -154,19 +161,21 @@ public class AnalysisArticleJoinSaver {
             TaskChain taskChain ) {
 /*A3a*/ if (valuesStateHolder.isCompetitorPriceChangedFlagSet()) {
             taskChain.addTaskLink(
-                    analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                            taskChain,
+                    analysisArticleJoinDataUpdater.new CompetitorPriceUpdater( /*
+                            // TODO XXX taskChain,
                             analysisArticleJoin,
                             valuesStateHolder
+                            */
                     )
             );
         } else {
     /*A3b*/  if (isReferenceArticleNotInDB(analysisArticleJoin)) {
                 taskChain.addTaskLink(
-                        analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                                taskChain,
+                        analysisArticleJoinDataUpdater.new CompetitorPriceUpdater( /*
+                                // TODO XXX taskChain,
                                 analysisArticleJoin,
                                 valuesStateHolder
+                                */
                         )
                 );
             }
@@ -180,45 +189,69 @@ public class AnalysisArticleJoinSaver {
 /*B1a*/ if (isReferenceArticleEanCleared(analysisArticleJoin)) {
             if (isReferenceArticleEanInDB(analysisArticleJoin)) {
                 taskChain.addTaskLink(
-                        analysisArticleJoinDataUpdater.new ReferenceArticleEanDeleter(
-                                taskChain,
+                        analysisArticleJoinDataUpdater.new ReferenceArticleEanDeleter( /*
+                                // TODO XXX taskChain,
                                 analysisArticleJoin,
                                 valuesStateHolder
+                                */
                         )
                 );
                 taskChain.addTaskLink(
-                        analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                                taskChain,
+                        analysisArticleJoinDataUpdater.new CompetitorPriceUpdater( /*
+                                // TODO XXX taskChain,
                                 analysisArticleJoin,
                                 valuesStateHolder
+                                */
                         )
                 );
             }
          } else {
      /*B1b*/ if (isReferenceArticleNotInDB(analysisArticleJoin)) {
                  taskChain.addTaskLink(
-                         analysisArticleJoinDataUpdater.new ReferenceArticleUpdater(
-                                 taskChain,
+                         analysisArticleJoinDataUpdater.new ReferenceArticleUpdater( /*
+                                 // TODO XXX taskChain,
                                  analysisArticleJoin,
                                  valuesStateHolder
+                                 */
                          )
                  );
              }
      /*B1c*/ taskChain.addTaskLink(
-                     analysisArticleJoinDataUpdater.new ReferenceArticleEanUpdater(
-                             taskChain,
+                     analysisArticleJoinDataUpdater.new ReferenceArticleEanUpdater( /*
+                             // TODO XXX taskChain,
                              analysisArticleJoin,
                              valuesStateHolder
+                             */
                      )
              );
      /*B1d*/ taskChain.addTaskLink(
-                     analysisArticleJoinDataUpdater.new CompetitorPriceUpdater(
-                             taskChain,
+                     analysisArticleJoinDataUpdater.new CompetitorPriceUpdater( /*
+                             // TODO XXX taskChain,
                              analysisArticleJoin,
                              valuesStateHolder
+                             */
                      )
              );
          }
 /*B1b*/
     }
+
+    public boolean isReferenceArticleNotInDB(AnalysisArticleJoin analysisArticleJoin) {
+        if (analysisArticleJoin.getReferenceArticleId() == null) {
+            return true;
+        }
+        return analysisArticleJoin.getReferenceArticleId() < 1;
+    }
+
+    public boolean isReferenceArticleEanInDB(AnalysisArticleJoin analysisArticleJoin) {
+        if (analysisArticleJoin.getReferenceArticleEanCodeId() == null) {
+            return false;
+        }
+        return analysisArticleJoin.getReferenceArticleEanCodeId() > 0;
+    }
+
+    public boolean isReferenceArticleEanCleared(AnalysisArticleJoin analysisArticleJoin) {
+        return analysisArticleJoin.isReferenceArticleEanNotSet();
+    }
+
 }

@@ -26,7 +26,7 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.AppHandle;
 
 @Database(
-        version = 7,
+        version = 9,
         entities = {
                 RemoteAnalysis.class,
                 RemoteAnalysisRow.class,
@@ -49,6 +49,36 @@ public abstract class RemoteDatabase extends RoomDatabase {
 
     private final static String DATABASE_NAME = "price_collector_remote_database";
 
+    private static volatile RemoteDatabase instance;
+
+    public static RemoteDatabase getInstance() {
+        if (instance == null) {
+            Context context = AppHandle.getHandle().getApplicationContext();
+            synchronized (RemoteDatabase.class) {
+                if (instance == null) {
+                    instance = Room.databaseBuilder(
+                            context,
+                            RemoteDatabase.class, DATABASE_NAME )
+                            // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to od komentuj .fallback...
+                            // i za komentuj .addMigrations
+                            /*/.fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
+                            /*/
+                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(MIGRATION_2_3)
+                            .addMigrations(MIGRATION_3_4)
+                            .addMigrations(MIGRATION_4_5)
+                            .addMigrations(MIGRATION_5_6)
+                            .addMigrations(MIGRATION_6_7)
+                            .addMigrations(MIGRATION_7_8)
+                            .addMigrations(MIGRATION_8_9)
+                            /**/
+                            .build();
+                    instance.updateDatabaseCreated(context);
+                }
+            }
+        }
+        return instance;
+    }
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -138,35 +168,97 @@ public abstract class RemoteDatabase extends RoomDatabase {
             database.execSQL("CREATE UNIQUE INDEX index_ean_codes__value ON ean_codes (value)" );
         }
     };
-    private static volatile RemoteDatabase instance;
 
-    public static RemoteDatabase getInstance() {
-        if (instance == null) {
-            Context context = AppHandle.getHandle().getApplicationContext();
-            synchronized (RemoteDatabase.class) {
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                            context,
-                            RemoteDatabase.class, DATABASE_NAME )
-                            // !! Jeśli zamiast migracji chcesz wyczyścić bazę, to od komentuj .fallback...
-                            // i za komentuj .addMigrations
-                            /*/.fallbackToDestructiveMigration() // tego nie rób, bo zpoamnisz i Ci wyczyści bazę...
-                            /*/
-                            .addMigrations(MIGRATION_1_2)
-                            .addMigrations(MIGRATION_2_3)
-                            .addMigrations(MIGRATION_3_4)
-                            .addMigrations(MIGRATION_4_5)
-                            .addMigrations(MIGRATION_5_6)
-                            .addMigrations(MIGRATION_6_7)
-                            /**/
-                            .build();
-                    instance.updateDatabaseCreated(context);
-                }
-            }
+    static final Migration MIGRATION_7_8 = new Migration(7, 8) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("DROP INDEX index_ean_codes_value" );
+            database.execSQL("DROP INDEX index_ean_codes_article_id" );
+            // TODO XXX database.execSQL("CREATE INDEX index_ean_codes_value ON ean_codes (value)" );
+            database.execSQL("PRAGMA foreign_keys = OFF");
+            database.execSQL("BEGIN TRANSACTION" );
+            database.execSQL("CREATE TABLE IF NOT EXISTS ean_codes_new (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "remote_id INTEGER NOT NULL, " +
+                    "value TEXT, " +
+                    "article_id INTEGER NOT NULL )"
+            );
+            database.execSQL("CREATE INDEX index_ean_codes_article_id ON ean_codes_new (article_id)" );
+            database.execSQL("CREATE UNIQUE INDEX index_ean_codes_value ON ean_codes_new (value)" );
+            database.execSQL("INSERT INTO ean_codes_new SELECT * FROM ean_codes" );
+            database.execSQL("DROP TABLE ean_codes" );
+            database.execSQL("ALTER TABLE ean_codes_new RENAME TO ean_codes" );
+            database.execSQL("COMMIT" );
+            database.execSQL("PRAGMA foreign_keys = ON");
         }
-        return instance;
-    }
+    };
 
+    static final Migration MIGRATION_8_9 = new Migration(8, 9) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("DROP INDEX index_analysis_rows_articleCode");
+            database.execSQL("BEGIN TRANSACTION");
+            database.execSQL("CREATE TABLE IF NOT EXISTS analysis_rows_new (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "analysisId INTEGER NOT NULL, " +
+                    "articleCode INTEGER NOT NULL, " +
+                    "storeId INTEGER NOT NULL, " +
+                    "articleName TEXT, " +
+                    "articleStorePrice REAL, " +
+                    "articleRefPrice REAL, " +
+                    "articleNewPrice REAL, " +
+                    "articleNewMarginPercent REAL, " +
+                    "articleLmPrice REAL, " +
+                    "articleObiPrice REAL, " +
+                    "articleCastoramaPrice REAL, " +
+                    "articleLocalCompetitor1Price REAL, " +
+                    "articleLocalCompetitor2Price REAL, " +
+                    "department TEXT, " +
+                    "sector TEXT )"
+            );
+            database.execSQL("CREATE INDEX index_analysis_rows_articleCode ON analysis_rows_new (articleCode)");
+            database.execSQL("INSERT INTO analysis_rows_new SELECT " +
+                    "id, " +
+                    "analysisId, " +
+                    "articleCode, " +
+                    "storeId, " +
+                    "articleName, " +
+                    "articleStorePrice, " +
+                    "articleRefPrice, " +
+                    "articleNewPrice, " +
+                    "articleNewMarginPercent, " +
+                    "articleLmPrice, " +
+                    "articleObiPrice, " +
+                    "articleBricomanPrice articleCastoramaPrice, " +
+                    "articleLocalCompetitor1Price, " +
+                    "articleLocalCompetitor2Price, " +
+                    "department, " +
+                    "sector "+
+                "FROM analysis_rows"
+            );
+            database.execSQL("DROP TABLE analysis_rows");
+            database.execSQL("ALTER TABLE analysis_rows_new RENAME TO analysis_rows");
+            database.execSQL("COMMIT");
+        }
+    };
+
+    /*
+    private Integer analysisId;
+    private Integer articleCode; // kod briko 6 cyfr
+    private Integer storeId;
+    private String articleName;
+    private Double articleStorePrice;
+    private Double articleRefPrice;
+    private Double articleNewPrice;
+    private Double articleNewMarginPercent;
+    private Double articleLmPrice;
+    private Double articleObiPrice;
+    private Double articleCastoramaPrice;
+    private Double articleLocalCompetitor1Price;
+    private Double articleLocalCompetitor2Price;
+    private String department;
+    private String sector;
+     */
     private final MutableLiveData<Boolean> databaseCreated = new MutableLiveData<>( false );
 
     public abstract RemoteAnalysisDao remoteAnalysisDao();

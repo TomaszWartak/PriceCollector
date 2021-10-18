@@ -8,6 +8,7 @@ import androidx.paging.DataSource;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.db.AnalysisArticleDao;
+import com.dev4lazy.pricecollector.model.db.AnalysisArticleJoinDao;
 import com.dev4lazy.pricecollector.model.db.AnalysisCompetitorSlotDao;
 import com.dev4lazy.pricecollector.model.db.AnalysisDao;
 import com.dev4lazy.pricecollector.model.db.ArticleDao;
@@ -46,6 +47,7 @@ import com.dev4lazy.pricecollector.model.entities.Store;
 import com.dev4lazy.pricecollector.model.entities.UOProject;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoinForPricesUpload;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
@@ -74,7 +76,7 @@ public class LocalDataRepository {
     
 // Analysis
     private final AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
-    private final Data<Analysis> analyzes  = new Data<>( analysisDao );
+    private final DataAccess<Analysis> analyzes  = new DataAccess<>( analysisDao );
 
     public void askAnalyzesNumberOf( MutableLiveData<Integer> result ) {
         analyzes.getNumberOfData( result );
@@ -111,7 +113,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // AnalysisCompetitorSlot
     private final AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
-    private final Data<AnalysisCompetitorSlot> slots = new Data<>(analysisCompetitorSlotDao);
+    private final DataAccess<AnalysisCompetitorSlot> slots = new DataAccess<>(analysisCompetitorSlotDao);
 
 
     public void insertAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Long> result ) {
@@ -152,7 +154,9 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // AnalysisArticle
     private final AnalysisArticleDao analysisArticleDao = AppHandle.getHandle().getLocalDatabase().analysisArticleDao();
-    private final Data<AnalysisArticle> analysisArticles = new Data<>( analysisArticleDao );
+    private final DataAccess<AnalysisArticle> analysisArticles = new DataAccess<>( analysisArticleDao );
+    private final AnalysisArticleJoinDao analysisArticleJoinDao = AppHandle.getHandle().getLocalDatabase().analysisArticleJoinDao();
+    private final AnlysisArticleJoinDataAccess analysisArticlesJoins = new AnlysisArticleJoinDataAccess( analysisArticleJoinDao);
 
     public void askAnalysisArticlesNumberOf( MutableLiveData<Integer> result ) {
         analysisArticles.getNumberOfData( result );
@@ -189,7 +193,15 @@ public class LocalDataRepository {
         analysisArticles.getAllData( result );
     }
 
-    public DataSource.Factory<Integer, AnalysisArticleJoin> getAllAnalysisArticlesJoin( int analysisId, int storeId ) {
+    public void getAnalysisArticleJoinsViaStringQuery(String stringQuery, MutableLiveData<List<AnalysisArticleJoin>> result ) {
+        analysisArticlesJoins.getAnalysisArticleJoinsViaStringQuery(stringQuery, result );
+    }
+
+    public void getAnalysisArticleJoinsForPricesUploadViaStringQuery(String stringQuery, MutableLiveData<List<AnalysisArticleJoinForPricesUpload>> result ) {
+        analysisArticlesJoins.getAnalysisArticleJoinsForPricesUploadViaStringQuery(stringQuery, result);
+    }
+
+    public DataSource.Factory<Integer, AnalysisArticleJoin> getAllAnalysisArticlesJoinPaged(int analysisId, int storeId ) {
         return ((AnalysisArticleDao)analysisArticles.getDao()).getAllAnalysisArticlesJoin3( analysisId, storeId );
     }
 
@@ -204,7 +216,7 @@ public class LocalDataRepository {
     //-----------------------------------------------------------------------
 // Article
     private final ArticleDao articleDao = AppHandle.getHandle().getLocalDatabase().articleDao();
-    private final Data<Article> articles = new Data<>(articleDao);
+    private final DataAccess<Article> articles = new DataAccess<>(articleDao);
 
     public void insertArticle( Article article, MutableLiveData<Long> result ) {
         articles.insertData( article,result);
@@ -225,7 +237,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Company
     private final CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
-    private final Data<Company> companies = new Data<>(companyDao);
+    private final DataAccess<Company> companies = new DataAccess<>(companyDao);
 
     public void insertCompany( Company company, MutableLiveData<Long> result ) {
         companies.insertData( company,result);
@@ -256,7 +268,7 @@ public class LocalDataRepository {
     //-----------------------------------------------------------------------
 // CompetitorPrice
     private final CompetitorPriceDao competitorPriceDao = AppHandle.getHandle().getLocalDatabase().competitorPriceDao();
-    private final Data<CompetitorPrice> competitorPrices = new Data<>( competitorPriceDao );
+    private final DataAccess<CompetitorPrice> competitorPrices = new DataAccess<>( competitorPriceDao );
 
     public void askCompetitorPricesNumberOf( MutableLiveData<Integer> result ) {
         competitorPrices.getNumberOfData( result );
@@ -293,7 +305,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Country
     private final CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
-    private final Data<Country> countries = new Data<>(countryDao);
+    private final DataAccess<Country> countries = new DataAccess<>(countryDao);
 
     public void insertCountry(Country country, MutableLiveData<Long> result ) {
         countries.insertData(country,result);
@@ -324,7 +336,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Department
     private final DepartmentDao departmentDao = AppHandle.getHandle().getLocalDatabase().departmentDao();
-    private final Data<Department> departments = new Data<>(departmentDao);
+    private final DataAccess<Department> departments = new DataAccess<>(departmentDao);
 
     public void insertDepartment( Department department, MutableLiveData<Long> result ) {
         departments.insertData( department, result );
@@ -341,7 +353,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // DepartmentInSector
     private final DepartmentInSectorDao departmentInSectorDao = AppHandle.getHandle().getLocalDatabase().departmentInSectorDao();
-    private final Data<DepartmentInSector> departmentInSectors = new Data<>(departmentInSectorDao);
+    private final DataAccess<DepartmentInSector> departmentInSectors = new DataAccess<>(departmentInSectorDao);
 
     public void insertDepartmentInSector( DepartmentInSector departmentInSector, MutableLiveData<Long> result ) {
         departmentInSectors.insertData( departmentInSector, result );
@@ -354,7 +366,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // EanCode
     private final EanCodeDao eanCodeDao = AppHandle.getHandle().getLocalDatabase().eanCodeDao();
-    private final Data<EanCode> eanCodes = new Data<EanCode>(eanCodeDao);
+    private final DataAccess<EanCode> eanCodes = new DataAccess<EanCode>(eanCodeDao);
 
     public void askEanCodeNumberOf( MutableLiveData<Integer> result ) {
         eanCodes.getNumberOfData( result );
@@ -389,7 +401,7 @@ public class LocalDataRepository {
     //-----------------------------------------------------------------------
 // Family
     private final FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
-    private final Data<Family> families = new Data<>( familyDao );
+    private final DataAccess<Family> families = new DataAccess<>( familyDao );
 
     public void insertFamily(Family family, MutableLiveData<Long> result ) {
         families.insertData( family, result );
@@ -422,7 +434,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Market
     private final MarketDao marketDao = AppHandle.getHandle().getLocalDatabase().marketDao();
-    private final Data<Market> markets = new Data<>( marketDao );
+    private final DataAccess<Market> markets = new DataAccess<>( marketDao );
 
     public void askMarketsNumberOf( MutableLiveData<Integer> result ) {
         markets.getNumberOfData( result );
@@ -460,7 +472,7 @@ public class LocalDataRepository {
 // Module
 
     private final ModuleDao moduleDao = AppHandle.getHandle().getLocalDatabase().moduleDao();
-    private final Data<Module> modules = new Data<>( moduleDao );
+    private final DataAccess<Module> modules = new DataAccess<>( moduleDao );
 
     public void askModulesNumberOf( MutableLiveData<Integer> result ) {
         modules.getNumberOfData( result );
@@ -498,7 +510,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // OwnArticleInfo
     private final OwnArticleInfoDao ownArticleInfoDao = AppHandle.getHandle().getLocalDatabase().ownArticleInfoDao();
-    private final Data<OwnArticleInfo> ownArticleInfos = new Data<OwnArticleInfo>(ownArticleInfoDao);
+    private final DataAccess<OwnArticleInfo> ownArticleInfos = new DataAccess<OwnArticleInfo>(ownArticleInfoDao);
 
 
     public void insertOwnArticleInfos(
@@ -515,7 +527,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // OwnStore
     private final OwnStoreDao ownStoreDao = AppHandle.getHandle().getLocalDatabase().ownStoreDao();
-    private final Data<OwnStore> ownStores = new Data<>(ownStoreDao);
+    private final DataAccess<OwnStore> ownStores = new DataAccess<>(ownStoreDao);
 
     public void insertOwnStore(OwnStore ownStore, MutableLiveData<Long> result ) {
         ownStores.insertData(ownStore,result);
@@ -554,7 +566,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Sector
     private final SectorDao sectorDao = AppHandle.getHandle().getLocalDatabase().sectorDao();
-    private final Data<Sector> sectors = new Data<>(sectorDao);
+    private final DataAccess<Sector> sectors = new DataAccess<>(sectorDao);
 
 
     public void insertSector(Sector sector, MutableLiveData<Long> result ) {
@@ -573,7 +585,7 @@ public class LocalDataRepository {
 //------------~-----------------------------------------------------------
 // Store
     private final StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
-    private final Data<Store> stores = new Data<>(storeDao);
+    private final DataAccess<Store> stores = new DataAccess<>(storeDao);
 
     public void findStoreById(int id, MutableLiveData<List<Store>> result) {
         stores.findDataById( id, result);
@@ -614,7 +626,7 @@ public class LocalDataRepository {
 // UOProject
 
     private final UOProjectDao uoProjectDao = AppHandle.getHandle().getLocalDatabase().uoProjectDao();
-    private final Data<UOProject> uoProjects = new Data<>( uoProjectDao );
+    private final DataAccess<UOProject> uoProjects = new DataAccess<>( uoProjectDao );
 
     public void askUOProjectsNumberOf( MutableLiveData<Integer> result ) {
         uoProjects.getNumberOfData( result );

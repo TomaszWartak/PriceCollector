@@ -11,12 +11,15 @@ import java.util.List;
 public class ProductionDataFeeder implements DataFeeder {
 
     private static ProductionDataFeeder instance = null;
+    /* TEST XXX
     public final String[] COMPANIES_NAMES = {"BRIKO", "Leroy Merlin", "OBI", "Castorama", "Konkurent lokalny"};
     public final int BRIKO_INDEX = 0;
     public final int LEROY_MERLIN_INDEX = 1;
     public final int OBI_INDEX = 2;
     public final int CASTORAMA_INDEX = 3;
     public final int LOCAL_COMPETITOR_INDEX = 4;
+
+     */
 
     public static ProductionDataFeeder getInstance() {
         if (instance == null) {

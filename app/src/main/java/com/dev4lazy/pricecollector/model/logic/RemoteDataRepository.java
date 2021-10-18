@@ -8,6 +8,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
+import com.dev4lazy.pricecollector.model.db.AnalysisArticleJoinDao;
+import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
+import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
+import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoinForPricesUpload;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysis;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteAnalysisDao;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRow;
@@ -35,7 +39,6 @@ import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.FunctionCall;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
-import com.healthmarketscience.sqlbuilder.dbspec.Table;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,34 +50,34 @@ public class RemoteDataRepository {
     private RemoteDatabase remoteDatabase;
 
     private final RemoteAnalysisDao remoteAnalysisDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisDao();
-    private final Data<RemoteAnalysis> analyzes = new Data<>(remoteAnalysisDao);
+    private final DataAccess<RemoteAnalysis> analyzes = new DataAccess<>(remoteAnalysisDao);
 
     private final RemoteAnalysisRowDao remoteAnalysisRowDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisRowDao();
-    private final Data<RemoteAnalysisRow> analysisRows = new Data<>(remoteAnalysisRowDao);
+    private final DataAccess<RemoteAnalysisRow> analysisRows = new DataAccess<>(remoteAnalysisRowDao);
 
     private final RemoteEanCodeDao remoteEanCodeDao = AppHandle.getHandle().getRemoteDatabase().remoteEanCodeDao();
-    private final Data<RemoteEanCode> eanCodes = new Data<>(remoteEanCodeDao);
+    private final DataAccess<RemoteEanCode> eanCodes = new DataAccess<>(remoteEanCodeDao);
     
     private final RemoteDepartmentDao departmentDao = AppHandle.getHandle().getRemoteDatabase().remoteDepartmentDao();
-    private final Data<RemoteDepartment> departments = new Data<>(departmentDao);
+    private final DataAccess<RemoteDepartment> departments = new DataAccess<>(departmentDao);
 
     private final RemoteFamilyDao remoteFamilyDao = AppHandle.getHandle().getRemoteDatabase().remoteFamilyDao();
-    private final Data<RemoteFamily> remoteFamilies = new Data<>( remoteFamilyDao );
+    private final DataAccess<RemoteFamily> remoteFamilies = new DataAccess<>( remoteFamilyDao );
 
     private final RemoteMarketDao remoteMarketDao = AppHandle.getHandle().getRemoteDatabase().remoteMarketDao();
-    private final Data<RemoteMarket> remoteMarkets = new Data<>( remoteMarketDao );
+    private final DataAccess<RemoteMarket> remoteMarkets = new DataAccess<>( remoteMarketDao );
 
     private final RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabase().remoteModuleDao();
-    private final Data<RemoteModule> remoteModules = new Data<>( remoteModuleDao );
+    private final DataAccess<RemoteModule> remoteModules = new DataAccess<>( remoteModuleDao );
 
     private final RemoteSectorDao sectorDao = AppHandle.getHandle().getRemoteDatabase().remoteSectorDao();
-    private final Data<RemoteSector> sectors = new Data<>(sectorDao);
+    private final DataAccess<RemoteSector> sectors = new DataAccess<>(sectorDao);
 
     private final RemoteUOProjectDao remoteUOProjectDao = AppHandle.getHandle().getRemoteDatabase().remoteUOProjectDao();
-    private final Data<RemoteUOProject> remoteUOProjects = new Data<>( remoteUOProjectDao );
+    private final DataAccess<RemoteUOProject> remoteUOProjects = new DataAccess<>( remoteUOProjectDao );
 
     private final RemoteUserDao userDao = AppHandle.getHandle().getRemoteDatabase().remoteUserDao();
-    private final Data<RemoteUser> users = new Data<>(userDao);
+    private final DataAccess<RemoteUser> users = new DataAccess<>(userDao);
 
     private final MediatorLiveData<List<RemoteAnalysisRow>> mObservableAnalysisRows;
 
@@ -147,6 +150,10 @@ public class RemoteDataRepository {
         remoteAnalysisRowDao.update(remoteAnalysisRow);
     }
 
+    public void updateAnalysisRow( RemoteAnalysisRow remoteAnalysisRow, MutableLiveData<Integer> result ) {
+        analysisRows.updateData( remoteAnalysisRow, result );
+    }
+
     public void deleteAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
         remoteAnalysisRowDao.delete(remoteAnalysisRow);
     }
@@ -163,13 +170,16 @@ public class RemoteDataRepository {
         analysisRows.getAllData( result );
     }
 
-    public LiveData<List<RemoteAnalysisRow>> loadAnalysisRows(String filter) {
-        if ((filter!=null) && (!filter.isEmpty())) {
-            return remoteAnalysisRowDao.getViaQueryLiveData(new SimpleSQLiteQuery(filter));
+    public LiveData<List<RemoteAnalysisRow>> loadAnalysisRows(String queryString) {
+        if ((queryString !=null) && (!queryString.isEmpty())) {
+            return remoteAnalysisRowDao.getViaQueryLiveData(new SimpleSQLiteQuery(queryString));
         }
         return remoteAnalysisRowDao.getAllLiveData();
     }
 
+    public void getRemoteAnalysisRowViaQuery( String stringQuery, MutableLiveData<List<RemoteAnalysisRow>> resultLD ) {
+        new GetRemoteAnalysisRowViaStringQueryTask(remoteAnalysisRowDao, resultLD).execute(stringQuery);
+    }
 
 //-----------------------------------------------------------------------------------
     public void insertAnalysis( RemoteAnalysis remoteAnalysis, MutableLiveData<Long> result ) {
@@ -455,6 +465,30 @@ public class RemoteDataRepository {
         protected Void doInBackground(final RemoteAnalysisRow... params) {
             mAssyncTaskDAO.insert(params[0]);
             return null;
+        }
+    }
+
+    private class GetRemoteAnalysisRowViaStringQueryTask extends AsyncTask<String, Void, List<RemoteAnalysisRow> > {
+
+        private final RemoteAnalysisRowDao dao;
+        private final MutableLiveData<List<RemoteAnalysisRow>> resultLD;
+
+        GetRemoteAnalysisRowViaStringQueryTask(RemoteAnalysisRowDao dao, MutableLiveData<List<RemoteAnalysisRow>> resultLD ) {
+            this.dao = dao;
+            this.resultLD = resultLD;
+        }
+
+        @Override
+        protected List<RemoteAnalysisRow> doInBackground ( String ...params){
+            return dao.getViaQuery( new SimpleSQLiteQuery(params[0]) );
+        }
+
+        @Override
+        protected void onPostExecute( List<RemoteAnalysisRow> result ) {
+            super.onPostExecute(result);
+            if (resultLD!=null) {
+                resultLD.postValue(result);
+            }
         }
     }
 }

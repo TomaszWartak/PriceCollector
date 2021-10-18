@@ -9,8 +9,7 @@ import androidx.room.PrimaryKey;
         indices = {
             @Index(
                 name = "index_analysis_rows_articleCode",
-                value = "articleCode",
-                unique = true
+                value = "articleCode"
             )
         }
 )
@@ -51,7 +50,7 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
     private Double articleNewMarginPercent;
     private Double articleLmPrice;
     private Double articleObiPrice;
-    private Double articleBricomanPrice;
+    private Double articleCastoramaPrice;
     private Double articleLocalCompetitor1Price;
     private Double articleLocalCompetitor2Price;
     private String department;
@@ -145,12 +144,12 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
         this.articleObiPrice = articleObiPrice;
     }
 
-    public Double getArticleBricomanPrice() {
-        return articleBricomanPrice;
+    public Double getArticleCastoramaPrice() {
+        return articleCastoramaPrice;
     }
 
-    public void setArticleBricomanPrice(Double articleBricomanPrice) {
-        this.articleBricomanPrice = articleBricomanPrice;
+    public void setArticleCastoramaPrice(Double articleCastoramaPrice) {
+        this.articleCastoramaPrice = articleCastoramaPrice;
     }
 
     public Double getArticleLocalCompetitor1Price() {
@@ -248,7 +247,7 @@ public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
         }
 
         public AnalysisRowBuilder artlcleBricomanPrice(Double articleBricomanPrice ){
-            remoteAnalysisRow.articleBricomanPrice = articleBricomanPrice;
+            remoteAnalysisRow.articleCastoramaPrice = articleBricomanPrice;
             return this;
         }
 

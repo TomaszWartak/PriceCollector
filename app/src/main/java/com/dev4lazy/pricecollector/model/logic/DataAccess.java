@@ -11,13 +11,17 @@ import com.dev4lazy.pricecollector.view.ProgressPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Data<D> {
+public class DataAccess<D> {
 
-    // TODO Data zrób, jako klasę/interfejs? abstrakcyjną, z której wywodzi się np. RoomData
+    // TODO DataAccess zrób, jako klasę/interfejs? abstrakcyjną, z której wywodzi się np. RoomData
     // TODO albo bardziej może _Dao (RoomDao, ...)
     private _Dao dao;
 
-    Data(_Dao dao) {
+    DataAccess() {
+
+    }
+
+    DataAccess(_Dao dao) {
         setDao(dao);
     }
 

@@ -18,12 +18,12 @@ import androidx.paging.DataSource;
 
 public class AnalysisArticleJoinDataUpdater {
     // TODO XXX private final AnalysisArticlesPagerFragment analysisArticlesPagerFragment;
-    private AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel;
+    // TODO XXX private AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel;
 
     private TaskChain taskChain;
 
-    public AnalysisArticleJoinDataUpdater( AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel ) {
-       this.analysisArticleJoinsListViewModel = analysisArticleJoinsListViewModel;
+    public AnalysisArticleJoinDataUpdater( /* TODO ??? AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel */ ) {
+        // TODO XXX this.analysisArticleJoinsListViewModel = analysisArticleJoinsListViewModel;
        taskChain = new TaskChain();
     }
 
@@ -40,34 +40,46 @@ public class AnalysisArticleJoinDataUpdater {
         protected AnalysisArticleJoin aAJ;
         protected AnalysisArticleJoinValuesStateHolder cI;
 
+        /* TODO XXX
         public AnalysisArticleJoinUpdater(TaskChain taskChain ) {
             super(taskChain);
         }
 
-        @Override
-        public void doIt() {}
+         */
 
+        @Override
+        public void doIt(Object... data) {
+
+        }
+
+        /*
         @Override
         public void takeData(Object... data) {
             aAJ = (AnalysisArticleJoin)data[0];
             cI = (AnalysisArticleJoinValuesStateHolder)data[1];
         }
 
+         */
+
     }
 
     class ReferenceArticleUpdater extends AnalysisArticleJoinUpdater {
 
-        public ReferenceArticleUpdater(
-                TaskChain taskChain,
+        /*public ReferenceArticleUpdater(
+                // TODO XXX TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
                 AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
-            super(taskChain);
+            // TODO XXX super(taskChain);
             aAJ = analysisArticleJoin;
             cI = valuesStateHolder;
         }
 
+         */
+
         @Override
-        public void doIt() {
+        public void doIt( Object... data) {
+            aAJ = (AnalysisArticleJoin)data[0];
+            cI = (AnalysisArticleJoinValuesStateHolder)data[1];
             saveReferenceArticle( aAJ, cI );
         }
 
@@ -108,8 +120,11 @@ public class AnalysisArticleJoinDataUpdater {
                 @Override
                 public void onChanged(Integer updatedCount) {
                     updateResult.removeObserver(this); // this = observer...
+                    /* TODO XXX
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
+
+                     */
                     runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };
@@ -128,8 +143,11 @@ public class AnalysisArticleJoinDataUpdater {
                 public void onChanged(Long insertedReferenceArticleId) {
                     insertResult.removeObserver(this); // this = observer...
                     analysisArticleJoin.setReferenceArticleId(insertedReferenceArticleId.intValue());
+                    /* TODO XXX
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
+
+                     */
                     runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };
@@ -141,18 +159,22 @@ public class AnalysisArticleJoinDataUpdater {
     }
 
     class ReferenceArticleEanUpdater extends AnalysisArticleJoinUpdater {
-
+        /*
         public ReferenceArticleEanUpdater(
-                TaskChain taskChain,
+                // TODO XXX  TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
                 AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
-            super( taskChain );
+            // TODO XXX super( taskChain );
             aAJ = analysisArticleJoin;
             cI = valuesStateHolder;
         }
 
+         */
+
         @Override
-        public void doIt() {
+        public void doIt( Object... data) {
+            aAJ = (AnalysisArticleJoin)data[0];
+            cI = (AnalysisArticleJoinValuesStateHolder)data[1];
             saveReferenceArticleEan(aAJ, cI);
         }
 
@@ -198,8 +220,11 @@ public class AnalysisArticleJoinDataUpdater {
                 public void onChanged(Long insertedEanCodeId) {
                     insertResult.removeObserver(this); // this = observer...
                     analysisArticleJoin.setReferenceArticleEanCodeId( insertedEanCodeId.intValue() );
+                    /* TODO XXX
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
+
+                     */
                     runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };
@@ -211,18 +236,21 @@ public class AnalysisArticleJoinDataUpdater {
     }
 
     class ReferenceArticleEanDeleter extends AnalysisArticleJoinUpdater {
-
+        /*
         public ReferenceArticleEanDeleter(
-                TaskChain taskChain,
+                // TODO XXX  TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
                 AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
-            super( taskChain );
+            // TODO XXX super( taskChain );
             aAJ = analysisArticleJoin;
             cI = valuesStateHolder;
         }
+         */
 
         @Override
-        public void doIt() {
+        public void doIt(Object... data) {
+            aAJ = (AnalysisArticleJoin)data[0];
+            cI = (AnalysisArticleJoinValuesStateHolder)data[1];
             deleteReferenceArticleEan(aAJ, cI);
         }
 
@@ -257,8 +285,11 @@ public class AnalysisArticleJoinDataUpdater {
                     // CP .referenceArticleEanCodeId
                     analysisArticleJoin.setReferenceArticleEanCodeId( null );
                     analysisArticleJoin.setReferenceArticleEanCodeValue( null );
+                    /* TODO XXX
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
+
+                     */
                     runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };
@@ -271,17 +302,21 @@ public class AnalysisArticleJoinDataUpdater {
 
     class CompetitorPriceUpdater extends AnalysisArticleJoinUpdater {
 
+        /*
         public CompetitorPriceUpdater(
-                TaskChain taskChain,
+                // TODO XXX TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
                 AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
-            super( taskChain );
+            // TODO XXX super( taskChain );
             aAJ = analysisArticleJoin;
             cI = valuesStateHolder;
         }
+         */
 
         @Override
-        public void doIt() {
+        public void doIt(Object... data) {
+            aAJ = (AnalysisArticleJoin)data[0];
+            cI = (AnalysisArticleJoinValuesStateHolder)data[1];
             saveCompetitorPrice( aAJ, cI );
         }
 
@@ -314,15 +349,17 @@ public class AnalysisArticleJoinDataUpdater {
                 @Override
                 public void onChanged(Integer updatedCount) {
                     updateResult.removeObserver(this); // this = observer...
+                    /* TODO XXX
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
+
+                     */
                     runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };
             updateResult.observeForever(updatingResultObserver);
             LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
             localDataRepository.updateCompetitorPrice(competitorPrice, updateResult);
-
         }
 
         CompetitorPrice prepareCompetitorPriceData(AnalysisArticleJoin analysisArticleJoin) {
@@ -348,8 +385,11 @@ public class AnalysisArticleJoinDataUpdater {
                 public void onChanged(Long insertedCompetitorPriceId) {
                     insertResult.removeObserver(this); // this = observer...
                     analysisArticleJoin.setCompetitorStorePriceId( insertedCompetitorPriceId.intValue() );
+                    /* TODO XXX
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
+
+                     */
                     runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };
@@ -360,18 +400,21 @@ public class AnalysisArticleJoinDataUpdater {
     }
 
     class AnalysisArticleUpdater extends AnalysisArticleJoinUpdater {
-
+        /*
         public AnalysisArticleUpdater(
-                TaskChain taskChain,
+                // TODO XXX TaskChain taskChain,
                 AnalysisArticleJoin analysisArticleJoin,
                 AnalysisArticleJoinValuesStateHolder valuesStateHolder) {
-            super( taskChain );
+            // TODO XXX super( taskChain );
             aAJ = analysisArticleJoin;
             cI = valuesStateHolder;
         }
+        */
 
         @Override
-        public void doIt() {
+        public void doIt(Object... data) {
+            aAJ = (AnalysisArticleJoin)data[0];
+            cI = (AnalysisArticleJoinValuesStateHolder)data[1];
             saveAnalysisArticle(aAJ, cI);
         }
 
@@ -407,8 +450,11 @@ public class AnalysisArticleJoinDataUpdater {
                 @Override
                 public void onChanged(Integer updatedCount) {
                     updateResult.removeObserver(this); // this = observer...
+                    /* TODO XXX
                     DataSource dataSource = analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().getValue().getDataSource();
                     dataSource.invalidate();
+
+                     */
                     runNextTaskLink( analysisArticleJoin, valuesStateHolder);
                 }
             };

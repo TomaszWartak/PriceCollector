@@ -63,7 +63,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
         //  analysisArticleJoinDataUpdater = new AnalysisArticleJoinDataUpdater( analysisArticleJoinsListViewModel );
         analysisArticleJoinSaver = new AnalysisArticleJoinSaver(
                 analysisArticleJoinsListViewModel,
-                analysisArticleJoinViewModel
+                analysisArticleJoinViewModel.getValuesStateHolder()
         );
         viewPagerSetup( view );
         setToolbarText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getArticleName() );
@@ -131,7 +131,6 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                             PagedList<AnalysisArticleJoin> pagedList = analysisArticleJoinPagerAdapter.getCurrentList();
                             AnalysisArticleJoin analysisArticleJoinScrolledFrom = pagedList.get(positionScrolledFrom);
                             if (analysisArticleJoinScrolledFrom.isCompetitorStoreIdNotSet()) {
-                                // TODO XXX tu dałem breakpoint. Czy kiedykolwiek się kod tutaj zatrzymał?
                                 analysisArticleJoinScrolledFrom.setCompetitorStoreId(competitorStoreViewModel.getStore().getId());
                             }
                             validateAndStartSavingDataScroledFrom(

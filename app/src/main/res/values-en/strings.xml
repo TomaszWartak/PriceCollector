@@ -25,7 +25,7 @@
     <string name="label_analysis_confirmation_date">"Closing date:\u00A0 "</string>
     <string name="label_analysis_creation_date">"Creating dante:\u00A0 "</string>
     <string name="label_analysis_due_date">Planned date for completion:\u00A0</string>
-    <string name="label_analysis_finish_date">Date taken:\u00A0</string>
+    <string name="label_analysis_last_sent_date">Date of the last data sent:\u00A0</string>
     <string name="label_analysis_header">ANALYSIS</string>
     <string name="name_label">Name</string>
     <string name="nedded_permissions_message_go_to_settings">Go to Settings and give consent.</string>
@@ -93,4 +93,6 @@
     <string name="competitors_toolbar_text">Competitors</string>
     <string name="ean_duplication_message_part1">DATA NOT SAVED\nEAN code</string>
     <string name="ean_duplication_message_part2">\nis is assigned to a other article</string>
+    <string name="send_data_to_remote_db">Send data to remote database</string>
+    <string name="populate_10_first">TEST - populate 10 first</string>
 </resources>

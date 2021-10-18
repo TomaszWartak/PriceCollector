@@ -15,6 +15,7 @@ import com.dev4lazy.pricecollector.model.entities.Analysis;
 public class AnalyzesListViewModel extends AndroidViewModel {
 
     private final LiveData<PagedList<Analysis>> analyzesLiveData;
+    private Analysis chosenAnalysis = null;
     private int chosenAnalysisId = 0;
 
     public AnalyzesListViewModel(Application application) {
@@ -30,10 +31,14 @@ public class AnalyzesListViewModel extends AndroidViewModel {
     }
 
     public int getChosenAnalysisId() {
-        return chosenAnalysisId;
+        return chosenAnalysis.getId();
     }
 
-    public void setChosenAnalysisId(int chosenAnalysisId) {
-        this.chosenAnalysisId = chosenAnalysisId;
+    public void setChosenAnalysis( Analysis analysis ) {
+        this.chosenAnalysis = analysis;
+    }
+
+    public Analysis getChosenAnalysis() {
+        return chosenAnalysis;
     }
 }

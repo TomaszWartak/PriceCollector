@@ -8,14 +8,16 @@ import androidx.room.PrimaryKey;
 
 @Entity(
     tableName = "ean_codes", // w bazie zdalnej nie ma takiej tabeli
-    foreignKeys = {
+    /*foreignKeys = {
         @ForeignKey(
             //entity = Article.class,
             entity = RemoteAnalysisRow.class,
             parentColumns = "articleCode", // kod briko
-            childColumns = "article_id"
+            childColumns = "article_id" // kod briko
         )
     },
+
+     */
     indices = {
         @Index( value = "article_id"),
         @Index( value = "value", unique = true )

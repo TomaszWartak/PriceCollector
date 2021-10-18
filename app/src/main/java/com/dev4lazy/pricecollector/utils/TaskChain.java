@@ -5,25 +5,82 @@ import java.util.ArrayList;
 public class TaskChain {
 
     private ArrayList<TaskLink> chain;
+    private TaskLink afterAllToDoTask = null;
+    private TaskLink suspendAfterTask = null;
+    // TODO XXX private Object[] dataForSuspendedtask = null;
+    private boolean supended = false;
+
 
     public TaskChain() {
         chain = new ArrayList<>();
     }
 
-    public void addTaskLink(TaskLink taskLink) {
+    public ArrayList<TaskLink> getChain() {
+        return chain;
+    }
+
+    public TaskLink getSuspendAfterTask() {
+        return suspendAfterTask;
+    }
+
+    /**
+     * Ustawia zadanie, po którym ma zostac wstrzymane przetwarzanie TaskChain.
+     * Przetwarzanie może byc wznowione za pomocą wywołania metody resume().
+     * @return this <- TaskChain
+     */
+    public TaskChain suspendAfter() {
+        suspendAfterTask = getLastTask();
+        return this;
+    }
+
+    public void suspend( ) {
+        supended = true;
+    }
+
+    public void resume( Object... data ) {
+        supended = false;
+        suspendAfterTask.getNextTaskLink().doIt( data );
+        suspendAfterTask = null;
+    }
+
+    public boolean isSupended() {
+        return supended;
+    }
+
+    public boolean isNotSuspended() {
+        return !supended;
+    }
+
+    public TaskChain addTaskLink(TaskLink taskLink) {
+        taskLink.setTaskChain( this );
         if (!chain.isEmpty()) {
             chain.get(chain.size() - 1).setNextTaskLink(taskLink);
         }
         chain.add(taskLink);
+        return this;
     }
 
-    public void startIt() {
+    public void startIt(Object... data) {
         if (!chain.isEmpty()) {
-            chain.get(0).doIt();
+            // TODO XXX chain.get(0).takeData(data);
+            chain.get(0).doIt(data);
         }
     }
 
-    public ArrayList<TaskLink> getChain() {
-        return chain;
+    public void setAfterAllToDoTask(TaskLink taskLink) {
+        afterAllToDoTask = taskLink;
     }
+
+    public TaskLink getAfterAllToDoTask() {
+        return afterAllToDoTask;
+    }
+
+    private TaskLink getLastTask() {
+        if (chain.isEmpty()) {
+            return null;
+        } else {
+            return chain.get(chain.size() - 1);
+        }
+    }
+
 }

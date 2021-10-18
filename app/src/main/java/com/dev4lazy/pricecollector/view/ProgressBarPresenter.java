@@ -19,7 +19,7 @@ import android.widget.ProgressBar;
  *      gdyż, po zakończeiu działania nie nadaje null progressBarowi... Wystarczy wywołac metodę reset(...).
  *  - Jeśli chcesz zwolnić pamięć progressBara, to wywołaj metodę kill()
  *
- *  Zob. użycie w Data.InsertListAsyncTask
+ *  Zob. użycie w DataAccess.InsertListAsyncTask
  */
 
 public class ProgressBarPresenter implements ProgressPresenter {

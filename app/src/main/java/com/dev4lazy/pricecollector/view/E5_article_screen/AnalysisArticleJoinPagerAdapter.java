@@ -124,6 +124,8 @@ public class AnalysisArticleJoinPagerAdapter
 
                 private EditText watchedEditText;
                 private int cursorPosition = 0;
+                private boolean watchedEditTextWasEmpty = true;
+
                 public CompetitorPriceEditTextWatcher( EditText watchedEditText ) {
                     this.watchedEditText = watchedEditText;
                 }
@@ -131,6 +133,7 @@ public class AnalysisArticleJoinPagerAdapter
                 @Override
                 public void beforeTextChanged (CharSequence charSequence, int start, int count, int after){
                     cursorPosition = watchedEditText.getSelectionStart();
+                    watchedEditTextWasEmpty = watchedEditText.getText().toString().isEmpty();
                 }
 
                 @Override
@@ -155,7 +158,7 @@ public class AnalysisArticleJoinPagerAdapter
                             makeCorrectionInEditText( charSequenceStr );
                         }
                         charSequence = decimalFormat.format( Double.parseDouble( charSequenceStr ) );
-                        if (areDecimalPlacesMoreThanTwo( charSequence, charSequenceStr ) ) {
+                        if (areDecimalPlacesDiffThanTwo( charSequence, charSequenceStr ) ) {
                             makeCorrectionInEditText( charSequence );
                         }
                     }
@@ -174,18 +177,20 @@ public class AnalysisArticleJoinPagerAdapter
                     return new StringBuffer(inputText).insert( decimalSeparatorPosition, '.' ).reverse().toString();
                 }
 
-                private boolean areDecimalPlacesMoreThanTwo(CharSequence charSequence, String charSequenceStr) {
+                private boolean areDecimalPlacesDiffThanTwo(CharSequence charSequence, String charSequenceStr) {
                     return charSequence.length() != charSequenceStr.length();
                 }
 
                 private void makeCorrectionInEditText(CharSequence charSequence) {
                     watchedEditText.removeTextChangedListener(this );
-                    // TODO XXX int cursorPosition = watchedEditText.getSelectionStart();
-                    if (isCursorPositionOutOfCharSequence(charSequence, cursorPosition)) {
+                    if (isCursorPositionOutOfCharSequence( charSequence, cursorPosition)) {
                         cursorPosition = charSequence.length();
                     }
+                    if (watchedEditTextWasEmpty) {
+                        cursorPosition = 1;
+                    }
                     watchedEditText.setText( charSequence );
-                    watchedEditText.setSelection(cursorPosition); // charSequence.length()
+                    watchedEditText.setSelection( cursorPosition ); // charSequence.length()
                     watchedEditText.addTextChangedListener(this );
                 }
 
@@ -292,7 +297,7 @@ public class AnalysisArticleJoinPagerAdapter
                 AnalysisArticleJoin analysisArticleJoin = getItem( getAbsoluteAdapterPosition() );
                 String eanFromAnalysisArticleJoin = analysisArticleJoin.getReferenceArticleEanCodeValue();
                 if (areTextsNotEqual( eanFromInput, eanFromAnalysisArticleJoin )) {
-                    analysisArticleJoinViewModel.getValuesStateHolder().setReferenceArticleEan( eanFromInput );
+                    analysisArticleJoinViewModel.getValuesStateHolder().setReferenceArticleEanCodeValue( eanFromInput );
                     // TODO czy wiersz niżej jest potrzebne do czegoś?
                     // TODO XXX analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
                 }

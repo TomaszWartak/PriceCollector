@@ -4,16 +4,19 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/anlysis_articles_list_screen_gotoanalyzes_menu_item"
+            android:id="@+id/analysis_articles_list_screen_gotoanalyzes_menu_item"
             android:title="@string/go_to_analyzes_list_menu_item" />
         <item
-            android:id="@+id/anlysis_articles_list_screen_search_menu_item"
+            android:id="@+id/analysis_articles_list_screen_search_menu_item"
             android:title="@string/search_articles_list_menu_item" />
+        <item
+            android:id="@+id/analysis_articles_list_screen_populate_data"
+            android:title="@string/populate_10_first" />    \
     </group>
     <item android:title="">
         <menu>
             <item
-                android:id="@+id/anlysis_articles_list_screen_logout_menu_item"
+                android:id="@+id/analysis_articles_list_screen_logout_menu_item"
                 android:title="@string/logout_menu_item" />
         </menu>
     </item>

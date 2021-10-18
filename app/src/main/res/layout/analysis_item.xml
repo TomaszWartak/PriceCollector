@@ -69,7 +69,7 @@
                 android:id="@+id/analysis_item__label_finish_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_analysis_finish_date"
+                android:text="@string/label_analysis_last_sent_date"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
                 card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_due_date" />
 
@@ -81,7 +81,7 @@
                 card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_finish_date"
                 card_view:layout_constraintTop_toBottomOf="@+id/analysis_Item__due_date" />
 
-            <!-- data potwierdzenia -->
+            <!-- data potwierdzenia
             <TextView
                 android:id="@+id/analysis_item__label_confirmation_date"
                 android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorValue"
                 card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_confirmation_date"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__finish_date" />
+                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__finish_date" /-->
 
             <ProgressBar
                 android:id="@+id/analysis_item__progressBar"

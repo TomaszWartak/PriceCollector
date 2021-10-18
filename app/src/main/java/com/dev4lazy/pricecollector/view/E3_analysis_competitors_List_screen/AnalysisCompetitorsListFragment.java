@@ -20,9 +20,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.logic.AnalysisDataUploader;
 import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.utils.AppUtils;
+import com.dev4lazy.pricecollector.utils.TaskChain;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
+import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.CompetitorsSlotsViewModel;
 import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -104,6 +108,9 @@ public class AnalysisCompetitorsListFragment extends Fragment {
                         case R.id.analysis_competitors_list_screen_logout_menu_item:
                             getLogoutQuestionDialog();
                             break;
+                        case R.id.analysis_competitors_list_screen_uploaddata_menu_item:
+                            uploadAnalysisData();
+                            break;
                         case R.id.analysis_competitors_list_screen_gotoanalyzes_menu_item:
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisCompetitorsFragment_to_analyzesListFragment );
                             break;
@@ -137,4 +144,9 @@ public class AnalysisCompetitorsListFragment extends Fragment {
                         System.exit(0);
                     }
 
+            private void uploadAnalysisData() {
+                AnalyzesListViewModel analyzesListViewModel =
+                        new ViewModelProvider( AppUtils.getActivity( getContext() ) ).get( AnalyzesListViewModel.class );
+                new AnalysisDataUploader( analyzesListViewModel.getChosenAnalysis() ).uploadData();
+            };
 }

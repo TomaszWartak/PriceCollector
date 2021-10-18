@@ -147,6 +147,13 @@ public class AnalysisArticleJoin {
     public void setCompetitorStorePrice(Double competitorStorePrice) {
         this.competitorStorePrice = competitorStorePrice;
     }
+    /*  TODO XXX
+    public AnalysisArticleJoin setCompetitorStorePrice(Double competitorStorePrice) {
+        this.competitorStorePrice = competitorStorePrice;
+        return this;
+    }
+
+     */
 
     public boolean isCompetitorStorePriceSet() {
         Double price = getCompetitorStorePrice();

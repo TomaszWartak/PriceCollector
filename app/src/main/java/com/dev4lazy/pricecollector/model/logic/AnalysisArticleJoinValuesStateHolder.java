@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.model.logic;
 
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
+import com.google.android.gms.common.data.FreezableUtils;
 
 public class AnalysisArticleJoinValuesStateHolder {
 
@@ -17,11 +18,12 @@ public class AnalysisArticleJoinValuesStateHolder {
         clearFlags();
     }
 
-    public void setAnalysisArticleJoin( AnalysisArticleJoin analysisArticleJoin ) {
+    public AnalysisArticleJoinValuesStateHolder setAnalysisArticleJoin( AnalysisArticleJoin analysisArticleJoin ) {
         this.analysisArticleJoin = analysisArticleJoin;
+        return this;
     }
 
-    private void clearFlags() {
+    public void clearFlags() {
         needToSave = false;
         competitorPriceChanged = false;
         commentsChanged = false;
@@ -59,12 +61,13 @@ public class AnalysisArticleJoinValuesStateHolder {
         return !competitorPriceChanged;
     }
 
-    public void setCompetitorStorePrice( Double price ) {
+    public AnalysisArticleJoinValuesStateHolder setCompetitorStorePrice( Double price ) {
         analysisArticleJoin.setCompetitorStorePrice( price );
         setFlagCompetitorPriceChanged(true);
         if (isNeedToSaveFlagNotSet()) {
             setFlagNeedToSave(true);
         }
+        return this;
     }
 
     public void clearFlagCommentsChanged() {
@@ -83,12 +86,13 @@ public class AnalysisArticleJoinValuesStateHolder {
         return !commentsChanged;
     }
 
-    public void setComments( String comments ) {
+    public AnalysisArticleJoinValuesStateHolder setComments( String comments ) {
         analysisArticleJoin.setComments( comments );
         setFlagCommentsChanged(true);
         if (isNeedToSaveFlagNotSet()) {
             setFlagNeedToSave(true);
         }
+        return this;
     }
 
     public void clearFlagReferenceArticleChanged() {
@@ -123,22 +127,14 @@ public class AnalysisArticleJoinValuesStateHolder {
         return !referenceArticleNameChanged;
     }
 
-    public void setReferenceArticleName( String name ) {
+    public AnalysisArticleJoinValuesStateHolder setReferenceArticleName( String name ) {
         analysisArticleJoin.setReferenceArticleName( name );
         setFlagReferenceArticleChanged( true );
         setFlagReferenceArticleNameChanged( true );
         if (isNeedToSaveFlagNotSet()) {
             setFlagNeedToSave( true );
         }
-    }
-
-    public void setReferenceArticleEan( String ean ) {
-        analysisArticleJoin.setReferenceArticleEanCodeValue( ean );
-        // TODO XXX setFlagReferenceArticleChanged(true);
-        setFlagReferenceArticleEanChanged(true);
-        if (isNeedToSaveFlagNotSet()) {
-            setFlagNeedToSave(true);
-        }
+        return this;
     }
 
     public void clearFlagReferenceArticleEanChanged() {
@@ -157,6 +153,16 @@ public class AnalysisArticleJoinValuesStateHolder {
         return !referenceArticleEanChanged;
     }
 
+    public AnalysisArticleJoinValuesStateHolder setReferenceArticleEanCodeValue(String ean ) {
+        analysisArticleJoin.setReferenceArticleEanCodeValue( ean );
+        // TODO XXX setFlagReferenceArticleChanged(true);
+        setFlagReferenceArticleEanChanged(true);
+        if (isNeedToSaveFlagNotSet()) {
+            setFlagNeedToSave(true);
+        }
+        return this;
+    }
+
     public void clearFlagReferenceArticleDescriptionChanged() {
         setFlagReferenceArticleDescriptionChanged( false );
     }
@@ -173,13 +179,14 @@ public class AnalysisArticleJoinValuesStateHolder {
         return !referenceArticleDescriptionChanged;
     }
 
-    public void setReferenceArticleDescription( String description ) {
+    public AnalysisArticleJoinValuesStateHolder setReferenceArticleDescription( String description ) {
         analysisArticleJoin.setReferenceArticleDescription( description );
         setFlagReferenceArticleChanged( true );
         setFlagReferenceArticleDescriptionChanged( true );
         if (isNeedToSaveFlagNotSet()) {
             setFlagNeedToSave( true );
         }
+        return this;
     }
 
     public boolean isAnyDataChangedFlagSet() {

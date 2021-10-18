@@ -70,7 +70,7 @@
                 android:id="@+id/label_analysis_finish_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_analysis_finish_date"
+                android:text="@string/label_analysis_last_sent_date"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
                 card_view:layout_constraintTop_toBottomOf="@+id/label_analysis_due_date" />
 

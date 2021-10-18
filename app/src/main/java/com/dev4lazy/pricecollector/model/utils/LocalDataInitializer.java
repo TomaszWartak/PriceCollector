@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.entities.Analysis;
+import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
 import com.dev4lazy.pricecollector.model.logic.Remote2LocalConverter;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
@@ -28,7 +30,14 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteSector;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUOProject;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppSettings;
+import com.dev4lazy.pricecollector.utils.TaskLink;
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
+import com.healthmarketscience.sqlbuilder.ComboCondition;
+import com.healthmarketscience.sqlbuilder.CustomSql;
+import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.healthmarketscience.sqlbuilder.UnaryCondition;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -997,4 +1006,5 @@ public class LocalDataInitializer {
             initializeLocalData();
         }
     }
+
 }
