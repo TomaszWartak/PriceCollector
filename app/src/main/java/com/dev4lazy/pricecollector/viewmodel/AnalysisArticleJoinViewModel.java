@@ -14,6 +14,9 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
     private AnalysisArticleJoin analysisArticleJoinForRestore;
     private boolean toRestoreAfterEanValueDupliaction;
     private int positionOnList;
+    private int firstVisibleItemPosition = 0;
+    private int lastVisibleItemPosition = 0;
+    private boolean articleLatelyDisplayed = false;
     private boolean savingDataInProgress; // todo - czy to jest wykorzystywane
 
     public AnalysisArticleJoinViewModel(Application application) {
@@ -354,6 +357,29 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
         return positionOnList;
     }
 
+    public int getFirstVisibleItemPosition() {
+        return firstVisibleItemPosition;
+    }
+
+    public void setFirstVisibleItemPosition(int firstVisibleItemPosition) {
+        this.firstVisibleItemPosition = firstVisibleItemPosition;
+    }
+
+    public int getLastVisibleItemPosition() {
+        return lastVisibleItemPosition;
+    }
+
+    public void setLastVisibleItemPosition(int lastVisibleItemPosition) {
+        this.lastVisibleItemPosition = lastVisibleItemPosition;
+    }
+
+    public boolean isArticleLatelyDisplayed() {
+        return articleLatelyDisplayed;
+    }
+
+    public void setArticleLatelyDisplayed(boolean articleLatelyDisplayed) {
+        this.articleLatelyDisplayed = articleLatelyDisplayed;
+    }
 
     public boolean isAnalysisArticleJoinNotModified() {
         return valuesStateHolder.isNotAnyValueSet();

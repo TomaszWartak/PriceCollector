@@ -127,11 +127,39 @@ public class AnalysisArticlesListFragment extends Fragment {
                         //  - jesli jestem na tej samej stronie - podświetlić po prostu Itewm, który był wyświetlony w ViewPagerze
                         //  - jesli na innej stronie - podświetlić Item, który był wyświetlony w ViewPagerze i ustawić go na śrdku strony
                         // TODO wypełnij metodę AnalysisArticleJoinsRecyclerView.scrollToItem()
-                        analysisArticleJoinsRecyclerView.scrollToPosition( analysisArticleJoinViewModel.getPositionOnList() );
+                        // TODO TEST
+                        // ((LinearLayoutManager)layoutManager).scrollToPositionWithOffset(positionToScroll - 1,0);
+                        // TODO END TEST
+                        int positionToScroll = analysisArticleJoinViewModel.getPositionOnList();
+                        int firstVisibleItemPosition = analysisArticleJoinViewModel.getFirstVisibleItemPosition();
+                        int lastVisibleItemPosition = analysisArticleJoinViewModel.getLastVisibleItemPosition();
+                        if (isPositionToScrollBeyondFirstPage( positionToScroll, firstVisibleItemPosition, lastVisibleItemPosition )) {
+                            // TODO XXX analysisArticleJoinsRecyclerView.scrollToPosition(positionToScroll);
+                            if (isPositionBeyondLatelyVisiblePage( positionToScroll, firstVisibleItemPosition, lastVisibleItemPosition)) {
+                                analysisArticleJoinsRecyclerView.scrollToPosition( positionToScroll );
+                            } else {
+                                analysisArticleJoinsRecyclerView.scrollToPosition( firstVisibleItemPosition );
+                            }
+                        }
                     }
                 }
             });
         }
+
+    private boolean isPositionToScrollBeyondFirstPage(
+            int positionToScroll,
+            int firstVisibleItemPosition,
+            int lastVisibleItemPosition ) {
+        int pageHeight = lastVisibleItemPosition-firstVisibleItemPosition;
+        return positionToScroll > pageHeight;
+    }
+
+    private boolean isPositionBeyondLatelyVisiblePage(
+            int positionToScroll,
+            int firstVisibleItemPosition,
+            int lastVisibleItemPosition ) {
+        return (positionToScroll<firstVisibleItemPosition) || (positionToScroll>lastVisibleItemPosition);
+    }
 
     @Override
     public void onStart() {

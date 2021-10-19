@@ -7,7 +7,6 @@ public class TaskChain {
     private ArrayList<TaskLink> chain;
     private TaskLink afterAllToDoTask = null;
     private TaskLink suspendAfterTask = null;
-    // TODO XXX private Object[] dataForSuspendedtask = null;
     private boolean supended = false;
 
 
@@ -28,7 +27,7 @@ public class TaskChain {
      * Przetwarzanie może byc wznowione za pomocą wywołania metody resume().
      * @return this <- TaskChain
      */
-    public TaskChain suspendAfter() {
+    public TaskChain suspendHere() {
         suspendAfterTask = getLastTask();
         return this;
     }

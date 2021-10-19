@@ -49,10 +49,10 @@ public class AnalysisDataUploader {
             .addTaskLink( new AnalysisArticleJoinGetter( ) )
             .addTaskLink( new PricesMapMaker( ) )
             .addTaskLink( new RemoteAnalysisRowsCollector( ) )
-            .suspendAfter()
+            .suspendHere()
             .addTaskLink( new RemoteAnalysisRowsDataUpdater() )
             .addTaskLink( new RemoteAnalysisRowsSaver() )
-            .suspendAfter()
+            .suspendHere()
             .addTaskLink( new AnalysisLastDataSentDateUpdater() )
             .startIt();
     }

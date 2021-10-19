@@ -34,7 +34,7 @@ import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
 import com.dev4lazy.pricecollector.AppHandle;
 
 @Database(
-    version = 15,
+    version = 16,
     entities = {
         AnalysisCompetitorSlot.class,
         Analysis.class,
@@ -112,6 +112,7 @@ public abstract class LocalDatabase extends RoomDatabase {
                             .addMigrations(MIGRATION_11_12)
                             .addMigrations(MIGRATION_13_14)
                             .addMigrations(MIGRATION_14_15)
+                            .addMigrations(MIGRATION_15_16)
                             /**/
                             .build();
                     instance.updateDatabaseCreated(context);
@@ -262,14 +263,37 @@ public abstract class LocalDatabase extends RoomDatabase {
         }
     };
 
-    /*/ W tej wersji SQLite DROP COLUMN nie nie jest obsługiwane...
     static final Migration MIGRATION_15_16 = new Migration(15, 16) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE analysis_articles DROP COLUMN competitor_store_id");
+            database.execSQL("BEGIN TRANSACTION");
+            database.execSQL("CREATE TABLE IF NOT EXISTS analysis_articles_new (" +
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "analysis_id INTEGER NOT NULL, " +
+                    "article_id INTEGER NOT NULL, " +
+                    "own_article_info_id INTEGER NOT NULL, " +
+                    "article_store_price REAL, " +
+                    "article_ref_price REAL, " +
+                    "article_new_price REAL," +
+                    "comments TEXT )"
+            );
+            database.execSQL("INSERT INTO analysis_articles_new SELECT " +
+                    "id, " +
+                    "analysis_id, " +
+                    "article_id, " +
+                    "own_article_info_id, " +
+                    "article_store_price, " +
+                    "article_ref_price, " +
+                    "article_new_price, "+
+                    "comments "+
+                    "FROM analysis_articles"
+            );
+            database.execSQL("DROP TABLE analysis_articles");
+            database.execSQL("ALTER TABLE analysis_articles_new RENAME TO analysis_articles");
+            database.execSQL("COMMIT");
+
         }
     };
-    /*/
 
     private void updateDatabaseCreated(final Context context) {
         if (context.getDatabasePath(DATABASE_NAME).exists()) {

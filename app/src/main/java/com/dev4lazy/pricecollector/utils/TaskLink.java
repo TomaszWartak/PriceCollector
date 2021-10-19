@@ -5,15 +5,6 @@ public abstract class TaskLink {
     private TaskChain taskChain;
     private TaskLink nextTaskLink;
 
-    // TODO !!! usuń konstruktor, bo rozbiłes metodę setTaskChain, która jest wołana w TaskChain
-    //  i nie trzeba nic ektra robić. Po usunieciu konstruktora trzeba będzie skorygowac użyci
-    //  TaskLink w zapsie cen na ekranie 5
-    /*public TaskLink(TaskChain taskChain) {
-        this.taskChain = taskChain;
-    }
-
-     */
-
     protected void setTaskChain( TaskChain taskChain ) {
         this.taskChain = taskChain;
     }
@@ -21,12 +12,6 @@ public abstract class TaskLink {
     public TaskChain getTaskChain() {
         return taskChain;
     }
-
-    /* TODO XXX
-    private TaskLink getNextTaskLink() {
-        return nextTaskLink;
-    }
-     */
 
     protected void setNextTaskLink(TaskLink nextTaskLink) {
         this.nextTaskLink = nextTaskLink;
@@ -48,13 +33,11 @@ public abstract class TaskLink {
                 if (needToBeSuspendedAfterThis()) {
                     taskChain.suspend( );
                 } else {
-                    // TODO XXX nextTaskLink.takeData(data);
                     nextTaskLink.doIt( data );
                 }
             } else {
                 TaskLink afterAllToDo = taskChain.getAfterAllToDoTask();
                 if (isAfterAllToDoTask(afterAllToDo)) {
-                    // TODO XXX afterToDo.takeData(data);
                     afterAllToDo.doIt( data );
                     taskChain.setAfterAllToDoTask( null );
                 }
@@ -71,17 +54,9 @@ public abstract class TaskLink {
         return this == taskChain.getSuspendAfterTask();
     }
 
-
     private boolean isAfterAllToDoTask(TaskLink afterToDo) {
         return afterToDo != null;
     }
-
-    /**
-     * Odbiera dane potrzebne do wykonania, od poprzedniego TaskLink.
-     *
-     * @param data (Object...) - dane do odebrania od poprzedniego TaskLink.
-     */
-    // TODO XXX abstract protected void takeData(Object... data);
 
     /**
      * Wywołuje kod do wykonania.

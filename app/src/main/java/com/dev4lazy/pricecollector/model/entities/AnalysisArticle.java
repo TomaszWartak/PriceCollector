@@ -20,18 +20,21 @@ public class AnalysisArticle {
     private int articleId;
     @ColumnInfo(name = "own_article_info_id")
     private int ownArticleInfoId;
+    /* TODO XXXX
         // todo?? usuń z bazy bo jest CompetitorPrice
         @ColumnInfo(name = "competitor_store_id")
         private int competitorStoreId;
         // todo?? usuń z bazy bo jest CompetitorPrice
         @ColumnInfo(name = "competitor_store_price")
         private Double competitorStorePrice;
+     */
     @ColumnInfo(name = "article_store_price")
     private Double articleStorePrice;
     @ColumnInfo(name = "article_ref_price")
     private Double articleRefPrice;
     @ColumnInfo(name = "article_new_price")
     private Double articleNewPrice;
+    /* TODO XXXX
         // todo?? usuń z bazy bo jest w CompetitorPrice
         //  Musi być w CompetitorPrice, bo w każdym sklepie konkurenta, może byc inny art ref
         @ColumnInfo(name = "reference_article_id")
@@ -42,6 +45,8 @@ public class AnalysisArticle {
         //  todo bo dla jednego AA moze być wiele (tyle ile sklepów) competitorprice...
         @ColumnInfo(name = "competitor_store_price_id")
         private int competitorStorePriceId; // from CompetitorPrice.
+     */
+
     private String comments;
 
     public int getId() {
@@ -76,21 +81,29 @@ public class AnalysisArticle {
         this.ownArticleInfoId = ownArticleInfoId;
     }
 
+    /* TODO XXXX
     public int getCompetitorStoreId() {
         return competitorStoreId;
     }
+     */
 
+    /* TODO XXXX
     public void setCompetitorStoreId(int competitorStoreId) {
         this.competitorStoreId = competitorStoreId;
     }
+         */
 
+    /* TODO XXXX
     public Double getCompetitorStorePrice() {
         return competitorStorePrice;
     }
+         */
 
+    /* TODO XXXX
     public void setCompetitorStorePrice(Double competitorStorePrice) {
         this.competitorStorePrice = competitorStorePrice;
     }
+         */
 
     public Double getArticleStorePrice() {
         return articleStorePrice;
@@ -116,13 +129,17 @@ public class AnalysisArticle {
         this.articleNewPrice = articleNewPrice;
     }
 
+    /* TODO XXXX
     public int getReferenceArticleId() {
         return referenceArticleId;
     }
+         */
 
+    /* TODO XXXX
     public void setReferenceArticleId(int referenceArticleId) {
         this.referenceArticleId = referenceArticleId;
     }
+         */
 
     public String getComments() {
         return comments;
@@ -132,13 +149,17 @@ public class AnalysisArticle {
         this.comments = comments;
     }
 
+    /* TODO XXXX
     public int getCompetitorStorePriceId() {
         return competitorStorePriceId;
     }
+         */
 
+    /* TODO XXXX
     public void setCompetitorStorePriceId(int competitorStorePriceId) {
         this.competitorStorePriceId = competitorStorePriceId;
     }
+         */
 
     @Override
     public boolean equals(Object o) {
