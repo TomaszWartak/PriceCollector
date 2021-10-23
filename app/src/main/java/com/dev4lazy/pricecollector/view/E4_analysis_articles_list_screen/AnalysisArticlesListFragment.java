@@ -1,6 +1,5 @@
 package com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen;
 
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
 
+import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.AppHandle;
@@ -36,10 +37,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class AnalysisArticlesListFragment extends Fragment {
+public class AnalysisArticlesListFragment extends Fragment { // OK
 
     private AnalysisArticleJoinsRecyclerView analysisArticleJoinsRecyclerView;
 
@@ -89,7 +87,8 @@ public class AnalysisArticlesListFragment extends Fragment {
 
         private void resetViewModels() {
             analysisArticleJoinsListViewModel.getSearchArticlesCriteria().clearAll();
-            analysisArticleJoinViewModel.setPositionOnList(0);
+            analysisArticleJoinViewModel.setPositionOnList( 0 );
+            analysisArticleJoinViewModel.setAnyArticleDisplayed( false );
         }
 
         private void setToolbarText() {
@@ -134,9 +133,8 @@ public class AnalysisArticlesListFragment extends Fragment {
                         int firstVisibleItemPosition = analysisArticleJoinViewModel.getFirstVisibleItemPosition();
                         int lastVisibleItemPosition = analysisArticleJoinViewModel.getLastVisibleItemPosition();
                         if (isPositionToScrollBeyondFirstPage( positionToScroll, firstVisibleItemPosition, lastVisibleItemPosition )) {
-                            // TODO XXX analysisArticleJoinsRecyclerView.scrollToPosition(positionToScroll);
-                            if (isPositionBeyondLatelyVisiblePage( positionToScroll, firstVisibleItemPosition, lastVisibleItemPosition)) {
-                                analysisArticleJoinsRecyclerView.scrollToPosition( positionToScroll );
+                            if (isPositionToScrollBeyondLatelyVisiblePage( positionToScroll, firstVisibleItemPosition, lastVisibleItemPosition)) {
+                                analysisArticleJoinsRecyclerView.scrollToPosition( getPositionOnMiddleOfPage( positionToScroll, firstVisibleItemPosition, lastVisibleItemPosition ) );
                             } else {
                                 analysisArticleJoinsRecyclerView.scrollToPosition( firstVisibleItemPosition );
                             }
@@ -150,15 +148,27 @@ public class AnalysisArticlesListFragment extends Fragment {
             int positionToScroll,
             int firstVisibleItemPosition,
             int lastVisibleItemPosition ) {
-        int pageHeight = lastVisibleItemPosition-firstVisibleItemPosition;
-        return positionToScroll > pageHeight;
+        // Pozycje są liczone od 0, więc trzeba dodać 1
+        return (positionToScroll+1) > getPageHeight( firstVisibleItemPosition, lastVisibleItemPosition );
     }
 
-    private boolean isPositionBeyondLatelyVisiblePage(
+    private int getPageHeight( int firstVisibleItemPosition,
+                              int lastVisibleItemPosition ) {
+        return lastVisibleItemPosition-firstVisibleItemPosition+1;
+    }
+
+    private boolean isPositionToScrollBeyondLatelyVisiblePage(
             int positionToScroll,
             int firstVisibleItemPosition,
             int lastVisibleItemPosition ) {
         return (positionToScroll<firstVisibleItemPosition) || (positionToScroll>lastVisibleItemPosition);
+    }
+
+    public int getPositionOnMiddleOfPage(
+            int positionToScroll,
+            int firstVisibleItemPosition,
+            int lastVisibleItemPosition ) {
+        return positionToScroll - (getPageHeight(firstVisibleItemPosition, lastVisibleItemPosition ) / 2);
     }
 
     @Override
@@ -187,8 +197,15 @@ public class AnalysisArticlesListFragment extends Fragment {
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisArticlesListFragment_to_searchArticlesFragment );
                             break;
                         case R.id.analysis_articles_list_screen_populate_data:
-                            populateTestData();
-                            break;
+                            if (BuildConfig.DEBUG) {
+                                populateTestData();
+                                break;
+                            } else {
+                                Toast.makeText(
+                                    getContext(),
+                                    R.string.only_for_testing,
+                                    Toast.LENGTH_SHORT).show();
+                            }
                         case R.id.analysis_articles_list_screen_logout_menu_item:
                             getLogoutQuestionDialog();
                             break;
@@ -198,13 +215,7 @@ public class AnalysisArticlesListFragment extends Fragment {
             });
         }
 
-    // TODO !!! tego nie skończyłeś...
     private void populateTestData() {
-        /*
-        - pobierz pierwsze 10 joinów
-        - wypełnij danymi
-        - zapisz
-         */
         ArrayList<AnalysisArticleJoin> analysisArticleJoinList =
                 (ArrayList<AnalysisArticleJoin>)analysisArticleJoinsListViewModel
                         .getAnalysisArticleJoinsListLiveData()
@@ -219,8 +230,6 @@ public class AnalysisArticlesListFragment extends Fragment {
                 analysisArticleJoin.setCompetitorStoreId(storeViewModel.getStore().getId());
             }
             AnalysisArticleJoinValuesStateHolder valuesStateHolder = new AnalysisArticleJoinValuesStateHolder( );
-            // TODO musisz sprawdzić czy id sklepu konkurenta jest ustawione
-            // może listę Holderów zrobić i dodawac przy każdym?
             switch (joinIndex) {
                 case 0:
                     if (random.nextBoolean()) {

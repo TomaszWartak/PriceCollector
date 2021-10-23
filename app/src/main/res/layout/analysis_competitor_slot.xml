@@ -10,17 +10,30 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/mtrl_card_spacing"
-        android:layout_marginTop="@dimen/mtrl_card_spacing"
-        android:layout_marginRight="@dimen/mtrl_card_spacing"
-        android:layout_marginBottom="@dimen/mtrl_card_spacing"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="4dp">
+        android:layout_marginStart="@dimen/card_view_margin_left"
+        android:layout_marginTop="@dimen/card_view_margin_top"
+        android:layout_marginEnd="@dimen/card_view_margin_right"
+        android:layout_marginBottom="@dimen/card_view_margin_bottom"
+        card_view:cardCornerRadius="@dimen/card_view_corner_radius"
+        card_view:cardElevation="@dimen/card_view_elevation">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/card_view_analysis_competitor_slot"
+            android:id="@+id/analysisCompetitorSlot_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/competitor_company_name"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/analysis_competitor_slot_height"
+                android:minWidth="@dimen/analysis_competitor_slot_minwidth"
+                android:paddingStart="@dimen/padding"
+                android:paddingEnd="@dimen/padding"
+                android:textColor="#000000"
+                android:background="@color/colorPrimaryLight"
+                android:gravity="center"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/competitor_store_name"
@@ -45,16 +58,6 @@
                 android:text="&#8942;"
                 android:textAppearance="?android:textAppearanceLarge"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/competitor_company_name"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/analysis_competitor_slot_height"
-                android:background="@color/colorPrimaryDark"
-                android:gravity="center"
-                android:minWidth="@dimen/analysis_competitor_slot_minwidth"
-                card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -57,9 +57,10 @@ public class AnalyzesListFragment extends Fragment {
         newAnalyzesCheck();
 
         if (BuildConfig.DEBUG) {
-            // todo test
+            /*todo test
             // Wyświetlenie nazwy zalogowanego użytkownika
             ((TextView) view.findViewById(R.id.user_login)).setText(AppHandle.getHandle().getSettings().getUser().getLogin());
+             */
             // Ustawienie otwarcia ekranu z czyszczeniem i inicjalizacją danych
             view.findViewById(R.id.main_screen_fragment_layout).setOnClickListener((View v) ->{
                 Navigation.findNavController(view).navigate(R.id.action_analyzesListFragment_to_testActionsFragment);
@@ -82,7 +83,7 @@ public class AnalyzesListFragment extends Fragment {
 
         private void setToolbarText( String toolbarText ) {
             int maxLength = toolbarText.length();
-            if (maxLength>24) {
+            if (maxLength>24) { // TODO Hardcoded - sprawdź inne wystąpienia (może opakować toolbar?)
                 maxLength=24;
             }
             toolbarText = toolbarText.substring(0,maxLength);

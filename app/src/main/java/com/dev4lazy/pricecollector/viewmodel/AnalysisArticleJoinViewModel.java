@@ -16,7 +16,7 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
     private int positionOnList;
     private int firstVisibleItemPosition = 0;
     private int lastVisibleItemPosition = 0;
-    private boolean articleLatelyDisplayed = false;
+    private boolean anyArticleDisplayed = false;
     private boolean savingDataInProgress; // todo - czy to jest wykorzystywane
 
     public AnalysisArticleJoinViewModel(Application application) {
@@ -373,12 +373,12 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
         this.lastVisibleItemPosition = lastVisibleItemPosition;
     }
 
-    public boolean isArticleLatelyDisplayed() {
-        return articleLatelyDisplayed;
+    public boolean isAnyArticleDisplayed() {
+        return anyArticleDisplayed;
     }
 
-    public void setArticleLatelyDisplayed(boolean articleLatelyDisplayed) {
-        this.articleLatelyDisplayed = articleLatelyDisplayed;
+    public void setAnyArticleDisplayed(boolean anyArticleDisplayed) {
+        this.anyArticleDisplayed = anyArticleDisplayed;
     }
 
     public boolean isAnalysisArticleJoinNotModified() {

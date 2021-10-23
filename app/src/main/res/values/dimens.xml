@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="margin">8dp</dimen>
-    <dimen name="distance">8dp</dimen>
+    <dimen name="padding">8dp</dimen>
+    <dimen name="elevation">4dp</dimen>
     <dimen name="input_height">56dp</dimen>
-    <dimen name="input_font_size">16dp</dimen>
+
+    <dimen name="toolbar_elevation">8dp</dimen>
+
+    <dimen name="input_font_size">12dp</dimen>
+    <dimen name="head_font_size">16dp</dimen>
+
     <dimen name="image_rectangle_side_size">128dp</dimen>
+
+    <dimen name="card_view_margin_left">8dp</dimen>
+    <dimen name="card_view_margin_right">8dp</dimen>
+    <dimen name="card_view_margin_top">4dp</dimen>
+    <dimen name="card_view_margin_bottom">4dp</dimen>
+    <dimen name="card_view_elevation">4dp</dimen>
+    <dimen name="card_view_interior_margin_top">4dp</dimen>
+    <dimen name="card_view_interior_margin_bottom">4dp</dimen>
+    <dimen name="card_view_interior_left_guideline">8dp</dimen>
+    <dimen name="card_view_corner_radius">4dp</dimen>
+
+    <dimen name="analysis_competitor_slot_height">48dp</dimen>
+    <dimen name="analysis_competitor_slot_minwidth">48dp</dimen>
+
+    <dimen name="fields_padding">8dp</dimen>
+
 </resources>

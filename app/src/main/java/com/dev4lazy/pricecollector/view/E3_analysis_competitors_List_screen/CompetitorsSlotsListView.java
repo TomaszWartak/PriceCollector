@@ -123,9 +123,11 @@ public class CompetitorsSlotsListView extends ListView {
                         case R.id.priceAnalysisMenuItem:
                             Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisArticlesListFragment);
                             break;
+                        /* TODO
                         case R.id.driveToCompetitorStoreMenuItem:
                             DriveToCompetitorStore();
                             break;
+                         */
                         case R.id.addCompetitorStoreMenuItem:
                             addCompetitorStore( view, competitorSlotFullData );
                             break;

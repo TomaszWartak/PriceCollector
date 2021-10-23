@@ -26,12 +26,10 @@ import java.text.DecimalFormatSymbols;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AnalysisArticleJoinPagerAdapter
+public class AnalysisArticleJoinPagerAdapter // OK
         extends
             PagedListAdapter<AnalysisArticleJoin,
-            AnalysisArticleJoinPagerAdapter.AnalysisArticleJoinPagerViewHolder>
-        /* TODO XXX implements
-            AnalysisArticlesPagerFragment.ArticleAddedDataCleaner */ {
+            AnalysisArticleJoinPagerAdapter.AnalysisArticleJoinPagerViewHolder> {
 
     private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
     private AnalysisArticleJoinPagerViewHolder holder;
@@ -62,7 +60,6 @@ public class AnalysisArticleJoinPagerAdapter
         }
     }
 
-    /* TODO XXX @Override */
     public void clearCompetitorArticleDataOnScreen() {
         holder.clearCompetitorArticleDataOnScreen();
     }
@@ -103,7 +100,6 @@ public class AnalysisArticleJoinPagerAdapter
             competitorPriceEditText = view.findViewById( R.id.analysis_article_CompetitorPrice_editText );
             competitorPriceEditText.addTextChangedListener( new CompetitorPriceEditTextWatcher( competitorPriceEditText ) );
             competitorPriceEditText.setKeyListener( DigitsKeyListener.getInstance("0123456789"+decimalSeparator) );
-            // TODO XXX competitorPriceEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
             articleCommentEditText = view.findViewById( R.id.analysis_article_ArticleComment_editText );
             articleCommentEditText.addTextChangedListener( new ArticleCommentEditTextWatcher() );
@@ -143,9 +139,6 @@ public class AnalysisArticleJoinPagerAdapter
                     Double priceFromAnalysisArticleJoin = getPriceFromItem();
                     if (arePricesNotEqual( priceFromInput, priceFromAnalysisArticleJoin )) {
                         analysisArticleJoinViewModel.getValuesStateHolder().setCompetitorStorePrice(priceFromInput);
-                        // TODO czy to niżej jest potrzebne do czegoś? No chyba tak, bo powyżej jest
-                        //  pobranie analysisArticleJoin z adaptera i zmiana wartości ceny
-                        // // TODO XXX  analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
                     }
                 }
 
@@ -166,7 +159,6 @@ public class AnalysisArticleJoinPagerAdapter
                 }
 
                 private boolean areDecimalSeparatorsMoreThanOne(String inputText) {
-                    // TODO XXX long lo = inputText.chars().filter(ch -> ch == '.' ).count();
                     return (inputText.chars().filter(ch -> ch == '.' ).count()) > 1;
                 }
 
@@ -245,17 +237,11 @@ public class AnalysisArticleJoinPagerAdapter
 
                 @Override
                 public void onTextChanged (CharSequence charSequence,int start, int before, int count){
-                    // TODO !!! commentsFromInput to raczej z charSequence trzeba pobrać...
-                    //  i w pozostłaych TextWatcherach też...
                     String commentsFromInput = charSequence.toString();
                     AnalysisArticleJoin analysisArticleJoin = getItem( getAbsoluteAdapterPosition() );
                     String commentsFromAnalysisArticleJoin = analysisArticleJoin.getComments();
                     if (areTextsNotEqual( commentsFromInput, commentsFromAnalysisArticleJoin )) {
                         analysisArticleJoinViewModel.getValuesStateHolder().setComments( commentsFromInput );
-                        // TODO XXX analysisArticleJoin.setComments(commentsFromInput);
-                        // TODO XXX  analysisArticleJoinViewModel.getChangeInformer().setFlagNeedToSave(true);
-                        // TODO czy wiersz niżej jest potrzebne do czegoś?
-                        // TODO XXX  analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
                     }
                 }
 
@@ -276,8 +262,6 @@ public class AnalysisArticleJoinPagerAdapter
                 String nameFromAnalysisArticleJoin = analysisArticleJoin.getReferenceArticleName();
                 if (areTextsNotEqual( nameFromInput, nameFromAnalysisArticleJoin )) {
                     analysisArticleJoinViewModel.getValuesStateHolder().setReferenceArticleName( nameFromInput );
-                    // TODO czy wiersz niżej jest potrzebne do czegoś?
-                    // TODO XXX analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
                 }
             }
 
@@ -298,8 +282,6 @@ public class AnalysisArticleJoinPagerAdapter
                 String eanFromAnalysisArticleJoin = analysisArticleJoin.getReferenceArticleEanCodeValue();
                 if (areTextsNotEqual( eanFromInput, eanFromAnalysisArticleJoin )) {
                     analysisArticleJoinViewModel.getValuesStateHolder().setReferenceArticleEanCodeValue( eanFromInput );
-                    // TODO czy wiersz niżej jest potrzebne do czegoś?
-                    // TODO XXX analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
                 }
             }
 
@@ -320,8 +302,6 @@ public class AnalysisArticleJoinPagerAdapter
                 String descriptionFromAnalysisArticleJoin = analysisArticleJoin.getReferenceArticleDescription();
                 if (areTextsNotEqual( descriptionFromInput, descriptionFromAnalysisArticleJoin )) {
                     analysisArticleJoinViewModel.getValuesStateHolder().setReferenceArticleDescription( descriptionFromInput );
-                    // TODO czy wiersz niżej jest potrzebne do czegoś?
-                    // TODO XXX analysisArticleJoinViewModel.setAnalysisArticleJoin(analysisArticleJoin);
                 }
             }
 
@@ -355,8 +335,6 @@ public class AnalysisArticleJoinPagerAdapter
                 competitorPriceEditText.setText( null );
             } else {
                 String formattedString = decimalFormat.format( competitorStorePrice );
-                /* TODO XXX formattedString = competitorStorePrice.toString(); */
-                // TODO XXX formattedString.replace(',', '.');
                 competitorPriceEditText.setText( formattedString );
             }
             articleCommentEditText.setText( analysisArticleJoin.getComments() );
@@ -394,30 +372,6 @@ public class AnalysisArticleJoinPagerAdapter
             notifyDataSetChanged();
         }
 
-    }
-
-    // TODO ???
-    public class DecimalDigitsInputFilter implements InputFilter {
-
-        Pattern mPattern;
-
-        public DecimalDigitsInputFilter() {
-            mPattern = Pattern.compile("[0-9]*+((\\.[0-9]?)?)||(\\.)?");
-        }
-
-        @Override
-        public CharSequence filter(
-                CharSequence source,
-                int start,
-                int end,
-                Spanned dest,
-                int dstart,
-                int dend ) {
-            Matcher matcher = mPattern.matcher(dest);
-            if (!matcher.matches())
-                return "";
-            return null;
-        }
     }
 
 }

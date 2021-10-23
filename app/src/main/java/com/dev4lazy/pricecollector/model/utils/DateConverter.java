@@ -25,20 +25,36 @@ public class DateConverter {
         return result;
     }
 
+    /* TODO aby poprawnie konwertowac datę na potrzeby lokalizacji trzeba użyć:
+        getDateInstance(),
+        getDateTimeInstance(),
+        getTimeInstance()`,
+        new SimpleDateFormat( String template, Locale locale) with for example `Locale.US` for ASCII dates.
+     */
     @TypeConverter
     public String date2String( Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //"yyyy-MM-dd HH:mm:ss"
         return dateFormat.format(date);
     }
 
-    public Date string2Date( String dateInString) throws ParseException {
-        String datePattern = "yyyy-MM-dd";
-        return string2DateWithFormat(dateInString,datePattern);
+    public String date2StringWithFormat( Date date,  String dateFormatPattern) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat( dateFormatPattern ); //""
+        return dateFormat.format(date);
     }
 
-    public Date string2DateWithFormat( String dateInString, String dateFPattern) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(dateFPattern);
-        return dateFormat.parse(dateInString);
+    public String date2StringWithMontName( Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("Mmmm yyyy"); //""
+        return dateFormat.format(date);
+    }
+
+    public Date string2Date( String dateInString) throws ParseException {
+        String datePattern = "yyyy-MM-dd";
+        return stringWithFormat2Date(dateInString,datePattern);
+    }
+
+    public Date stringWithFormat2Date( String dateInString, String dateFormatPattern) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat( dateFormatPattern );
+        return dateFormat.parse( dateInString );
     }
 
 }

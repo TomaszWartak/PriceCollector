@@ -35,10 +35,7 @@ import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class AnalysisArticlesPagerFragment extends Fragment {
+public class AnalysisArticlesPagerFragment extends Fragment { // OK
 
     private StoreViewModel competitorStoreViewModel;
     private AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel;
@@ -58,9 +55,6 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analysis_articles_pager_fragment, container, false);
         viewModelsSetup();
-        // TODO inincjacja Savera
-        //  zamiast Inicjalizacji updatera
-        //  analysisArticleJoinDataUpdater = new AnalysisArticleJoinDataUpdater( analysisArticleJoinsListViewModel );
         analysisArticleJoinSaver = new AnalysisArticleJoinSaver(
                 analysisArticleJoinsListViewModel,
                 analysisArticleJoinViewModel.getValuesStateHolder()
@@ -212,12 +206,6 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                             getString(R.string.ean_duplication_message_part1) +
                             analysisArticleJoin.getReferenceArticleEanCodeValue() +
                             getString(R.string.ean_duplication_message_part2);
-                            /*
-                        "DANE NIE ZOSTAŁY ZAPISANE" + "\r\n"+
-                        "Kod EAN "+ analysisArticleJoin.getReferenceArticleEanCodeValue() + "\r\n"+
-                        "jest już przypisany do innego artykułu"; // TODO Hardcoded
-
-                             */
                     showMessage( duplicationMessage );
                     analysisArticleJoinViewModel.setToRestoreAfterEanValueDupliaction( true );
                     analysisArticleJoinViewModel.setValuesStateHolder( tempAnalysisArticleJoinValuesStateHolder );
@@ -249,7 +237,7 @@ public class AnalysisArticlesPagerFragment extends Fragment {
 
     private void setToolbarText( String toolbarText ) {
             int maxLength = toolbarText.length();
-            if (maxLength>24) {
+            if (maxLength>24) { // TODO hardcoded
                 maxLength=24;
             }
             toolbarText = toolbarText.substring(0,maxLength);
@@ -262,7 +250,6 @@ public class AnalysisArticlesPagerFragment extends Fragment {
                 public void onChanged(PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                     if (!analysisArticlesJoins.isEmpty()) {
                         analysisArticleJoinPagerAdapter.submitList(analysisArticlesJoins);
-                        // TODO ??? jeśli pojawi się zmiana na liście, to będzie się ustawiac w tym miejscu?
                         analysisArticlesViewPager.setCurrentItem(
                                 analysisArticleJoinViewModel.getPositionOnList(),
                                 false

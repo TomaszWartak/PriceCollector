@@ -22,7 +22,6 @@ import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppSettings;
 import com.dev4lazy.pricecollector.view.ProgressPresenter;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
-import com.healthmarketscience.sqlbuilder.ComboCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
 
@@ -53,10 +52,10 @@ public class AnalysisDataDownloader {
     private HashMap<Integer, Article> classScopeArticleMap; // Article.getRemote_id()
     private HashMap<String, Sector> classScopeSectorMap; // Sector.getName()
     private HashMap<String, Department> classScopeDepartmentMap; // Department.getSymbol()
-    private Family classScopeFamily;
-    private Module classScopeModule;
-    private Market classScopeMarket;
-    private UOProject classScopeUOProject;
+    private Family classScopeDummyFamily;
+    private Module classScopeDummyModule;
+    private Market classScopeDummyMarket;
+    private UOProject classScopeDummyUOProject;
     private HashMap<Integer, OwnArticleInfo> classScopeOwnArticleInfoMap; // OwnArticleInfo.getArticleId()
 
 
@@ -300,7 +299,6 @@ public class AnalysisDataDownloader {
             }
         };
         result.observeForever(resultObserver);
-        // TODO XXX AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllAnalysisRows(result);
         String remoteAnalysisRowQueryString = getQuery( analysis.getRemote_id() );
         AppHandle.getHandle().getRepository().getRemoteDataRepository().getRemoteAnalysisRowViaQuery( remoteAnalysisRowQueryString, result );
     }
@@ -439,7 +437,7 @@ public class AnalysisDataDownloader {
             public void onChanged( List<Family> familiesList) {
                 if ((familiesList != null)&&(!familiesList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
-                    classScopeFamily = familiesList.get(0);
+                    classScopeDummyFamily = familiesList.get(0);
                     createDummyMarket( analysis, finalResult, progressPresenter );
                 }
             }
@@ -455,7 +453,7 @@ public class AnalysisDataDownloader {
             public void onChanged( List<Market> marketsList) {
                 if ((marketsList != null)&&(!marketsList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
-                    classScopeMarket = marketsList.get(0);
+                    classScopeDummyMarket = marketsList.get(0);
                     createDummyModule( analysis, finalResult, progressPresenter );
                 }
             }
@@ -471,7 +469,7 @@ public class AnalysisDataDownloader {
             public void onChanged( List<Module> modulesList ) {
                 if ((modulesList != null)&&(!modulesList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
-                    classScopeModule = modulesList.get(0);
+                    classScopeDummyModule = modulesList.get(0);
                     createDummyUOProject( analysis, finalResult, progressPresenter );
                 }
             }
@@ -487,7 +485,7 @@ public class AnalysisDataDownloader {
             public void onChanged(List<UOProject> uoProjectsList) {
                 if ((uoProjectsList != null)&&(!uoProjectsList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
-                    classScopeUOProject = uoProjectsList.get(0);
+                    classScopeDummyUOProject = uoProjectsList.get(0);
                     insertOwnArticlesInfos( analysis, finalResult, progressPresenter );
                 }
             }
@@ -511,10 +509,10 @@ public class AnalysisDataDownloader {
                     classScopeArticleMap.get( remoteAnalysisRow.getArticleCode() ),
                     classScopeDepartmentMap.get( remoteAnalysisRow.getDepartment() ),
                     classScopeSectorMap.get( remoteAnalysisRow.getSector() ),
-                    classScopeFamily,
-                    classScopeModule,
-                    classScopeMarket,
-                    classScopeUOProject
+                    classScopeDummyFamily,
+                    classScopeDummyModule,
+                    classScopeDummyMarket,
+                    classScopeDummyUOProject
             );
             ownArticleInfoList.add( ownArticleInfo );
         }

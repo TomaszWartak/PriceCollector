@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader;
+import com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader_2;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppUtils;
@@ -87,6 +88,7 @@ public class AnalyzesRecyclerView extends RecyclerView {
             // TODO sprawdź, czy tu nie jest potrzebny VieMOdel, czy to się nie zgubi przy obrocie
 
             private Analysis analysis;
+            private final TextView textViewAnalysisHeader;
             private final TextView textViewAnalysisCreationDate;
             private final TextView textViewAnalysisDueDate;
             private final TextView textViewAnalysisLastDataSentDate;
@@ -95,6 +97,7 @@ public class AnalyzesRecyclerView extends RecyclerView {
 
             public AnalysisViewHolder( View view ) {
                 super(view);
+                textViewAnalysisHeader = view.findViewById( R.id.analysis_item__header );
                 textViewAnalysisCreationDate = view.findViewById( R.id.analysis_item__creation_date);
                 textViewAnalysisDueDate = view.findViewById( R.id.analysis_Item__due_date);
                 textViewAnalysisLastDataSentDate = view.findViewById( R.id.analysis_item__finish_date);
@@ -113,6 +116,7 @@ public class AnalyzesRecyclerView extends RecyclerView {
                 this.analysis = analysis;
                 Date date = analysis.getCreationDate();
                 if ( dateIsCorrect( date ) ) {
+                    textViewAnalysisHeader.setText( dateConverter.date2StringWithFormat( date, "yyyy-MM"));
                     textViewAnalysisCreationDate.setText( dateConverter.date2String( date ) );
                 }
                 date = analysis.getDueDate();
@@ -172,7 +176,8 @@ public class AnalyzesRecyclerView extends RecyclerView {
             }
 
             public void updateArticlesAllData( MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
-                AnalysisDataDownloader.getInstance().insertArticles( analysis, finalResult, progressPresenter );
+                // TODO XXX AnalysisDataDownloader.getInstance().insertArticles( analysis, finalResult, progressPresenter );
+                new AnalysisDataDownloader_2().downloadData( analysis, finalResult, progressPresenter );
             }
 
             protected void clear() {

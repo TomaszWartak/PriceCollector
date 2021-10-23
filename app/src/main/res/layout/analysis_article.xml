@@ -12,7 +12,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/analysis_article_fragment_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#EEEEEE" >
 
             <!-- Zdjęcie artykułu strategicznego -->
             <com.google.android.material.imageview.ShapeableImageView
@@ -31,7 +32,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="235dp"
                 android:layout_height="@dimen/input_height"
-                android:layout_marginTop="@dimen/distance"
+                android:layout_marginTop="@dimen/padding"
                 android:layout_marginEnd="@dimen/margin"
                 android:hint="@string/sku_label"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +56,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="235dp"
                 android:layout_height="@dimen/input_height"
-                android:layout_marginTop="@dimen/distance"
+                android:layout_marginTop="@dimen/padding"
                 android:layout_marginEnd="@dimen/margin"
                 android:hint="@string/ean_code_label"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -80,9 +81,10 @@
                 app:endIconMode="clear_text"
                 android:layout_width="235dp"
                 android:layout_height="@dimen/input_height"
-                android:layout_marginTop="@dimen/distance"
+                android:layout_marginTop="@dimen/padding"
                 android:layout_marginEnd="@dimen/margin"
                 android:hint="@string/competitor_price_label"
+                app:boxBackgroundColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysis_article_EAN_textInput">
 
@@ -106,10 +108,11 @@
                 app:endIconMode="clear_text"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_marginTop="@dimen/distance"
+                android:layout_marginTop="@dimen/padding"
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
                 android:hint="@string/article_remarks_label"
+                app:boxBackgroundColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysis_article_CompetitorPrice_textInput">
@@ -143,9 +146,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/distance"
+                android:layout_marginTop="@dimen/padding"
                 android:text="@string/reference_article_label"
                 android:textStyle="bold"
+                android:textColor="#000000"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_divider" />
 
@@ -155,7 +159,7 @@
                 android:layout_width="@dimen/image_rectangle_side_size"
                 android:layout_height="@dimen/image_rectangle_side_size"
                 android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/distance"
+                android:layout_marginTop="@dimen/padding"
                 android:src="@drawable/common_google_signin_btn_icon_dark"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_headerRefArticle" />
@@ -168,8 +172,9 @@
                 android:layout_width="235dp"
                 android:layout_height="@dimen/input_height"
                 android:layout_marginEnd="@dimen/margin"
-                android:layout_marginTop="@dimen/distance"
+                android:layout_marginTop="@dimen/padding"
                 android:hint="@string/name_label"
+                app:boxBackgroundColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_headerRefArticle">
 
@@ -193,8 +198,9 @@
                 android:layout_width="235dp"
                 android:layout_height="@dimen/input_height"
                 android:layout_marginEnd="@dimen/margin"
-                android:layout_marginTop="@dimen/distance"
+                android:layout_marginTop="@dimen/padding"
                 android:hint="@string/ean_code_label"
+                app:boxBackgroundColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysis_article_refArticleName_textInput">
 
@@ -217,10 +223,11 @@
                 app:endIconMode="clear_text"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_marginTop="@dimen/distance"
+                android:layout_marginTop="@dimen/padding"
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
                 android:hint="@string/article_remarks_label"
+                app:boxBackgroundColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/analysis_article_refArticleEAN_textInput">

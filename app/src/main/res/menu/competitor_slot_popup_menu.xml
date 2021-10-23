@@ -5,9 +5,9 @@
         <item
             android:id="@+id/priceAnalysisMenuItem"
             android:title="@string/price_analysis" />
-        <item
+        <!-- todo item
             android:id="@+id/driveToCompetitorStoreMenuItem"
-            android:title="@string/drive_to_competitor_store"/>
+            android:title="@string/drive_to_competitor_store"/-->
     </group>
     <group android:id="@+id/grp2">
         <item

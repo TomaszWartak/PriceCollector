@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
         // using toolbar as ActionBar
         setSupportActionBar(toolbar);
         toolbar.setTitle("PriceCollector");
-        // toolbar.setDisplayHomeAsUpEnabled(true);
+        // todo XXX toolbar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void setDrawerHidden() {

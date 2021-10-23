@@ -54,10 +54,6 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
 
     }
 
-    public void scrollToCenterOfPage( int position ) {
-        // https://stackoverflow.com/questions/37270265/how-to-center-the-clicked-position-in-the-recyclerview/44854796
-    }
-
     private class AnalysisArticleJoinAdapter extends PagedListAdapter<AnalysisArticleJoin, AnalysisArticleJoinAdapter.AnalysisArticleJoinViewHolder> {
 
         private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
@@ -103,7 +99,7 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
             }
 
             private void openAnalysisArticle( View view) {
-                analysisArticleJoinViewModel.setArticleLatelyDisplayed( true );
+                analysisArticleJoinViewModel.setAnyArticleDisplayed( true );
                 analysisArticleJoinViewModel.setAnalysisArticleJoin( getItem( getAdapterPosition() ) );
                 analysisArticleJoinViewModel.setPositionOnList( getAdapterPosition() );
                 RecyclerView.LayoutManager layoutManager = getLayoutManager();
@@ -118,10 +114,10 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
                 } else {
                     setItemNotHighlighted();
                 }
-                if (isArticleLastVisited()) {
-                    setItemTextTypefaceBold();
+                if (isArticleLastVisited( analysisArticleJoin )) {
+                    setINameItemTypefaceBold();
                 } else {
-                    setItemTextTypefaceNormal();
+                    setINameItemTypefaceNormal();
                 }
                 showItemData(analysisArticleJoin);
             }
@@ -131,31 +127,31 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
             }
 
             private void setItemHighlighted() {
-                linearLayout.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+                linearLayout.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryLight));
             }
 
             private void setItemNotHighlighted() {
                 linearLayout.setBackgroundColor(Color.WHITE);
             }
 
-            private boolean isArticleLastVisited() {
-                return (
-                        analysisArticleJoinViewModel!=null) &&
-                        analysisArticleJoinViewModel.isArticleLatelyDisplayed() &&
-                        (getAdapterPosition()==analysisArticleJoinViewModel.getPositionOnList()
-                        );
+            private boolean isArticleLastVisited( AnalysisArticleJoin analysisArticleJoin ) {
+                // TODO TEST
+                int positionOnList = analysisArticleJoinViewModel.getPositionOnList();
+                int adapterPosition = getAdapterPosition();
+                // TODO END TEST
+                return
+                        ( analysisArticleJoinViewModel!=null ) &&
+                        analysisArticleJoinViewModel.isAnyArticleDisplayed() && //TODO <- ta nazwa nie oddaje funkcjonalności
+                        // TODO XXX( getAdapterPosition()==analysisArticleJoinViewModel.getPositionOnList() );
+                        ( analysisArticleJoin.getAnalysisArticleId() == analysisArticleJoinViewModel.getAnalysisArticleJoin().getAnalysisArticleId() );
             }
 
-            private void setItemTextTypefaceBold() {
+            private void setINameItemTypefaceBold() {
                 textViewArticleName.setTypeface(null, Typeface.BOLD);
-                textViewArticleOwnCode.setTypeface(null, Typeface.BOLD);
-                textViewArticleEanCode.setTypeface(null, Typeface.BOLD);
             }
 
-            private void setItemTextTypefaceNormal() {
+            private void setINameItemTypefaceNormal() {
                 textViewArticleName.setTypeface(null, Typeface.NORMAL);
-                textViewArticleOwnCode.setTypeface(null, Typeface.NORMAL);
-                textViewArticleEanCode.setTypeface(null, Typeface.NORMAL);
             }
 
 

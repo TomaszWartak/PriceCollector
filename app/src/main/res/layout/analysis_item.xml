@@ -11,22 +11,32 @@
         android:layout_marginTop="@dimen/card_view_margin_top"
         android:layout_marginEnd="@dimen/card_view_margin_right"
         android:layout_marginBottom="@dimen/card_view_margin_bottom"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="4dp">
+        card_view:cardCornerRadius="@dimen/card_view_corner_radius"
+        card_view:cardElevation="@dimen/card_view_elevation">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/card_view_constraint_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/card_view_interior_margin_top"
+            android:layout_marginBottom="@dimen/card_view_interior_margin_bottom">
+
+            <!-- guideline -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_analysis_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                card_view:layout_constraintGuide_begin="@dimen/card_view_interior_left_guideline" />
 
             <!-- Nagłówek -->
             <TextView
                 android:id="@+id/analysis_item__header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_analysis_header"
-                android:textColor="@color/colorSecondaryText"
+                android:textColor="#000000"
                 android:textStyle="bold"
+                android:textSize="@dimen/head_font_size"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
                 card_view:layout_constraintTop_toTopOf="parent" />
 
@@ -43,7 +53,7 @@
                 android:id="@+id/analysis_item__creation_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorValue"
+                android:textColor="@color/colorPrimary"
                 card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_creation_date"
                 card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__header" />
 
@@ -60,7 +70,7 @@
                 android:id="@+id/analysis_Item__due_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorValue"
+                android:textColor="@color/colorPrimary"
                 card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_due_date"
                 card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__creation_date" />
 
@@ -77,7 +87,7 @@
                 android:id="@+id/analysis_item__finish_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorValue"
+                android:textColor="@color/colorPrimary"
                 card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_finish_date"
                 card_view:layout_constraintTop_toBottomOf="@+id/analysis_Item__due_date" />
 
@@ -110,7 +120,7 @@
                 android:progress="1"
                 android:visibility="gone"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_confirmation_date" />
+                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_finish_date" />
 
             <TextView
                 android:id="@+id/analysis_item__data_to_download"
@@ -120,16 +130,8 @@
                 android:text="@string/articles_data_ready_to_download"
                 android:textColor="@color/colorWarning"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
-                card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_confirmation_date"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_confirmation_date" />
-
-            <!-- guideline -->
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_analysis_item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                card_view:layout_constraintGuide_begin="@dimen/card_view_interior_left_guideline" />
+                card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_finish_date"
+                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_finish_date" />
 
             <!-- todo com.google.android.material.button.MaterialButton
                 android:id="@+id/button_analysis_articles_create"
@@ -143,9 +145,7 @@
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent" /-->
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-        
 
     </com.google.android.material.card.MaterialCardView>
 

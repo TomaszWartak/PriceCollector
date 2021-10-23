@@ -150,5 +150,6 @@
     <string name="ean_duplication_message_part2">\njest już przypisany do innego artykułu</string>
     <string name="send_data_to_remote_db">Wyślij dane do aplikacji Badanie Cen</string>
     <string name="populate_10_first">TEST - wypełnij danymi 10 pierwszych</string>
+    <string name="only_for_testing">Dostępne wyłącznie na potrzeby testów</string>
 
 </resources>
