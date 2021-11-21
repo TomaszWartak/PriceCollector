@@ -79,7 +79,6 @@ public class LoginFragment
                 public void handleOnBackPressed() {
                     // Handle the back button event
                     new LogoutQuestionDialog( getContext(), getActivity() ).get();
-                    // TODO XXX getLogoutQuestionDialog();
                 }
             };
             getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);

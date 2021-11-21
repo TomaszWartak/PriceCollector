@@ -107,7 +107,7 @@ public class AnalyzesRecyclerView extends RecyclerView {
             }
 
             public void setLabelsMaxWidth(View view) {
-                int labelMaxWidth = (int)Math.round( Resources.getSystem().getDisplayMetrics().widthPixels*0.8 );
+                int labelMaxWidth = (int)Math.round( Resources.getSystem().getDisplayMetrics().widthPixels*0.8);
                 setLabelMaxWidth( view.findViewById( R.id.analysis_item__label_creation_date ), labelMaxWidth );
                 setLabelMaxWidth( view.findViewById( R.id.analysis_item__label_due_date ), labelMaxWidth );
                 setLabelMaxWidth( view.findViewById( R.id.analysis_item__label_finish_date ), labelMaxWidth );
