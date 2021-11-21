@@ -359,7 +359,7 @@ public class AnalysisDataUploader {
             };
             updateResult.observeForever(updatingResultObserver);
             RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
-            remoteDataRepository.updateAnalysisRow( remoteAnalysisRow, updateResult );
+            remoteDataRepository.updateRemoteAnalysisRow( remoteAnalysisRow, updateResult );
         }
 
     }

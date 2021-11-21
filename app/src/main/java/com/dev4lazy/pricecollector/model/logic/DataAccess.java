@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.dev4lazy.pricecollector.model.db._Dao;
-import com.dev4lazy.pricecollector.view.ProgressPresenter;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,14 +53,14 @@ public class DataAccess<D> {
         // new InsertAsyncTask(dao, result).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, data );
     }
 
-    public void insertDataList(ArrayList<D> dataList, ProgressPresenter progressPresenter ) {
+    public void insertDataList(ArrayList<D> dataList, ProgressPresenter progressPresenter) {
         // TODO tutaj raczej PagedList...
-        insertDataList( dataList, progressPresenter, null );
+        insertDataList( dataList, null, progressPresenter);
     }
 
-    public void insertDataList( List<D> dataList, ProgressPresenter progressPresenter, MutableLiveData<Long> resultLD ) {
+    public void insertDataList( List<D> dataList, MutableLiveData<Long> resultLD, ProgressPresenter progressPresenter) {
         // TODO tutaj raczej PagedList...
-        new InsertListAsyncTask(dao, progressPresenter, resultLD ).execute(dataList);
+        new InsertListAsyncTask(dao, resultLD, progressPresenter).execute(dataList);
         // new InsertListAsyncTask(dao, progressPresenter, resultLD ).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, dataList );
     }
     public void updateData(D data, MutableLiveData<Integer> resultLD) {
@@ -182,7 +182,7 @@ public class DataAccess<D> {
         private final ProgressPresenter progressPresenter;
 
 
-        InsertListAsyncTask(_Dao dao, ProgressPresenter progressPresenter, MutableLiveData<Long> resultLD ) {
+        InsertListAsyncTask(_Dao dao, MutableLiveData<Long> resultLD, ProgressPresenter progressPresenter) {
             this.dao = dao;
             this.progressPresenter = progressPresenter;
             this.resultLD = resultLD;
@@ -191,7 +191,7 @@ public class DataAccess<D> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if (progressPresenter!=null){
+            if (progressPresenter !=null){
                 progressPresenter.start();
             }
         }
@@ -201,7 +201,7 @@ public class DataAccess<D> {
             Long id = null;
             for (D data : params[0]) {
                 id = dao.insert(data);
-                if (progressPresenter!=null){
+                if (progressPresenter !=null){
                     publishProgress();
                 }
             }
@@ -210,7 +210,7 @@ public class DataAccess<D> {
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            if (progressPresenter!=null) {
+            if (progressPresenter !=null) {
                 progressPresenter.stepUp();
             }
             super.onProgressUpdate(values);
@@ -222,8 +222,8 @@ public class DataAccess<D> {
             if (resultLD!=null) {
                 resultLD.postValue(result);
             }
-            if (progressPresenter!=null) {
-                progressPresenter.stop();
+            if ((progressPresenter !=null) && (progressPresenter.shouldBeHiddenWhenFinished())) {
+                progressPresenter.hide();
             }
         }
     }

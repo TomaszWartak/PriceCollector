@@ -15,8 +15,6 @@ public class AppHandle extends Application implements LifecycleObserver {
 
     private static AppHandle appHandle = null;
 
-    // TODO XXX private AppEventsObserver appEventsObserver;
-
     @Override
     public void onCreate() {
         super.onCreate();

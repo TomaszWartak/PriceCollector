@@ -48,41 +48,13 @@ public class AddStoreDialogFragment extends DialogFragment {
 
         EditText companyNameEditText = viewInflated.findViewById(R.id.add_store_company_name_edit_text);
         EditText storeNameEditText = viewInflated.findViewById(R.id.add_store_name_edit_text);
+        /*todo XXX storeNameEditText.setFocusableInTouchMode(true);
+        storeNameEditText.requestFocus();
+
+         /**/
         EditText streetEditText = viewInflated.findViewById(R.id.add_store_street_edit_text);
         EditText cityEditText = viewInflated.findViewById(R.id.add_store_city_edit_text);
         EditText zipcodeEditText = viewInflated.findViewById(R.id.add_store_zipcode_edit_text);
-
-        StoreViewModel storeViewModel = new ViewModelProvider(getActivity()).get(StoreViewModel.class);
-        Store store = storeViewModel.getStore();
-        String dialogTitle = "";
-        switch (storeViewModel.getActionToDo()) {
-            case ADD: {
-                dialogTitle = getString(R.string.add_competitor_store);
-                break;
-            }
-            case MODIFY: {
-                dialogTitle = getString(R.string.edit_competitor_store);
-                storeNameEditText.setText( store.getName() );
-                streetEditText.setText( store.getStreet() );
-                cityEditText.setText( store.getCity() );
-                zipcodeEditText.setText( store.getZipCode() );
-                break;
-            }
-            case DELETE: {
-                dialogTitle = getString(R.string.delete_competitor_store);
-                storeNameEditText.setEnabled(false);
-                storeNameEditText.setText( store.getName() );
-                streetEditText.setEnabled(false);
-                streetEditText.setText( store.getStreet() );
-                cityEditText.setEnabled(false);
-                cityEditText.setText( store.getCity() );
-                zipcodeEditText.setEnabled(false);
-                zipcodeEditText.setText( store.getZipCode() );
-                break;
-            }
-            default:
-        }
-
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
@@ -95,8 +67,10 @@ public class AddStoreDialogFragment extends DialogFragment {
             }
         };
         result.observeForever(resultObserver);
+        StoreViewModel storeViewModel = new ViewModelProvider(getActivity()).get(StoreViewModel.class);
+        Store store = storeViewModel.getStore();
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyById(store.getCompanyId(),result);
-
+        String dialogTitle = getString(R.string.add_competitor_store);
         return getAddStoreDialog(
                 viewInflated,
                 storeViewModel,
@@ -118,12 +92,14 @@ public class AddStoreDialogFragment extends DialogFragment {
             EditText streetEditText,
             EditText cityEditText,
             EditText zipcodeEditText) {
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(getContext())
-                .setTitle(dialogTitle)
-                .setView(viewInflated) // jeśli dialog ma mieć niestandarodowy widok
-                .setPositiveButton(R.string.caption_ok, new DialogInterface.OnClickListener() {
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(
+                    getContext(),
+                    R.style.PC_AlertDialogStyle_Overlay )
+                .setTitle( dialogTitle.toUpperCase() )
+                .setView( viewInflated ) // jeśli dialog ma mieć niestandarodowy widok
+                .setPositiveButton( R.string.caption_ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick( DialogInterface dialog, int which ) {
                         // onClick zostaje pusta ze względu na walidację (zob. niżej onShow() )
                     }
                 })
@@ -138,11 +114,10 @@ public class AddStoreDialogFragment extends DialogFragment {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new View.OnClickListener() {
+                Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO Do something
                         store.setName( storeNameEditText.getText().toString() );
                         store.setStreet( streetEditText.getText().toString() );
                         store.setCity( cityEditText.getText().toString() );

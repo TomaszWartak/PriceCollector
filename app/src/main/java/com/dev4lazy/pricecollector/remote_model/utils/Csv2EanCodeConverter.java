@@ -5,8 +5,10 @@ import androidx.lifecycle.Observer;
 
 import com.dev4lazy.pricecollector.model.logic.RemoteDataRepository;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteEanCode;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // todo test:
 // - uruchom testy
@@ -41,7 +43,7 @@ public class Csv2EanCodeConverter {
             }
         };
         result.observeForever(observer);
-        remoteDataRepository.askEanCodesNumberOf(result);
+        remoteDataRepository.askRemoteEanCodesNumberOf(result);
 
         //todo może jakiś warunek, że jak błędy to nie działamy dalej...
         // ? globalne zmienne do błędów
@@ -52,7 +54,7 @@ public class Csv2EanCodeConverter {
         eanCodeCsvReader.closeReader();
     }
     
-    public void makeEanCodeList() {
+    public List<RemoteEanCode> makeEanCodeList() {
         ArrayList<String> values;
         // "pusty odczyt" - wiersz nagłówków
         String csvLine = eanCodeCsvReader.readCsvLine();
@@ -62,6 +64,7 @@ public class Csv2EanCodeConverter {
             remoteEanCode = makeEanCode(values);
             remoteEanCodeList.add(remoteEanCode);
         }
+        return remoteEanCodeList;
     }
 
     public RemoteEanCode makeEanCode(ArrayList<String> values ) {
@@ -82,12 +85,18 @@ public class Csv2EanCodeConverter {
         }
     }
 
+    public void insertAllEanCodes(
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter ) {
+        remoteDataRepository.insertRemoteEanCodes( getRemoteEanCodeList(), result, progressPresenter );
+    }
+
     public ArrayList<RemoteEanCode> getRemoteEanCodeList() {
         return remoteEanCodeList;
     }
 
     private void insertEanCode( RemoteEanCode remoteEanCode) {
-        remoteDataRepository.insertEanCode(remoteEanCode);
+        remoteDataRepository.insertRemoteEanCode(remoteEanCode);
     }
 
 }

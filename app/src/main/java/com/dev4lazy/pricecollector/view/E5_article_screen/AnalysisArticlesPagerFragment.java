@@ -1,7 +1,6 @@
 package com.dev4lazy.pricecollector.view.E5_article_screen;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,10 +28,10 @@ import com.dev4lazy.pricecollector.model.logic.AnalysisArticleJoinSaver;
 import com.dev4lazy.pricecollector.model.logic.AnalysisArticleJoinValuesStateHolder;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
 import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCallback;
+import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
 public class AnalysisArticlesPagerFragment extends Fragment { // OK
@@ -60,7 +59,6 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
                 analysisArticleJoinViewModel.getValuesStateHolder()
         );
         viewPagerSetup( view );
-        setToolbarText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getArticleName() );
         viewPagerSubscribtion( analysisArticleJoinViewModel );
         return view;
     }
@@ -236,11 +234,13 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
             };
 
     private void setToolbarText( String toolbarText ) {
+            /*
             int maxLength = toolbarText.length();
             if (maxLength>24) { // TODO hardcoded
                 maxLength=24;
             }
             toolbarText = toolbarText.substring(0,maxLength);
+            */
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(toolbarText);
         }
 
@@ -263,6 +263,7 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
     @Override
     public void onStart() {
         super.onStart();
+        setToolbarText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getArticleName() );
         navigationViewMenuSetup();
     }
 
@@ -287,7 +288,8 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
                         clearCompetitorArticleData();
                         break;
                     case R.id.article_screen_logout_menu_item:
-                        getLogoutQuestionDialog();
+                        new LogoutQuestionDialog( getContext(), getActivity() ).get();
+                        // TODO XXX getLogoutQuestionDialog();
                         break;
                 }
                 return false;
@@ -311,16 +313,20 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
         analysisArticleJoin.setReferenceArticleDescription( "" );
     }
 
+    /* TODO XXX
     private void getLogoutQuestionDialog() {
-        new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+        new MaterialAlertDialogBuilder(getContext())
                 .setTitle("")
                 .setMessage(R.string.question_close_app)
-                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogoutDialogListener( getActivity() ) )
                 .setNegativeButton(getActivity().getString(R.string.caption_no),null)
                 .show();
     }
 
-    private class LogOffListener implements DialogInterface.OnClickListener {
+     */
+
+    /*
+    private class LogoutDialogListener implements DialogInterface.OnClickListener {
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -334,5 +340,7 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
         getActivity().finishAndRemoveTask();
         System.exit(0);
     }
+
+     */
 
 }

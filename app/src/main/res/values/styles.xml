@@ -1,14 +1,121 @@
-<resources>
+<resources
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <style name="AlertDialogStyle" parent="AppTheme">
+    <!-- TODO  a nie ma stylu material dla toolbara? -->
+    <!-- Toolbar -->
+    <style name="PC_Toolbar.TitleTextStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">@dimen/toolbar_font_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
     </style>
-    <!-- <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar"> -->
 
-    <!--  <style name="AppTheme" parent="android:Theme.Material"> -->
-        <!-- Customize your theme here. -->
-        <!-- <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item> -->
-    <!-- </style> -->
+    <!-- TabLayout -->
+    <style name="PC_TabLayoutStyle" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">?colorPrimary</item>
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabPaddingStart">@dimen/tripple_margin</item>
+        <item name="tabPaddingEnd">@dimen/tripple_margin</item>
+        <item name="tabTextColor">@color/myLightGrey</item>
+        <item name="tabSelectedTextColor">?colorPrimary</item>
+        <!-- TODO item name="tabBackground">@drawable/tab_background</item-->
+        <item name="tabTextAppearance">@style/PC_TabTextAppearance</item>
+    </style>
+
+    <style name="PC_TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/large_font_size</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <!-- TextInput -->
+    <style name="PC_TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="boxBackgroundColor">@color/white</item>
+        <!--item name="android:padding">@dimen/one_and_half_padding</item-->
+    </style>
+
+    <style name="PC_TextInputLayoutStyleDisabled" parent="PC_TextInputLayoutStyle">
+        <item name="android:enabled">false</item>
+        <item name="android:textColor">@color/myLightGrey</item>
+    </style>
+
+    <style name="PC_EditTextTextAppearanceBody1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">@dimen/large_font_size</item>
+    </style>
+
+    <style name="PC_LoginInputStyle" parent="PC_TextInputLayoutStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:minWidth">256dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColorHint">?colorOnPrimary</item>
+        <item name="hintTextColor">?colorOnPrimary</item>
+        <item name="boxBackgroundColor">?colorSurface</item>
+        <item name="boxStrokeColor">?colorOnPrimary</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+    </style>
+
+    <!-- Dropdown -->
+    <style name="PC_ExposedDropdownMenuStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="boxBackgroundColor">@color/white</item>
+    </style>
+
+    <style name="PC_ExposedDropdownMenuTextAppearanceBody1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">@dimen/large_font_size</item>
+    </style>
+
+    <!-- Button -->
+    <style name="PC_MaterialButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textSize">@dimen/large_font_size</item>
+        <item name="android:layout_marginStart">@dimen/margin</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">?colorPrimaryLight</item>
+    </style>
+
+    <style name="PC_MaterialAlertDialogButtonStyle" parent="PC_MaterialButtonStyle">
+        <item name="android:backgroundTint">?colorPrimaryLight</item>
+    </style>
+
+    <!-- AlertDialog -->
+    <style name="PC_AlertDialogStyle_Overlay" parent = "ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorSurface">?mainViewsColorSurface</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PC_MaterialAlertDialogButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/PC_MaterialAlertDialogButtonStyle</item>
+    </style>
+
+    <!-- PopupMenu -->
+    <style name="PC_PopupMenuStyle" parent="Widget.MaterialComponents.PopupMenu">
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:listPreferredItemHeightSmall">32dp</item>
+    </style>
+    <!-- TODO XXX
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:layout_margin">0dp</item>
+    -->
+
+    <!-- MaterialCard -->
+    <style name="PC_MaterialCardViewStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/card_view_margin_left</item>
+        <item name="android:layout_marginTop">@dimen/card_view_margin_top</item>
+        <item name="android:layout_marginEnd">@dimen/card_view_margin_right</item>
+        <item name="android:layout_marginBottom">@dimen/card_view_margin_bottom</item>
+        <item name="cardCornerRadius">@dimen/card_view_corner_radius</item>
+        <item name="cardElevation">@dimen/elevation</item>
+    </style>
+
+    <style name="PC_LoginMaterialCardViewStyle" parent="PC_MaterialCardViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/double_margin</item>
+        <item name="android:layout_marginStart">@dimen/large_margin</item>
+        <item name="android:layout_marginEnd">@dimen/large_margin</item>
+        <item name="cardBackgroundColor">?colorPrimaryLight</item>
+    </style>
+
+    <!-- NavigationView -->
 
 </resources>

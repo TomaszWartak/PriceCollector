@@ -1,14 +1,19 @@
 package com.dev4lazy.pricecollector.remote_model.utils;
 
 import android.content.res.Resources;
+import android.view.View;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.logic.AnalysisArticleJoinSaver;
+import com.dev4lazy.pricecollector.model.logic.RemoteDataRepository;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysis;
+import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRow;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteDepartment;
+import com.dev4lazy.pricecollector.remote_model.enities.RemoteEanCode;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteFamily;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteMarket;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteModule;
@@ -16,10 +21,21 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteSector;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUOProject;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.utils.TaskChain;
+import com.dev4lazy.pricecollector.utils.TaskLink;
+import com.dev4lazy.pricecollector.view.utils.PopupWindowWrapper;
+import com.dev4lazy.pricecollector.view.utils.ProgressBarWrapper;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresentingManager;
+import com.dev4lazy.pricecollector.view.utils.TextViewMessageWrapper;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DATA_SIZE_UNKNOWN;
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DONT_HIDE_WHEN_FINISHED;
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.HIDE_WHEN_FINISHED;
 
 // Klasa używana do inicjalizacji danych lokalnych aplikacji, po pierwszym logowaniu
 // TODO inicjalizacja tylko danych testowych, czy wszystkich?
@@ -74,20 +90,12 @@ public class RemoteDataInitializer {
         AppHandle.getHandle().getRepository().getRemoteDataRepository().clearDatabase();
     }
 
-    public void initializeRemoteDatabase() {
-        /* todo wywal komentarz
-            niestety RemoteDatabaseInitializer może być wywołany tylko we Fragmencie lub Aktywności,
-            więc nie mogę go tu wywołać. Jest wołany na żądanie w testowych fragmentach.
-            new RemoteDatabaseInitializer(this).doConversion();
-         */
-        initializeRemoteData();
-    }
-
 // ---------------------------------------------------------------------------
 //  proceduta inicjalizacji danych zdalnych
-    private void initializeRemoteData() {
+    public void initializeRemoteData( ProgressPresentingManager progressPresentingManager ) {
         prepareRemoteData();
-        startRemoteDataInitialisationChain();
+        // TODO XXX startRemoteDataInitialisationChain();
+        startRemoteDataInitialisationChain_2( progressPresentingManager );
     }
 
     private void prepareRemoteData() {
@@ -184,7 +192,7 @@ public class RemoteDataInitializer {
     }
 
     public void clearRemoteDepartments() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllDepartments( null );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteRemoteAllDepartments( null );
     }
 
     public void prepareRemoteSectors() {
@@ -211,7 +219,7 @@ public class RemoteDataInitializer {
     }
 
     public void clearRemoteSectors() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllSectors( null );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllRemoteSectors( null );
     }
 
     public void prepareRemoteAnalyzes() {
@@ -261,7 +269,7 @@ public class RemoteDataInitializer {
 
         }
         try {
-            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-11=30"));
+            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-11-30"));
         } catch (ParseException parseException) {
 
         }
@@ -270,7 +278,7 @@ public class RemoteDataInitializer {
     }
 
     private void clearRemoteAnalysis() {
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllAnalyzes( null );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllRemoteAnalyzes( null );
 
     }
 
@@ -380,6 +388,7 @@ public class RemoteDataInitializer {
 // Zapis danych
 
 
+    /* TODO XXX
     private void startRemoteDataInitialisationChain() {
         populateRemoteUsers();
         // todo Nie zrobiłem łąncucha. W przypadku Remote nie ma tworzenia zależności on line.
@@ -395,49 +404,254 @@ public class RemoteDataInitializer {
         // Czyli populateRemoteAnalysisRows jest wołane z populateRemoteAnalysis
         populateRemoteAnalysis( 0 );
     }
+    */
 
+    // TODO lift up
+    private ProgressPresentingManager progressPresentingManager;
+
+    private void startRemoteDataInitialisationChain_2( ProgressPresentingManager progressPresentingManager ) {
+        this.progressPresentingManager = progressPresentingManager;
+        new TaskChain()
+                .addTaskLink( new RemoteUsersSaver() )
+                .addTaskLink( new RemoteDepartmentsSaver() )
+                .addTaskLink( new RemoteSectorsSaver() )
+                .addTaskLink( new RemoteUOProjectsSaver() )
+                .addTaskLink( new RemoteFamiliesSaver() )
+                .addTaskLink( new RemoteMarketsSaver() )
+                .addTaskLink( new RemoteModulesSaver() )
+                .addTaskLink( new RemoteAnalysisSaver( 0 ) )
+                .addTaskLink( new RemoteAnalysisRowsSaver() )
+                .addTaskLink( new RemoteEanCodesSaver() )
+                .startIt( );
+    }
+
+    // TODO XXX
     public void populateRemoteUsers() {
         for (RemoteUser remoteUser : remoteUsers ) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertUser( remoteUser, null );
+            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteUser( remoteUser, null );
         }
     }
 
+    private class RemoteUsersSaver extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            if (remoteUsers.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long lastAddedId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (lastAddedId != null) {
+                            runNextTaskLink();
+                        }
+                    }
+                };
+                progressPresentingManager.resetProgressPresenter( remoteUsers.size(), DONT_HIDE_WHEN_FINISHED );
+                progressPresentingManager.showMessagePresenter( "Lista użytkowników" ); // TODO hardcoded
+                insertResult.observeForever(insertingResultObserver);
+                RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+                remoteDataRepository.insertRemoteUsers( remoteUsers, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+            } else {
+                runNextTaskLink();
+            }
+        }
+    }
+
+    // TODO XXX
     public void populateRemoteDepartments() {
         for (RemoteDepartment remoteDepartment : remoteDepartments) {
             AppHandle.getHandle().getRepository().getRemoteDataRepository().insertDepartment( remoteDepartment, null );
         }
     }
 
-    public void populateRemoteSectors() {
-        for (RemoteSector remoteSector : remoteSectors) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertSector( remoteSector, null );
+
+    private class RemoteDepartmentsSaver extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            if (remoteDepartments.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long lastAddedId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (lastAddedId != null) {
+                            runNextTaskLink();
+                        }
+                    }
+                };
+                progressPresentingManager.resetProgressPresenter( remoteDepartments.size(), DONT_HIDE_WHEN_FINISHED );
+                progressPresentingManager.showMessagePresenter( "Lista działów" ); // TODO hardcoded
+                insertResult.observeForever(insertingResultObserver);
+                RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+                remoteDataRepository.insertRemoteDepartments( remoteDepartments, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+            } else {
+                runNextTaskLink();
+            }
         }
     }
 
+    // TODO XXX
+    public void populateRemoteSectors() {
+        for (RemoteSector remoteSector : remoteSectors) {
+            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteSector( remoteSector, null );
+        }
+    }
+
+
+    private class RemoteSectorsSaver extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            if (remoteSectors.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long lastAddedId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (lastAddedId != null) {
+                            runNextTaskLink();
+                        }
+                    }
+                };
+                progressPresentingManager.resetProgressPresenter( remoteSectors.size(), DONT_HIDE_WHEN_FINISHED );
+                progressPresentingManager.showMessagePresenter( "Lista sektorów" ); // TODO hardcoded
+                insertResult.observeForever(insertingResultObserver);
+                RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+                remoteDataRepository.insertRemoteSectors( remoteSectors, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+            } else {
+                runNextTaskLink();
+            }
+        }
+    }
+
+    // TODO XXX
     public void populateRemoteUOProjects() {
         for (RemoteUOProject remoteUOProject : remoteUOProjects) {
             AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteUOProject( remoteUOProject, null );
         }
     }
 
+
+    private class RemoteUOProjectsSaver extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            if (remoteUOProjects.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long lastAddedId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (lastAddedId != null) {
+                            runNextTaskLink();
+                        }
+                    }
+                };
+                progressPresentingManager.resetProgressPresenter( remoteUOProjects.size(), DONT_HIDE_WHEN_FINISHED );
+                progressPresentingManager.showMessagePresenter( "Lista projektów UO" ); // TODO hardcoded
+                insertResult.observeForever(insertingResultObserver);
+                RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+                remoteDataRepository.insertRemoteUOProjects( remoteUOProjects, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+            } else {
+                runNextTaskLink();
+            }
+        }
+    }
+
+    // TODO XXX
     public void populateRemoteFamilies() {
         for (RemoteFamily remoteFamily : remoteFamilies) {
             AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteFamily( remoteFamily, null );
         }
     }
 
+    private class RemoteFamiliesSaver extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            if (remoteFamilies.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long lastAddedId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (lastAddedId != null) {
+                            runNextTaskLink();
+                        }
+                    }
+                };
+                progressPresentingManager.resetProgressPresenter( remoteFamilies.size(), DONT_HIDE_WHEN_FINISHED );
+                progressPresentingManager.showMessagePresenter( "Lista rodzin" ); // TODO hardcoded
+                insertResult.observeForever(insertingResultObserver);
+                RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+                remoteDataRepository.insertRemoteFamilies( remoteFamilies, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+            } else {
+                runNextTaskLink();
+            }
+        }
+    }
+
+    // TODO XXX
     public void populateRemoteMarkets() {
         for (RemoteMarket remoteMarket : remoteMarkets) {
             AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteMarket( remoteMarket, null );
         }
     }
 
+    private class RemoteMarketsSaver extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            if (remoteMarkets.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long lastAddedId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (lastAddedId != null) {
+                            runNextTaskLink();
+                        }
+                    }
+                };
+                progressPresentingManager.resetProgressPresenter( remoteMarkets.size(), DONT_HIDE_WHEN_FINISHED );
+                progressPresentingManager.showMessagePresenter( "Lista rynków" ); // TODO hardcoded
+                insertResult.observeForever(insertingResultObserver);
+                RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+                remoteDataRepository.insertRemoteMarkets( remoteMarkets, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+            } else {
+                runNextTaskLink();
+            }
+        }
+    }
+
+    // TODO XXX
     public void populateRemoteModules() {
         for (RemoteModule remoteModule : remoteModules) {
             AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteModule( remoteModule, null );
         }
     }
-    
+
+    private class RemoteModulesSaver extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            if (remoteModules.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long lastAddedId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (lastAddedId != null) {
+                            runNextTaskLink();
+                        }
+                    }
+                };
+                progressPresentingManager.resetProgressPresenter( remoteModules.size(), DONT_HIDE_WHEN_FINISHED );
+                progressPresentingManager.showMessagePresenter( "Lista modułów" ); // TODO hardcoded
+                insertResult.observeForever(insertingResultObserver);
+                RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+                remoteDataRepository.insertRemoteModules( remoteModules, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+            } else {
+                runNextTaskLink();
+            }
+        }
+    }
+
     public void populateRemoteAnalysis( int analysisNr ) {
         MutableLiveData<Long> analysisInsertResult = new MutableLiveData<>();
         Observer<Long> insertingResultObserver = new Observer<Long>() {
@@ -450,13 +664,51 @@ public class RemoteDataInitializer {
                     prepareConverters();
                     // todo: jesli populateRemoteAnalysis() jest wołane z startRemoteDataInitialisationChain,
                     //  to prepareCOnverters było już wcześniej wołane. Czyli konwertery są dwa razy tworozne
-                    populateRemoteAnalysisRows( analysisId.intValue() );
+                    populateRemoteAnalysisRows( analysisNr, analysisId.intValue() );
                     populateRemoteEanCodes( );
                 }
             }
         };
         analysisInsertResult.observeForever( insertingResultObserver );
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().insertAnalysis( remoteAnalyzes.get( analysisNr ), analysisInsertResult );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteAnalysis(
+                remoteAnalyzes.get( analysisNr ),
+                analysisInsertResult
+        );
+    }
+
+    private class RemoteAnalysisSaver extends TaskLink {
+
+        Integer analysisNr;
+
+        public RemoteAnalysisSaver( int analysisNr ) {
+            this.analysisNr = analysisNr;
+        }
+
+        @Override
+        protected void doIt(Object... data) {
+            if (remoteAnalyzes.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long analysisId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (analysisId!=-1) {
+                            prepareConverters();
+                            // todo: jesli populateRemoteAnalysis() jest wołane z startRemoteDataInitialisationChain,
+                            //  to prepareCOnverters było już wcześniej wołane. Czyli konwertery są dwa razy tworozne
+                            if (analysisId != null) {
+                                runNextTaskLink( analysisNr, analysisId );
+                            }
+                        }
+                    }
+                };
+                insertResult.observeForever(insertingResultObserver);
+                RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
+                remoteDataRepository.insertRemoteAnalysis( remoteAnalyzes.get( analysisNr ), insertResult );
+            } else {
+                runNextTaskLink( null ); // <-- CRASH!
+            }
+        }
     }
 
     private void prepareConverters() {
@@ -468,14 +720,61 @@ public class RemoteDataInitializer {
         }
     }
 
-    private void populateRemoteAnalysisRows(int analysisId ) {
-        csv2AnalysisRowConverter.makeAnalisisRowList( analysisId );
+    private void populateRemoteAnalysisRows( int analysisNr, int analysisId ) {
+        csv2AnalysisRowConverter.makeAnalysisRowList( analysisNr, analysisId );
         csv2AnalysisRowConverter.insertAllAnalysisRows();
+    }
+
+    private class RemoteAnalysisRowsSaver extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            Integer analysisNr = (Integer) data[0];
+            Long analysisId = (Long) data[1];
+            MutableLiveData<Long> insertResult = new MutableLiveData<>();
+            Observer<Long> insertingResultObserver = new Observer<Long>() {
+                @Override
+                public void onChanged(Long lastAddedId) {
+                    insertResult.removeObserver(this); // this = observer...
+                    if (lastAddedId != null) {
+                        runNextTaskLink();
+                    }
+                }
+            };
+            List<RemoteAnalysisRow> remoteAnalysisRowsList = csv2AnalysisRowConverter.makeAnalysisRowList(
+                    analysisNr,
+                    analysisId.intValue()
+            );
+            progressPresentingManager.resetProgressPresenter( remoteAnalysisRowsList.size(), DONT_HIDE_WHEN_FINISHED );
+            progressPresentingManager.showMessagePresenter( "Lista artykułów strategicznych" ); // TODO hardcoded
+            insertResult.observeForever( insertingResultObserver );
+            csv2AnalysisRowConverter.insertAllAnalysisRows( insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+        }
     }
 
     private void populateRemoteEanCodes( ) {
         csv2EanCodeConverter.makeEanCodeList();
         csv2EanCodeConverter.insertAllEanCodes();
+    }
+
+    private class RemoteEanCodesSaver extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            MutableLiveData<Long> insertResult = new MutableLiveData<>();
+            Observer<Long> insertingResultObserver = new Observer<Long>() {
+                @Override
+                public void onChanged(Long lastAddedId) {
+                    insertResult.removeObserver(this); // this = observer...
+                    if (lastAddedId != null) {
+                        runNextTaskLink();
+                    }
+                }
+            };
+            List<RemoteEanCode> remoteEanCodeList = csv2EanCodeConverter.makeEanCodeList();
+            progressPresentingManager.resetProgressPresenter( remoteEanCodeList.size(), HIDE_WHEN_FINISHED );
+            progressPresentingManager.showMessagePresenter( "Lista kodów kreskowych" ); // TODO hardcoded
+            insertResult.observeForever( insertingResultObserver );
+            csv2EanCodeConverter.insertAllEanCodes( insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+        }
     }
 
 }

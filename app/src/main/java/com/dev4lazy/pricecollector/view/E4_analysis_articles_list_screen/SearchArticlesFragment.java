@@ -1,6 +1,5 @@
 package com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,11 +7,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.SearchArticlesCriteria;
+import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -87,14 +85,14 @@ public class SearchArticlesFragment extends Fragment {
                                 filterSetSign = " *";
                             }
                             tab.setText(getResources().getString(R.string.articles_search_tab_data_name)+filterSetSign);
-                            // tab.setCustomView( view.findViewById(R.id.search_articles_by_data_tab ) );
+                            // TODO XXX tab.setCustomView( view.findViewById(R.id.search_articles_by_data_tab ) );
                             break;
                         case SearchArticlesPagerAdapter.SEARCH_BY_STRUCTURE:
                             if (searchArticlesCriteria.isStructureFilterSet()) {
                                 filterSetSign = " *";
                             }
                             tab.setText(getResources().getString(R.string.articles_search_tab_structure_name)+filterSetSign);
-                            // tab.setCustomView( view.findViewById(R.id.search_articles_by_structure_tab ) );
+                            // TODO XXX tab.setCustomView( view.findViewById(R.id.search_articles_by_structure_tab ) );
                             break;
                     }
                 }
@@ -124,7 +122,8 @@ public class SearchArticlesFragment extends Fragment {
                             Navigation.findNavController( getView() ).navigate( R.id.action_searchArticlesFragment_to_analyzesListFragment );
                             break;
                         case R.id.search_articles_logout_menu_item:
-                            getLogoutQuestionDialog();
+                            new LogoutQuestionDialog( getContext(), getActivity() ).get();
+                            // TODO XXX getLogoutQuestionDialog();
                             break;
                     }
                     return false;
@@ -132,16 +131,20 @@ public class SearchArticlesFragment extends Fragment {
             });
         }
 
+        /* TODO XXX
             private void getLogoutQuestionDialog() {
-                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                new MaterialAlertDialogBuilder(getContext())
                         .setTitle("")
                         .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogoutDialogListener( getActivity() ) )
                         .setNegativeButton(getActivity().getString(R.string.caption_no),null)
                         .show();
             }
 
-                private class LogOffListener implements DialogInterface.OnClickListener {
+         */
+
+            /* TODO XXX
+                private class LogoutDialogListener implements DialogInterface.OnClickListener {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -155,4 +158,6 @@ public class SearchArticlesFragment extends Fragment {
                         getActivity().finishAndRemoveTask();
                         System.exit(0);
                     }
+
+             */
 }

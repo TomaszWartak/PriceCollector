@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">PriceCollector</string>
 
-
     <!-- wspólne -->
     <string name="not_translated">nie przetłumaczone...</string>
     <string name="caption_ok" translatable="false">OK</string>
@@ -151,5 +150,9 @@
     <string name="send_data_to_remote_db">Wyślij dane do aplikacji Badanie Cen</string>
     <string name="populate_10_first">TEST - wypełnij danymi 10 pierwszych</string>
     <string name="only_for_testing">Dostępne wyłącznie na potrzeby testów</string>
+    <string name="articles">ARTYKUŁY</string>
+    <string name="searching">Wyszukiwanie</string>
+    <string name="searching_articles">WYSZUKIWANIE ARTYKUŁÓW</string>
+    <string name="threedots_vertical">⋮</string>
 
 </resources>

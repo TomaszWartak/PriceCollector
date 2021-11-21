@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:id="@+id/grp1" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns="http://schemas.android.com/apk/res-auto">
+    <group
+        android:id="@+id/grp1">
         <item
-            android:id="@+id/priceAnalysisMenuItem"
+            android:id="@+id/makeAnalysisMenuItem"
             android:title="@string/price_analysis" />
         <!-- todo item
             android:id="@+id/driveToCompetitorStoreMenuItem"
             android:title="@string/drive_to_competitor_store"/-->
     </group>
-    <group android:id="@+id/grp2">
+    <group
+        android:id="@+id/grp2">
         <item
             android:id="@+id/addCompetitorStoreMenuItem"
             android:title="@string/add_competitor_store"/>

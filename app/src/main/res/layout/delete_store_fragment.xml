@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,16 +17,16 @@
         <!-- Konkurent  -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/delete_store_company_name_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/PC_TextInputLayoutStyleDisabled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/competitor">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/delete_store_company_name_edit_text"
+                style="@style/PC_TextInputLayoutStyleDisabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
                 android:inputType="text"
                 android:maxLines="1"/>
 
@@ -36,16 +35,16 @@
         <!-- Nazwa sklepu  -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/delete_store_name_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/PC_TextInputLayoutStyleDisabled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/store_name">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/delete_store_name_edit_text"
+                style="@style/PC_TextInputLayoutStyleDisabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
                 android:inputType="text"
                 android:maxLines="1" />
 
@@ -54,18 +53,16 @@
         <!-- Ulica  -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/delete_store_street_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/PC_TextInputLayoutStyleDisabled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/store_street"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:hint="@string/store_street" >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/delete_store_street_edit_text"
+                style="@style/PC_TextInputLayoutStyleDisabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
                 android:inputType="text"
                 android:maxLines="1" />
 
@@ -74,18 +71,16 @@
         <!-- Miejscowość  -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/delete_store_city_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/PC_TextInputLayoutStyleDisabled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/store_city"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:hint="@string/store_city" >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/delete_store_city_edit_text"
+                style="@style/PC_TextInputLayoutStyleDisabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
                 android:inputType="text"
                 android:maxLines="1" />
 
@@ -94,18 +89,16 @@
         <!-- Kod pocztowy  -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/delete_store_zipcode_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/PC_TextInputLayoutStyleDisabled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/store_zipcode"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:hint="@string/store_zipcode" >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/delete_store_zipcode_edit_text"
+                style="@style/PC_TextInputLayoutStyleDisabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
                 android:inputType="text"
                 android:maxLines="1" />
 

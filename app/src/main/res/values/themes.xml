@@ -2,10 +2,20 @@
 <resources>
     <!-- Base application theme. -->
      <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-    <!--style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar"-->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+         <item name="colorPrimary">@color/colorPrimary</item>
+         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+         <item name="colorPrimaryLight">@color/colorPrimaryLight</item>
+         <item name="colorOnPrimary">@color/colorOnPrimary</item>
 
+         <item name="colorSecondary">@color/colorSecondary</item>
+         <item name="colorSecondaryLight">@color/colorSecondaryLight</item>
+
+         <item name="colorSurface">@color/colorSurface</item>
+         <item name="colorAccent">@color/colorAccent</item>
+         <item name="mainViewsColorSurface">@color/colorBackground</item>
+         <item name="colorWarning">@color/colorWarning</item>
+        <!--item name="colorSurface">@color/myVeryLightGrey</item-->
+
+         <!-- todo item name="colorSurface">@color/myVeryLightGrey</item-->
     </style>
 </resources>

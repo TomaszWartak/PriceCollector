@@ -1,15 +1,13 @@
 package com.dev4lazy.pricecollector.view.E1_login_screen;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -17,9 +15,8 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
@@ -35,17 +32,14 @@ import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader.getInstance;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class LoginFragment
         extends Fragment
         implements AuthSupport.LoginCallback {
@@ -53,6 +47,7 @@ public class LoginFragment
     private UserViewModel userViewModel;
     private EditText userLoginEditText;
     private EditText userPasswordEditText;
+    private ProgressBar pleaseWaitProgressBar;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -74,11 +69,7 @@ public class LoginFragment
                 Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_testActionsFragment2);
             });
         }
-        view.findViewById(R.id.login_button).setOnClickListener((View v) -> {
-            logIn(/* todo test viemodel view */);
-        });
-        viewSetup(view);
-        viewSubscribtion();
+        viewSetup( view );
         return view;
     }
 
@@ -87,128 +78,60 @@ public class LoginFragment
                 @Override
                 public void handleOnBackPressed() {
                     // Handle the back button event
-                    getLogoutQuestionDialog();
+                    new LogoutQuestionDialog( getContext(), getActivity() ).get();
+                    // TODO XXX getLogoutQuestionDialog();
                 }
             };
             getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         }
 
-            private void getLogoutQuestionDialog() {
-                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
-                        .setTitle("")
-                        .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
-                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                        .show();
-            }
-
-                private class LogOffListener implements DialogInterface.OnClickListener {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finishApp();
-                    }
-                }
-
-                    private void finishApp() {
-                        // TODO promotor: czy to można bardziej elegancko zrobić?
-                        AppHandle.getHandle().shutdown();
-                        getActivity().finishAndRemoveTask();
-                        System.exit(0);
-                    }
-
         void viewSetup(View view) {
             userLoginEditText = view.findViewById(R.id.userlogin_edit_text);
             userPasswordEditText = view.findViewById(R.id.password_edit_text);
+            Button loginButton = view.findViewById(R.id.login_button);
+            if (BuildConfig.DEBUG) {
+                loginButton.setFocusableInTouchMode(true);
+                loginButton.requestFocus();
+            }
+            loginButton.setOnClickListener((View v) -> {
+                logIn();
+            });
+
         }
 
-        private void viewSubscribtion() {
-            // userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-            // Gdyby wartość nie było trzymane w ViewModelu to znikał
-            /* userLoginEditTextSubscription();
-            userPasswordEditTextSubscription();
-            */
+        void logIn( ) {
+            showPleaseWaitProgressBar();
+            setUserViewModelData( new User() );
+            runAuthSupport();
         }
 
-            private void userLoginEditTextSubscription() {
-                userLoginEditText.addTextChangedListener(new TextWatcher() {
-                     @Override
-                     public void beforeTextChanged (CharSequence s,int start, int count, int after){
-                     }
+    private void showPleaseWaitProgressBar() {
+        pleaseWaitProgressBar = this.getView().findViewById(R.id.please_wait_progress_bar);
+        pleaseWaitProgressBar.setVisibility(View.VISIBLE);
+    }
 
-                     @Override
-                     public void onTextChanged (CharSequence charSequence,int start, int before, int count){
-                         userViewModel.getUser().setLogin(charSequence.toString());
-                     }
-
-                     @Override
-                     public void afterTextChanged (Editable s){
-                     }
-                 });
-            }
-
-            private void userPasswordEditTextSubscription() {
-                userPasswordEditText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged (CharSequence s,int start, int count, int after){
-                    }
-
-                    @Override
-                    public void onTextChanged (CharSequence charSequence,int start, int before, int count){
-                        userViewModel.getUser().setPassword(charSequence.toString());
-                    }
-
-                    @Override
-                    public void afterTextChanged (Editable s){
-                    }
-                });
-            }
-
-        void logIn( /* todo test viemodel View view*/ ) {
-        // TODO XXX pobranie danych usera (e-mail) z systemu
-        // TODO TEST
-        // testAccounts();
-        // TODO END TEST
-        // todo test viewmodel
-        // EditText userLoginEditText = view.findViewById( R.id.userlogin_edit_text);
-        // EditText userPasswordEditText = view.findViewById(R.id.password_edit_text);
-        // todo end test viewmodel
-        // todo zrób tu test jak login i hasło przeżywają bez viewmodelu i z viewmodelem
-        // todo test viewmodel
-        /**/ User user = new User();
+    private void setUserViewModelData(User user) {
         user.setLogin( userLoginEditText.getText().toString() );
-        user.setLogin("nowak_j");
+        /* TODO TEST */ user.setLogin("nowak_j");
         user.setPassword( userPasswordEditText.getText().toString() );
-        user.setPassword("nowak");
+        /* TODO TEST */ user.setPassword("nowak");
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        userViewModel.setUser( user ); /**/
-        // todo end test viewmodel
+        userViewModel.setUser( user );
+    }
+
+    private void runAuthSupport() {
         AuthSupport authSupport = AppHandle.getHandle().getAuthSupport();
         authSupport.addCredential("USER_ID", userViewModel.getUser().getLogin() );
         authSupport.addCredential("USER_PASSWORD", userViewModel.getUser().getPassword() );
-        /**/ userViewModel.getUser().setLogin( "nowak_j");
-        /**/ userViewModel.getUser().setPassword( "nowak" );
-        /**/authSupport.addCredential("USER_ID", "nowak_j" );
-        /**/authSupport.addCredential("USER_PASSWORD", "nowak");
-
+        /* TODO TEST */ userViewModel.getUser().setLogin( "nowak_j");
+        /* TODO TEST */ userViewModel.getUser().setPassword( "nowak" );
+        /* TODO TEST */ authSupport.addCredential("USER_ID", "nowak_j" );
+        /* TODO TEST */ authSupport.addCredential("USER_PASSWORD", "nowak");
         authSupport.signIn();
     }
 
-    /*/ TODO TEST
-    private void testAccounts() {
-        Pattern emailPattern = Patterns.EMAIL_ADDRESS;
-        Account[] accounts = AccountManager.get(getContext()).getAccounts();
-        int len = accounts.length;
-        for (Account account : accounts) {
-            if (emailPattern.matcher(account.name).matches()) {
-                String possibleEmail = account.name;
-            }
-        }
-    }
-     TODO END TEST
-    /*/
 // ----------------------------------------------------------
-// Implementacja metod interfejsu calbaków logowania AuthSupport.LoginCallback
+// Implementacja metod interfejsu callbacków logowania AuthSupport.LoginCallback
 // Obsługa callbacków logowania
 
     @Override
@@ -261,7 +184,7 @@ public class LoginFragment
             }
         };
         findRemoteUserResult.observeForever(findRemoteUserResultObserver);
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().findUserByLogin(userViewModel.getUser().getLogin(), findRemoteUserResult );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().findRemoteUserByLogin(userViewModel.getUser().getLogin(), findRemoteUserResult );
     }
 
         private void getSettingsInfo() { // todo czy getSettingsInfo?
@@ -297,12 +220,11 @@ public class LoginFragment
             //  to można by stworzyć klasę warunków, w których uznaje się, że jest niepowodzenie,
             //  której implementacją jest "TimeCondition"
             private void getNewAnalysisInfo() {
-                ProgressBar pleaseWaitSpinner = this.getView().findViewById(R.id.please_wait_spinner);
                 MutableLiveData<Boolean> serverRepliedResult = new MutableLiveData<>();
                 Observer<Boolean> resultObserver = new Observer<Boolean>() {
                     @Override
                     public void onChanged( Boolean isServerReplied ) {
-                        pleaseWaitSpinner.setVisibility(View.GONE);
+                        pleaseWaitProgressBar.setVisibility(View.GONE);
                         /// Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
                     }
                     /* @Override
@@ -313,7 +235,6 @@ public class LoginFragment
                     }
                     */
                 };
-                pleaseWaitSpinner.setVisibility(View.VISIBLE);
                 serverRepliedResult.observeForever( resultObserver );
                 AnalysisDataDownloader analysisDataDownloader = getInstance();
                 analysisDataDownloader.checkNewAnalysisToDownload( serverRepliedResult );
@@ -325,6 +246,7 @@ public class LoginFragment
         //  jest tylko, że serwer niedostepny, a powinno jeszcze, ze nieprawidłowe dane logowania...
         //  Może parametrem powiniwn byc komunikat,a w bardziej zaawanoswanej wersji obiekt,
         //  który udosuepnia informację?
+        pleaseWaitProgressBar.setVisibility(View.GONE);
         userPasswordEditText.setText("");
             // todo kumnuikat jakiś :-)
         Toast.makeText(
@@ -336,58 +258,16 @@ public class LoginFragment
     @Override
     public void onStart() {
         super.onStart();
-        setupDrawer();
+        setupToolbar();
         setupNavigationViewMenu();
     }
-
-        private void setupDrawer() {
-            DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
-            Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-            // TODO XXX ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
-                    getActivity(),
-                    drawerLayout,
-                    /**/toolbar,/**/
-                    R.string.navigation_drawer_open,
-                    R.string.navigation_drawer_close) {
-
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    // TODO XXX ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PriceCollector");
-                }
-
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    // TODO XXX ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
-                }
-            };
-            drawerLayout.addDrawerListener(drawerToggle);
-            // Hamburger icon on
-            drawerToggle.setDrawerIndicatorEnabled(true);
-            drawerToggle.syncState();
-
-            drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_LOCKED_CLOSED );
-            // navigationView = findViewById(R.id.navigation_view);
-            // navigationView.setNavigationItemSelectedListener(getOnNavigationItemSelectedListener());
-
-            // true - chyba jeśli klawisz back ma o jeden poziom robić
-            // false - chyba jeśli klawisz back ma wracać do home
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
 
         private void setupNavigationViewMenu() {
             NavigationView navigationView = getActivity().findViewById(R.id.navigation_view);
             Menu navigationViewMenu = navigationView.getMenu();
             navigationViewMenu.clear();
             navigationView.inflateMenu(R.menu.login_screen_menu);
-            // odblokowanie NavigationDrawer, zablokowanej w MainAcyivity
             DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
-            drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED );
-            /* Hamburger icon on
-            DrawerToggle drawerToggle = ???
-            drawerToggle.setDrawerIndicatorEnabled(true);
-            drawerToggle.syncState();
-            */
             navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -395,12 +275,18 @@ public class LoginFragment
                     drawerLayout.closeDrawers();
                     switch (item.getItemId()) {
                         case R.id.login_screen_logout_menu_item:
-                            getLogoutQuestionDialog();
+                            new LogoutQuestionDialog( getContext(), getActivity() ).get();
+                            // TODO XXX getLogoutQuestionDialog();
                             break;
                     }
                     return false;
                 }
             });
         }
+
+    private void setupToolbar() {
+        ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        toolbar.hide();
+    }
 
 }

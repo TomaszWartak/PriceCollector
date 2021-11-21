@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Remote2LocalConverter {
 
@@ -148,15 +150,6 @@ public class Remote2LocalConverter {
         return ownArticleInfo;
     }
 
-    public EanCode createEanCode(RemoteEanCode remoteEanCode, Article article ) {
-        EanCode localEanCode = new EanCode();
-        // remoteEanCode.article_id = briko;
-        localEanCode.setRemote_id( remoteEanCode.getId() );
-        localEanCode.setValue( remoteEanCode.getValue() );
-        localEanCode.setArticleId( article.getId() );
-        return localEanCode;
-    }
-
     /**
      *
      * @param remoteEanCodesHashMap - mapa eanów pobranych z bazy zdalnej
@@ -174,9 +167,30 @@ public class Remote2LocalConverter {
         for (Map.Entry<Integer, RemoteEanCode> remoteEanCodeEntry : remoteEanCodesHashMap.entrySet() ) {
             remoteEanCode = remoteEanCodeEntry.getValue();
             Article article = articlesHashMap.get( remoteEanCodeEntry.getKey() );
-            eanCodesList.add( createEanCode( remoteEanCode, article ));
+            if (article!=null) {
+                eanCodesList.add(createEanCode(remoteEanCode, article));
+            }
         }
+        /**/
+        /* TODO XXX*/
+        /*
+        ArrayList<EanCode> eanCodesList = new ArrayList( remoteEanCodesHashMap
+            .values()
+            .stream()
+            .collect( Collectors.toList() )
+        );
+         */
         return eanCodesList;
+    }
+
+
+    public EanCode createEanCode(RemoteEanCode remoteEanCode, Article article ) {
+        EanCode localEanCode = new EanCode();
+        // remoteEanCode.article_id = briko;
+        localEanCode.setRemote_id( remoteEanCode.getId() );
+        localEanCode.setValue( remoteEanCode.getValue() );
+        localEanCode.setArticleId( article.getId() );
+        return localEanCode;
     }
 
     public AnalysisArticle createAnalysisArticle(

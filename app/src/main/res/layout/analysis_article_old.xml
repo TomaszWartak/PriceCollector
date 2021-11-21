@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:minWidth="1280dp"
+    android:minHeight="720dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/analysis_article_fragment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/myVeryLightGrey" >
+
+            <!-- Zdjęcie artykułu strategicznego -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/analysisArticleFragment_imageArticle"
+                android:layout_width="@dimen/image_rectangle_side_size"
+                android:layout_height="@dimen/image_rectangle_side_size"
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginTop="@dimen/margin"
+                android:src="@drawable/common_google_signin_btn_icon_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Kod SKU artykułu  -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/analysis_article_OwnCode_textInput"
+                style="@style/PC_TextInputLayoutStyleDisabled"
+                android:layout_width="235dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding"
+                android:layout_marginEnd="@dimen/margin"
+                android:hint="@string/sku_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/analysis_article_OwnCode_editText"
+                    style="@style/PC_TextInputLayoutStyleDisabled"
+                    android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:enabled="false"
+                    tools:layout_editor_absoluteX="138dp"
+                    tools:layout_editor_absoluteY="478dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- EAN artykułu  -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/analysis_article_EAN_textInput"
+                style="@style/PC_TextInputLayoutStyleDisabled"
+                android:layout_width="235dp"
+                android:layout_height="@dimen/input_height"
+                android:layout_marginTop="@dimen/padding"
+                android:layout_marginEnd="@dimen/margin"
+                android:hint="@string/ean_code_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysis_article_OwnCode_textInput">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/analysis_article_EAN_editText"
+                    style="@style/PC_TextInputLayoutStyleDisabled"
+                    android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    tools:layout_editor_absoluteX="138dp"
+                    tools:layout_editor_absoluteY="478dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Cena artykułu u konkurenta -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/analysis_article_CompetitorPrice_textInput"
+                style="@style/PC_TextInputLayoutStyle"
+                app:endIconMode="clear_text"
+                android:layout_width="235dp"
+                android:layout_height="@dimen/input_height"
+                android:layout_marginTop="@dimen/padding"
+                android:layout_marginEnd="@dimen/margin"
+                android:hint="@string/competitor_price_label"
+                app:boxBackgroundColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysis_article_EAN_textInput">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/analysis_article_CompetitorPrice_editText"
+                    style="@style/PC_TextInputLayoutStyle"
+                    android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="numberDecimal"
+                    android:digits="0123456789,"
+                    android:maxLines="1"
+                    tools:layout_editor_absoluteX="138dp"
+                    tools:layout_editor_absoluteY="478dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Uwagi  -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/analysis_article_ArticleComment_textInput"
+                style="@style/PC_TextInputLayoutStyle"
+                app:endIconMode="clear_text"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="@dimen/padding"
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginEnd="@dimen/margin"
+                android:hint="@string/article_remarks_label"
+                app:boxBackgroundColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysis_article_CompetitorPrice_textInput">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/analysis_article_ArticleComment_editText"
+                    style="@style/PC_TextInputLayoutStyle"
+                    android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textMultiLine"
+                    android:maxLines="4"
+                    android:gravity="top"
+                    tools:layout_editor_absoluteX="138dp"
+                    tools:layout_editor_absoluteY="478dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Kreska oddzielająca -->
+            <View
+                android:id="@+id/analysisArticleFragment_divider"
+                android:layout_width="409dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysis_article_ArticleComment_textInput" />
+
+            <!-- Nagłówek sekcji artykułu referencyjnego -->
+            <TextView
+                android:id="@+id/analysisArticleFragment_headerRefArticle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginTop="@dimen/padding"
+                android:text="@string/reference_article_label"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_divider" />
+
+            <!-- Fotografia artykułu referencyjnego -->
+
+            <!-- Nazwa artykułu referencyjnego -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/analysisArticleFragment_imageRefArticle"
+                style="@style/PC_TextInputLayoutStyle"
+                android:layout_width="@dimen/image_rectangle_side_size"
+                android:layout_height="@dimen/image_rectangle_side_size"
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginTop="@dimen/padding"
+                android:src="@drawable/common_google_signin_btn_icon_dark"
+                app:layout_constraintEnd_toStartOf="@+id/analysis_article_refArticleName_textInput"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_headerRefArticle" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/analysis_article_refArticleName_textInput"
+                style="@style/PC_TextInputLayoutStyle"
+                app:endIconMode="clear_text"
+                android:layout_width="235dp"
+                android:layout_height="@dimen/input_height"
+                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginTop="@dimen/padding"
+                android:hint="@string/name_label"
+                app:boxBackgroundColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysisArticleFragment_headerRefArticle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/analysis_article_refArticleName_editText"
+                    style="@style/PC_TextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
+                    tools:layout_editor_absoluteX="138dp"
+                    tools:layout_editor_absoluteY="478dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- EAN artykułu referencyjnego -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/analysis_article_refArticleEAN_textInput"
+                style="@style/PC_TextInputLayoutStyle"
+                app:endIconMode="clear_text"
+                android:layout_width="235dp"
+                android:layout_height="@dimen/input_height"
+                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginTop="@dimen/padding"
+                android:hint="@string/ean_code_label"
+                app:boxBackgroundColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysis_article_refArticleName_textInput">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/analysis_article_refArticleEAN_editText"
+                    style="@style/PC_TextInputLayoutStyle"
+                    android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    tools:layout_editor_absoluteX="138dp"
+                    tools:layout_editor_absoluteY="478dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Opis artykułu referencyjnego -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/analysis_article_refArticleComment_textInput"
+                style="@style/PC_TextInputLayoutStyle"
+                app:endIconMode="clear_text"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="@dimen/padding"
+                android:layout_marginStart="@dimen/margin"
+                android:layout_marginEnd="@dimen/margin"
+                android:hint="@string/article_remarks_label"
+                app:boxBackgroundColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analysis_article_refArticleEAN_textInput">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/analysis_article_refArticleComment_editText"
+                    style="@style/PC_TextInputLayoutStyle"
+                    android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textMultiLine"
+                    android:maxLines="4"
+                    android:textColor="@color/colorValue"
+                    android:gravity="top"
+                    tools:layout_editor_absoluteX="138dp"
+                    tools:layout_editor_absoluteY="478dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

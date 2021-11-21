@@ -3,6 +3,7 @@ package com.dev4lazy.pricecollector.test_view.test_actions_2_screen;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +16,16 @@ import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.remote_model.utils.RemoteDataInitializer;
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.view.utils.PopupWindowWrapper;
+import com.dev4lazy.pricecollector.view.utils.ProgressBarWrapper;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresentingManager;
+import com.dev4lazy.pricecollector.view.utils.TextViewMessageWrapper;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DATA_SIZE_UNKNOWN;
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DONT_HIDE_WHEN_FINISHED;
+
 public class TestActionsFragment2 extends Fragment {
-
-
-    public TestActionsFragment2() {
-        // Required empty public constructor
-    }
 
 
     @Override
@@ -32,33 +33,31 @@ public class TestActionsFragment2 extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.test_actions_fragment2, container, false);
-        // todo test
-
         setTestButtons(view);
-
-        // Inflate the layout for this fragment
         return view;
     }
 
-    private void setTestButtons(View view) {
-        view.findViewById(R.id.button_clear_remote_users).setOnClickListener((View v) -> {
+    private void setTestButtons(View parentView) {
+        parentView.findViewById(R.id.button_clear_remote_users).setOnClickListener((View v) -> {
             RemoteDataInitializer.getInstance().clearRemoteUsers();
         });
-        view.findViewById(R.id.button_create_remote_users).setOnClickListener((View v) -> {
+        parentView.findViewById(R.id.button_create_remote_users).setOnClickListener((View v) -> {
             RemoteDataInitializer.getInstance().initializeRemoteUsersOnly();
         });
-        view.findViewById(R.id.button_show_remote_users).setOnClickListener((View v) -> {
-            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteUsersListFragment);
+        parentView.findViewById(R.id.button_show_remote_users).setOnClickListener((View v) -> {
+            Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment2_to_remoteUsersListFragment);
         });
 
-        view.findViewById(R.id.button_clear_remote2).setOnClickListener((View v) -> {
+        parentView.findViewById(R.id.button_clear_remote2).setOnClickListener((View v) -> {
             RemoteDataInitializer.getInstance().clearRemoteDatabase();
         });
-        view.findViewById(R.id.button_create_remote2).setOnClickListener((View v) -> {
-            RemoteDataInitializer.getInstance().initializeRemoteDatabase();
+        parentView.findViewById(R.id.button_create_remote2).setOnClickListener((View v) -> {
+            RemoteDataInitializer.getInstance().initializeRemoteData(
+                    getPopulatingDataProgressPresentingManager( parentView )
+            );
         });
-        view.findViewById(R.id.button_show_remote2).setOnClickListener((View v) -> {
-            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteAnalysisRowJoinFragment);
+        parentView.findViewById(R.id.button_show_remote2).setOnClickListener((View v) -> {
+            Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment2_to_remoteAnalysisRowJoinFragment);
         });
 
         /* todo ?
@@ -78,25 +77,51 @@ public class TestActionsFragment2 extends Fragment {
         view.findViewById(R.id.button_show_remote_departments).setOnClickListener((View v) -> {
             Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteDepartmentsListFragment);
         });
+        */
 
-         */
-
-        view.findViewById(R.id.button_clear_local2).setOnClickListener((View v) -> {
+        parentView.findViewById(R.id.button_clear_local2).setOnClickListener((View v) -> {
             LocalDataInitializer.getInstance().clearLocalDatabase();
         });
-        view.findViewById(R.id.button_show_numbers_of_data2).setOnClickListener((View v) -> {
-            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_testNumbersOfDataFragment2);
+        parentView.findViewById(R.id.button_show_numbers_of_data2).setOnClickListener((View v) -> {
+            Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment2_to_testNumbersOfDataFragment2);
         });
-        view.findViewById(R.id.button_add_second_remote_analysis).setOnClickListener((View v) -> {
+        parentView.findViewById(R.id.button_add_second_remote_analysis).setOnClickListener((View v) -> {
             RemoteDataInitializer remoteDataInitializer = RemoteDataInitializer.getInstance();
             remoteDataInitializer.prepareRemoteAnalyzes();
             remoteDataInitializer.populateRemoteAnalysis( 1 );
         });
-        view.findViewById(R.id.button_add_third_remote_analysis).setOnClickListener((View v) -> {
+        parentView.findViewById(R.id.button_add_third_remote_analysis).setOnClickListener((View v) -> {
             RemoteDataInitializer remoteDataInitializer = RemoteDataInitializer.getInstance();
             remoteDataInitializer.prepareRemoteAnalyzes();
             remoteDataInitializer.populateRemoteAnalysis( 2 );
         });
+    }
+
+    private ProgressPresentingManager getPopulatingDataProgressPresentingManager(View parentView ) {
+        PopupWindowWrapper populatingDataPopupWindowWrapper =
+                new PopupWindowWrapper(
+                        parentView,
+                        R.layout.remote_populate_data_popup_window ).
+                        setWidth( ViewGroup.LayoutParams.MATCH_PARENT ).
+                        setHeight( ViewGroup.LayoutParams.WRAP_CONTENT ).
+                        setGravity( Gravity.CENTER ).
+                        setOutsideTouchable( false ).
+                        setFocusable( false ).
+                        show(0 , 0);
+        View popupView = populatingDataPopupWindowWrapper.getPopupView();
+        return new ProgressPresentingManager(
+                new ProgressPresenter(
+                        new ProgressBarWrapper(
+                                popupView.findViewById(R.id.remote_populate_data__progressBar)
+                        ),
+                        DATA_SIZE_UNKNOWN,
+                        DONT_HIDE_WHEN_FINISHED
+                ),
+                new TextViewMessageWrapper(
+                        popupView.findViewById(R.id.remote_populate_data__progress_message)
+                ),
+                populatingDataPopupWindowWrapper
+        );
     }
 
     @Override
@@ -126,4 +151,5 @@ public class TestActionsFragment2 extends Fragment {
             ).show();
         }
     }
+
 }

@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.entities.Analysis;
-import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.model.logic.LocalDataRepository;
 import com.dev4lazy.pricecollector.model.logic.Remote2LocalConverter;
 import com.dev4lazy.pricecollector.model.entities.AnalysisCompetitorSlot;
@@ -30,14 +28,7 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteSector;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUOProject;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppSettings;
-import com.dev4lazy.pricecollector.utils.TaskLink;
-import com.healthmarketscience.sqlbuilder.BinaryCondition;
-import com.healthmarketscience.sqlbuilder.ComboCondition;
-import com.healthmarketscience.sqlbuilder.CustomSql;
-import com.healthmarketscience.sqlbuilder.SelectQuery;
-import com.healthmarketscience.sqlbuilder.UnaryCondition;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -330,7 +321,7 @@ public class LocalDataInitializer {
             }
         };
         getAllRemoteSectorsResult.observeForever( resultObserver );
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllSectors(getAllRemoteSectorsResult);
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteSectors(getAllRemoteSectorsResult);
     }
 
     private void getDepartmentsFromRemoteDatabase( ) {
@@ -349,7 +340,7 @@ public class LocalDataInitializer {
             }
         };
         getAllRemoteDepartmentsResult.observeForever( insertingResultObserver );
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllDepartments( getAllRemoteDepartmentsResult );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteDepartments( getAllRemoteDepartmentsResult );
     }
 
     private void getFamilyFromRemoteDatabase( ) {
@@ -801,12 +792,6 @@ public class LocalDataInitializer {
                     if (companiesList != null) {
                         AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
                         analysisCompetitorSlot.initialize( 1, companiesList.get(0).getId(), companiesList.get(0).getName() );
-                        /* TODO XXX
-                        analysisCompetitorSlot.setSlotNr(1);
-                        analysisCompetitorSlot.setOtherStoreId( AnalysisCompetitorSlot.NONE );
-                        analysisCompetitorSlot.setCompanyId( companiesList.get(0).getId() );
-                        analysisCompetitorSlot.setCompanyName( companiesList.get(0).getName() );
-                         */
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
                         populateCompetitorSlotNr2();
                     }
@@ -830,12 +815,6 @@ public class LocalDataInitializer {
                     if (companiesList != null) {
                         AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
                         analysisCompetitorSlot.initialize( 2, companiesList.get(0).getId(), companiesList.get(0).getName() );
-                        /* TODO XXX
-                        analysisCompetitorSlot.setSlotNr(2);
-                        analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
-                        analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
-                        analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
-                         */
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
                         populateCompetitorSlotNr3();
                     }
@@ -859,12 +838,6 @@ public class LocalDataInitializer {
                     if (companiesList != null) {
                         AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
                         analysisCompetitorSlot.initialize( 3, companiesList.get(0).getId(), companiesList.get(0).getName() );
-                        /* TODO XXX
-                        analysisCompetitorSlot.setSlotNr(3);
-                        analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
-                        analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
-                        analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
-                        */
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
                         populateCompetitorSlotNr4();
                     }
@@ -888,12 +861,6 @@ public class LocalDataInitializer {
                     if (companiesList != null) {
                         AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
                         analysisCompetitorSlot.initialize( 4, companiesList.get(0).getId(), companiesList.get(0).getName() );
-                        /* TODO XXX
-                        analysisCompetitorSlot.setSlotNr(4);
-                        analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
-                        analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
-                        analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
-                         */
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
                         populateCompetitorSlotNr5();
                     }
@@ -917,12 +884,6 @@ public class LocalDataInitializer {
                     if (companiesList != null) {
                         AnalysisCompetitorSlot analysisCompetitorSlot = new AnalysisCompetitorSlot();
                         analysisCompetitorSlot.initialize( 5, companiesList.get(0).getId(), companiesList.get(0).getName() );
-                        /* TODO XXX
-                        analysisCompetitorSlot.setSlotNr(5);
-                        analysisCompetitorSlot.setOtherStoreId(AnalysisCompetitorSlot.NONE);
-                        analysisCompetitorSlot.setCompanyId(companiesList.get(0).getId());
-                        analysisCompetitorSlot.setCompanyName(companiesList.get(0).getName());
-                         */
                         AppHandle.getHandle().getRepository().getLocalDataRepository().insertAnalysisCompetitorSlot(analysisCompetitorSlot,null);
                         AppHandle.getHandle().getSettings().saveInitialisationStage( COMPETITORS_SLOTS_INITIALIZED );
                         populateDummyFamily( );

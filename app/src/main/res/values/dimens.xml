@@ -1,30 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="margin">8dp</dimen>
-    <dimen name="padding">8dp</dimen>
-    <dimen name="elevation">4dp</dimen>
+    <!-- Toolbar -->
+    <dimen name="toolbar_elevation">@dimen/quadruple_elevation</dimen>
+    <dimen name="toolbar_font_size">@dimen/head5_font_size</dimen>
+
+    <!-- Fields -->
+    <dimen name="horizontal_fields_padding">@dimen/padding</dimen>
+    <dimen name="vertical_fields_padding">@dimen/half_padding</dimen>
+    <dimen name="fields_padding">@dimen/padding</dimen>
+    <dimen name="input_font_size">@dimen/medium_font_size</dimen>
+    <dimen name="three_dots_menu_font_size">@dimen/head3_font_size</dimen>
     <dimen name="input_height">56dp</dimen>
 
-    <dimen name="toolbar_elevation">8dp</dimen>
-
-    <dimen name="input_font_size">12dp</dimen>
-    <dimen name="head_font_size">16dp</dimen>
-
+    <!-- Images -->
     <dimen name="image_rectangle_side_size">128dp</dimen>
+    <dimen name="login_screen_logo_size">192dp</dimen>
+    <dimen name="navigation_view_logo_size">96dp</dimen>
+    <dimen name="login_screen_logo_margin_top">@dimen/double_large_margin</dimen>
 
-    <dimen name="card_view_margin_left">8dp</dimen>
-    <dimen name="card_view_margin_right">8dp</dimen>
-    <dimen name="card_view_margin_top">4dp</dimen>
-    <dimen name="card_view_margin_bottom">4dp</dimen>
-    <dimen name="card_view_elevation">4dp</dimen>
-    <dimen name="card_view_interior_margin_top">4dp</dimen>
-    <dimen name="card_view_interior_margin_bottom">4dp</dimen>
+    <!-- Cards -->
+    <dimen name="card_view_margin_left">@dimen/margin</dimen>
+    <dimen name="card_view_margin_right">@dimen/margin</dimen>
+    <dimen name="card_view_margin_top">0dp</dimen>
+    <dimen name="card_view_margin_bottom">@dimen/margin</dimen>
+    <dimen name="card_view_interior_margin_top">@dimen/half_margin</dimen>
+    <dimen name="card_view_interior_margin_bottom">@dimen/half_margin</dimen>
     <dimen name="card_view_interior_left_guideline">8dp</dimen>
     <dimen name="card_view_corner_radius">4dp</dimen>
+    <dimen name="card_view_elevation">@dimen/elevation</dimen>
 
+    <!-- Analysis competitors slots -->
     <dimen name="analysis_competitor_slot_height">48dp</dimen>
     <dimen name="analysis_competitor_slot_minwidth">48dp</dimen>
 
-    <dimen name="fields_padding">8dp</dimen>
+    <!--=======================================================-->
+    <dimen name="half_margin">4dp</dimen>
+    <dimen name="margin">8dp</dimen>
+    <dimen name="double_margin">16dp</dimen>
+    <dimen name="tripple_margin">24dp</dimen>
+    <dimen name="large_margin">64dp</dimen>
+    <dimen name="double_large_margin">128dp</dimen>
+
+    <dimen name="half_padding">4dp</dimen>
+    <dimen name="padding">8dp</dimen>
+    <dimen name="one_and_half_padding">12dp</dimen>
+    <dimen name="double_padding">16dp</dimen>
+    <dimen name="triple_padding">24dp</dimen>
+    <dimen name="quadruple_padding">32dp</dimen>
+
+    <dimen name="elevation">4dp</dimen>
+    <dimen name="one_and_half_elevation">6dp</dimen>
+    <dimen name="double_elevation">8dp</dimen>
+    <dimen name="triple_elevation">12dp</dimen>
+    <dimen name="quadruple_elevation">16dp</dimen>
+
+    <dimen name="small_font_size">8sp</dimen>
+    <dimen name="small_medium_font_size">10sp</dimen>
+    <dimen name="medium_font_size">12sp</dimen>
+    <dimen name="medium_large_font_size">14sp</dimen>
+    <dimen name="large_font_size">16sp</dimen>
+    <dimen name="largest_font_size">18sp</dimen>
+    <dimen name="head1_font_size">32sp</dimen>
+    <dimen name="head2_font_size">28sp</dimen>
+    <dimen name="head3_font_size">24sp</dimen>
+    <dimen name="head4_font_size">20sp</dimen>
+    <dimen name="head5_font_size">16sp</dimen>
 
 </resources>

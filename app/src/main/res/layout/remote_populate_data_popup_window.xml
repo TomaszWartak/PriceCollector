@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:layout_marginStart="@dimen/double_margin"
+        android:layout_marginEnd="@dimen/double_margin"
+        android:layout_marginTop="@dimen/double_margin"
+        android:layout_marginBottom="@dimen/double_margin"
+        card_view:cardCornerRadius="@dimen/card_view_corner_radius"
+        card_view:cardElevation="@dimen/card_view_elevation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/double_padding"
+            android:gravity="center" >
+
+            <ProgressBar
+                android:id="@+id/remote_populate_data__progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="20dp"
+                android:layout_marginBottom="@dimen/margin"
+                android:visibility="visible"
+                android:max="100"
+                android:progress="1"
+                android:indeterminate="false"
+                android:progressTint="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/remote_populate_data__progress_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin"
+                android:visibility="visible"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/medium_large_font_size" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/remote_populate_data__button"
+                style="@style/PC_MaterialButtonStyle"
+                android:layout_marginStart="0dp"
+                android:visibility="gone"
+                android:enabled="false"
+                android:text="@string/caption_ok" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>

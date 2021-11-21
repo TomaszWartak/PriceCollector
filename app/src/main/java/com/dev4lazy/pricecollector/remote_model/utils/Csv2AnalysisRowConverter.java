@@ -2,8 +2,12 @@ package com.dev4lazy.pricecollector.remote_model.utils;
 
 import com.dev4lazy.pricecollector.model.logic.RemoteDataRepository;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRow;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import androidx.lifecycle.MutableLiveData;
 
 // todo test:
 // - uruchom testy
@@ -26,7 +30,7 @@ public class Csv2AnalysisRowConverter {
     public Csv2AnalysisRowConverter() {
         analysisRowCsvReader.openReader( analysisRowsFileName );
         remoteDataRepository = RemoteDataRepository.getInstance();
-        remoteDataRepository.askAnalysisRowsCount();
+        remoteDataRepository.askRemoteAnalysisRowsCount();
         //todo może jakiś warunek, że jak błędy to nie działamy dalej...
         // ? globalne zmienne do błędów
         remoteAnalysisRowList = new ArrayList<>();
@@ -52,20 +56,27 @@ public class Csv2AnalysisRowConverter {
         fieldNamesList.add("article_local_competitor2_price");
     }
 
-    public void makeAnalisisRowList( int analisisId ) {
+    public List<RemoteAnalysisRow> makeAnalysisRowList(int analysisNr, int analysisId) {
         ArrayList<String> values;
         // "pusty odczyt" - wiersz nagłówków
         String csvLine = analysisRowCsvReader.readCsvLine();
         RemoteAnalysisRow remoteAnalysisRow;
+        int rowCounter = 0;
         while ((csvLine= analysisRowCsvReader.readCsvLine())!=null) {
             values = csvDecoder.getValuesFromCsvLine(csvLine);
-            remoteAnalysisRow = makeAnalisisRow(values);
-            remoteAnalysisRow.setAnalysisId( analisisId );
+            remoteAnalysisRow = makeAnalysisRow(values);
+            remoteAnalysisRow.setAnalysisId(analysisId);
             remoteAnalysisRowList.add(remoteAnalysisRow);
+            rowCounter++;
+            // Na potrzeby testu, dla pierwszej analizy pobierane jest tylko 1000 wierszy
+            if ((rowCounter==1000) && (analysisNr==0)) {
+                break;
+            }
         }
+        return remoteAnalysisRowList;
     }
 
-    public RemoteAnalysisRow makeAnalisisRow(ArrayList<String> values ) {
+    public RemoteAnalysisRow makeAnalysisRow(ArrayList<String> values ) {
         // todo musibyć sprawdzanie typu po konwersji, bo mogą przyjść śmieci w pliku i appka się wysypie...
         // todo co jeśli będzie mniej danych
         // todo może zamiast warości 0..11 użyj stałych...
@@ -96,12 +107,18 @@ public class Csv2AnalysisRowConverter {
         }
     }
 
+    public void insertAllAnalysisRows(
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter ) {
+        remoteDataRepository.insertRemoteAnalysisRows( getRemoteAnalysisRowList(), result, progressPresenter );
+    }
+
     public ArrayList<RemoteAnalysisRow> getRemoteAnalysisRowList() {
         return remoteAnalysisRowList;
     }
 
     private void insertAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
-        remoteDataRepository.insertAnalysisRow(remoteAnalysisRow);
+        remoteDataRepository.insertRemoteAnalysisRow(remoteAnalysisRow);
     }
 
 }

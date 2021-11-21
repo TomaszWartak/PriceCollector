@@ -1,34 +1,46 @@
-package com.dev4lazy.pricecollector.view;
+package com.dev4lazy.pricecollector.view.utils;
 
 import android.app.Dialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel2;
+import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-public class AlertDialogFragment2 extends DialogFragment {
+public class AlertDialogFragment extends DialogFragment {
 
-    public static AlertDialogFragment2 newInstance( ) {
-        AlertDialogFragment2 alertDialogFragment = new AlertDialogFragment2( );
+    public static AlertDialogFragment newInstance( ) {
+        AlertDialogFragment alertDialogFragment = new AlertDialogFragment( );
         return alertDialogFragment;
     }
 
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState ) {
-        AlertDialogFragmentViewModel2 alertDialogFragmentViewModel = new ViewModelProvider( getActivity() ).get( AlertDialogFragmentViewModel2.class );
-        /* todo?
-        AlertDialog alertDialog = new AlertDialog.Builder( getContext() )
-                .setTitle( alertDialogFragmentViewModel.getTitle() )
+        AlertDialogFragmentViewModel alertDialogFragmentViewModel = new ViewModelProvider( getActivity() ).get( AlertDialogFragmentViewModel.class );
+        return getAlertDialog(alertDialogFragmentViewModel);
+    }
+
+    @NonNull
+    private AlertDialog getAlertDialog(AlertDialogFragmentViewModel alertDialogFragmentViewModel) {
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(
+                    getContext(),
+                    R.style.PC_AlertDialogStyle_Overlay )
+                .setTitle( alertDialogFragmentViewModel.getTitle().toUpperCase() )
                 .setMessage( alertDialogFragmentViewModel.getMessage() )
                 .setCancelable( alertDialogFragmentViewModel.isCancelable() )
-                .setPositiveButton( alertDialogFragmentViewModel.getPositiveButtonLabel(), alertDialogFragmentViewModel.getPostiveButtonOnClickListener() )
-                .setNegativeButton( alertDialogFragmentViewModel.getNegativeButtonLabel(), alertDialogFragmentViewModel.getNegativeButtonOnClickListener() )
+                .setPositiveButton(
+                        alertDialogFragmentViewModel.getPositiveButtonLabel(),
+                        alertDialogFragmentViewModel.getPostiveButtonOnClickListener() )
+                .setNegativeButton(
+                        alertDialogFragmentViewModel.getNegativeButtonLabel(),
+                        alertDialogFragmentViewModel.getNegativeButtonOnClickListener() )
                 .create();
-
-         */
-
+        //AlertDialog alertDialog = alertDialogBuilder.create();
         /* Jeśli chcesz przechwycić flow po wybraniu OK, aby zapobiec zamknięciu, jeśli coś jest nie tak,
             to trzeba być jak niżej zrobić.
             Z tym, że wtedy przestanie działać positiveButtonOnClickListener z ViewModel...
@@ -56,7 +68,6 @@ public class AlertDialogFragment2 extends DialogFragment {
             }
         });
            */
-        return alertDialogFragmentViewModel.getAlertDialog();
+        return alertDialog;
     }
-
 }

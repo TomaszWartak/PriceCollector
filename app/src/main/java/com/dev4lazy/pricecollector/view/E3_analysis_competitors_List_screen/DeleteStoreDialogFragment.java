@@ -53,34 +53,14 @@ public class DeleteStoreDialogFragment extends DialogFragment {
 
         StoreViewModel storeViewModel = new ViewModelProvider(getActivity()).get(StoreViewModel.class);
         Store store = storeViewModel.getStore();
-        String dialogTitle = "";
-        switch (storeViewModel.getActionToDo()) {
-            case ADD: {
-                dialogTitle = getString(R.string.add_competitor_store);
-                break;
-            }
-            case MODIFY: {
-                dialogTitle = getString(R.string.edit_competitor_store);
-                storeNameEditText.setText( store.getName() );
-                streetEditText.setText( store.getStreet() );
-                cityEditText.setText( store.getCity() );
-                zipcodeEditText.setText( store.getZipCode() );
-                break;
-            }
-            case DELETE: {
-                dialogTitle = getString(R.string.delete_competitor_store);
-                storeNameEditText.setEnabled(false);
-                storeNameEditText.setText( store.getName() );
-                streetEditText.setEnabled(false);
-                streetEditText.setText( store.getStreet() );
-                cityEditText.setEnabled(false);
-                cityEditText.setText( store.getCity() );
-                zipcodeEditText.setEnabled(false);
-                zipcodeEditText.setText( store.getZipCode() );
-                break;
-            }
-            default:
-        }
+        storeNameEditText.setEnabled(false);
+        storeNameEditText.setText( store.getName() );
+        streetEditText.setEnabled(false);
+        streetEditText.setText( store.getStreet() );
+        cityEditText.setEnabled(false);
+        cityEditText.setText( store.getCity() );
+        zipcodeEditText.setEnabled(false);
+        zipcodeEditText.setText( store.getZipCode() );
 
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
@@ -96,15 +76,12 @@ public class DeleteStoreDialogFragment extends DialogFragment {
         result.observeForever(resultObserver);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyById(store.getCompanyId(),result);
 
+        String dialogTitle = getString(R.string.delete_competitor_store);
         return getDeleteStoreDialog(
                 viewInflated,
                 storeViewModel,
                 store,
-                dialogTitle,
-                storeNameEditText,
-                streetEditText,
-                cityEditText,
-                zipcodeEditText);
+                dialogTitle );
     }
 
     @NonNull
@@ -112,17 +89,15 @@ public class DeleteStoreDialogFragment extends DialogFragment {
             View viewInflated,
             StoreViewModel storeViewModel,
             Store store,
-            String dialogTitle,
-            EditText storeNameEditText,
-            EditText streetEditText,
-            EditText cityEditText,
-            EditText zipcodeEditText) {
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(getContext())
-                .setTitle(dialogTitle)
-                .setView(viewInflated) // jeśli dialog ma mieć niestandarodowy widok
-                .setPositiveButton(R.string.caption_ok, new DialogInterface.OnClickListener() {
+            String dialogTitle ) {
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(
+                    getContext(),
+                    R.style.PC_AlertDialogStyle_Overlay )
+                .setTitle( dialogTitle.toUpperCase() )
+                .setView( viewInflated ) // jeśli dialog ma mieć niestandarodowy widok
+                .setPositiveButton( R.string.caption_ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick( DialogInterface dialog, int which ) {
                         // onClick zostaje pusta ze względu na walidację (zob. niżej onShow() )
                     }
                 })

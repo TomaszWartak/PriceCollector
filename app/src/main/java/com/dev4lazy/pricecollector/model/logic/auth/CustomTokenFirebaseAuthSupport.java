@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,9 +65,11 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
                             //  if (BuildConfig.DEBUG) {
                             //	    Log.d( TAG, ".."+var );
                             //  }
-                            Log.w(TAG, "signInFirebase:failure", exception);
-                            setLoggedIn(false);
-                            callIfUnsuccessful( Resources.getSystem().getString(R.string.firebase_login_problem));
+                            if (BuildConfig.DEBUG) {
+                                Log.w( TAG, "signInFirebase:failure", exception);
+                            }
+                            setLoggedIn( false );
+                            callIfUnsuccessful( AppHandle.getHandle().getResources().getString(R.string.firebase_login_problem) );
                         }
                     });
         }

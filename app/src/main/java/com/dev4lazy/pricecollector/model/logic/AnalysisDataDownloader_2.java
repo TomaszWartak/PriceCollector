@@ -16,7 +16,7 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRow;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteEanCode;
 import com.dev4lazy.pricecollector.utils.TaskChain;
 import com.dev4lazy.pricecollector.utils.TaskLink;
-import com.dev4lazy.pricecollector.view.ProgressPresenter;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresentingManager;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
@@ -24,9 +24,13 @@ import com.healthmarketscience.sqlbuilder.SelectQuery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DONT_HIDE_WHEN_FINISHED;
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.HIDE_WHEN_FINISHED;
 
 /**
  * AnalysisDataDownloader_2
@@ -37,7 +41,7 @@ import androidx.lifecycle.Observer;
 public class AnalysisDataDownloader_2 {
 
     private Analysis analysis;
-    private ProgressPresenter progressPresenter;
+    private ProgressPresentingManager progressPresentingManager;
     private MutableLiveData<Boolean> finalResult;
     private ArrayList<RemoteAnalysisRow> classScopeRemoteAnalysisRowsList;
     private HashMap<Integer, Article> classScopeArticleMap; // klucz: Article.getRemote_id()
@@ -49,18 +53,25 @@ public class AnalysisDataDownloader_2 {
     private Module classScopeDummyModule;
     private UOProject classScopeDummyUOProject;
 
-    public void downloadData( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    public void downloadData(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            ProgressPresentingManager progressPresentingManager ) {
         this.analysis = analysis;
-        this.progressPresenter = progressPresenter;
+        this.progressPresentingManager = progressPresentingManager;
         this.finalResult = finalResult;
         new TaskChain()
                 .addTaskLink(new RemoteAnalysisRowsGetter())
                 .addTaskLink(new NewArticlesListMaker())
+                .addTaskLink(new AllArticlesGetter())
+                .addTaskLink(new NewArticlesDuplicatesRemover())
                 .addTaskLink(new NewArticlesSaver())
                 .addTaskLink(new AllArticlesGetter())
                 .addTaskLink(new AllArticlesMapCreator())
                 .addTaskLink(new RemoteEanCodesGetter())
                 .addTaskLink(new NewEanCodesListMaker())
+                .addTaskLink(new AllEanCodesGetter())
+                .addTaskLink(new NewEanCodesDuplicatesRemover())
                 .addTaskLink(new NewEanCodesSaver())
                 .addTaskLink(new SectorsGetter())
                 .addTaskLink(new SectorsMapCreator())
@@ -74,13 +85,15 @@ public class AnalysisDataDownloader_2 {
                 .addTaskLink(new DummyModuleCreator())
                 .addTaskLink(new UOProjectGetter())
                 .addTaskLink(new DummyUOProjectCreator())
-                .addTaskLink(new OwnArticleInfoListMaker())
+                .addTaskLink(new AllOwnArticleInfosGetter())
+                .addTaskLink(new NewOwnArticleInfosListMaker())
+                .addTaskLink(new NewOwnArticleInfosDuplicatesRemover())
                 .addTaskLink(new NewOwnArticleInfosSaver())
                 .addTaskLink(new AllOwnArticleInfosGetter())
                 .addTaskLink(new OwnArticleInfoMapMaker())
                 .addTaskLink(new AnalysisArticlesListMaker())
                 .addTaskLink(new AnalysisArticlesSaver())
-                // TODO XXX .suspendHere()
+                .addTaskLink(new AnalysisUpdater())
                 .startIt( );
 
     }
@@ -100,7 +113,6 @@ public class AnalysisDataDownloader_2 {
                 }
             };
             result.observeForever(resultObserver);
-            Analysis analysis = (Analysis)data[0];
             String remoteAnalysisRowQueryString = getQuery( analysis.getRemote_id() );
             AppHandle.getHandle().getRepository().getRemoteDataRepository().getRemoteAnalysisRowViaQuery( remoteAnalysisRowQueryString, result );
         }
@@ -120,37 +132,22 @@ public class AnalysisDataDownloader_2 {
         @Override
         protected void doIt(Object... data) {
             Remote2LocalConverter converter = new Remote2LocalConverter();
-            ArrayList<Article> articlesList = converter.createArticlesList( classScopeRemoteAnalysisRowsList );
-            runNextTaskLink( articlesList );
-        }
-    }
-
-    private class NewArticlesSaver extends TaskLink {
-        @Override
-        protected void doIt(Object... data) {
-            ArrayList<Article> articlesList = (ArrayList<Article>)data[0];
-            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-            if (progressPresenter!=null) {
-                progressPresenter.reset(articlesList.size());
-            }
-            // TODO XXX tutaj trzeba zmienić nie na grupowy zapis, tylko pojedynczy
-            //  Czy na pewno? To chyba jeszcze nie tutaj. Wystarczy chybatylko result zrobić,
-            //  żeby mozna było uruchomić następne zadanie
-            localDataRepository.insertArticles( articlesList, progressPresenter );
-            runNextTaskLink();
+            ArrayList<Article> newArticlesList = converter.createArticlesList( classScopeRemoteAnalysisRowsList );
+            runNextTaskLink( newArticlesList );
         }
     }
 
     private class AllArticlesGetter extends TaskLink {
         @Override
         protected void doIt(Object... data) {
+            List<Article> newArticlesList = (List<Article>)data[0];
             MutableLiveData<List<Article>> result = new MutableLiveData<>();
             Observer<List<Article>> resultObserver = new Observer<List<Article>>() {
                 @Override
-                public void onChanged(List<Article> articleList) {
-                    if ((articleList != null)&&(!articleList.isEmpty())) {
+                public void onChanged(List<Article> allArticlesList) {
+                    if (allArticlesList != null) {
                         result.removeObserver(this); // this = observer...
-                        runNextTaskLink(articleList);
+                        runNextTaskLink( newArticlesList, allArticlesList );
                     }
                 }
             };
@@ -159,34 +156,82 @@ public class AnalysisDataDownloader_2 {
         }
     }
 
+    private class NewArticlesDuplicatesRemover extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            List<Article> newArticlesList = (List<Article>)data[0];
+            List<Article> allArticlesList = (List<Article>)data[1];
+            if (!allArticlesList.isEmpty()) {
+                HashMap<Integer,Article> allArticlesMap = new HashMap<>(
+                        allArticlesList
+                                .stream()
+                                .collect( Collectors.toMap( Article::getRemote_id, article->article ) ) );
+                //  TODO !!!! Przy drugiej analizie Wiersz wyżej Duplicate key com.dev4lazy.pricecollector.model.entities.Article
+                newArticlesList = newArticlesList
+                        .stream()
+                        .filter( article -> !allArticlesMap.containsKey( article.getRemote_id() ) )
+                        .collect( Collectors.toList() );
+            }
+            runNextTaskLink( newArticlesList );
+        }
+    }
+
+    private class NewArticlesSaver extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            ArrayList<Article> newArticlesList =  (ArrayList<Article>)data[0];
+            if (newArticlesList.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long lastAddedArticleId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (lastAddedArticleId != null) {
+                            runNextTaskLink(newArticlesList);
+                        }
+                    }
+                };
+                progressPresentingManager.resetProgressPresenter( newArticlesList.size(), DONT_HIDE_WHEN_FINISHED );
+                progressPresentingManager.showMessagePresenter( "Lista artykułów" ); // TODO hardcoded
+                insertResult.observeForever(insertingResultObserver);
+                LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+                localDataRepository.insertArticles( newArticlesList, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+            } else {
+                runNextTaskLink( newArticlesList );
+            }
+        }
+    }
+
+    // tutaj w łańcuchu jest wywołanie AllArticlesGetter()
+
     private class AllArticlesMapCreator extends TaskLink {
         @Override
         protected void doIt(Object... data) {
-            List<Article> articleList = (List<Article>)data[0];
-            classScopeArticleMap = new HashMap<>();
-            for (Article article : articleList ) {
-                classScopeArticleMap.put( article.getRemote_id(), article );
-            }
-            runNextTaskLink(articleList);
+            List<Article> allArticlesList = (List<Article>)data[1];
+            classScopeArticleMap = new HashMap<>(
+                    allArticlesList
+                            .stream()
+                            .collect( Collectors.toMap( Article::getRemote_id, article->article ) ) );
+            runNextTaskLink( allArticlesList );
         }
     }
 
     private class RemoteEanCodesGetter extends TaskLink {
         @Override
         protected void doIt(Object... data) {
-            List<Article> articleList = (List<Article>)data[0];
+            List<Article> allArticlesList = (List<Article>)data[0];
             MutableLiveData<List<RemoteEanCode>> result = new MutableLiveData<>();
             Observer<List<RemoteEanCode>> resultObserver = new Observer<List<RemoteEanCode>>() {
                 @Override
                 public void onChanged(List<RemoteEanCode> remoteEanCodesList) {
                     if ((remoteEanCodesList != null)&&(!remoteEanCodesList.isEmpty())) {
                         result.removeObserver(this); // this = observer...
-                        runNextTaskLink( remoteEanCodesList, articleList );
+                        runNextTaskLink( remoteEanCodesList, allArticlesList);
                     }
                 }
             };
             result.observeForever(resultObserver);
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllEanCodes(result);
+            AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteEanCodes(result);
         }
     }
 
@@ -194,42 +239,91 @@ public class AnalysisDataDownloader_2 {
         @Override
         protected void doIt(Object... data) {
             List<RemoteEanCode> remoteEanCodesList = (List<RemoteEanCode>)data[0];
-            List<Article> articleList = (List<Article>)data[1];
-            ArrayList<EanCode> eanCodeList = convertToEanCodes( remoteEanCodesList, articleList  );
-            runNextTaskLink();
+            List<Article> allArticlesList = (List<Article>)data[1];
+            ArrayList<EanCode> newEanCodeList = convertToEanCodes( remoteEanCodesList, allArticlesList);
+            runNextTaskLink(newEanCodeList);
         }
-
 
         private ArrayList<EanCode> convertToEanCodes (
                 List<RemoteEanCode> remoteEanCodesList,
-                List<Article> articleList ) {
-            // TODO ??? HashMap<Integer, RemoteEanCode> remoteEanCodesHashMap =
-            // TODO ??? remoteEanCodesList.stream().collect( Collectors.toMap(RemoteEanCode::getArticleId, Function.identity() ));
-            // TODO ??? remoteEanCodesList.stream().collect( Collectors.toMap( RemoteEanCode::getArticleId, b->b ));
-            HashMap<Integer, RemoteEanCode> remoteEanCodesHashMap = new HashMap<>();
-            for (RemoteEanCode remoteEanCode : remoteEanCodesList) {
-                remoteEanCodesHashMap.put( remoteEanCode.getArticleId(), remoteEanCode );
-            }
-            HashMap<Integer, Article> articlesHashMap = new HashMap<>();
-            for (Article article : articleList ) {
-                articlesHashMap.put( article.getRemote_id(), article );
-            }
+                List<Article> allArticlesList) {
+            HashMap<Integer, RemoteEanCode> remoteEanCodesHashMap = new HashMap<>(
+                remoteEanCodesList
+                    .stream()
+                    .collect( Collectors.toMap( RemoteEanCode::getArticleId, remoteEanCode -> remoteEanCode ))
+            );
+            HashMap<Integer, Article> articlesHashMap = new HashMap<>(
+                allArticlesList
+                    .stream()
+                    .collect( Collectors.toMap( Article::getRemote_id, article -> article ) )
+            );
             Remote2LocalConverter converter = new Remote2LocalConverter();
             return converter.createEanCodesList( remoteEanCodesHashMap, articlesHashMap );
         }
 
     }
 
+    private class AllEanCodesGetter extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            List<EanCode> newEanCodesList = (List<EanCode>)data[0];
+            MutableLiveData<List<EanCode>> result = new MutableLiveData<>();
+            Observer<List<EanCode>> resultObserver = new Observer<List<EanCode>>() {
+                @Override
+                public void onChanged(List<EanCode> allEanCodesList) {
+                    if (allEanCodesList != null) {
+                        result.removeObserver(this); // this = observer...
+                        runNextTaskLink( newEanCodesList, allEanCodesList );
+                    }
+                }
+            };
+            result.observeForever(resultObserver);
+            AppHandle.getHandle().getRepository().getLocalDataRepository().getAllEanCodes( result );
+        }
+    }
+
+    private class NewEanCodesDuplicatesRemover extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            List<EanCode> newEanCodesList = (List<EanCode>)data[0];
+            List<EanCode> allEanCodesList = (List<EanCode>)data[1];
+            if (!allEanCodesList.isEmpty()) {
+                HashMap<String,EanCode> allEanCodesMap = new HashMap<>(
+                        allEanCodesList
+                                .stream()
+                                .collect( Collectors.toMap( EanCode::getValue, eanCode->eanCode ) ) );
+                newEanCodesList = newEanCodesList
+                        .stream()
+                        .filter( eanCode -> !allEanCodesMap.containsKey( eanCode.getValue() ) )
+                        .collect( Collectors.toList() );
+            }
+            runNextTaskLink(newEanCodesList);
+        }
+    }
+
     private class NewEanCodesSaver extends TaskLink {
         @Override
         protected void doIt(Object... data) {
-            ArrayList<EanCode> eanCodeList = (ArrayList<EanCode>)data[0];
-            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-            if (progressPresenter!=null) {
-                progressPresenter.reset(eanCodeList.size());
+            ArrayList<EanCode> newEanCodesList =  (ArrayList<EanCode>)data[0];
+            if (newEanCodesList.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long lastAddedEanCodeId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (lastAddedEanCodeId != null) {
+                            runNextTaskLink();
+                        }
+                    }
+                };
+                progressPresentingManager.resetProgressPresenter( newEanCodesList.size(), DONT_HIDE_WHEN_FINISHED );
+                progressPresentingManager.showMessagePresenter( "Lista kodów EAN" ); // TODO hardcoded
+                insertResult.observeForever(insertingResultObserver);
+                LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+                localDataRepository.insertEanCodes( newEanCodesList, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
+            } else {
+                runNextTaskLink();
             }
-            localDataRepository.insertEanCodes( eanCodeList, progressPresenter );
-            runNextTaskLink();
         }
     }
 
@@ -258,8 +352,8 @@ public class AnalysisDataDownloader_2 {
             classScopeSectorMap = new HashMap<>();
             for (Sector sector : sectorList ) {
                 classScopeSectorMap.put( sector.getName(), sector );
-                runNextTaskLink();
             }
+            runNextTaskLink();
         }
     }
 
@@ -402,12 +496,34 @@ public class AnalysisDataDownloader_2 {
         }
     }
 
-    private class OwnArticleInfoListMaker extends TaskLink {
+    private class AllOwnArticleInfosGetter extends TaskLink {
         @Override
         protected void doIt(Object... data) {
+            // TODO XXX ArrayList<OwnArticleInfo> newOwnArticleInfosList = (ArrayList<OwnArticleInfo>)data[0];
+            MutableLiveData<List<OwnArticleInfo>> result = new MutableLiveData<>();
+            Observer<List<OwnArticleInfo>> resultObserver = new Observer<List<OwnArticleInfo>>() {
+                @Override
+                public void onChanged(List<OwnArticleInfo> actualOwnArticleInfosList) {
+                    if ((actualOwnArticleInfosList != null)) {
+                        result.removeObserver(this); // this = observer...
+                        runNextTaskLink( /* TODO XXX newOwnArticleInfosList,*/ actualOwnArticleInfosList);
+                    }
+                }
+            };
+            result.observeForever(resultObserver);
+            AppHandle.getHandle().getRepository().getLocalDataRepository().getAllOwnArticleInfos(result);
+        }
+    }
+
+    private class NewOwnArticleInfosListMaker extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            // TODO to chyba powinno być tak, że tworzone jest tylko dla nowych artykułow
+            //  a dla "starych" robiony jest update (cena sklepowa i ref)
+            List<OwnArticleInfo> actualOwnArticleInfosList = (List<OwnArticleInfo>)data[0];
             Remote2LocalConverter converter = new Remote2LocalConverter();
             OwnArticleInfo ownArticleInfo;
-            ArrayList<OwnArticleInfo> ownArticleInfoList = new ArrayList<>();
+            ArrayList<OwnArticleInfo> newOwnArticleInfosList = new ArrayList<>();
             for (RemoteAnalysisRow remoteAnalysisRow : classScopeRemoteAnalysisRowsList) {
                 ownArticleInfo = converter.createOwnArticleInfo(
                         remoteAnalysisRow,
@@ -419,59 +535,66 @@ public class AnalysisDataDownloader_2 {
                         classScopeDummyMarket,
                         classScopeDummyUOProject
                 );
-                ownArticleInfoList.add( ownArticleInfo );
+                newOwnArticleInfosList.add( ownArticleInfo );
             }
-            runNextTaskLink(  ownArticleInfoList  );
+            runNextTaskLink( newOwnArticleInfosList, actualOwnArticleInfosList );
+        }
+    }
+
+    private class NewOwnArticleInfosDuplicatesRemover extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            List<OwnArticleInfo> newOwnArticleInfosList = (List<OwnArticleInfo>)data[0];
+            List<OwnArticleInfo> actualOwnArticleInfosList = (List<OwnArticleInfo>)data[1];
+            if (!actualOwnArticleInfosList.isEmpty()) {
+                HashMap<String,OwnArticleInfo> actualOwnArticleInfosMap = new HashMap<>(
+                        actualOwnArticleInfosList
+                                .stream()
+                                .collect( Collectors.toMap( OwnArticleInfo::getOwnCode, ownArticleInfo->ownArticleInfo ) ) );
+                newOwnArticleInfosList = newOwnArticleInfosList
+                        .stream()
+                        .filter( ownArticleInfo -> !actualOwnArticleInfosMap.containsKey( ownArticleInfo.getOwnCode() ) )
+                        .collect( Collectors.toList() );
+            }
+            runNextTaskLink( newOwnArticleInfosList );
         }
     }
 
     private class NewOwnArticleInfosSaver extends TaskLink {
         @Override
         protected void doIt(Object... data) {
-            ArrayList<OwnArticleInfo> ownArticleInfoList =  (ArrayList<OwnArticleInfo>)data[0];
-            MutableLiveData<Long> insertResult = new MutableLiveData<>();
-            Observer<Long> insertingResultObserver = new Observer<Long>() {
-                @Override
-                public void onChanged(Long lastAddedOwnArticleInfoId) {
-                    insertResult.removeObserver(this); // this = observer...
-                    if (lastAddedOwnArticleInfoId!=null) {
-                        runNextTaskLink();
+            ArrayList<OwnArticleInfo> newOwnArticleInfoList =  (ArrayList<OwnArticleInfo>)data[0];
+            if (newOwnArticleInfoList.size()>0) {
+                MutableLiveData<Long> insertResult = new MutableLiveData<>();
+                Observer<Long> insertingResultObserver = new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long lastAddedOwnArticleInfoId) {
+                        insertResult.removeObserver(this); // this = observer...
+                        if (lastAddedOwnArticleInfoId!=null) {
+                            runNextTaskLink();
+                        }
                     }
-                }
-            };
-            if (progressPresenter!=null) {
-                progressPresenter.reset(ownArticleInfoList.size());
+                };
+                progressPresentingManager.resetProgressPresenter( newOwnArticleInfoList.size(), DONT_HIDE_WHEN_FINISHED );
+                progressPresentingManager.showMessagePresenter( "Informacje dodatkowe" ); // TODO hardcoded
+                insertResult.observeForever(insertingResultObserver);
+                LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+                localDataRepository.insertOwnArticleInfos( newOwnArticleInfoList, progressPresentingManager.getProgressPresenterWrapper(), insertResult );
+            } else {
+                runNextTaskLink();
             }
-            insertResult.observeForever(insertingResultObserver);
-            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-            localDataRepository.insertOwnArticleInfos( ownArticleInfoList, progressPresenter, insertResult );
+
         }
     }
 
-    private class AllOwnArticleInfosGetter extends TaskLink {
-        @Override
-        protected void doIt(Object... data) {
-            MutableLiveData<List<OwnArticleInfo>> result = new MutableLiveData<>();
-            Observer<List<OwnArticleInfo>> resultObserver = new Observer<List<OwnArticleInfo>>() {
-                @Override
-                public void onChanged(List<OwnArticleInfo> ownArticleInfosList) {
-                    if ((ownArticleInfosList != null)&&(!ownArticleInfosList.isEmpty())) {
-                        result.removeObserver(this); // this = observer...
-                        runNextTaskLink( ownArticleInfosList );
-                    }
-                }
-            };
-            result.observeForever(resultObserver);
-            AppHandle.getHandle().getRepository().getLocalDataRepository().getAllOwnArticleInfos(result);
-        }
-    }
+    // Tutaj wywołanie AllOwnArticleInfosGetter
 
     private class OwnArticleInfoMapMaker extends TaskLink {
         @Override
         protected void doIt(Object... data) {
-            List<OwnArticleInfo> ownArticleInfosList = (List<OwnArticleInfo>)data[0];
+            List<OwnArticleInfo> actualOwnArticleInfosList = (List<OwnArticleInfo>)data[0];
             classScopeOwnArticleInfoMap = new HashMap<>();
-            for (OwnArticleInfo ownArticleInfo : ownArticleInfosList ) {
+            for (OwnArticleInfo ownArticleInfo : actualOwnArticleInfosList) {
                 classScopeOwnArticleInfoMap.put( ownArticleInfo.getArticleId(), ownArticleInfo );
             }
             runNextTaskLink();
@@ -510,17 +633,32 @@ public class AnalysisDataDownloader_2 {
                 @Override
                 public void onChanged(Long lastInsertedId) {
                     insertResult.removeObserver( this ); // this = observer...
-                    analysis.setDataDownloaded( true );
-                    localDataRepository.updateAnalysis( analysis, null );
-                    finalResult.postValue( true );
+                    runNextTaskLink();
                 }
             };
-            if (progressPresenter!=null) {
-                progressPresenter.reset( analysisArticlesList.size() );
-            }
+            progressPresentingManager.resetProgressPresenter(  analysisArticlesList.size(), HIDE_WHEN_FINISHED );
+            progressPresentingManager.showMessagePresenter( "Lista artykułów strategicznych" ); // TODO hardcoded
             insertResult.observeForever( insertingResultObserver );
-            localDataRepository.insertAnalysisArticles( analysisArticlesList, progressPresenter, insertResult );
+            localDataRepository.insertAnalysisArticles( analysisArticlesList, progressPresentingManager.getProgressPresenterWrapper(), insertResult );
         }
     }
 
+
+    private class AnalysisUpdater extends TaskLink {
+        @Override
+        protected void doIt(Object... data) {
+            MutableLiveData<Integer> updateResult = new MutableLiveData<Integer>();
+            Observer<Integer> updatingResultObserver = new Observer<Integer>() {
+                @Override
+                public void onChanged(Integer updatedCount) {
+                    updateResult.removeObserver(this); // this = observer...
+                    finalResult.postValue( true );
+                }
+            };
+            updateResult.observeForever( updatingResultObserver );
+            analysis.setDataDownloaded( true );
+            LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
+            localDataRepository.updateAnalysis( analysis, updateResult );
+        }
+    }
 }

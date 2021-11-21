@@ -12,6 +12,9 @@ import java.util.Objects;
                 @Index(
                         value = "remote_id" /* ,
                         unique = true */
+                        /* Nie może być unique, bo artykuł referencyjny nie ma odpowiednika
+                        w zdalnej bazie danych i wartość remote_id nadawana jest -1...
+                        */
                 ),
         }
 ) // [dbo].[DCT_Article]
@@ -34,7 +37,7 @@ import java.util.Objects;
 public class Article {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int remote_id; // klucz głowny w bazie zdalnej; tutaj kod briko (6 cyfr) ...
+    private int remote_id; // klucz głowny w bazie zdalnej; tutaj: kod briko (6 cyfr) ...
     private String name;
     private String description;
     // todo ??? picture;

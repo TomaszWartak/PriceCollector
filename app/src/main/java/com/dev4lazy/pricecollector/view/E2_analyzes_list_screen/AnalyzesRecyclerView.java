@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
-import com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader_2;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
-import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppUtils;
-import com.dev4lazy.pricecollector.view.ProgressBarPresenter;
-import com.dev4lazy.pricecollector.view.ProgressPresenter;
+import com.dev4lazy.pricecollector.view.utils.ProgressBarWrapper;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresentingManager;
+import com.dev4lazy.pricecollector.view.utils.TextViewMessageWrapper;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 
 import java.util.Date;
@@ -33,7 +33,8 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.dev4lazy.pricecollector.view.ProgressPresenter.DATA_SIZE_UNKNOWN;
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DATA_SIZE_UNKNOWN;
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DONT_HIDE_WHEN_FINISHED;
 
 public class AnalyzesRecyclerView extends RecyclerView {
 
@@ -73,7 +74,7 @@ public class AnalyzesRecyclerView extends RecyclerView {
             if ( analysis == null) {
                 holder.clear();
             } else {
-                holder.bind( analysis );
+                holder.bind( analysis, position );
             }
         }
 
@@ -87,7 +88,6 @@ public class AnalyzesRecyclerView extends RecyclerView {
         class AnalysisViewHolder extends ViewHolder {
             // TODO sprawdź, czy tu nie jest potrzebny VieMOdel, czy to się nie zgubi przy obrocie
 
-            private Analysis analysis;
             private final TextView textViewAnalysisHeader;
             private final TextView textViewAnalysisCreationDate;
             private final TextView textViewAnalysisDueDate;
@@ -98,6 +98,7 @@ public class AnalyzesRecyclerView extends RecyclerView {
             public AnalysisViewHolder( View view ) {
                 super(view);
                 textViewAnalysisHeader = view.findViewById( R.id.analysis_item__header );
+                setLabelsMaxWidth(view);
                 textViewAnalysisCreationDate = view.findViewById( R.id.analysis_item__creation_date);
                 textViewAnalysisDueDate = view.findViewById( R.id.analysis_Item__due_date);
                 textViewAnalysisLastDataSentDate = view.findViewById( R.id.analysis_item__finish_date);
@@ -105,40 +106,50 @@ public class AnalyzesRecyclerView extends RecyclerView {
                 textViewAnalysisDataReadyToDownload = view.findViewById(R.id.analysis_item__data_to_download );
             }
 
-            private void openCompetitorSlots( View view, Analysis analysis ) {
-                // TODO XXX sloty muszą się otworzyć dla konkretnej analizy, więc jakoś (ViewModel) trzeba przekazać info o analizie
-                AnalyzesListViewModel analyzesListViewModel = new ViewModelProvider( AppUtils.getActivity( getContext() ) ).get( AnalyzesListViewModel.class );
-                analyzesListViewModel.setChosenAnalysis( analysis );
-                Navigation.findNavController( view ).navigate(R.id.action_analyzesListFragment_to_analysisCompetitorsFragment);
+            public void setLabelsMaxWidth(View view) {
+                int labelMaxWidth = (int)Math.round( Resources.getSystem().getDisplayMetrics().widthPixels*0.8 );
+                setLabelMaxWidth( view.findViewById( R.id.analysis_item__label_creation_date ), labelMaxWidth );
+                setLabelMaxWidth( view.findViewById( R.id.analysis_item__label_due_date ), labelMaxWidth );
+                setLabelMaxWidth( view.findViewById( R.id.analysis_item__label_finish_date ), labelMaxWidth );
             }
 
-            protected void bind( Analysis analysis ) {
-                this.analysis = analysis;
-                Date date = analysis.getCreationDate();
+            public void setLabelMaxWidth( TextView textViewLabel, int maxWidth ) {
+                textViewLabel.setMaxWidth( maxWidth );
+            }
+
+            protected void bind( Analysis analysis, int positionInAdapter) {
+                setHeaderAndCreationDateText( analysis.getCreationDate() );
+                setDueDateText( analysis.getDueDate( ) );
+                setLastDataSentDateText( analysis.getFinishDate() );
+                setAnalysisDataReadyToDownload( analysis, positionInAdapter);
+            }
+
+            private void setHeaderAndCreationDateText(Date date) {
                 if ( dateIsCorrect( date ) ) {
                     textViewAnalysisHeader.setText( dateConverter.date2StringWithFormat( date, "yyyy-MM"));
                     textViewAnalysisCreationDate.setText( dateConverter.date2String( date ) );
                 }
-                date = analysis.getDueDate();
-                if ( dateIsCorrect( date ) ) {
+            }
+
+            private void setDueDateText(Date date) {
+                if ( dateIsCorrect(date) ) {
                     if (date.before( new Date() )) {
                         textViewAnalysisDueDate.setTextColor( ContextCompat.getColor( getContext(), R.color.colorWarning) );
                     }
-                    textViewAnalysisDueDate.setText( dateConverter.date2String( date ) );
+                    textViewAnalysisDueDate.setText( dateConverter.date2String(date) );
                 }
-                date = analysis.getFinishDate();
+            }
+
+            private void setLastDataSentDateText(Date date) {
                 if ( dateIsCorrect( date ) ) {
                     textViewAnalysisLastDataSentDate.setText( dateConverter.date2String( date ) );
                 }
-                /* TODO XXX
-                date = analysis.getConfirmationDate();
-                if ( dateIsCorrect( date ) ) {
-                    textViewAnalysisConfirmationDate.setText( dateConverter.date2String( date ) );
-                }
-                */
-                int visibility = textViewAnalysisDataReadyToDownload.getVisibility();
+            }
+
+            private void setAnalysisDataReadyToDownload( Analysis analysis, int positionInAdapter) {
+                int dataReadyToDownloadVisibility = textViewAnalysisDataReadyToDownload.getVisibility();
                 if ( analysis.isDataNotDownloaded() ) {
-                    if (visibility!= VISIBLE) {
+                    if (dataReadyToDownloadVisibility != VISIBLE) {
                         textViewAnalysisDataReadyToDownload.setVisibility(VISIBLE);
                     }
                     itemView.setOnClickListener( (View v) -> {
@@ -149,20 +160,35 @@ public class AnalyzesRecyclerView extends RecyclerView {
                             public void onChanged(Boolean analysisDataDownloaded) {
                                 if (analysisDataDownloaded != null) {
                                     finalResult.removeObserver(this); // this = observer...
-                                    AppHandle.getHandle().getRepository().getLocalDataRepository().updateAnalysis( analysis, null );
-                                    notifyDataSetChanged();
+                                    PagedList<Analysis> analyzesList = getCurrentList();
+                                    Analysis analysisToInvalidate = analyzesList.get( positionInAdapter );
+                                    analysisToInvalidate.setDataDownloaded( true );
+                                    analyzesList.getDataSource().invalidate();
+                                    notifyItemChanged( positionInAdapter );
                                 }
                             }
                         };
                         finalResult.observeForever(resultObserver);
                         updateArticlesAllData(
+                                analysis,
                                 finalResult,
-                                new ProgressBarPresenter(
-                                        itemView.findViewById(R.id.analysis_item__progressBar),
-                                        DATA_SIZE_UNKNOWN ) );
+                                new ProgressPresentingManager(
+                                    new ProgressPresenter(
+                                        new ProgressBarWrapper(
+                                            itemView.findViewById(R.id.analysis_item__progressBar)
+                                        ),
+                                        DATA_SIZE_UNKNOWN,
+                                        DONT_HIDE_WHEN_FINISHED
+                                    ),
+                                    new TextViewMessageWrapper(
+                                        itemView.findViewById(R.id.analysis_item__progress_message)
+                                    ),
+                                    null
+                                )
+                        );
                     });
                 } else {
-                    if (visibility!= GONE) {
+                    if (dataReadyToDownloadVisibility != GONE) {
                         textViewAnalysisDataReadyToDownload.setVisibility(GONE);
                     }
                     itemView.setOnClickListener( (View v) -> {
@@ -175,9 +201,19 @@ public class AnalyzesRecyclerView extends RecyclerView {
                 return (date!=null)&&(dateConverter.date2Long(date)!=0L);
             }
 
-            public void updateArticlesAllData( MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+            public void updateArticlesAllData(
+                    Analysis analysis,
+                    MutableLiveData<Boolean> finalResult,
+                    ProgressPresentingManager progressPresentingManager ) {
                 // TODO XXX AnalysisDataDownloader.getInstance().insertArticles( analysis, finalResult, progressPresenter );
-                new AnalysisDataDownloader_2().downloadData( analysis, finalResult, progressPresenter );
+                new AnalysisDataDownloader_2().downloadData( analysis, finalResult, progressPresentingManager );
+            }
+
+            private void openCompetitorSlots( View view, Analysis analysis ) {
+                // TODO XXX sloty muszą się otworzyć dla konkretnej analizy, więc jakoś (ViewModel) trzeba przekazać info o analizie
+                AnalyzesListViewModel analyzesListViewModel = new ViewModelProvider( AppUtils.getActivity( getContext() ) ).get( AnalyzesListViewModel.class );
+                analyzesListViewModel.setChosenAnalysis( analysis );
+                Navigation.findNavController( view ).navigate(R.id.action_analyzesListFragment_to_analysisCompetitorsFragment);
             }
 
             protected void clear() {

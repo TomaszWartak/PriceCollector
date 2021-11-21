@@ -96,4 +96,8 @@
     <string name="send_data_to_remote_db">Send data to remote database</string>
     <string name="populate_10_first">TEST - populate 10 first</string>
     <string name="only_for_testing">Only available for testing purposes</string>
+    <string name="articles">ARTICLES</string>
+    <string name="searching">Searching</string>
+    <string name="searching_articles">SEARCHING ARTICLES</string>
+    <string name="threedots_vertical">⋮</string>
 </resources>

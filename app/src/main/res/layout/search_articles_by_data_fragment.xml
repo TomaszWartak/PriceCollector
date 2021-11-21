@@ -12,13 +12,17 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:padding="@dimen/fields_padding"
-        android:paddingTop="16dp">
+        android:layout_marginTop="@dimen/half_margin"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:padding="0dp"
+        android:paddingTop="@dimen/double_padding">
 
         <!-- Nazwa artykułu -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_articles_article_name_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/PC_TextInputLayoutStyle"
             app:endIconMode="clear_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,6 +30,8 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/search_articles_article_name_edit_text"
+                style="@style/PC_TextInputLayoutStyle"
+                android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -36,7 +42,7 @@
         <!-- EAN  -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_articles_ean_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/PC_TextInputLayoutStyle"
             app:endIconMode="clear_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,6 +50,8 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/search_articles_ean_edit_text"
+                style="@style/PC_TextInputLayoutStyle"
+                android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -54,7 +62,7 @@
         <!-- SKU  -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_articles_sku_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/PC_TextInputLayoutStyle"
             app:endIconMode="clear_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,6 +72,8 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/search_articles_sku_edit_text"
+                style="@style/PC_TextInputLayoutStyle"
+                android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -74,7 +84,7 @@
         <!-- Any text  -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_articles_any_text_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/PC_TextInputLayoutStyle"
             app:endIconMode="clear_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,6 +94,8 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/search_articles_any_text_edit_text"
+                style="@style/PC_TextInputLayoutStyle"
+                android:textAppearance="@style/PC_EditTextTextAppearanceBody1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -91,29 +103,25 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Przyciski  -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:orientation="horizontal"
-            android:padding="@dimen/fields_padding"
-            android:paddingTop="16dp">
+            android:gravity="end"
+            android:layout_marginBottom="@dimen/half_margin"
+            android:paddingTop="@dimen/padding">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/search_articles_by_data_button_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="136dp"
-                android:layout_marginTop="8dp"
+                style="@style/PC_MaterialButtonStyle"
                 android:text="@string/caption_clear" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/search_articles_by_data_button_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="8dp"
+                style="@style/PC_MaterialButtonStyle"
                 android:text="@string/caption_search" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

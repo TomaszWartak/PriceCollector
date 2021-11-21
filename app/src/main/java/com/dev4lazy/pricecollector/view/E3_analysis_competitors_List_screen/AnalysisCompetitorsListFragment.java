@@ -1,7 +1,6 @@
 package com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,14 +21,11 @@ import androidx.navigation.Navigation;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUploader;
 import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
-import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppUtils;
-import com.dev4lazy.pricecollector.utils.TaskChain;
-import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
+import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.CompetitorsSlotsViewModel;
 import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -48,7 +44,6 @@ public class AnalysisCompetitorsListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analysis_competitors_fragment, container, false);
-        setToolbarText(getString(R.string.competitors_toolbar_text));
         setOnBackPressedCallback();
         listViewSetup(view);
         listViewSubscribtion();
@@ -71,13 +66,16 @@ public class AnalysisCompetitorsListFragment extends Fragment {
 
         private void listViewSetup(View view) {
             competitorsSlotsListView = view.findViewById(R.id.analysis_competitors_listview);
-            competitorsSlotsListView.setup( new ViewModelProvider( getActivity() ).get( StoreViewModel.class) );
+            competitorsSlotsListView.setup(
+                    new ViewModelProvider( getActivity() ).get( StoreViewModel.class),
+                    new ViewModelProvider( getActivity() ).get( CompetitorsSlotsViewModel.class)
+            );
         }
 
         private void listViewSubscribtion() {
             // todo askForSlots();
-            competitorsSlotsViewModel = new ViewModelProvider(this).get( CompetitorsSlotsViewModel.class);
-            competitorsSlotsViewModel.getCompetitorsSlotsLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<CompetitorSlotFullData>>() {
+            competitorsSlotsViewModel = new ViewModelProvider( getActivity() ).get( CompetitorsSlotsViewModel.class);
+            competitorsSlotsViewModel.getCompetitorsSlotsFullDataLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<CompetitorSlotFullData>>() {
                 @Override
                 public void onChanged(ArrayList<CompetitorSlotFullData> competitorSlotFullDataList) {
                     if (!competitorSlotFullDataList.isEmpty()) {
@@ -90,6 +88,7 @@ public class AnalysisCompetitorsListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        setToolbarText(getString(R.string.competitors_toolbar_text));
         navigationViewMenuSetup();
     }
 
@@ -106,7 +105,8 @@ public class AnalysisCompetitorsListFragment extends Fragment {
                     drawerLayout.closeDrawers();
                     switch (item.getItemId()) {
                         case R.id.analysis_competitors_list_screen_logout_menu_item:
-                            getLogoutQuestionDialog();
+                            new LogoutQuestionDialog( getContext(), getActivity() ).get();
+                            // TODO XXX getLogoutQuestionDialog();
                             break;
                         case R.id.analysis_competitors_list_screen_uploaddata_menu_item:
                             uploadAnalysisData();
@@ -120,16 +120,20 @@ public class AnalysisCompetitorsListFragment extends Fragment {
             });
         }
 
+        /* TODO XXX
             private void getLogoutQuestionDialog() {
-                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                new MaterialAlertDialogBuilder(getContext())
                         .setTitle("")
                         .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogoutDialogListener( getActivity() ) )
                         .setNegativeButton(getActivity().getString(R.string.caption_no),null)
                         .show();
             }
 
-                private class LogOffListener implements DialogInterface.OnClickListener {
+         */
+
+            /* TODO XXX
+                private class LogoutDialogListener implements DialogInterface.OnClickListener {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -143,6 +147,8 @@ public class AnalysisCompetitorsListFragment extends Fragment {
                         getActivity().finishAndRemoveTask();
                         System.exit(0);
                     }
+
+             */
 
             private void uploadAnalysisData() {
                 AnalyzesListViewModel analyzesListViewModel =

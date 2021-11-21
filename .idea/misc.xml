@@ -9,33 +9,39 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.15885416666666666" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/drawable/layout_rounded_bottom_background.xml" value="0.24166666666666667" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/drawable/tab_background.xml" value="0.23486328125" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/add_store_fragment.xml" value="0.10536980749746708" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/alert_dialog_fragment.xml" value="0.1" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/alert_dialog_fragment2.xml" value="0.103596757852077" />
-        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_article.xml" value="0.33" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_article.xml" value="0.48345323741007196" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_article_fragment.xml" value="0.20885416666666667" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_article_list_item.xml" value="0.1" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_articles_list_fragment.xml" value="0.21041666666666667" />
-        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_competitor_slot.xml" value="0.1" />
-        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_competitors_fragment.xml" value="0.1" />
-        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_item.xml" value="0.5" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_competitor_slot.xml" value="0.4540983606557377" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_competitor_slot2.xml" value="0.460431654676259" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_competitors_fragment.xml" value="0.22752808988764045" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_item.xml" value="0.302504816955684" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analysis_item2.xml" value="0.2078125" />
-        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analyzes_list_fragment.xml" value="0.75" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/analyzes_list_fragment.xml" value="0.33" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/companies_list_fragment.xml" value="0.20885416666666667" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/delete_store_fragment.xml" value="0.23177083333333334" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/dropdown_item.xml" value="0.371875" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/edit_store_fragment.xml" value="0.22708333333333333" />
-        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/login_fragment.xml" value="0.33" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/login_fragment.xml" value="0.35670103092783506" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/main_activity.xml" value="0.21145833333333333" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/main_activity_drawer.xml" value="0.19701086956521738" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/main_activity_with_drawer.xml" value="0.1" />
-        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/search_articles_by_data_fragment.xml" value="0.33" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/navigation_view_header.xml" value="0.371875" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/remote_populate_data_popup_window.xml" value="0.5" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/search_articles_by_data_fragment.xml" value="0.1" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/search_articles_by_structure_fragment.xml" value="0.33" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/search_articles_fragment.xml" value="0.33" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/search_articles_tab.xml" value="0.1" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/search_articles_tablayout.xml" value="0.24365942028985507" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/set_up_preferences_fragment.xml" value="0.21197916666666666" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/start_screen_fragment.xml" value="0.215625" />
+        <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/layout/test_actions_fragment2.xml" value="0.371875" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/menu/analysis_competitors_list_screen_menu.xml" value="0.1" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/menu/anlysis_articles_list_screen_menu.xml" value="0.1" />
         <entry key="..\:/Program Files/Git/PriceCollector/app/src/main/res/menu/anlyzes_list_screen_menu.xml" value="0.1" />
@@ -55,5 +61,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.33" />
+      </ProjectState>
+    </option>
   </component>
 </project>

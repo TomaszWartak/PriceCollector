@@ -48,7 +48,7 @@ import com.dev4lazy.pricecollector.model.entities.UOProject;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoinForPricesUpload;
-import com.dev4lazy.pricecollector.view.ProgressPresenter;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.FunctionCall;
@@ -98,8 +98,8 @@ public class LocalDataRepository {
         analyzes.findDataById( id, result );
     }
 
-    public void insertAnalyzes ( ArrayList<Analysis> analyzesList, ProgressPresenter progressPresenter ) {
-        analyzes.insertDataList( analyzesList, progressPresenter );
+    public void insertAnalyzes ( ArrayList<Analysis> analyzesList, ProgressPresenter progressPresenter) {
+        analyzes.insertDataList( analyzesList, progressPresenter);
     }
 
     public void updateAnalysis( Analysis analysis, MutableLiveData<Integer> result ) {
@@ -166,15 +166,17 @@ public class LocalDataRepository {
         analysisArticles.insertData( analysisArticle, result );
     }
 
-    public void insertAnalysisArticles( ArrayList<AnalysisArticle> analysisArticlesList, ProgressPresenter progressPresenter ) {
-        analysisArticles.insertDataList( analysisArticlesList, progressPresenter );
+    public void insertAnalysisArticles(
+            ArrayList<AnalysisArticle> analysisArticlesList,
+            ProgressPresenter progressPresenter) {
+        analysisArticles.insertDataList( analysisArticlesList, progressPresenter);
     }
 
     public void insertAnalysisArticles(
             ArrayList<AnalysisArticle> analysisArticlesList,
             ProgressPresenter progressPresenter,
             MutableLiveData<Long> resultLD ) {
-        analysisArticles.insertDataList( analysisArticlesList, progressPresenter, resultLD );
+        analysisArticles.insertDataList( analysisArticlesList, resultLD, progressPresenter);
     }
 
     public void updateAnalysisArticle( AnalysisArticle analysisArticle, MutableLiveData<Integer> result ) {
@@ -219,11 +221,18 @@ public class LocalDataRepository {
     private final DataAccess<Article> articles = new DataAccess<>(articleDao);
 
     public void insertArticle( Article article, MutableLiveData<Long> result ) {
-        articles.insertData( article,result);
+        articles.insertData( article, result);
     }
 
     public void insertArticles( ArrayList<Article> articlesList, ProgressPresenter progressPresenter) {
-        articles.insertDataList( articlesList, progressPresenter );
+        articles.insertDataList( articlesList, progressPresenter);
+    }
+
+    public void insertArticles(
+            ArrayList<Article> articlesList,
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter) {
+        articles.insertDataList( articlesList, result, progressPresenter);
     }
 
     public void updateArticle( Article article, MutableLiveData<Integer> result ) {
@@ -278,8 +287,10 @@ public class LocalDataRepository {
         competitorPrices.insertData( competitorPrice, result );
     }
 
-    public void insertCompetitorPrices(ArrayList<CompetitorPrice> competitorPricesList, ProgressPresenter progressPresenter ) {
-        competitorPrices.insertDataList( competitorPricesList, progressPresenter );
+    public void insertCompetitorPrices(
+            ArrayList<CompetitorPrice> competitorPricesList,
+            ProgressPresenter progressPresenter) {
+        competitorPrices.insertDataList( competitorPricesList, progressPresenter);
     }
 
     public void updateCompetitorPrice( CompetitorPrice competitorPrice, MutableLiveData<Integer> result ) {
@@ -343,7 +354,7 @@ public class LocalDataRepository {
     }
 
     public void insertDepartments( List<Department> departmentsList, MutableLiveData<Long> result ) {
-        departments.insertDataList( departmentsList,null, result);
+        departments.insertDataList( departmentsList, result,null);
     }
 
     public void getAllDepartments( MutableLiveData<List<Department>> result ) {
@@ -389,14 +400,26 @@ public class LocalDataRepository {
         eanCodes.insertData( eanCode, result );
     }
 
-    public void insertEanCodes( ArrayList<EanCode> eanCodeList, ProgressPresenter progressPresenter) {
-        eanCodes.insertDataList( eanCodeList, progressPresenter );
+    public void insertEanCodes(
+            ArrayList<EanCode> eanCodeList,
+            ProgressPresenter progressPresenter) {
+        eanCodes.insertDataList( eanCodeList, progressPresenter);
+    }
+
+    public void insertEanCodes(
+            ArrayList<EanCode> eanCodeList,
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter) {
+        eanCodes.insertDataList( eanCodeList, result, progressPresenter);
     }
 
     public void deleteEanCode(EanCode eanCode, MutableLiveData<Integer> result ) {
         eanCodes.deleteData( eanCode, result );
     }
 
+    public void getAllEanCodes( MutableLiveData<List<EanCode>> result ) {
+        eanCodes.getAllData( result );
+    }
 
     //-----------------------------------------------------------------------
 // Family
@@ -407,8 +430,10 @@ public class LocalDataRepository {
         families.insertData( family, result );
     }
 
-    public void inserFamilies( ArrayList<Family> familiesList, ProgressPresenter progressPresenter ) {
-        families.insertDataList( familiesList, progressPresenter );
+    public void inserFamilies(
+            ArrayList<Family> familiesList,
+            ProgressPresenter progressPresenter) {
+        families.insertDataList( familiesList, progressPresenter);
     }
 
     public void updateFamily( Family family, MutableLiveData<Integer> result ) {
@@ -444,8 +469,10 @@ public class LocalDataRepository {
         markets.insertData( market, result );
     }
 
-    public void insertMarkets( ArrayList<Market> marketsList, ProgressPresenter progressPresenter ) {
-        markets.insertDataList( marketsList, progressPresenter );
+    public void insertMarkets(
+            ArrayList<Market> marketsList,
+            ProgressPresenter progressPresenter) {
+        markets.insertDataList( marketsList, progressPresenter);
     }
 
     public void updateMarket( Market market, MutableLiveData<Integer> result ) {
@@ -482,8 +509,10 @@ public class LocalDataRepository {
         modules.insertData( module, result );
     }
 
-    public void insertModules( ArrayList<Module> modulesList, ProgressPresenter progressPresenter ) {
-        modules.insertDataList( modulesList, progressPresenter );
+    public void insertModules(
+            ArrayList<Module> modulesList,
+            ProgressPresenter progressPresenter) {
+        modules.insertDataList( modulesList, progressPresenter);
     }
 
     public void updateModule( Module module, MutableLiveData<Integer> result ) {
@@ -517,7 +546,7 @@ public class LocalDataRepository {
             ArrayList<OwnArticleInfo> ownArticleInfoList,
             ProgressPresenter progressPresenter,
             MutableLiveData<Long> resultLD ) {
-        ownArticleInfos.insertDataList( ownArticleInfoList, progressPresenter, resultLD );
+        ownArticleInfos.insertDataList( ownArticleInfoList, resultLD, progressPresenter);
     }
 
     public void getAllOwnArticleInfos( MutableLiveData<List<OwnArticleInfo>> result ) {
@@ -574,7 +603,7 @@ public class LocalDataRepository {
     }
 
     public void insertSectors( List<Sector> sectorsList, MutableLiveData<Long> result ) {
-        sectors.insertDataList( sectorsList,null, result);
+        sectors.insertDataList( sectorsList, result,null);
     }
 
     public void getAllSectors( MutableLiveData<List<Sector>> result ) {
@@ -636,8 +665,10 @@ public class LocalDataRepository {
         uoProjects.insertData( uoProject, result );
     }
 
-    public void insertUOProjects( ArrayList<UOProject> uoProjectsList, ProgressPresenter progressPresenter ) {
-        uoProjects.insertDataList( uoProjectsList, progressPresenter );
+    public void insertUOProjects(
+            ArrayList<UOProject> uoProjectsList,
+            ProgressPresenter progressPresenter) {
+        uoProjects.insertDataList( uoProjectsList, progressPresenter);
     }
 
     public void updateUOProject( UOProject uoProject, MutableLiveData<Integer> result ) {

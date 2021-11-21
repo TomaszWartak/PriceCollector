@@ -9,10 +9,10 @@ import java.util.HashMap;
 public class CompetitorSlotFullData {
 
     private AnalysisCompetitorSlot slot;
-    private ArrayList<Store> competitorStores;
+    // TODO XXX private ArrayList<Store> competitorStores;
     private HashMap<Integer, Store> competitorStoresMap;
     private Store chosenStore;
-    private int state; //todo?
+    // TODO XXX private int state;
 
     CompetitorSlotFullData(AnalysisCompetitorSlot slot) {
         this.slot = slot;
@@ -30,20 +30,24 @@ public class CompetitorSlotFullData {
         return competitorStoresMap.get( storeId );
     }
 
+    public void replaceStore( Store store ) {
+        competitorStoresMap.replace( store.getId(), store);
+    }
+
     public void removeStore( Store store ) {
         competitorStoresMap.remove( store.getId() );
     }
 
-    // TODO XXX
+    /* TODO XXX
     public ArrayList<Store> getCompetitorStores1() {
         return competitorStores;
     }
-
-    // TODO XXX
+    */
+    /* TODO XXX
     public void setCompetitorStores1(ArrayList<Store> stores) {
         this.competitorStores = stores;
     }
-
+    */
 
     public HashMap<Integer, Store> getCompetitorStoresMap() {
         return competitorStoresMap;
@@ -65,6 +69,7 @@ public class CompetitorSlotFullData {
         setChosenStore( null );
     }
 
+    /* TODO XXX
     public int getState() {
         return state;
     }
@@ -72,5 +77,7 @@ public class CompetitorSlotFullData {
     public void setState(int state) {
         this.state = state;
     }
+
+     */
 
 }

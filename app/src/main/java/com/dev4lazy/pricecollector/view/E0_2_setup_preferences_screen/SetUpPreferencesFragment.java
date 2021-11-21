@@ -40,4 +40,5 @@ public class SetUpPreferencesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Navigation.findNavController(view).navigate(R.id.action_setUpPreferencesFragment_to_loginFragment);
     }
+
 }

@@ -212,7 +212,7 @@
         tools:layout="@layout/remote_analysis_row_fragment" />
     <!--dialog
         android:id="@+id/alertDialogFragment"
-        android:name="com.dev4lazy.pricecollector.view.AlertDialogFragment"
+        android:name="com.dev4lazy.pricecollector.view.utils.AlertDialogFragment"
         android:label="AlertDialogFragment"
         tools:layout="@layout/alert_dialog_fragment" /-->
     <fragment
@@ -258,7 +258,7 @@
     </fragment>
     <dialog
         android:id="@+id/alertDialogFragment2"
-        android:name="com.dev4lazy.pricecollector.view.AlertDialogFragment2"
+        android:name="com.dev4lazy.pricecollector.view.utils.AlertDialogFragment2"
         android:label="AlertDialogFragment2"
         tools:layout="@layout/alert_dialog_fragment2" />
     <fragment

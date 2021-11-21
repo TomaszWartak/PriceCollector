@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,34 +11,24 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:padding="@dimen/fields_padding"
-        android:paddingTop="16dp">
+        android:layout_marginTop="@dimen/half_margin"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:padding="0dp"
+        android:paddingTop="@dimen/double_padding">
 
         <!-- Sektor -->
-        <!--com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_articles_sector_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/sector">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_articles_sector_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:maxLines="1"/>
-
-        </com.google.android.material.textfield.TextInputLayout-->
-
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            style="@style/PC_ExposedDropdownMenuStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/sector">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/search_articles_sector_dropdown"
+                style="@style/PC_ExposedDropdownMenuStyle"
+                android:textAppearance="@style/PC_ExposedDropdownMenuTextAppearanceBody1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -48,36 +37,16 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Dział  -->
-        <!--com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_articles_department_text_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/department">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_articles_department_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:maxLines="1" />
-
-        </com.google.android.material.textfield.TextInputLayout-->
-
-        <!--TODO Spinner
-            Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" /-->
-
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            style="@style/PC_ExposedDropdownMenuStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/department">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/search_articles_department_dropdown"
+                style="@style/PC_ExposedDropdownMenuStyle"
+                android:textAppearance="@style/PC_ExposedDropdownMenuTextAppearanceBody1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -92,23 +61,18 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:orientation="horizontal"
-            android:padding="@dimen/fields_padding"
-            android:paddingTop="16dp">
+            android:gravity="end"
+            android:layout_marginBottom="@dimen/half_margin"
+            android:paddingTop="@dimen/padding">
 
             <Button
                 android:id="@+id/search_articles_by_structures_button_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="136dp"
-                android:layout_marginTop="8dp"
+                style="@style/PC_MaterialButtonStyle"
                 android:text="@string/caption_clear" />
 
             <Button
                 android:id="@+id/search_articles_by_structures_button_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="8dp"
+                style="@style/PC_MaterialButtonStyle"
                 android:text="@string/caption_search" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

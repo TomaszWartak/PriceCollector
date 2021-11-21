@@ -20,7 +20,7 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRow;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteEanCode;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.AppSettings;
-import com.dev4lazy.pricecollector.view.ProgressPresenter;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
@@ -30,7 +30,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.dev4lazy.pricecollector.view.ProgressPresenter.NO_PROGRESS_PRESENTER;
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DONT_HIDE_WHEN_FINISHED;
+import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.NO_PROGRESS_PRESENTER;
 
 /**
  * AnalysisDataDownloader
@@ -108,7 +109,7 @@ public class AnalysisDataDownloader {
         countAnalyzesNewerThenResult.observeForever( resultObserver );
         RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
         Date lastCheckAnalysisDate = AppSettings.getInstance().getLastAnalysisCreationDate();
-        remoteDataRepository.countAnalyzesNewerThen( lastCheckAnalysisDate, countAnalyzesNewerThenResult );
+        remoteDataRepository.countRemoteAnalyzesNewerThen( lastCheckAnalysisDate, countAnalyzesNewerThenResult );
     }
 
     public boolean isNewAnalysisReadyToDownlad() {
@@ -191,7 +192,7 @@ public class AnalysisDataDownloader {
         result.observeForever( resultObserver );
         RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
         Date dateTheLastAnalysisWasCreated = AppSettings.getInstance().getLastAnalysisCreationDate();
-        remoteDataRepository.findAnalyzesNewerThen( dateTheLastAnalysisWasCreated, result );
+        remoteDataRepository.findRemoteAnalyzesNewerThen( dateTheLastAnalysisWasCreated, result );
     }
 
     private void insertNewAnalyzes( ArrayList<Analysis> newAnalyzes ) {
@@ -273,7 +274,7 @@ public class AnalysisDataDownloader {
      * @param analysis
      * @param progressPresenter
      */
-    public void insertArticles( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    public void insertArticles( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter) {
         MutableLiveData<List<RemoteAnalysisRow>> result = new MutableLiveData<>();
         Observer<List<RemoteAnalysisRow>> resultObserver = new Observer<List<RemoteAnalysisRow>>() {
             @Override
@@ -290,11 +291,11 @@ public class AnalysisDataDownloader {
                     // todo?? ProgressBar progressBar = getView().findViewById(R.id.remote_2_local_progressBar);
                     // todo?? ProgressBarPresenter progressBarPresenter = new ProgressBarPresenter( progressBar, articlesList.size()  );
                     LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-                    if (progressPresenter!=null) {
-                        progressPresenter.reset(articlesList.size());
+                    if (progressPresenter !=null) {
+                        progressPresenter.reset( articlesList.size(), DONT_HIDE_WHEN_FINISHED );
                     }
-                    localDataRepository.insertArticles( articlesList, progressPresenter );
-                    createArticlesMap( analysis, finalResult, progressPresenter );
+                    localDataRepository.insertArticles( articlesList, progressPresenter);
+                    createArticlesMap( analysis, finalResult, progressPresenter);
                 }
             }
         };
@@ -319,7 +320,7 @@ public class AnalysisDataDownloader {
      * 3. Wywołanie insertEanCodes() w celu dopisania kodów kreskowych.
      * @param progressPresenter
      */
-    private void createArticlesMap( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    private void createArticlesMap( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter) {
         MutableLiveData<List<Article>> result = new MutableLiveData<>();
         Observer<List<Article>> resultObserver = new Observer<List<Article>>() {
             @Override
@@ -330,7 +331,7 @@ public class AnalysisDataDownloader {
                     for (Article article : articleList ) {
                         classScopeArticleMap.put( article.getRemote_id(), article );
                     }
-                    insertEanCodes( analysis, finalResult, articleList, progressPresenter );
+                    insertEanCodes( analysis, finalResult, articleList, progressPresenter);
                 }
             }
         };
@@ -347,35 +348,37 @@ public class AnalysisDataDownloader {
      * @param articleList
      * @param progressPresenter
      */
-    private void insertEanCodes( Analysis analysis, MutableLiveData<Boolean> finalResult, List<Article> articleList, ProgressPresenter progressPresenter ) {
+    private void insertEanCodes(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            List<Article> articleList,
+            ProgressPresenter progressPresenter) {
         MutableLiveData<List<RemoteEanCode>> result = new MutableLiveData<>();
         Observer<List<RemoteEanCode>> resultObserver = new Observer<List<RemoteEanCode>>() {
             @Override
             public void onChanged(List<RemoteEanCode> remoteEanCodesList) {
                 if ((remoteEanCodesList != null)&&(!remoteEanCodesList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
-                    ArrayList<EanCode> eanCodeList = convertToEanCodes( remoteEanCodesList, articleList, progressPresenter );
+                    ArrayList<EanCode> eanCodeList = convertToEanCodes( remoteEanCodesList, articleList );
                     // todo? ProgressBar progressBar = getView().findViewById(R.id.remote_2_local_progressBar);
                     // todo? ProgressBarPresenter progressBarPresenter = new ProgressBarPresenter( progressBar, eanCodeList.size()  );
                     LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
-                    if (progressPresenter!=null) {
-                        progressPresenter.reset(eanCodeList.size());
+                    if (progressPresenter !=null) {
+                        progressPresenter.reset( eanCodeList.size(), DONT_HIDE_WHEN_FINISHED );
                     }
-                    localDataRepository.insertEanCodes( eanCodeList, progressPresenter );
-                    createSectorsMap( analysis, finalResult, progressPresenter );
+                    localDataRepository.insertEanCodes( eanCodeList, progressPresenter);
+                    createSectorsMap( analysis, finalResult, progressPresenter);
                 }
             }
         };
         result.observeForever(resultObserver);
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllEanCodes(result);
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().getAllRemoteEanCodes(result);
 
     }
 
     private ArrayList<EanCode> convertToEanCodes(
             List<RemoteEanCode> remoteEanCodesList,
-            List<Article> articleList,
-            ProgressPresenter progressPresenter
-    ) {
+            List<Article> articleList ) {
         //HashMap<Integer, RemoteEanCode> remoteEanCodesHashMap =
         // remoteEanCodesList.stream().collect( Collectors.toMap(RemoteEanCode::getArticleId, Function.identity() ));
         //remoteEanCodesList.stream().collect( Collectors.toMap( RemoteEanCode::getArticleId, b->b ));
@@ -392,7 +395,10 @@ public class AnalysisDataDownloader {
         return converter.createEanCodesList( remoteEanCodesHashMap, articlesHashMap );
     }
 
-    private void createSectorsMap( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    private void createSectorsMap(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            ProgressPresenter progressPresenter) {
         MutableLiveData<List<Sector>> result = new MutableLiveData<>();
         Observer<List<Sector>> resultObserver = new Observer<List<Sector>>() {
             @Override
@@ -403,7 +409,7 @@ public class AnalysisDataDownloader {
                     for (Sector sector : sectorList ) {
                         classScopeSectorMap.put( sector.getName(), sector );
                     }
-                    createDepartmentsMap( analysis, finalResult, progressPresenter );
+                    createDepartmentsMap( analysis, finalResult, progressPresenter);
                 }
             }
         };
@@ -411,7 +417,10 @@ public class AnalysisDataDownloader {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllSectors(result);
     }
 
-    private void createDepartmentsMap( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    private void createDepartmentsMap(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            ProgressPresenter progressPresenter) {
         MutableLiveData<List<Department>> result = new MutableLiveData<>();
         Observer<List<Department>> resultObserver = new Observer<List<Department>>() {
             @Override
@@ -422,7 +431,7 @@ public class AnalysisDataDownloader {
                     for (Department department : departmentList ) {
                         classScopeDepartmentMap.put( department.getSymbol(), department );
                     }
-                    createDummyFamily( analysis, finalResult, progressPresenter );
+                    createDummyFamily( analysis, finalResult, progressPresenter);
                 }
             }
         };
@@ -430,7 +439,10 @@ public class AnalysisDataDownloader {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllDepartments(result);
     }
 
-    private void createDummyFamily( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    private void createDummyFamily(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            ProgressPresenter progressPresenter) {
         MutableLiveData<List<Family>> result = new MutableLiveData<>();
         Observer<List<Family>> resultObserver = new Observer<List<Family>>() {
             @Override
@@ -438,7 +450,7 @@ public class AnalysisDataDownloader {
                 if ((familiesList != null)&&(!familiesList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
                     classScopeDummyFamily = familiesList.get(0);
-                    createDummyMarket( analysis, finalResult, progressPresenter );
+                    createDummyMarket( analysis, finalResult, progressPresenter);
                 }
             }
         };
@@ -446,7 +458,10 @@ public class AnalysisDataDownloader {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllFamilies( result );
     }
 
-    private void createDummyMarket( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    private void createDummyMarket(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            ProgressPresenter progressPresenter) {
         MutableLiveData<List<Market>> result = new MutableLiveData<>();
         Observer<List<Market>> resultObserver = new Observer<List<Market>>() {
             @Override
@@ -454,7 +469,7 @@ public class AnalysisDataDownloader {
                 if ((marketsList != null)&&(!marketsList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
                     classScopeDummyMarket = marketsList.get(0);
-                    createDummyModule( analysis, finalResult, progressPresenter );
+                    createDummyModule( analysis, finalResult, progressPresenter);
                 }
             }
         };
@@ -462,7 +477,10 @@ public class AnalysisDataDownloader {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllMarkets( result );
     }
 
-    private void createDummyModule( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    private void createDummyModule(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            ProgressPresenter progressPresenter) {
         MutableLiveData<List<Module>> result = new MutableLiveData<>();
         Observer<List<Module>> resultObserver = new Observer<List<Module>>() {
             @Override
@@ -470,7 +488,7 @@ public class AnalysisDataDownloader {
                 if ((modulesList != null)&&(!modulesList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
                     classScopeDummyModule = modulesList.get(0);
-                    createDummyUOProject( analysis, finalResult, progressPresenter );
+                    createDummyUOProject( analysis, finalResult, progressPresenter);
                 }
             }
         };
@@ -478,7 +496,10 @@ public class AnalysisDataDownloader {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllModules( result );
     }
 
-    private void createDummyUOProject( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    private void createDummyUOProject(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            ProgressPresenter progressPresenter) {
         MutableLiveData<List<UOProject>> result = new MutableLiveData<>();
         Observer<List<UOProject>> resultObserver = new Observer<List<UOProject>>() {
             @Override
@@ -486,7 +507,7 @@ public class AnalysisDataDownloader {
                 if ((uoProjectsList != null)&&(!uoProjectsList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
                     classScopeDummyUOProject = uoProjectsList.get(0);
-                    insertOwnArticlesInfos( analysis, finalResult, progressPresenter );
+                    insertOwnArticlesInfos( analysis, finalResult, progressPresenter);
                 }
             }
         };
@@ -499,7 +520,10 @@ public class AnalysisDataDownloader {
      * @param analysis
      * @param progressPresenter
      */
-    private void insertOwnArticlesInfos( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    private void insertOwnArticlesInfos(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            ProgressPresenter progressPresenter) {
         Remote2LocalConverter converter = new Remote2LocalConverter();
         OwnArticleInfo ownArticleInfo;
         ArrayList<OwnArticleInfo> ownArticleInfoList = new ArrayList<>();
@@ -523,19 +547,22 @@ public class AnalysisDataDownloader {
             public void onChanged(Long lastAddedOwnArticleInfoId) {
                     insertResult.removeObserver(this); // this = observer...
                     if (lastAddedOwnArticleInfoId!=null) {
-                        createOwnArticleInfosMap( analysis, finalResult, progressPresenter );
+                        createOwnArticleInfosMap( analysis, finalResult, progressPresenter);
                     }
             }
         };
-        if (progressPresenter!=null) {
-            progressPresenter.reset(ownArticleInfoList.size());
+        if (progressPresenter !=null) {
+            progressPresenter.reset( ownArticleInfoList.size(), DONT_HIDE_WHEN_FINISHED );
         }
         insertResult.observeForever(insertingResultObserver);
         LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
         localDataRepository.insertOwnArticleInfos( ownArticleInfoList, progressPresenter, insertResult );
     }
 
-    private void createOwnArticleInfosMap( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    private void createOwnArticleInfosMap(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            ProgressPresenter progressPresenter) {
         MutableLiveData<List<OwnArticleInfo>> result = new MutableLiveData<>();
         Observer<List<OwnArticleInfo>> resultObserver = new Observer<List<OwnArticleInfo>>() {
             @Override
@@ -546,7 +573,7 @@ public class AnalysisDataDownloader {
                     for (OwnArticleInfo ownArticleInfo : ownArticleInfosList ) {
                         classScopeOwnArticleInfoMap.put( ownArticleInfo.getArticleId(), ownArticleInfo );
                     }
-                    insertAnalysisArticles( analysis, finalResult, progressPresenter );
+                    insertAnalysisArticles( analysis, finalResult, progressPresenter);
                 }
             }
         };
@@ -554,7 +581,10 @@ public class AnalysisDataDownloader {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllOwnArticleInfos(result);
     }
 
-    private void insertAnalysisArticles( Analysis analysis, MutableLiveData<Boolean> finalResult, ProgressPresenter progressPresenter ) {
+    private void insertAnalysisArticles(
+            Analysis analysis,
+            MutableLiveData<Boolean> finalResult,
+            ProgressPresenter progressPresenter) {
         Remote2LocalConverter converter = new Remote2LocalConverter();
         AnalysisArticle analysisArticle;
         ArrayList<AnalysisArticle> analysisArticlesList = new ArrayList<>();
@@ -582,8 +612,8 @@ public class AnalysisDataDownloader {
                 finalResult.postValue( true );
             }
         };
-        if (progressPresenter!=null) {
-            progressPresenter.reset( analysisArticlesList.size() );
+        if (progressPresenter !=null) {
+            progressPresenter.reset( analysisArticlesList.size(), DONT_HIDE_WHEN_FINISHED );
         }
         insertResult.observeForever( insertingResultObserver );
         localDataRepository.insertAnalysisArticles( analysisArticlesList, progressPresenter, insertResult );

@@ -1,6 +1,5 @@
 package com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,10 +7,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -23,14 +24,13 @@ import androidx.paging.PagedList;
 import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.model.logic.AnalysisArticleJoinSaver;
 import com.dev4lazy.pricecollector.model.logic.AnalysisArticleJoinValuesStateHolder;
+import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
         View view = inflater.inflate(R.layout.analysis_articles_list_fragment, container, false);
         viewModelsSetup();
         setOnBackPressedCallback();
-        setToolbarText();
+        // TODO XXX setToolbarText();
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
         return view;
@@ -97,7 +97,8 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
             if (analysisArticleJoinsListViewModel.getSearchArticlesCriteria().isFilterSet()) {
                 title = title + filtered;
             }
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
+            ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            toolbar.setTitle(title);
         }
 
         private void recyclerViewSetup( View view ) {
@@ -110,7 +111,8 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
                     = new ViewModelProvider( getActivity() ).get( AnalyzesListViewModel.class );
             analysisArticleJoinsListViewModel.buildAnalysisiArticleJoinsPagedList(
                     analyzesListViewModel.getChosenAnalysisId(),
-                    storeViewModel.getStore().getId() );
+                    storeViewModel.getStore().getId()
+            );
             analysisArticleJoinsListViewModel.getAnalysisArticleJoinsListLiveData().observe(
                     getViewLifecycleOwner(), new Observer<PagedList<AnalysisArticleJoin>>() {
                 @Override
@@ -174,6 +176,7 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
     @Override
     public void onStart() {
         super.onStart();
+        setToolbarText();
         navigationViewMenuSetup();
     }
 
@@ -207,7 +210,8 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
                                     Toast.LENGTH_SHORT).show();
                             }
                         case R.id.analysis_articles_list_screen_logout_menu_item:
-                            getLogoutQuestionDialog();
+                            new LogoutQuestionDialog( getContext(), getActivity() ).get();
+                            // TODO XXX getLogoutQuestionDialog();
                             break;
                     }
                     return false;
@@ -349,21 +353,24 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
                     valuesStateHolder
             ).startSavingDataChain( analysisArticleJoin );
         }
-        for (int joinIndex = 0; joinIndex<analysisArticleJoinList.size(); joinIndex++ ) {
-
-        }
+        analysisArticleJoinsRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
+    /* TODO XXX
             private void getLogoutQuestionDialog() {
-                new MaterialAlertDialogBuilder(getContext())/*, R.style.AlertDialogStyle) */
+                new MaterialAlertDialogBuilder(getContext()))
                         .setTitle("")
                         .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogOffListener() )
+                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogoutDialogListener( getActivity() ) )
                         .setNegativeButton(getActivity().getString(R.string.caption_no),null)
                         .show();
             }
 
-                private class LogOffListener implements DialogInterface.OnClickListener {
+     */
+
+
+            /* TODO XXX
+                private class LogoutDialogListener implements DialogInterface.OnClickListener {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -378,5 +385,6 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
                         System.exit(0);
                     }
 
+             */
 
 }

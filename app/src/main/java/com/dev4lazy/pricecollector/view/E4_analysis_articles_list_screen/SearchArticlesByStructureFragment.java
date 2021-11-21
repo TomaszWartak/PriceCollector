@@ -115,38 +115,8 @@ public class SearchArticlesByStructureFragment extends Fragment {
             }
 
     private void searchArticles( ) {
-        /* TODO XXX analysisArticleJoinsListViewModel =
-                new ViewModelProvider( getActivity() ).get( AnalysisArticleJoinsListViewModel.class );
-         AnalysisArticleJoinsListViewModel.SearchArticlesCriteria searchArticlesCriteria
-                = analysisArticleJoinsListViewModel.getSearchArticlesCriteria();
-         */
-        // TODO XXX  setSearchByStructureCriteria();
-        // TODO XXX searchArticlesCriteria.setFilterSet( searchArticlesCriteria.areCriteriaSet() );
         Navigation.findNavController( getView() ).navigate( R.id.action_searchArticlesFragment_to_analysisArticlesListFragment );
     }
-
-    private void setSearchByStructureCriteria() {
-        // TODO XXX setSectorCriterion();
-        // TODO XXX setDepartmentCriterion();
-    }
-
-    /* TODO XXX
-    private void setSectorCriterion() {
-        if (selectedSector==null) {
-            searchArticlesCriteria.setArticleSectorId( 0 );
-        } else {
-            searchArticlesCriteria.setArticleSectorId( selectedSector.getId() );
-        }
-    }
-
-    private void setDepartmentCriterion() {
-        if (selectedDepartment==null) {
-            searchArticlesCriteria.setArticleDepartmentId( 0 );
-        } else {
-            searchArticlesCriteria.setArticleDepartmentId( selectedDepartment.getId() );
-        }
-    }
-    */
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -166,6 +136,11 @@ public class SearchArticlesByStructureFragment extends Fragment {
             public void onChanged(List<Sector> sectorList) {
                 if ((sectorList != null)&&(!sectorList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
+                    for (Sector sector : sectorList ) {
+                        StringBuilder stringBuilder = new StringBuilder(sector.getName());
+                        stringBuilder.append( NONE.substring( 0, NONE.length()-stringBuilder.length() ) );
+                        sector.setName( stringBuilder.toString() );
+                    }
                     sectorList.add( 0, getDummySector() );
                     ArrayAdapter sectorAdapter = new ArrayAdapter( getContext(), R.layout.dropdown_item, sectorList );
                     articleSectorDropdown.setAdapter( sectorAdapter );
@@ -174,7 +149,6 @@ public class SearchArticlesByStructureFragment extends Fragment {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 searchArticlesCriteria.setSelectedSector( (Sector)sectorAdapter.getItem( position ) );
-                                // TODO XXX setSectorCriterion();
                                 setTabDataName();
                                 setToolbarText();
                             }
@@ -188,8 +162,12 @@ public class SearchArticlesByStructureFragment extends Fragment {
         AppHandle.getHandle().getRepository().getLocalDataRepository().getAllSectors(result);
     }
 
+    private final String NONE = "                                        ";
+
     private Sector getDummySector() {
-        return new Sector();
+        Sector sector = new Sector();
+        sector.setName( NONE );
+        return sector;
     }
 
     private void departmentDropdownSetup( View view ) {
@@ -199,6 +177,11 @@ public class SearchArticlesByStructureFragment extends Fragment {
             public void onChanged(List<Department> departmentList) {
                 if ((departmentList != null)&&(!departmentList.isEmpty())) {
                     result.removeObserver(this); // this = observer...
+                    for (Department department : departmentList) {
+                        StringBuilder stringBuilder = new StringBuilder(department.getName());
+                        stringBuilder.append( NONE.substring( 0, NONE.length()-stringBuilder.length() ) );
+                        department.setName( stringBuilder.toString() );
+                    }
                     departmentList.add( 0, getDummyDepartment() );
                     ArrayAdapter departmentAdapter = new ArrayAdapter( getContext(), R.layout.dropdown_item, departmentList );
                     articleDepartmentDropdown.setAdapter( departmentAdapter );
@@ -207,7 +190,6 @@ public class SearchArticlesByStructureFragment extends Fragment {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                     searchArticlesCriteria.setSelectedDepartment( (Department)departmentAdapter.getItem( position ) );
-                                    // TODO XXX setDepartmentCriterion();
                                     setTabDataName();
                                     setToolbarText();
                                 }
@@ -222,19 +204,9 @@ public class SearchArticlesByStructureFragment extends Fragment {
     }
 
     private Department getDummyDepartment() {
-        return new Department();
-    }
-
-    // TODO XXX
-    @Override
-    public void onPause() {
-        super.onPause();
-        // TODO XXX setSearchByStructureCriteria();
-        /*
-        setTabDataName();
-        setToolbarText();
-
-         */
+        Department department = new Department();
+        department.setName( NONE );
+        return department;
     }
 
         private void setTabDataName() {
@@ -248,10 +220,9 @@ public class SearchArticlesByStructureFragment extends Fragment {
         }
 
         private void setToolbarText() {
-            // TODO XXX String toolbarText = ((AppCompatActivity) getActivity()).getSupportActionBar().getTitle().toString();
             String toolbarText = storeViewModel.getStore().getName();
             int maxLength = toolbarText.length();
-            if (maxLength>24) {
+            if (maxLength>24) { // TODO hardcoded
                 maxLength=24;
             }
             toolbarText = toolbarText.substring(0,maxLength);
@@ -263,22 +234,18 @@ public class SearchArticlesByStructureFragment extends Fragment {
         }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        clearViewIfCriteriaAreNotSet( getView() );
-        /* TODO XXX
-        setTabDataName();
+    public void onStart() {
+        super.onStart();
         setToolbarText();
-
-         */
     }
 
-    private void clearViewIfCriteriaAreNotSet( View view ) {
-        /* TODO XXX analysisArticleJoinsListViewModel =
-                new ViewModelProvider( getActivity() ).get( AnalysisArticleJoinsListViewModel.class );
-         AnalysisArticleJoinsListViewModel.SearchArticlesCriteria searchArticlesCriteria =
-                analysisArticleJoinsListViewModel.getSearchArticlesCriteria();
-         */
+    @Override
+    public void onResume() {
+        super.onResume();
+        clearViewIfCriteriaAreNotSet( );
+    }
+
+    private void clearViewIfCriteriaAreNotSet( ) {
         if ( searchArticlesCriteria.isFilterNotSet() ) {
             clearDropdowns();
         }

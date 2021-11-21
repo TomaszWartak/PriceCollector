@@ -8,10 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
-import com.dev4lazy.pricecollector.model.db.AnalysisArticleJoinDao;
-import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
-import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoinForPricesUpload;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysis;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteAnalysisDao;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysisRow;
@@ -34,7 +30,7 @@ import com.dev4lazy.pricecollector.remote_model.db.RemoteUOProjectDao;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteUserDao;
 import com.dev4lazy.pricecollector.AppHandle;
-import com.dev4lazy.pricecollector.view.ProgressPresenter;
+import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.FunctionCall;
@@ -123,7 +119,7 @@ public class RemoteDataRepository {
         return remoteAnalysisRowDao.getNumberOfLiveData();
     }
 
-    public void askAnalysisRowsCount() {
+    public void askRemoteAnalysisRowsCount() {
         getRowsCount();
     }
 
@@ -131,34 +127,41 @@ public class RemoteDataRepository {
         new GetRowsCountAsyncTask( remoteAnalysisRowDao ).execute();
     }
 
-    public LiveData<List<RemoteAnalysisRow>> loadAnalysisRow(final int analysisRowId) {
+    public LiveData<List<RemoteAnalysisRow>> loadRemoteAnalysisRow(final int analysisRowId) {
         return remoteAnalysisRowDao.findByIdLiveData(analysisRowId);
     }
 
 //-----------------------------------------------------------------------------------
 // insertAnalysisRow
-    public void insertAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
+    public void insertRemoteAnalysisRow(RemoteAnalysisRow remoteAnalysisRow) {
         // RemoteAnalysisRowDao.insert(remoteAnalysisRow);
         insert(remoteAnalysisRow);
+    }
+
+    public void insertRemoteAnalysisRows(
+        List<RemoteAnalysisRow> remoteAnalysisRows,
+        MutableLiveData<Long> result,
+        ProgressPresenter progressPresenter ) {
+        analysisRows.insertDataList( remoteAnalysisRows, result, progressPresenter );
     }
 
     private void insert(RemoteAnalysisRow remoteAnalysisRow) {
         new InsertRowAsyncTask(remoteAnalysisRowDao).execute(remoteAnalysisRow);
     }
 
-    public void updateAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
+    public void updateRemoteAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
         remoteAnalysisRowDao.update(remoteAnalysisRow);
     }
 
-    public void updateAnalysisRow( RemoteAnalysisRow remoteAnalysisRow, MutableLiveData<Integer> result ) {
+    public void updateRemoteAnalysisRow(RemoteAnalysisRow remoteAnalysisRow, MutableLiveData<Integer> result ) {
         analysisRows.updateData( remoteAnalysisRow, result );
     }
 
-    public void deleteAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
+    public void deleteRemoteAnalysisRow( RemoteAnalysisRow remoteAnalysisRow) {
         remoteAnalysisRowDao.delete(remoteAnalysisRow);
     }
 
-    public void deleteAllAnalysisRows() {
+    public void deleteAllRemoteAnalysisRows() {
         remoteAnalysisRowDao.deleteAll();
     }
 
@@ -166,11 +169,11 @@ public class RemoteDataRepository {
         return mObservableAnalysisRows;
     }
 
-    public void getAllAnalysisRows( MutableLiveData<List<RemoteAnalysisRow>> result ) {
+    public void getAllRemoteAnalysisRows( MutableLiveData<List<RemoteAnalysisRow>> result ) {
         analysisRows.getAllData( result );
     }
 
-    public LiveData<List<RemoteAnalysisRow>> loadAnalysisRows(String queryString) {
+    public LiveData<List<RemoteAnalysisRow>> loadRemoteAnalysisRows(String queryString) {
         if ((queryString !=null) && (!queryString.isEmpty())) {
             return remoteAnalysisRowDao.getViaQueryLiveData(new SimpleSQLiteQuery(queryString));
         }
@@ -182,11 +185,11 @@ public class RemoteDataRepository {
     }
 
 //-----------------------------------------------------------------------------------
-    public void insertAnalysis( RemoteAnalysis remoteAnalysis, MutableLiveData<Long> result ) {
+    public void insertRemoteAnalysis(RemoteAnalysis remoteAnalysis, MutableLiveData<Long> result ) {
         analyzes.insertData( remoteAnalysis, result );
     }
 
-    public void deleteAllAnalyzes(MutableLiveData<Integer> result) {
+    public void deleteAllRemoteAnalyzes(MutableLiveData<Integer> result) {
         analyzes.deleteAllData(result);
     }
 
@@ -201,7 +204,7 @@ public class RemoteDataRepository {
      */
 //-----------------------------------------------------------------------------------
 
-    public void countAnalyzesNewerThen( Date lastCheckDate, MutableLiveData<Integer> result ) {
+    public void countRemoteAnalyzesNewerThen(Date lastCheckDate, MutableLiveData<Integer> result ) {
         List<Object> queryArguments = new ArrayList<>();
         queryArguments.add( lastCheckDate.getTime() );
         String queryStr = new SelectQuery()
@@ -215,7 +218,7 @@ public class RemoteDataRepository {
         analyzes.getNumberOfData( query, result);
     }
 
-    public void findAnalyzesNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result ) {
+    public void findRemoteAnalyzesNewerThen(Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result ) {
         List<Object> queryArguments = new ArrayList<>();
         queryArguments.add( lastCheckDate.getTime() );
         SimpleSQLiteQuery query = new SimpleSQLiteQuery("SELECT * FROM analyzes WHERE creation_date > ?"  /**/, queryArguments.toArray() /**/ );
@@ -225,15 +228,22 @@ public class RemoteDataRepository {
 //-----------------------------------------------------------------------------------
 
     //-----------------------------------------------------------------------------------
-    public void insertUser( RemoteUser remoteUser, MutableLiveData<Long> result) {
+    public void insertRemoteUser(RemoteUser remoteUser, MutableLiveData<Long> result) {
         users.insertData( remoteUser, result);
+    }
+
+    public void insertRemoteUsers(
+            List<RemoteUser> remoteUsersList,
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter ) {
+        users.insertDataList( remoteUsersList, result, progressPresenter );
     }
 
     public void deleteAllUsers(MutableLiveData<Integer> result) {
         users.deleteAllData(result);
     }
 
-    public void findUserByLogin( String login, MutableLiveData<List<RemoteUser>> result) {
+    public void findRemoteUserByLogin(String login, MutableLiveData<List<RemoteUser>> result) {
         users.getViaQuery( "SELECT * from users WHERE login='"+login+"'", result);
     }
 
@@ -242,24 +252,37 @@ public class RemoteDataRepository {
         departments.insertData( remoteDepartment, result);
     }
 
+    public void insertRemoteDepartments(
+            List<RemoteDepartment> remoteDepartmentList,
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter ) {
+        departments.insertDataList( remoteDepartmentList, result, progressPresenter );
+    }
 
-    public void getAllDepartments( MutableLiveData<List<RemoteDepartment>> result ) {
+    public void getAllRemoteDepartments(MutableLiveData<List<RemoteDepartment>> result ) {
         departments.getAllData( result );
     }
 
-    public void deleteAllDepartments(MutableLiveData<Integer> result) {
+    public void deleteRemoteAllDepartments(MutableLiveData<Integer> result) {
         departments.deleteAllData(result);
     }
 
 //-----------------------------------------------------------------------------------
-    public void insertSector( RemoteSector remoteSector, MutableLiveData<Long> result) {
+    public void insertRemoteSector(RemoteSector remoteSector, MutableLiveData<Long> result) {
         sectors.insertData( remoteSector, result);
     }
 
-    public void getAllSectors( MutableLiveData<List<RemoteSector>> result ) {
+    public void insertRemoteSectors(
+            List<RemoteSector> remoteSectorsList,
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter ) {
+        sectors.insertDataList(remoteSectorsList, result, progressPresenter );
+    }
+
+    public void getAllRemoteSectors(MutableLiveData<List<RemoteSector>> result ) {
         sectors.getAllData( result );
     }
-    public void deleteAllSectors(MutableLiveData<Integer> result) {
+    public void deleteAllRemoteSectors(MutableLiveData<Integer> result) {
         sectors.deleteAllData(result);
     }
 
@@ -274,8 +297,18 @@ public class RemoteDataRepository {
     public void insertRemoteFamily( RemoteFamily remoteFamily, MutableLiveData<Long> result ) {
         remoteFamilies.insertData( remoteFamily, result );
     }
-    public void insertRemoteFamilies( ArrayList<RemoteFamily> remoteFamiliesList, ProgressPresenter progressPresenter ) {
-        remoteFamilies.insertDataList( remoteFamiliesList, progressPresenter );
+
+    public void insertRemoteFamilies(
+            ArrayList<RemoteFamily> remoteFamiliesList,
+            ProgressPresenter progressPresenter) {
+        remoteFamilies.insertDataList( remoteFamiliesList, progressPresenter);
+    }
+
+    public void insertRemoteFamilies(
+            List<RemoteFamily> remoteFamiliesList,
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter) {
+        remoteFamilies.insertDataList( remoteFamiliesList, result, progressPresenter);
     }
 
     public void updateRemoteFamily( RemoteFamily remoteFamily, MutableLiveData<Integer> result ) {
@@ -308,8 +341,17 @@ public class RemoteDataRepository {
         remoteMarkets.insertData( remoteMarket, result );
     }
 
-    public void insertRemoteMarkets( ArrayList<RemoteMarket> remoteMarketsList, ProgressPresenter progressPresenter ) {
-        remoteMarkets.insertDataList( remoteMarketsList, progressPresenter );
+    public void insertRemoteMarkets(
+            ArrayList<RemoteMarket> remoteMarketsList,
+            ProgressPresenter progressPresenter) {
+        remoteMarkets.insertDataList( remoteMarketsList, progressPresenter);
+    }
+
+    public void insertRemoteMarkets(
+            List<RemoteMarket> remoteMarketsList,
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter) {
+        remoteMarkets.insertDataList( remoteMarketsList, result, progressPresenter);
     }
 
     public void updateRemoteMarket( RemoteMarket remoteMarket, MutableLiveData<Integer> result ) {
@@ -342,8 +384,17 @@ public class RemoteDataRepository {
         remoteModules.insertData( remoteModule, result );
     }
 
-    public void insertRemoteModules( ArrayList<RemoteModule> remoteModulesList, ProgressPresenter progressPresenter ) {
-        remoteModules.insertDataList( remoteModulesList, progressPresenter );
+    public void insertRemoteModules(
+            ArrayList<RemoteModule> remoteModulesList,
+            ProgressPresenter progressPresenter) {
+        remoteModules.insertDataList( remoteModulesList, progressPresenter);
+    }
+
+    public void insertRemoteModules(
+            List<RemoteModule> remoteModulesList,
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter) {
+        remoteModules.insertDataList( remoteModulesList, result, progressPresenter);
     }
 
     public void updateRemoteModule( RemoteModule remoteModule, MutableLiveData<Integer> result ) {
@@ -376,8 +427,18 @@ public class RemoteDataRepository {
         remoteUOProjects.insertData( remoteUOProject, result );
     }
 
-    public void insertRemoteUOProjects( ArrayList<RemoteUOProject> remoteUOProjectsList, ProgressPresenter progressPresenter ) {
-        remoteUOProjects.insertDataList( remoteUOProjectsList, progressPresenter );
+
+    public void insertRemoteUOProjects(
+            List<RemoteUOProject> remoteUOProjectsList,
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter ) {
+        remoteUOProjects.insertDataList( remoteUOProjectsList, result, progressPresenter );
+    }
+
+    public void insertRemoteUOProjects(
+            ArrayList<RemoteUOProject> remoteUOProjectsList,
+            ProgressPresenter progressPresenter) {
+        remoteUOProjects.insertDataList( remoteUOProjectsList, progressPresenter);
     }
 
     public void updateRemoteUOProject( RemoteUOProject remoteUOProject, MutableLiveData<Integer> result ) {
@@ -401,19 +462,27 @@ public class RemoteDataRepository {
     }
 
     //-----------------------------------------------------------------------------------
-    public void askEanCodesNumberOf(MutableLiveData<Integer> result ) {
+    public void askRemoteEanCodesNumberOf(MutableLiveData<Integer> result ) {
         eanCodes.getNumberOfData(result);
     }
 
-    public void insertEanCode( RemoteEanCode eanCode ) {
+    public void insertRemoteEanCode(RemoteEanCode eanCode ) {
         eanCodes.insertData( eanCode, null );
     }
 
-    public void insertEanCode( RemoteEanCode eanCode, MutableLiveData<Long> result) {
+    public void insertRemoteEanCode(RemoteEanCode eanCode, MutableLiveData<Long> result) {
         eanCodes.insertData( eanCode, result);
     }
 
-    public void getAllEanCodes( MutableLiveData<List<RemoteEanCode>> result ) {
+
+    public void insertRemoteEanCodes(
+            List<RemoteEanCode> remoteEanCodes,
+            MutableLiveData<Long> result,
+            ProgressPresenter progressPresenter ) {
+        eanCodes.insertDataList( remoteEanCodes, result, progressPresenter );
+    }
+
+    public void getAllRemoteEanCodes(MutableLiveData<List<RemoteEanCode>> result ) {
         eanCodes.getAllData( result );
     }
 

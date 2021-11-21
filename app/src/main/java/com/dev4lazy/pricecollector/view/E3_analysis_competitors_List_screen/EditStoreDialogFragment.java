@@ -29,10 +29,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class EditStoreDialogFragment extends DialogFragment {
 
     private String validationMessage = "";
@@ -54,35 +50,10 @@ public class EditStoreDialogFragment extends DialogFragment {
 
         StoreViewModel storeViewModel = new ViewModelProvider(getActivity()).get(StoreViewModel.class);
         Store store = storeViewModel.getStore();
-        String dialogTitle = "";
-        switch (storeViewModel.getActionToDo()) {
-            case ADD: {
-                dialogTitle = getString(R.string.add_competitor_store);
-                break;
-            }
-            case MODIFY: {
-                dialogTitle = getString(R.string.edit_competitor_store);
-                storeNameEditText.setText( store.getName() );
-                streetEditText.setText( store.getStreet() );
-                cityEditText.setText( store.getCity() );
-                zipcodeEditText.setText( store.getZipCode() );
-                break;
-            }
-            case DELETE: {
-                dialogTitle = getString(R.string.delete_competitor_store);
-                storeNameEditText.setEnabled(false);
-                storeNameEditText.setText( store.getName() );
-                streetEditText.setEnabled(false);
-                streetEditText.setText( store.getStreet() );
-                cityEditText.setEnabled(false);
-                cityEditText.setText( store.getCity() );
-                zipcodeEditText.setEnabled(false);
-                zipcodeEditText.setText( store.getZipCode() );
-                break;
-            }
-            default:
-        }
-
+        storeNameEditText.setText( store.getName() );
+        streetEditText.setText( store.getStreet() );
+        cityEditText.setText( store.getCity() );
+        zipcodeEditText.setText( store.getZipCode() );
         MutableLiveData<List<Company>> result = new MutableLiveData<>();
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
@@ -96,7 +67,7 @@ public class EditStoreDialogFragment extends DialogFragment {
         };
         result.observeForever(resultObserver);
         AppHandle.getHandle().getRepository().getLocalDataRepository().findCompanyById(store.getCompanyId(),result);
-
+        String dialogTitle = getString(R.string.edit_competitor_store);
         return getEditStoreDialog(
                 viewInflated,
                 storeViewModel,
@@ -118,12 +89,14 @@ public class EditStoreDialogFragment extends DialogFragment {
             EditText streetEditText,
             EditText cityEditText,
             EditText zipcodeEditText) {
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(getContext())
-                .setTitle(dialogTitle)
-                .setView(viewInflated) // jeśli dialog ma mieć niestandarodowy widok
-                .setPositiveButton(R.string.caption_ok, new DialogInterface.OnClickListener() {
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(
+                    getContext(),
+                    R.style.PC_AlertDialogStyle_Overlay )
+                .setTitle( dialogTitle.toUpperCase() )
+                .setView( viewInflated ) // jeśli dialog ma mieć niestandarodowy widok
+                .setPositiveButton( R.string.caption_ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick( DialogInterface dialog, int which ) {
                         // onClick zostaje pusta ze względu na walidację (zob. niżej onShow() )
                     }
                 })
@@ -142,7 +115,6 @@ public class EditStoreDialogFragment extends DialogFragment {
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO Do something
                         store.setName( storeNameEditText.getText().toString() );
                         store.setStreet( streetEditText.getText().toString() );
                         store.setCity( cityEditText.getText().toString() );
@@ -157,7 +129,6 @@ public class EditStoreDialogFragment extends DialogFragment {
                                 validationMessage,
                                 Toast.LENGTH_LONG).show();
                         }
-
                     }
                 });
             }

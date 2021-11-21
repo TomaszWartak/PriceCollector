@@ -31,11 +31,11 @@ public interface AnalysisDao extends _Dao<Analysis> {
     List<Analysis> getAll();
 
     @Override
-    @Query("SELECT * FROM analyzes  ORDER BY id ASC" )
+    @Query("SELECT * FROM analyzes  ORDER BY id DESC" )
     LiveData<List<Analysis>> getAllLiveData();
 
     @Override
-    @Query("SELECT * FROM analyzes  ORDER BY id ASC" )
+    @Query("SELECT * FROM analyzes  ORDER BY creation_date DESC" )
     DataSource.Factory<Integer, Analysis> getAllPaged();
 
     @Override

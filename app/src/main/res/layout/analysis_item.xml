@@ -5,12 +5,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/card_view_margin_left"
-        android:layout_marginTop="@dimen/card_view_margin_top"
-        android:layout_marginEnd="@dimen/card_view_margin_right"
-        android:layout_marginBottom="@dimen/card_view_margin_bottom"
+        style="@style/PC_MaterialCardViewStyle"
         card_view:cardCornerRadius="@dimen/card_view_corner_radius"
         card_view:cardElevation="@dimen/card_view_elevation">
 
@@ -34,93 +29,151 @@
                 android:id="@+id/analysis_item__header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
+                android:textColor="?colorOnSurface"
                 android:textStyle="bold"
-                android:textSize="@dimen/head_font_size"
+                android:textSize="@dimen/head5_font_size"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
                 card_view:layout_constraintTop_toTopOf="parent" />
 
             <!-- data utworzenia -->
-            <TextView
-                android:id="@+id/analysis_item__label_creation_date"
+            <LinearLayout
+                android:id="@+id/layout_creation_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_analysis_creation_date"
+                android:orientation="horizontal"
+                android:gravity="left|bottom"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__header" />
+                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__header">
 
-            <TextView
-                android:id="@+id/analysis_item__creation_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_creation_date"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__header" />
+                <TextView
+                    android:id="@+id/analysis_item__label_creation_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="@string/label_analysis_creation_date"
+                    android:textSize="@dimen/medium_large_font_size"
+                    android:maxLines="8"
+                    />
+                <!-- TODO XXX
+                    android:textSize="@dimen/medium_large_font_size"
+                    card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
+                    card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__header"
+                    -->
+
+                <TextView
+                    android:id="@+id/analysis_item__creation_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:textSize="@dimen/medium_large_font_size"
+                    android:textColor="?colorPrimary"
+                    android:maxLines="8"
+                     />
+                <!-- TODO XXX
+                    android:textSize="@dimen/medium_large_font_size"
+                    card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_creation_date"
+                    card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__header"
+                -->
+
+            </LinearLayout>
 
             <!-- planowana data wykonania -->
-            <TextView
-                android:id="@+id/analysis_item__label_due_date"
+            <LinearLayout
+                android:id="@+id/layout_due_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_analysis_due_date"
+                android:orientation="horizontal"
+                android:gravity="left|bottom"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_creation_date" />
+                card_view:layout_constraintTop_toBottomOf="@+id/layout_creation_date">
 
-            <TextView
-                android:id="@+id/analysis_Item__due_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_due_date"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__creation_date" />
+                <TextView
+                    android:id="@+id/analysis_item__label_due_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:maxLines="8"
+                    android:text="@string/label_analysis_due_date"
+                    android:textSize="@dimen/medium_large_font_size"
+                    />
+
+                <!-- TODO XXX
+                android:textSize="@dimen/medium_large_font_size"
+                card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
+                    card_view:layout_constraintTop_toBottomOf="@+id/layout_creation_date"
+                -->
+
+                <TextView
+                    android:id="@+id/analysis_Item__due_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:textSize="@dimen/medium_large_font_size"
+                    android:maxLines="8"
+                    android:textColor="?colorPrimary" />
+
+                <!-- TODO XXX
+                 android:textSize="@dimen/medium_large_font_size"
+                    card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_due_date"
+                    card_view:layout_constraintTop_toBottomOf="@+id/layout_creation_date"
+                    -->
+
+            </LinearLayout>
 
             <!-- data wykonania -->
-            <TextView
-                android:id="@+id/analysis_item__label_finish_date"
+            <LinearLayout
+                android:id="@+id/layout_finish_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_analysis_last_sent_date"
+                android:orientation="horizontal"
+                android:gravity="left|bottom"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_due_date" />
+                card_view:layout_constraintTop_toBottomOf="@+id/layout_due_date">
 
-            <TextView
-                android:id="@+id/analysis_item__finish_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_finish_date"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_Item__due_date" />
+                <TextView
+                    android:id="@+id/analysis_item__label_finish_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="@string/label_analysis_last_sent_date"
+                    android:textSize="@dimen/medium_large_font_size"
+                    android:maxLines="8" />
+
+                <!-- TODO XXX
+                android:textSize="@dimen/medium_large_font_size"
+                   -->
+
+                <TextView
+                    android:id="@+id/analysis_item__finish_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:textSize="@dimen/medium_large_font_size"
+                    android:textColor="?colorPrimary"
+                    android:maxLines="8" />
+
+                <!-- TODO XXX
+                android:textSize="@dimen/medium_large_font_size"
+                -->
+
+            </LinearLayout>
 
             <!-- data potwierdzenia
-            <TextView
-                android:id="@+id/analysis_item__label_confirmation_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_analysis_confirmation_date"
-                card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_finish_date" />
+             <TextView
+                 android:id="@+id/analysis_item__label_confirmation_date"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="@string/label_analysis_confirmation_date"
+                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
+                 card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_finish_date" />
 
-            <TextView
-                android:id="@+id/analysis_item__confirmation_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorValue"
-                card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_confirmation_date"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__finish_date" /-->
-
-            <ProgressBar
-                android:id="@+id/analysis_item__progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminate="false"
-                android:max="100"
-                android:minWidth="200dp"
-                android:minHeight="50dp"
-                android:progress="1"
-                android:visibility="gone"
-                card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_finish_date" />
+             <TextView
+                 android:id="@+id/analysis_item__confirmation_date"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:textColor="@color/colorValue"
+                 card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_confirmation_date"
+                 card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__finish_date" /-->
 
             <TextView
                 android:id="@+id/analysis_item__data_to_download"
@@ -128,22 +181,35 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:text="@string/articles_data_ready_to_download"
-                android:textColor="@color/colorWarning"
+                android:textSize="@dimen/medium_large_font_size"
+                android:textColor="?colorWarning"
                 card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
-                card_view:layout_constraintStart_toEndOf="@+id/analysis_item__label_finish_date"
-                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__label_finish_date" />
+                card_view:layout_constraintStart_toEndOf="@+id/layout_finish_date"
+                card_view:layout_constraintTop_toBottomOf="@+id/layout_finish_date" />
 
-            <!-- todo com.google.android.material.button.MaterialButton
-                android:id="@+id/button_analysis_articles_create"
-                style="@style/Widget.MaterialComponents.Button"
+            <ProgressBar
+                android:id="@+id/analysis_item__progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="20dp"
+                android:visibility="gone"
+                android:max="100"
+                android:progress="1"
+                android:indeterminate="false"
+                android:progressTint="?colorPrimary"
+                card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
+                card_view:layout_constraintTop_toBottomOf="@+id/layout_finish_date" />
+
+            <TextView
+                android:id="@+id/analysis_item__progress_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="4dp"
-                android:backgroundTint="@color/colorWarning"
-                android:text="Pobierz Artykuły"
-                card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent" /-->
+                android:visibility="gone"
+                android:textColor="?colorPrimary"
+                android:textSize="@dimen/medium_large_font_size"
+                card_view:layout_constraintStart_toStartOf="@+id/guideline_analysis_item"
+                card_view:layout_constraintTop_toBottomOf="@+id/analysis_item__progressBar" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -179,18 +179,6 @@ public class SearchArticlesByDataFragment extends Fragment {
                 searchArticlesCriteria.setArticleAnyText( articleAnyTextEditText.getText().toString() );
             }
 
-    // TODO XXX
-    @Override
-    public void onPause() {
-        super.onPause();
-        /*
-        setSearchByDataCriteria();
-        setTabDataName();
-        setToolbarText();
-
-         */
-    }
-
         private void setTabDataName() {
             // TODO niestety getView daje bieżący fragment a potrzebujemy SearchArtriclesFragment
             TabLayout tabLayout = getParentFragment().getView().findViewById(R.id.search_articles_tabs);
@@ -203,13 +191,14 @@ public class SearchArticlesByDataFragment extends Fragment {
         }
 
         private void setToolbarText() {
-            // TODO XXX String toolbarText = ((AppCompatActivity) getActivity()).getSupportActionBar().getTitle().toString();
             String toolbarText = storeViewModel.getStore().getName();
+            /* TODO XXX
             int maxLength = toolbarText.length();
             if (maxLength>24) {
                 maxLength=24;
             }
             toolbarText = toolbarText.substring(0,maxLength);
+             */
             String filtered = " *";
             if (searchArticlesCriteria.isFilterSet()) {
                 toolbarText = toolbarText + filtered;
@@ -218,17 +207,18 @@ public class SearchArticlesByDataFragment extends Fragment {
         }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        clearViewIfCriteriaAreNotSet( getView() );
-        /*  TODO XXX
-        setTabDataName();
+    public void onStart() {
+        super.onStart();
         setToolbarText();
-
-         */
     }
 
-    private void clearViewIfCriteriaAreNotSet( View view ) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        clearViewIfCriteriaAreNotSet( );
+    }
+
+    private void clearViewIfCriteriaAreNotSet( ) {
         if ( searchArticlesCriteria.isFilterNotSet() ) {
             clearEditTexts();
         }

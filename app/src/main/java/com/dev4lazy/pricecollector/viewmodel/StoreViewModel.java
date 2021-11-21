@@ -13,7 +13,7 @@ public class StoreViewModel extends AndroidViewModel {
     private boolean onChangedReactionAllowed;
     private Store temporary;
     private MutableLiveData<Store> selected = new MutableLiveData<>();
-    private Action actionToDo;
+    // TODO XXX private Action actionToDo;
 
     public StoreViewModel(Application application) {
         super(application);
@@ -66,6 +66,7 @@ public class StoreViewModel extends AndroidViewModel {
         selected = new MutableLiveData<>();
     }
 
+    /* TODO XXX
     public Action getActionToDo() {
         return actionToDo;
     }
@@ -73,4 +74,5 @@ public class StoreViewModel extends AndroidViewModel {
     public void setActionToDo(Action actionToDo) {
         this.actionToDo = actionToDo;
     }
+     */
 }

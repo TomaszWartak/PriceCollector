@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/card_view_margin_left"
+        android:layout_marginTop="@dimen/card_view_margin_top"
+        android:layout_marginEnd="@dimen/card_view_margin_right"
+        android:layout_marginBottom="@dimen/card_view_margin_bottom"
+        card_view:cardCornerRadius="@dimen/card_view_corner_radius"
+        card_view:cardElevation="@dimen/card_view_elevation" >
+
+        <!-- TODO
+        android:minHeight="@dimen/analysis_competitor_slot_height"
+        -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/analysisCompetitorSlot_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?colorSurface" >
+
+            <!-- Dummy tło nazwy konkurenta -->
+            <TextView
+                android:id="@+id/dummy_bkg_competitor_company_name"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintHeight_min="@dimen/analysis_competitor_slot_height"
+                android:background="?colorPrimaryLight"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintEnd_toStartOf="@+id/dummy_layout_competitor_store_name"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintBottom_toBottomOf="parent" />
+
+            <!-- nazwa konkurenta -->
+            <TextView
+                android:id="@+id/competitor_company_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/double_padding"
+                android:paddingEnd="@dimen/double_padding"
+                android:textSize="@dimen/medium_large_font_size"
+                android:textColor="?colorOnPrimary"
+                android:background="?colorPrimaryLight"
+                android:maxLines="8"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintEnd_toStartOf="@+id/dummy_layout_competitor_store_name"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintBottom_toBottomOf="parent" />
+
+            <!-- TODO XXX powyżej masz tekst hardcoded -->
+            <!-- TODO XXX
+            android:text="Konkurent lokalny"
+            android:textSize="@dimen/medium_large_font_size"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:textColor="?colorOnPrimary"
+            android:layout_height="@dimen/analysis_competitor_slot_height"
+            android:textSize="@dimen/medium_large_font_size"
+            -->
+
+            <LinearLayout
+                android:id="@+id/dummy_layout_competitor_store_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="left|center_vertical"
+                android:background="?colorSurface"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintStart_toEndOf="@+id/competitor_company_name"
+                card_view:layout_constraintEnd_toStartOf="@+id/competitor_slot_menu" >
+
+                <!-- Sklep konkurenta -->
+                <TextView
+                    android:id="@+id/competitor_store_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?colorSurface"
+                    android:maxLines="8"
+                    android:paddingStart="@dimen/padding"
+                    android:paddingEnd="@dimen/padding"
+                    android:textSize="@dimen/medium_large_font_size" />
+
+                <!-- TODO XXX powyżej masz tekst hardcoded -->
+
+                <!-- TODO XXX
+                android:text="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                android:gravity="left"
+                android:ellipsize="none"
+                android:scrollHorizontally="true"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="16sp"
+                app:autoSizeMaxTextSize="16sp"
+                app:autoSizeStepGranularity="2sp"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                -->
+
+            </LinearLayout>
+
+            <!-- menu ... -->
+            <TextView
+                android:id="@+id/competitor_slot_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/analysis_competitor_slot_minwidth"
+                android:minHeight="@dimen/analysis_competitor_slot_height"
+                android:gravity="center"
+                android:text="@string/threedots_vertical"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textSize="@dimen/three_dots_menu_font_size"
+                android:background="?colorSurface"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>
