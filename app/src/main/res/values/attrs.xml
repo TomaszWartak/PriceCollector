@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="colorPrimaryLight" format="color" />
-    <attr name="colorWarning" format="color" />
-    <attr name="mainViewsColorSurface" format="color" />
     <attr name="colorSecondaryLight" format="color" />
+    <attr name="colorOnPrimaryLight" format="color" />
+    <attr name="mainViewsColorSurface" format="color" />
+
+    <attr name="colorWarning" format="color" />
 </resources>

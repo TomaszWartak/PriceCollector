@@ -10,6 +10,8 @@ import com.dev4lazy.pricecollector.utils.BroadcastReceiverWrapper;
 import com.dev4lazy.pricecollector.utils.ExternalServicesSupport;
 import com.dev4lazy.pricecollector.AppHandle;
 
+import androidx.annotation.NonNull;
+
 /**
 Klasa obsługująca logowanie na podstawie identyfikatora użytkownika i hasła, z wykorzystaniem tokena Firebase.
 Realizowane jest to tak, że serwer logowania po otrzymaniu danych uwierzytelniających zwraca token Firebase,
@@ -47,7 +49,7 @@ public class MockCustomTokenOwnAuthSupport
                     "DATA_FROM_MOCKAUTH_READY"
                 )
         );
-        externalServicesSupport.startBroadcastListening();
+        externalServicesSupport.prepareConnection();
         externalServicesSupport.bindToService(
                 "com.dev4lazy.pricecollectormockauth",
                 "com.dev4lazy.pricecollectormockauth.MockAuthService");
@@ -76,15 +78,20 @@ public class MockCustomTokenOwnAuthSupport
 
         // TODO
         // if (!externalServicesSupport.isBoundToMockAuthService()) {
-        if (!externalServicesSupport.isBoundToService()) {
+        if (externalServicesSupport.isNotBoundToService()) {
             callIfUnsuccessful( AppHandle.getHandle().getString(R.string.login_server_unavailable) );
             return;
         }
+        Bundle bundle = getCredentialsBundle();
+        externalServicesSupport.sendDataToService(bundle);
+    }
+
+    @NonNull
+    public Bundle getCredentialsBundle() {
         Bundle bundle = new Bundle();
         bundle.putString("userId", getCredential("USER_ID") );
         bundle.putString("password", getCredential("USER_PASSWORD") );
-        externalServicesSupport.sendDataToService(bundle);
-        //todo czy token jest case sensitive, tzn czy dla nowak_j i NOWAK_J będzie taki sam?
+        return bundle;
     }
 
     // wylogowuje użytkownika z własnego serwera logowania
@@ -145,13 +152,18 @@ public class MockCustomTokenOwnAuthSupport
     private class MockAuthServiceBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            /* TODO XXX tutaj poniżej nie trzeba sprawdzać, czy przyszła właścia akcja,
+                gdyż sprawdzanie jest ustawiane przy inicjacji odbiornika
             if (intent.getAction().equals("DATA_FROM_MOCKAUTH_READY")) {
+             */
                 if (intent.getBooleanExtra("AUTHENTICATED", false )) {
                     callIfDataReceived(true, intent.getStringExtra("TOKEN") );
                 } else {
                     callIfDataReceived(false,"" );
                 }
+            /* TODO dotyczy TODO powyżej
             }
+             */
         }
     }
 }

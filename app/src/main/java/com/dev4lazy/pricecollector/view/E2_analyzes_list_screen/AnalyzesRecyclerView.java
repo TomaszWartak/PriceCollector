@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
-import com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader_2;
+import com.dev4lazy.pricecollector.model.logic.AnalysisFullDataDownloader;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import com.dev4lazy.pricecollector.utils.AppUtils;
 import com.dev4lazy.pricecollector.view.utils.ProgressBarWrapper;
@@ -205,8 +205,8 @@ public class AnalyzesRecyclerView extends RecyclerView {
                     Analysis analysis,
                     MutableLiveData<Boolean> finalResult,
                     ProgressPresentingManager progressPresentingManager ) {
-                // TODO XXX AnalysisDataDownloader.getInstance().insertArticles( analysis, finalResult, progressPresenter );
-                new AnalysisDataDownloader_2().downloadData( analysis, finalResult, progressPresentingManager );
+                // TODO XXX AnalysisBasicDataDownloader.getInstance().insertArticles( analysis, finalResult, progressPresenter );
+                new AnalysisFullDataDownloader().downloadData( analysis, finalResult, progressPresentingManager );
             }
 
             private void openCompetitorSlots( View view, Analysis analysis ) {

@@ -5,8 +5,9 @@
          <item name="colorPrimary">@color/colorPrimary</item>
          <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
          <item name="colorPrimaryLight">@color/colorPrimaryLight</item>
-         <item name="colorOnPrimary">@color/colorOnPrimary</item>
 
+         <item name="colorOnPrimary">@color/colorOnPrimary</item>
+         <item name="colorOnPrimaryLight">@color/colorOnPrimaryLight</item>
          <item name="colorSecondary">@color/colorSecondary</item>
          <item name="colorSecondaryLight">@color/colorSecondaryLight</item>
 

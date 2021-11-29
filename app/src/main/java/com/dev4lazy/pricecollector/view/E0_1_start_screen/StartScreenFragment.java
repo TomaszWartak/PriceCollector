@@ -155,37 +155,6 @@ public class StartScreenFragment extends Fragment {
         }
 
         private void showExplantationAndAskUserForPermissionDialog(View view, String deniedPermissionsMessage ) {
-            /* TODO XXX usuń
-            AlertDialogFragmentViewModel alertDialogFragmentViewModel = ViewModelProviders.of(getActivity()).get(AlertDialogFragmentViewModel.class);
-            alertDialogFragmentViewModel.setTitle("");
-            alertDialogFragmentViewModel.setMessage(
-                    getResources().getString(R.string.nedded_permissions_message_line1) + "\n" +
-                    getResources().getString(R.string.nedded_permissions_message_line2) + "\n" +
-                    deniedPermissionsMessage
-            );
-            alertDialogFragmentViewModel.setPositiveButtonLabel( getString(R.string.yes_i_want_to_allow_message) );
-            alertDialogFragmentViewModel.setPostiveButtonOnClickListener(
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            checkAndRequestPermissions();
-                        }
-                    }
-            );
-            alertDialogFragmentViewModel.setNegativeButtonLabel(getString(R.string.no_i_want_to_exit_app_message));
-            alertDialogFragmentViewModel.setNegativeButtonOnClickListener(
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            finishApp();
-                        }
-                    }
-            );
-            alertDialogFragmentViewModel.setCancelable(false);
-            Navigation.findNavController( view ).navigate( R.id.action_startScreenFragment_to_alertDialogFragment );
-             */
             /* TODO XXX
             To musisz przetestować - zmiana AlertDialogFragment na AlertDialogFragment2
             musisz zdjąć uprawnienia i asprawdzić, jak dialog się wyświetli

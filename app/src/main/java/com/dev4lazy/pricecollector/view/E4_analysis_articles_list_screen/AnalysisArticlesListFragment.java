@@ -93,9 +93,9 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
 
         private void setToolbarText() {
             String title = storeViewModel.getStore().getName();
-            String filtered = " *";
+            String filtered = "* ";
             if (analysisArticleJoinsListViewModel.getSearchArticlesCriteria().isFilterSet()) {
-                title = title + filtered;
+                title = filtered + title;
             }
             ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
             toolbar.setTitle(title);

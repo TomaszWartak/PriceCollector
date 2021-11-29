@@ -32,7 +32,15 @@ public class CsvReader {
         unreachable catch clause - thrown type FileNotFoundException has already been caught */
         catch (FileNotFoundException ex0) {
             ex0.printStackTrace();
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException ex2) {
+                ex2.printStackTrace();
+            }
         } /**/
+        /* TODO XXX
         catch (IOException ex1) {
             ex1.printStackTrace();
             try {
@@ -43,6 +51,7 @@ public class CsvReader {
                 ex2.printStackTrace();
             }
         }
+         */
     }
 
     private File getPrivateDirectory() {

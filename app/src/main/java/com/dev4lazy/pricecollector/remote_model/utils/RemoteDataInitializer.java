@@ -232,12 +232,12 @@ public class RemoteDataInitializer {
     private void prepareRemoteAnalysis1( List<RemoteAnalysis> remoteAnalyzes ) {
         RemoteAnalysis remoteAnalysis = new RemoteAnalysis();
         try {
-            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2019-09-15") );
+            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2021-09-15") );
         } catch (ParseException parseException) {
 
         }
         try {
-            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-09-30"));
+            remoteAnalysis.setDueDate(new DateConverter().string2Date("2021-09-30"));
         } catch (ParseException parseException) {
 
         }
@@ -248,12 +248,12 @@ public class RemoteDataInitializer {
     private void prepareRemoteAnalysis2( List<RemoteAnalysis> remoteAnalyzes ) {
         RemoteAnalysis remoteAnalysis = new RemoteAnalysis();
         try {
-            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2019-10-07") );
+            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2021-10-07") );
         } catch (ParseException parseException) {
 
         }
         try {
-            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-10-21"));
+            remoteAnalysis.setDueDate(new DateConverter().string2Date("2021-10-21"));
         } catch (ParseException parseException) {
 
         }
@@ -264,12 +264,12 @@ public class RemoteDataInitializer {
     private void prepareRemoteAnalysis3( List<RemoteAnalysis> remoteAnalyzes ) {
         RemoteAnalysis remoteAnalysis = new RemoteAnalysis();
         try {
-            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2019-11-05") );
+            remoteAnalysis.setCreationDate( new DateConverter().string2Date("2021-11-05") );
         } catch (ParseException parseException) {
 
         }
         try {
-            remoteAnalysis.setDueDate(new DateConverter().string2Date("2019-11-30"));
+            remoteAnalysis.setDueDate(new DateConverter().string2Date("2021-11-30"));
         } catch (ParseException parseException) {
 
         }
@@ -330,8 +330,17 @@ public class RemoteDataInitializer {
         AppHandle.getHandle().getRepository().getRemoteDataRepository().deleteAllRemoteUOProjects( null );
     }
 
+    private void prepareConverters() {
+        if (csv2AnalysisRowConverter==null) {
+            csv2AnalysisRowConverter = new Csv2AnalysisRowConverter();
+        }
+        if (csv2EanCodeConverter==null) {
+            csv2EanCodeConverter = new Csv2EanCodeConverter();
+        }
+    }
 
-    /*
+
+    /* TODO XXX
     public void initializeAnaylysisRowsAndEanCodesOnly() {
         clearRemoteDatabase();
         prepareConverters();
@@ -386,25 +395,6 @@ public class RemoteDataInitializer {
 
 // ---------------------------------------------------------------------------
 // Zapis danych
-
-
-    /* TODO XXX
-    private void startRemoteDataInitialisationChain() {
-        populateRemoteUsers();
-        // todo Nie zrobiłem łąncucha. W przypadku Remote nie ma tworzenia zależności on line.
-        // Wystarczy zainicjować dane w odpowiedniej kolejności.
-        // A przynajmniej tak mi się wydaje... :-)
-        populateRemoteDepartments();
-        populateRemoteSectors();
-        populateRemoteFamilies();
-        populateRemoteMarkets();
-        populateRemoteModules();
-        populateRemoteUOProjects();
-        // todo ? I dupa, bo RemoteAnalysisRow.analysisId zalezy od Analysis.id
-        // Czyli populateRemoteAnalysisRows jest wołane z populateRemoteAnalysis
-        populateRemoteAnalysis( 0 );
-    }
-    */
 
     // TODO lift up
     private ProgressPresentingManager progressPresentingManager;
@@ -706,17 +696,9 @@ public class RemoteDataInitializer {
                 RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
                 remoteDataRepository.insertRemoteAnalysis( remoteAnalyzes.get( analysisNr ), insertResult );
             } else {
-                runNextTaskLink( null ); // <-- CRASH!
+                // TODO Może Rollback transakcji?
+                // runNextTaskLink( null ); // <-- CRASH!
             }
-        }
-    }
-
-    private void prepareConverters() {
-        if (csv2AnalysisRowConverter==null) {
-            csv2AnalysisRowConverter = new Csv2AnalysisRowConverter();
-        }
-        if (csv2EanCodeConverter==null) {
-            csv2EanCodeConverter = new Csv2EanCodeConverter();
         }
     }
 

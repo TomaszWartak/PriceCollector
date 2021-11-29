@@ -32,58 +32,21 @@ public class ExternalServicesSupport {
     // Opakowany odbiornik danych z serwisu
     private BroadcastReceiverWrapper broadcastReceiverWrapper;
 
-    public ExternalServicesSupport(Context context) {
+    public ExternalServicesSupport( Context context) {
         this.context = context;
     }
 
-    private void setBoundToService(Boolean bound) {
-        boundToService = bound;
-    }
-
-    public Boolean isBoundToService() {
-        return boundToService;
-    }
-
-    public void bindToService( String packageName, String className ) {
-        Intent intent = new Intent();
-        intent.setClassName( packageName, className );
-        // TODO co z obsługą niepowodzenia?
-        boolean result = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    public void unbindFromService() {
-        AppHandle.getHandle().unbindService(serviceConnection);
-    }
-
-    public void sendDataToService(Bundle bundle) {
-        Message msg = Message.obtain();
-        msg.setData(bundle);
-        try {
-            messenger.send(msg);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-// ----------------------------------------------------------
-// obsługa odbiornika
     public void setBroadcastReceiverWrapper(BroadcastReceiverWrapper broadcastReceiverWrapperToSet) {
         broadcastReceiverWrapper = broadcastReceiverWrapperToSet;
     }
 
-    private void registerServiceBroadcastReceiver( ) {
-        context.registerReceiver(
-                broadcastReceiverWrapper.getBroadcastReceiver(),
-                broadcastReceiverWrapper.getIntentFilter()
-        );
-    }
-
-    public void startBroadcastListening() {
+    public void prepareConnection() {
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(
                     ComponentName className,
                     IBinder service) {
+                // TODO W opisieIBinder jest, żeby nie użwać bezpośrednio, tylko użyć Binder...
                 messenger = new Messenger(service);
                 setBoundToService(true);
                 registerServiceBroadcastReceiver( );
@@ -99,8 +62,54 @@ public class ExternalServicesSupport {
         };
     }
 
+    private void registerServiceBroadcastReceiver( ) {
+        /* TODO XXX
+        context.registerReceiver(
+                broadcastReceiverWrapper.getBroadcastReceiver(),
+                broadcastReceiverWrapper.getIntentFilter()
+        );
+        */
+        broadcastReceiverWrapper.registerReceiver( context );
+    }
+
     private void unregisterServiceBroadcastReceiver() {
+        broadcastReceiverWrapper.unregisterReceiver( context );
+        /* TODO XXX
         context.unregisterReceiver(broadcastReceiverWrapper.getBroadcastReceiver());
+        */
+    }
+
+    public void bindToService( String packageName, String className ) {
+        Intent intent = new Intent();
+        intent.setClassName( packageName, className );
+        // TODO co z obsługą niepowodzenia?
+        boolean result = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    public void unbindFromService() {
+        context.unbindService(serviceConnection);
+    }
+
+    private void setBoundToService(Boolean bound) {
+        boundToService = bound;
+    }
+
+    public Boolean isBoundToService() {
+        return boundToService;
+    }
+
+    public Boolean isNotBoundToService() {
+        return !isBoundToService();
+    }
+
+    public void sendDataToService(Bundle bundle) {
+        Message msg = Message.obtain();
+        msg.setData(bundle);
+        try {
+            messenger.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 }

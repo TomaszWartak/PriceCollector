@@ -213,7 +213,8 @@ public class SearchArticlesByStructureFragment extends Fragment {
             TabLayout tabLayout = getParentFragment().getView().findViewById(R.id.search_articles_tabs);
             TabLayout.Tab tab = tabLayout.getTabAt(SearchArticlesPagerAdapter.SEARCH_BY_STRUCTURE);
             if (searchArticlesCriteria.isStructureFilterSet()) {
-                tab.setText(getResources().getString(R.string.articles_search_tab_structure_name)+" *");
+                String filtered = "* ";
+                tab.setText(filtered+getResources().getString(R.string.articles_search_tab_structure_name));
             } else {
                 tab.setText(R.string.articles_search_tab_structure_name);
             }
@@ -221,14 +222,16 @@ public class SearchArticlesByStructureFragment extends Fragment {
 
         private void setToolbarText() {
             String toolbarText = storeViewModel.getStore().getName();
+            /* TODO XXX
             int maxLength = toolbarText.length();
             if (maxLength>24) { // TODO hardcoded
                 maxLength=24;
             }
             toolbarText = toolbarText.substring(0,maxLength);
-            String filtered = " *";
+             */
+            String filtered = "* ";
             if (searchArticlesCriteria.isFilterSet()) {
-                toolbarText = toolbarText + filtered;
+                toolbarText = filtered + toolbarText;
             }
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle( toolbarText );
         }
@@ -242,7 +245,19 @@ public class SearchArticlesByStructureFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setProperHeightOfView();
         clearViewIfCriteriaAreNotSet( );
+    }
+
+    private void setProperHeightOfView() {
+        View layoutView = getView().findViewById( R.id.search_articles_by_structure_layout );
+        if (layoutView!=null) {
+            ViewGroup.LayoutParams layoutParams = layoutView.getLayoutParams();
+            if (layoutParams!=null) {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                layoutView.requestLayout();
+            }
+        }
     }
 
     private void clearViewIfCriteriaAreNotSet( ) {

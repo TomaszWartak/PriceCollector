@@ -2,10 +2,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context="view.E4_analysis_articles_list_screen.SearchArticlesByStructureFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/search_articles_by_structure_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"

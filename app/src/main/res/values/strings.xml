@@ -22,8 +22,11 @@
     <string name="access_denied">Dostęp nie przyznany</string>
     <string name="hint_userlogin">Identyfikator użytkownika</string>
     <string name="hint_password">Hasło</string>
+    <string name="enter_user_ID">Podaj identyfikator użytkownika</string>
+    <string name="enter_password">Podaj hasło</string>
     <string name="login_data_incorrect">Dane logowania nieprawidłowe...</string>
     <string name="firebase_login_problem">Problem z logowaniem do Firebase...</string>
+    <string name="user_not_found_in_the_remote_database">W zdalnej bazie danych nie znaleziono danych użytkownika</string>
 
     <!-- for analysis item -->
     <string name="label_analysis_header">ANALIZA </string>

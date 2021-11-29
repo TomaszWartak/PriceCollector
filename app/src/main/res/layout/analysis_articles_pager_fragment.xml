@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".view.E4_analysis_articles_list_screen.AnalysisArticlesListFragment">
 
-    <!-- todo?
+    <!-- todo XXXX
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/analysis_articles_recycler"
         android:layout_width="match_parent"

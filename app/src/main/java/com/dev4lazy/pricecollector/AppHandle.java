@@ -11,7 +11,7 @@ import com.dev4lazy.pricecollector.utils.AppSettings;
 
 import androidx.lifecycle.LifecycleObserver;
 
-public class AppHandle extends Application implements LifecycleObserver {
+public class AppHandle extends Application /* Na potrzeby testów: implements LifecycleObserver */ {
 
     private static AppHandle appHandle = null;
 

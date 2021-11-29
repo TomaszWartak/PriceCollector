@@ -100,4 +100,7 @@
     <string name="searching">Searching</string>
     <string name="searching_articles">SEARCHING ARTICLES</string>
     <string name="threedots_vertical">⋮</string>
+    <string name="user_not_found_in_the_remote_database">User information not found in the remote database</string>
+    <string name="enter_user_ID">Enter your user ID</string>
+    <string name="enter_password">Enter your password</string>
 </resources>

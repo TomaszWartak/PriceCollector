@@ -153,8 +153,8 @@ public class CompetitorsSlotsListView extends ListView {
         }
 
         public void setTextViewCompanyNameMaxWidth(TextView textViewCompanyName) {
-            int widthPixels = Resources.getSystem().getDisplayMetrics().widthPixels;
-            int textViewCompanyNameMaxWidth = (int)Math.round( widthPixels*0.35 );
+            int screeWidthInPixels = Resources.getSystem().getDisplayMetrics().widthPixels;
+            int textViewCompanyNameMaxWidth = (int)Math.round( screeWidthInPixels *0.35 );
             textViewCompanyName.setMaxWidth( textViewCompanyNameMaxWidth );
         }
 

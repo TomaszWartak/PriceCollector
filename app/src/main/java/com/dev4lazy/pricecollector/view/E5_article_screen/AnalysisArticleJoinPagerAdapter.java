@@ -1,45 +1,56 @@
 package com.dev4lazy.pricecollector.view.E5_article_screen;
 
+import android.content.Context;
 import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
+import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCallback;
+import com.dev4lazy.pricecollector.view.utils.PopupWindowWrapper;
+import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
-import com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.AnalysisArticleJoinDiffCallback;
-import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
-
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class AnalysisArticleJoinPagerAdapter // OK
         extends
             PagedListAdapter<AnalysisArticleJoin,
             AnalysisArticleJoinPagerAdapter.AnalysisArticleJoinPagerViewHolder> {
 
+    private ViewPager2 parentViewPager;
     private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
     private AnalysisArticleJoinPagerViewHolder holder;
+    int statusbarHeight;
+    private int toolbarHeight;
 
     public AnalysisArticleJoinPagerAdapter(
+            ViewPager2 analysisArticlesViewPager,
             AnalysisArticleJoinDiffCallback analysisArticleJoinDiffCallback,
-            AnalysisArticleJoinViewModel analysisArticleJoinViewModel
+            AnalysisArticleJoinViewModel analysisArticleJoinViewModel,
+            int statusbarHeight,
+            int toolbarHeight
         ) {
         super(analysisArticleJoinDiffCallback);
+        this.parentViewPager = analysisArticlesViewPager;
         this.analysisArticleJoinViewModel = analysisArticleJoinViewModel;
+        this.statusbarHeight = statusbarHeight;
+        this.toolbarHeight = toolbarHeight;
     }
 
     @NonNull
@@ -68,8 +79,7 @@ public class AnalysisArticleJoinPagerAdapter // OK
 
         private char decimalSeparator;
         private DecimalFormat decimalFormat;
-        // Own Article
-        // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
+        private ImageView ownArticleImageView;
         private TextView ownCodeTextView;
         private TextView eanCodeTextView;
         private EditText competitorPriceEditText;
@@ -92,8 +102,7 @@ public class AnalysisArticleJoinPagerAdapter // OK
         }
 
         private void setView( View view ) {
-            // Own Article
-            // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
+            ownArticleImageView = view.findViewById( R.id.analysisArticleFragment_imageArticle );
             ownCodeTextView = view.findViewById( R.id.analysis_article_OwnCode_editText );
             eanCodeTextView = view.findViewById( R.id.analysis_article_EAN_editText );
 
@@ -328,6 +337,16 @@ public class AnalysisArticleJoinPagerAdapter // OK
         protected void bind(AnalysisArticleJoin analysisArticleJoin ) {
             // Own Article
             // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
+            int ownArticleImageResId = getOwnArticleImageResId( analysisArticleJoin);
+            if (ownArticleImageResId!=0) {
+                ownArticleImageView.setImageResource( ownArticleImageResId );
+                ownArticleImageView.setOnClickListener(
+                        new OwnArticleImageViewOnClickListener( analysisArticleJoin )
+                );
+            } else {
+                ownArticleImageView.setImageResource( R.drawable.common_google_signin_btn_icon_dark );
+                ownArticleImageView.setOnClickListener( null );
+            }
             ownCodeTextView.setText( analysisArticleJoin.getOwnCode() );
             eanCodeTextView.setText( analysisArticleJoin.getEanCode() );
             Double competitorStorePrice = analysisArticleJoin.getCompetitorStorePrice();
@@ -345,9 +364,75 @@ public class AnalysisArticleJoinPagerAdapter // OK
             referenceArticleDescriptionEditText.setText( analysisArticleJoin.getReferenceArticleDescription() );
         }
 
+
+            private int getOwnArticleImageResId( AnalysisArticleJoin analysisArticleJoin ) {
+                Context applicationContext = AppHandle.getHandle();
+                int resId = applicationContext.getResources().getIdentifier(
+                        getOwnArticleImageName( analysisArticleJoin ),
+                        "drawable",
+                        applicationContext.getPackageName()
+                );
+                return resId;
+            }
+
+            private String getOwnArticleImageName( AnalysisArticleJoin analysisArticleJoin ) {
+                return "i"+analysisArticleJoin.getOwnCode();
+            }
+
+            private class OwnArticleImageViewOnClickListener implements View.OnClickListener {
+                private AnalysisArticleJoin analysisArticleJoin;
+                private PopupWindowWrapper populatingDataPopupWindowWrapper;
+
+                public OwnArticleImageViewOnClickListener( AnalysisArticleJoin analysisArticleJoin ) {
+                    super();
+                    this.analysisArticleJoin = analysisArticleJoin;;
+                }
+
+                @Override
+                public void onClick(View articleImageView) {
+                    // TODO XXX int screeWidthInPixels = Resources.getSystem().getDisplayMetrics().widthPixels;
+                    populatingDataPopupWindowWrapper =
+                            new PopupWindowWrapper(
+                                    articleImageView,
+                                    R.layout.article_image_greater_popup_window ).
+                                    setWidth( ViewGroup.LayoutParams.MATCH_PARENT ).
+                                    setHeight( ViewGroup.LayoutParams.WRAP_CONTENT ).
+                                    setGravity( Gravity.TOP ).
+                                    setOutsideTouchable( false ).
+                                    setFocusable( true );
+
+                    ImageView articleGreaterImageView = getArticleGreaterImageView();
+                    articleGreaterImageView.setImageDrawable( ((ImageView)articleImageView).getDrawable() );
+                    articleGreaterImageView.getLayoutParams().width =  ViewGroup.LayoutParams.MATCH_PARENT;
+                    articleGreaterImageView.setOnClickListener( new OwnArticleGreaterImageViewOnClickListener() );
+
+                    TextView articleEANTextView = getArticleEANTextView();
+                    articleEANTextView.setText( analysisArticleJoin.getEanCode() );
+
+                    int marginTop = itemView.getContext().getResources().getDimensionPixelSize( R.dimen.margin );
+                    populatingDataPopupWindowWrapper.show(0 , statusbarHeight+toolbarHeight+marginTop );
+                }
+
+                private ImageView getArticleGreaterImageView() {
+                    return populatingDataPopupWindowWrapper.getPopupView().findViewById(R.id.articleImageGreater_imageArticle);
+                }
+
+                private TextView getArticleEANTextView() {
+                    return populatingDataPopupWindowWrapper.getPopupView().findViewById(R.id.articleImageGreater_EANArticle);
+                }
+
+                class OwnArticleGreaterImageViewOnClickListener implements View.OnClickListener {
+                    @Override
+                    public void onClick(View v) {
+                        populatingDataPopupWindowWrapper.close();
+                    }
+                }
+
+            }
+
         protected void clear() {
             // Own Article
-            // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
+            // ownArticleImageView. TODO ???
             ownCodeTextView.setText( null );
             eanCodeTextView.setText( null );
             competitorPriceEditText.setText( null );

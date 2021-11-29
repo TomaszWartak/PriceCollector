@@ -6,8 +6,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.LinearLayout;
 
 import com.dev4lazy.pricecollector.R;
+import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.model.logic.SearchArticlesCriteria;
 import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
@@ -73,30 +76,32 @@ public class SearchArticlesFragment extends Fragment {
             /**/
             new TabLayoutMediator(
                     tabLayout,
-                    viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-                @Override
-                public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                    SearchArticlesCriteria searchArticlesCriteria =
-                            analysisArticleJoinsListViewModel.getSearchArticlesCriteria();
-                    String filterSetSign = "";
-                    switch (position) {
-                        case SearchArticlesPagerAdapter.SEARCH_BY_DATA:
-                            if (searchArticlesCriteria.isDataFilterSet()) {
-                                filterSetSign = " *";
+                    viewPager,
+                    new TabLayoutMediator.TabConfigurationStrategy() {
+                        @Override
+                        public void onConfigureTab( @NonNull TabLayout.Tab tab, int position) {
+                            SearchArticlesCriteria searchArticlesCriteria =
+                                    analysisArticleJoinsListViewModel.getSearchArticlesCriteria();
+                            String filterSetSign = "";
+                            switch (position) {
+                                case SearchArticlesPagerAdapter.SEARCH_BY_DATA:
+                                    if (searchArticlesCriteria.isDataFilterSet()) {
+                                        filterSetSign = "* ";
+                                    }
+                                    tab.setText(filterSetSign + getResources().getString(R.string.articles_search_tab_data_name));
+                                    // TODO XXX tab.setCustomView( view.findViewById(R.id.search_articles_by_data_tab ) );
+                                    break;
+                                case SearchArticlesPagerAdapter.SEARCH_BY_STRUCTURE:
+                                    if (searchArticlesCriteria.isStructureFilterSet()) {
+                                        filterSetSign = "* ";
+                                    }
+                                    tab.setText(filterSetSign + getResources().getString(R.string.articles_search_tab_structure_name));
+                                    // TODO XXX tab.setCustomView( view.findViewById(R.id.search_articles_by_structure_tab ) );
+                                    break;
                             }
-                            tab.setText(getResources().getString(R.string.articles_search_tab_data_name)+filterSetSign);
-                            // TODO XXX tab.setCustomView( view.findViewById(R.id.search_articles_by_data_tab ) );
-                            break;
-                        case SearchArticlesPagerAdapter.SEARCH_BY_STRUCTURE:
-                            if (searchArticlesCriteria.isStructureFilterSet()) {
-                                filterSetSign = " *";
-                            }
-                            tab.setText(getResources().getString(R.string.articles_search_tab_structure_name)+filterSetSign);
-                            // TODO XXX tab.setCustomView( view.findViewById(R.id.search_articles_by_structure_tab ) );
-                            break;
+                        }
                     }
-                }
-            }).attach();
+            ).attach();
         }
 
     @Override

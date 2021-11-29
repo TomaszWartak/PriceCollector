@@ -13,6 +13,8 @@ import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 import com.dev4lazy.pricecollector.viewmodel.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -43,6 +45,7 @@ public class SearchArticlesByDataFragment extends Fragment {
         viewSetup( view );
         return view;
     }
+
 
     private void viewModelsSetup() {
         analysisArticleJoinsListViewModel =
@@ -184,7 +187,8 @@ public class SearchArticlesByDataFragment extends Fragment {
             TabLayout tabLayout = getParentFragment().getView().findViewById(R.id.search_articles_tabs);
             TabLayout.Tab tab = tabLayout.getTabAt(SearchArticlesPagerAdapter.SEARCH_BY_DATA);
             if (searchArticlesCriteria.isDataFilterSet()) {
-                tab.setText(getResources().getString(R.string.articles_search_tab_data_name)+" *");
+                String filtered = "* ";
+                tab.setText(filtered+getResources().getString(R.string.articles_search_tab_data_name));
             } else {
                 tab.setText(R.string.articles_search_tab_data_name);
             }
@@ -199,9 +203,9 @@ public class SearchArticlesByDataFragment extends Fragment {
             }
             toolbarText = toolbarText.substring(0,maxLength);
              */
-            String filtered = " *";
+            String filtered = "* ";
             if (searchArticlesCriteria.isFilterSet()) {
-                toolbarText = toolbarText + filtered;
+                toolbarText = filtered + toolbarText;
             }
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle( toolbarText );
         }
@@ -215,7 +219,19 @@ public class SearchArticlesByDataFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setProperHeightOfView();
         clearViewIfCriteriaAreNotSet( );
+    }
+
+    private void setProperHeightOfView() {
+        View layoutView = getView().findViewById( R.id.search_articles_by_data_layout );
+        if (layoutView!=null) {
+            ViewGroup.LayoutParams layoutParams = layoutView.getLayoutParams();
+            if (layoutParams!=null) {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                layoutView.requestLayout();
+            }
+        }
     }
 
     private void clearViewIfCriteriaAreNotSet( ) {

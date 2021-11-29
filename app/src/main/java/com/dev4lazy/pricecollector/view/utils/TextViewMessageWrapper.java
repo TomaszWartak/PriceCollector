@@ -18,7 +18,7 @@ public class TextViewMessageWrapper implements MessageViewWrapper {
     @Override
     public void show() {
         if (isTextViewNotNull()) {
-            textView.setVisibility( View.VISIBLE );
+            setVisible();
         }
     }
 
@@ -26,9 +26,20 @@ public class TextViewMessageWrapper implements MessageViewWrapper {
     public void show( String message) {
         if (isTextViewNotNull()) {
             textView.setText( message );
-            textView.setVisibility( View.VISIBLE );
+            setVisible();
         }
     }
+
+    private void setVisible() {
+        if (isTextViewNotVisible()) {
+            textView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private boolean isTextViewNotVisible() {
+        return textView.getVisibility() != View.VISIBLE;
+    }
+
 
     @Override
     public void hide() {

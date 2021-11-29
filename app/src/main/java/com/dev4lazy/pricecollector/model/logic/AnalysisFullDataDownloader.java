@@ -33,12 +33,12 @@ import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DONT_HIDE
 import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.HIDE_WHEN_FINISHED;
 
 /**
- * AnalysisDataDownloader_2
+ * AnalysisFullDataDownloader
  *
  * Służy do pobrania danych potrzebnych do badania cen z serwera zdalnego (serwera Aplikacji Badanie Cen).
  *
  */
-public class AnalysisDataDownloader_2 {
+public class AnalysisFullDataDownloader {
 
     private Analysis analysis;
     private ProgressPresentingManager progressPresentingManager;

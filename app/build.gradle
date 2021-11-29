@@ -112,7 +112,7 @@ dependencies {
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
 
     // Paging 2021-08-01 https://developer.android.com/jetpack/androidx/releases/paging
-    implementation "androidx.paging:paging-runtime:3.0.1" // prev 2.1.2
+    implementation "androidx.paging:paging-runtime:3.0.1" //  prev 2.1.2
 
     // Współdzielona biblioteka z definicją danych lokalnych
     // implementation project(":pricecollectorlocaldata-debug")
@@ -120,5 +120,7 @@ dependencies {
     // SQLBuilder 2021-09-01 https://mvnrepository.com/artifact/com.healthmarketscience.sqlbuilder/sqlbuilder
     implementation 'com.healthmarketscience.sqlbuilder:sqlbuilder:3.0.2'
 
+    // Picasso 2021-11-25 https://mvnrepository.com/artifact/com.squareup.picasso/picasso
+    // implementation "com.squareup.picasso:picasso:2.8"
 
 }

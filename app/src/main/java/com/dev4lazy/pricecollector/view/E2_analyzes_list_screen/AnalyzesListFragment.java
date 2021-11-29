@@ -23,15 +23,14 @@ import androidx.paging.PagedList;
 import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
-import com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader;
+import com.dev4lazy.pricecollector.model.logic.AnalysisBasicDataDownloader;
 import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel2;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
-import static android.view.View.GONE;
-import static com.dev4lazy.pricecollector.model.logic.AnalysisDataDownloader.getInstance;
+import static com.dev4lazy.pricecollector.model.logic.AnalysisBasicDataDownloader.getInstance;
 
 public class AnalyzesListFragment extends Fragment {
 
@@ -104,8 +103,8 @@ public class AnalyzesListFragment extends Fragment {
 
         private void newAnalyzesCheck() {
             /* TODO XXX newAnalyzesReady = new MutableLiveData<>();
-            AnalysisDataDownloader analysisDataDownloader = getInstance();
-            newAnalyzesReady.setValue( analysisDataDownloader.isNewAnalysisReadyToDownlad() );
+            AnalysisBasicDataDownloader analysisBasicDataDownloader = getInstance();
+            newAnalyzesReady.setValue( analysisBasicDataDownloader.isNewAnalysisReadyToDownlad() );
             newAnalyzesReady.observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
                 @Override
                 public void onChanged( Boolean newAnalyzesReady  ) {
@@ -114,8 +113,8 @@ public class AnalyzesListFragment extends Fragment {
                     }
                 }
             }); */
-            AnalysisDataDownloader analysisDataDownloader = getInstance();
-            analysisDataDownloader.getNewAnalysisReadyToDownladLD().observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
+            AnalysisBasicDataDownloader analysisBasicDataDownloader = getInstance();
+            analysisBasicDataDownloader.getNewAnalysisReadyToDownladLD().observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
                 @Override
                 public void onChanged( Boolean newAnalyzesReady  ) {
                     if (newAnalyzesReady) {
@@ -128,8 +127,8 @@ public class AnalyzesListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AnalysisDataDownloader analysisDataDownloader = getInstance();
-        if (analysisDataDownloader.isNewAnalysisReadyToDownlad()) {
+        AnalysisBasicDataDownloader analysisBasicDataDownloader = getInstance();
+        if (analysisBasicDataDownloader.isNewAnalysisReadyToDownlad()) {
             showAskUserForAnalyzesDataDownload( view );
         }
     }
@@ -154,7 +153,7 @@ public class AnalyzesListFragment extends Fragment {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        AnalysisDataDownloader.getInstance().downloadAnalysisBasicData();
+                                        AnalysisBasicDataDownloader.getInstance().downloadAnalysisBasicData();
                                         analyzesRecyclerView.refresh();
                                     }
                                 }

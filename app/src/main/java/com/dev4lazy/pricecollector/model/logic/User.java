@@ -26,6 +26,10 @@ public class User {
         login = remoteUser.getLogin();
         name = remoteUser.getName();
         email = remoteUser.getEmail();
+        /* TODO XXX potrzebna konwersja danych remote
+        ownStore = remoteUser.getOwnStoreNumber();
+        sector = remoteUser.getSectorName();
+        */
     }
 
     public String getLogin() {

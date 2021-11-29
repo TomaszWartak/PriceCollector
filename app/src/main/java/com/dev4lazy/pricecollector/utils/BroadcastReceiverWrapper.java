@@ -1,39 +1,45 @@
 package com.dev4lazy.pricecollector.utils;
 
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.IntentFilter;
 
+/**
+ * Ułatwia korzystanie z BraodcastReceiver.
+ */
 public class BroadcastReceiverWrapper {
+
     BroadcastReceiver broadcastReceiver;
-    String expectedAction;
     IntentFilter intentFilter;
 
+    /**
+     * Konstruktor
+     * @param broadcastReceiverToSet: BroadcastReceiver
+     * @param actionsToSet: zestaw akcji, które ma obsługiwać BroadcastReceiver
+     */
     public BroadcastReceiverWrapper(
             BroadcastReceiver broadcastReceiverToSet,
-            String actionToSet ) {
-        setBroadcastReceiverAndIntentFilter(
-                broadcastReceiverToSet,
-                actionToSet );
-    }
-
-    public void setBroadcastReceiverAndIntentFilter(
-            BroadcastReceiver broadcastReceiverToSet,
-            String actionToSet ) {
+            String... actionsToSet ) {
         broadcastReceiver = broadcastReceiverToSet;
-        expectedAction = actionToSet;
         intentFilter  = new IntentFilter();
-        intentFilter.addAction( expectedAction );
-    };
+        for (String action : actionsToSet) {
+            intentFilter.addAction(action);
+        }
+    }
 
     public BroadcastReceiver getBroadcastReceiver() {
         return broadcastReceiver;
     }
 
-    public String getExpectedAction() {
-        return expectedAction;
-    }
-
     public IntentFilter getIntentFilter() {
         return intentFilter;
+    }
+
+    public void registerReceiver( Context context ) {
+        context.registerReceiver( getBroadcastReceiver(), getIntentFilter() );
+    }
+
+    public void unregisterReceiver( Context context ) {
+        context.unregisterReceiver( getBroadcastReceiver() );
     }
 }

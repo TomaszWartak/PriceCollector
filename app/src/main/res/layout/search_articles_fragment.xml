@@ -5,11 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     card_view:cardCornerRadius="@dimen/card_view_corner_radius"
     card_view:cardElevation="@dimen/card_view_elevation">
 
     <LinearLayout
+        android:id="@+id/search_articles_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -19,9 +20,9 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:elevation="@dimen/elevation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/elevation">
 
             <TextView
                 android:id="@+id/search_articles_header"
@@ -29,12 +30,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin"
                 android:layout_marginBottom="@dimen/double_margin"
+                android:elevation="@dimen/elevation"
                 android:gravity="center_horizontal"
                 android:text="@string/searching_articles"
-                android:textSize="@dimen/head4_font_size"
                 android:textColor="?android:textColorSecondary"
+                android:textSize="@dimen/head4_font_size"
                 android:textStyle="bold"
-                android:elevation="@dimen/elevation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,13 +56,13 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/search_articles_tabs"
+            style="@style/PC_TabLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:elevation="@dimen/elevation"
-            app:tabMode="scrollable"
-            style="@style/PC_TabLayoutStyle" >
+            app:tabMode="scrollable">
 
         </com.google.android.material.tabs.TabLayout>
 

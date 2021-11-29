@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.view.E5_article_screen;
 
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -77,10 +78,15 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
 
         private void viewPagerSetup( View view ) {
             analysisArticlesViewPager = view.findViewById(R.id.analysis_articles_pager);
+            int statusbarHeight = getStatusBarHeight();
+            int toolbarHeight = ((AppCompatActivity) getActivity()).getSupportActionBar().getHeight();
             analysisArticleJoinPagerAdapter =
                     new AnalysisArticleJoinPagerAdapter(
+                            analysisArticlesViewPager,
                             new AnalysisArticleJoinDiffCallback(),
-                            analysisArticleJoinViewModel
+                            analysisArticleJoinViewModel,
+                            statusbarHeight,
+                            toolbarHeight
                     );
             analysisArticlesViewPager.setAdapter(analysisArticleJoinPagerAdapter);
             analysisArticlesViewPager.registerOnPageChangeCallback( new ViewPager2.OnPageChangeCallback() {
@@ -158,6 +164,18 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
             });
         }
 
+    private int getStatusBarHeight() {
+        int height;
+        Resources myResources = getResources();
+        int idStatusBarHeight = myResources.getIdentifier( "status_bar_height", "dimen", "android");
+        if (idStatusBarHeight > 0) {
+            height = getResources().getDimensionPixelSize(idStatusBarHeight);
+        } else {
+            height = 0;
+        }
+        return height;
+    }
+
     public void restoreReferenceArticleEanCodeValue() {
         analysisArticleJoinViewModel.restoreReferenceArticleEanCodeValue();
         AnalysisArticleJoinValuesStateHolder valuesStateHolder =
@@ -234,7 +252,7 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
             };
 
     private void setToolbarText( String toolbarText ) {
-            /*
+            /* TODO XXX
             int maxLength = toolbarText.length();
             if (maxLength>24) { // TODO hardcoded
                 maxLength=24;
