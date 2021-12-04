@@ -28,7 +28,7 @@ public class Csv2AnalysisRowConverter {
     private ArrayList<RemoteAnalysisRow> remoteAnalysisRowList;
 
     public Csv2AnalysisRowConverter() {
-        analysisRowCsvReader.openReader( analysisRowsFileName );
+        analysisRowCsvReader.openReaderFromAssets( analysisRowsFileName );
         remoteDataRepository = RemoteDataRepository.getInstance();
         remoteDataRepository.askRemoteAnalysisRowsCount();
         //todo może jakiś warunek, że jak błędy to nie działamy dalej...

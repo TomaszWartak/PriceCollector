@@ -13,12 +13,9 @@
         <action
             android:id="@+id/action_startScreenFragment_to_setUpPreferencesFragment"
             app:destination="@id/setUpPreferncesFragment" />
-        <!--action
-            android:id="@+id/action_startScreenFragment_to_alertDialogFragment"
-            app:destination="@id/alertDialogFragment" /-->
         <action
-            android:id="@+id/action_startScreenFragment_to_alertDialogFragment2"
-            app:destination="@id/alertDialogFragment2" />
+            android:id="@+id/action_startScreenFragment_to_alertDialogFragment"
+            app:destination="@id/alertDialogFragment" />
     </fragment>
 
     <fragment
@@ -46,11 +43,8 @@
             android:id="@+id/action_analyzesListFragment_to_analysisCompetitorsFragment"
             app:destination="@id/analysisCompetitorsFragment" />
         <action
-            android:id="@+id/action_analyzesListFragment_to_alertDialogFragment2"
-            app:destination="@id/alertDialogFragment2" />
-        <!--action
             android:id="@+id/action_analyzesListFragment_to_alertDialogFragment"
-            app:destination="@id/alertDialogFragment" /-->
+            app:destination="@id/alertDialogFragment" />
     </fragment>
 
     <fragment
@@ -140,6 +134,9 @@
         <action
             android:id="@+id/action_analysisCompetitorsFragment_to_deleteStoreDialogFragment"
             app:destination="@id/deleteStoreDialogFragment" />
+        <action
+            android:id="@+id/action_analysisCompetitorsFragment_to_alertDialogFragment"
+            app:destination="@id/alertDialogFragment" />
     </fragment>
     <dialog
         android:id="@+id/addStoreDialogFragment"
@@ -210,11 +207,6 @@
         android:name="com.dev4lazy.pricecollector.test_view.remote_articles_screen.RemoteAnalysisRowJoinFragment"
         android:label="RemoteAnalysisRowJoinFragment"
         tools:layout="@layout/remote_analysis_row_fragment" />
-    <!--dialog
-        android:id="@+id/alertDialogFragment"
-        android:name="com.dev4lazy.pricecollector.view.utils.AlertDialogFragment"
-        android:label="AlertDialogFragment"
-        tools:layout="@layout/alert_dialog_fragment" /-->
     <fragment
         android:id="@+id/remoteSectorsListFragment"
         android:name="com.dev4lazy.pricecollector.remote_view_viewmodel.RemoteSectorsListFragment"
@@ -257,10 +249,10 @@
             app:destination="@id/analyzesListFragment" />
     </fragment>
     <dialog
-        android:id="@+id/alertDialogFragment2"
-        android:name="com.dev4lazy.pricecollector.view.utils.AlertDialogFragment2"
-        android:label="AlertDialogFragment2"
-        tools:layout="@layout/alert_dialog_fragment2" />
+        android:id="@+id/alertDialogFragment"
+        android:name="com.dev4lazy.pricecollector.view.utils.AlertDialogFragment"
+        android:label="AlertDialogFragment"
+        tools:layout="@layout/alert_dialog_fragment" />
     <fragment
         android:id="@+id/searchArticlesFragment"
         android:name="com.dev4lazy.pricecollector.view.E4_analysis_articles_list_screen.SearchArticlesFragment"

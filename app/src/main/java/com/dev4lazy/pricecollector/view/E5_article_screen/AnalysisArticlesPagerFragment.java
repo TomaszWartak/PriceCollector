@@ -59,8 +59,6 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
                 analysisArticleJoinsListViewModel,
                 analysisArticleJoinViewModel.getValuesStateHolder()
         );
-        viewPagerSetup( view );
-        viewPagerSubscribtion( analysisArticleJoinViewModel );
         return view;
     }
 
@@ -76,8 +74,8 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
                             .get( AnalysisArticleJoinViewModel.class );
         }
 
-        private void viewPagerSetup( View view ) {
-            analysisArticlesViewPager = view.findViewById(R.id.analysis_articles_pager);
+        private void viewPagerSetup( ) {
+            analysisArticlesViewPager = getView().findViewById(R.id.analysis_articles_pager);
             int statusbarHeight = getStatusBarHeight();
             int toolbarHeight = ((AppCompatActivity) getActivity()).getSupportActionBar().getHeight();
             analysisArticleJoinPagerAdapter =
@@ -252,13 +250,6 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
             };
 
     private void setToolbarText( String toolbarText ) {
-            /* TODO XXX
-            int maxLength = toolbarText.length();
-            if (maxLength>24) { // TODO hardcoded
-                maxLength=24;
-            }
-            toolbarText = toolbarText.substring(0,maxLength);
-            */
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(toolbarText);
         }
 
@@ -277,10 +268,11 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
             });
         }
 
-
     @Override
     public void onStart() {
         super.onStart();
+        viewPagerSetup( );
+        viewPagerSubscribtion( analysisArticleJoinViewModel );
         setToolbarText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getArticleName() );
         navigationViewMenuSetup();
     }
@@ -330,35 +322,4 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
         analysisArticleJoin.setReferenceArticleEanCodeValue( "" );
         analysisArticleJoin.setReferenceArticleDescription( "" );
     }
-
-    /* TODO XXX
-    private void getLogoutQuestionDialog() {
-        new MaterialAlertDialogBuilder(getContext())
-                .setTitle("")
-                .setMessage(R.string.question_close_app)
-                .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogoutDialogListener( getActivity() ) )
-                .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                .show();
-    }
-
-     */
-
-    /*
-    private class LogoutDialogListener implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            finishApp();
-        }
-    }
-
-    private void finishApp() {
-        // TODO promotor: czy to można bardziej elegancko zrobić?
-        AppHandle.getHandle().shutdown();
-        getActivity().finishAndRemoveTask();
-        System.exit(0);
-    }
-
-     */
-
 }

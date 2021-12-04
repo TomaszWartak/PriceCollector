@@ -63,20 +63,11 @@ public class ExternalServicesSupport {
     }
 
     private void registerServiceBroadcastReceiver( ) {
-        /* TODO XXX
-        context.registerReceiver(
-                broadcastReceiverWrapper.getBroadcastReceiver(),
-                broadcastReceiverWrapper.getIntentFilter()
-        );
-        */
         broadcastReceiverWrapper.registerReceiver( context );
     }
 
     private void unregisterServiceBroadcastReceiver() {
         broadcastReceiverWrapper.unregisterReceiver( context );
-        /* TODO XXX
-        context.unregisterReceiver(broadcastReceiverWrapper.getBroadcastReceiver());
-        */
     }
 
     public void bindToService( String packageName, String className ) {

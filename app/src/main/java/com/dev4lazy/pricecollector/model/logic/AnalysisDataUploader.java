@@ -36,12 +36,9 @@ import static com.dev4lazy.pricecollector.model.utils.DataFeeder.OBI_INDEX;
 public class AnalysisDataUploader {
 
     private Analysis analysisToUpload;
-    // TODO XXX private int analysisId;
-    // TODO XXX private int remoteAnalysisId;
 
     public AnalysisDataUploader( Analysis analysis ) {
         this.analysisToUpload = analysis;
-        // TODO XXX this.analysisId = analysisToUpload.getId();
     }
 
     public void uploadData() {

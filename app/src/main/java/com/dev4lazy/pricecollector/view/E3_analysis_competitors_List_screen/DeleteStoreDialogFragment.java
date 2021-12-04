@@ -29,10 +29,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class DeleteStoreDialogFragment extends DialogFragment {
+public class DeleteStoreDialogFragment extends DialogFragment { //OK
 
     private String validationMessage = "";
 

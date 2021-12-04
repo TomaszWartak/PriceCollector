@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.view.E5_article_screen;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
@@ -391,11 +392,19 @@ public class AnalysisArticleJoinPagerAdapter // OK
                 @Override
                 public void onClick(View articleImageView) {
                     // TODO XXX int screeWidthInPixels = Resources.getSystem().getDisplayMetrics().widthPixels;
+                    Context context = articleImageView.getContext();
+                    int screenOrientation = context.getResources().getConfiguration().orientation;
+                    int width;
+                    if (screenOrientation== Configuration.ORIENTATION_PORTRAIT) {
+                        width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    } else {
+                        width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    }
                     populatingDataPopupWindowWrapper =
                             new PopupWindowWrapper(
                                     articleImageView,
                                     R.layout.article_image_greater_popup_window ).
-                                    setWidth( ViewGroup.LayoutParams.MATCH_PARENT ).
+                                    setWidth( width ).
                                     setHeight( ViewGroup.LayoutParams.WRAP_CONTENT ).
                                     setGravity( Gravity.TOP ).
                                     setOutsideTouchable( false ).

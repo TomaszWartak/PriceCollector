@@ -183,7 +183,6 @@ public class SearchArticlesByDataFragment extends Fragment {
             }
 
         private void setTabDataName() {
-            // TODO niestety getView daje bieżący fragment a potrzebujemy SearchArtriclesFragment
             TabLayout tabLayout = getParentFragment().getView().findViewById(R.id.search_articles_tabs);
             TabLayout.Tab tab = tabLayout.getTabAt(SearchArticlesPagerAdapter.SEARCH_BY_DATA);
             if (searchArticlesCriteria.isDataFilterSet()) {
@@ -196,13 +195,6 @@ public class SearchArticlesByDataFragment extends Fragment {
 
         private void setToolbarText() {
             String toolbarText = storeViewModel.getStore().getName();
-            /* TODO XXX
-            int maxLength = toolbarText.length();
-            if (maxLength>24) {
-                maxLength=24;
-            }
-            toolbarText = toolbarText.substring(0,maxLength);
-             */
             String filtered = "* ";
             if (searchArticlesCriteria.isFilterSet()) {
                 toolbarText = filtered + toolbarText;

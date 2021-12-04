@@ -115,6 +115,9 @@
     <string name="short_permission_name_contacts">KONTAKTY</string>
     <string name="login_server_unavailable">Brak komunikacji z serwerem logowania...</string>
 
+    <!-- dialog dotyczący wysłania rezultatów analizy -->
+    <string name="question_about_uploading_data">Czy chcesz teraz wysłać wyniki badania cen?</string>
+
     <!-- Dla ActionBarDrawerToggle, ale po co ???-->
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
@@ -150,7 +153,7 @@
     <string name="competitors_toolbar_text">Konkurenci</string>
     <string name="ean_duplication_message_part1">DANE NIE ZOSTAŁY ZAPISANE\nKod EAN</string>
     <string name="ean_duplication_message_part2">\njest już przypisany do innego artykułu</string>
-    <string name="send_data_to_remote_db">Wyślij dane do aplikacji Badanie Cen</string>
+    <string name="send_data_to_remote_db">Wyślij wyniki Badania cen</string>
     <string name="populate_10_first">TEST - wypełnij danymi 10 pierwszych</string>
     <string name="only_for_testing">Dostępne wyłącznie na potrzeby testów</string>
     <string name="articles">ARTYKUŁY</string>

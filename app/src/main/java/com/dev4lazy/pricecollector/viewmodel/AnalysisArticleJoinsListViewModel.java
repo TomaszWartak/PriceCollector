@@ -174,7 +174,7 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
                 );
             }
             if (searchArticlesCriteria.isArticleAnyTextSet() ) {
-                // query.addCondition(BinaryCondition.like(new CustomSql( "ec1.value" ), "%"+searchArticlesCriteria.getArticleAnyText()+"%"));
+                // TODO ??? query.addCondition(BinaryCondition.like(new CustomSql( "ec1.value" ), "%"+searchArticlesCriteria.getArticleAnyText()+"%"));
             }
             if (searchArticlesCriteria.isArticleSectorIdSet() ) {
                 query.addCondition(BinaryCondition.equalTo(

@@ -29,7 +29,7 @@ public class Csv2EanCodeConverter {
     private ArrayList<RemoteEanCode> remoteEanCodeList;
 
     public Csv2EanCodeConverter() {
-        eanCodeCsvReader.openReader( eanCodesFileName );
+        eanCodeCsvReader.openReaderFromAssets( eanCodesFileName );
         remoteDataRepository = RemoteDataRepository.getInstance();
 
         // todo to niepotrzebne raczej...

@@ -6,7 +6,9 @@
     android:minWidth="1280dp"
     android:minHeight="720dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?mainViewsColorSurface"
+    >
 
     <!-- TODO XXX
     android:fillViewport="true"
@@ -16,7 +18,10 @@
             android:id="@+id/analysis_article_fragment_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/myVeryLightGrey" >
+            >
+            <!-- TODO XXX
+            android:background="@color/myVeryLightGrey"
+            -->
 
             <!-- Zdjęcie artykułu strategicznego -->
             <com.google.android.material.card.MaterialCardView

@@ -36,7 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DATA_SIZE_UNKNOWN;
 import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DONT_HIDE_WHEN_FINISHED;
 
-public class AnalyzesRecyclerView extends RecyclerView {
+public class AnalyzesRecyclerView extends RecyclerView { //OK
 
     public AnalyzesRecyclerView(@NonNull Context context) {
         super(context);
@@ -86,13 +86,10 @@ public class AnalyzesRecyclerView extends RecyclerView {
         }
 
         class AnalysisViewHolder extends ViewHolder {
-            // TODO sprawdź, czy tu nie jest potrzebny VieMOdel, czy to się nie zgubi przy obrocie
-
             private final TextView textViewAnalysisHeader;
             private final TextView textViewAnalysisCreationDate;
             private final TextView textViewAnalysisDueDate;
             private final TextView textViewAnalysisLastDataSentDate;
-            // TODO XXX private final TextView textViewAnalysisConfirmationDate;
             private final TextView textViewAnalysisDataReadyToDownload;
 
             public AnalysisViewHolder( View view ) {
@@ -102,7 +99,6 @@ public class AnalyzesRecyclerView extends RecyclerView {
                 textViewAnalysisCreationDate = view.findViewById( R.id.analysis_item__creation_date);
                 textViewAnalysisDueDate = view.findViewById( R.id.analysis_Item__due_date);
                 textViewAnalysisLastDataSentDate = view.findViewById( R.id.analysis_item__finish_date);
-                // TODO XXX textViewAnalysisConfirmationDate = view.findViewById( R.id.analysis_item__confirmation_date );
                 textViewAnalysisDataReadyToDownload = view.findViewById(R.id.analysis_item__data_to_download );
             }
 
@@ -205,12 +201,10 @@ public class AnalyzesRecyclerView extends RecyclerView {
                     Analysis analysis,
                     MutableLiveData<Boolean> finalResult,
                     ProgressPresentingManager progressPresentingManager ) {
-                // TODO XXX AnalysisBasicDataDownloader.getInstance().insertArticles( analysis, finalResult, progressPresenter );
                 new AnalysisFullDataDownloader().downloadData( analysis, finalResult, progressPresentingManager );
             }
 
             private void openCompetitorSlots( View view, Analysis analysis ) {
-                // TODO XXX sloty muszą się otworzyć dla konkretnej analizy, więc jakoś (ViewModel) trzeba przekazać info o analizie
                 AnalyzesListViewModel analyzesListViewModel = new ViewModelProvider( AppUtils.getActivity( getContext() ) ).get( AnalyzesListViewModel.class );
                 analyzesListViewModel.setChosenAnalysis( analysis );
                 Navigation.findNavController( view ).navigate(R.id.action_analyzesListFragment_to_analysisCompetitorsFragment);
@@ -220,7 +214,6 @@ public class AnalyzesRecyclerView extends RecyclerView {
                 textViewAnalysisCreationDate.setText( null );
                 textViewAnalysisDueDate.setText( null );
                 textViewAnalysisLastDataSentDate.setText( null );
-                // TODO XXX textViewAnalysisConfirmationDate.setText( null );
                 textViewAnalysisDataReadyToDownload.setText( null );
             }
 

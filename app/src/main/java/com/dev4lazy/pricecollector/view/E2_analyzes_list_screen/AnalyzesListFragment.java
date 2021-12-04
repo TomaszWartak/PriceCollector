@@ -25,14 +25,14 @@ import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.logic.AnalysisBasicDataDownloader;
 import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
-import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel2;
+import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
 import static com.dev4lazy.pricecollector.model.logic.AnalysisBasicDataDownloader.getInstance;
 
-public class AnalyzesListFragment extends Fragment {
+public class AnalyzesListFragment extends Fragment { //OK
 
     private AnalyzesListViewModel analyzesListViewModel;
     private AnalyzesRecyclerView analyzesRecyclerView;
@@ -63,28 +63,12 @@ public class AnalyzesListFragment extends Fragment {
                 public void handleOnBackPressed() {
                     // Handle the back button event
                     new LogoutQuestionDialog( getContext(), getActivity() ).get();
-                    // TODO XXX getLogoutQuestionDialog( getContext() );
                 }
             };
             getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         }
 
-        /* TODO XXX
-            private void getLogoutQuestionDialog( Context context ) {
-                new MaterialAlertDialogBuilder(
-                            context,
-                            R.style.PC_AlertDialogStyle_Overlay )
-                        .setTitle("")
-                        .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogoutDialogListener( getActivity() ) )
-                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                        .show();
-            }
-
-         */
-
-
-    private void recyclerViewSetup(View view ) {
+        private void recyclerViewSetup(View view ) {
             analyzesRecyclerView = view.findViewById( R.id.analyzes_recycler );
             analyzesRecyclerView.setup();
         }
@@ -102,17 +86,6 @@ public class AnalyzesListFragment extends Fragment {
         }
 
         private void newAnalyzesCheck() {
-            /* TODO XXX newAnalyzesReady = new MutableLiveData<>();
-            AnalysisBasicDataDownloader analysisBasicDataDownloader = getInstance();
-            newAnalyzesReady.setValue( analysisBasicDataDownloader.isNewAnalysisReadyToDownlad() );
-            newAnalyzesReady.observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
-                @Override
-                public void onChanged( Boolean newAnalyzesReady  ) {
-                    if (newAnalyzesReady) {
-                        showAskUserForAnalyzesDataDownload( getView() );
-                    }
-                }
-            }); */
             AnalysisBasicDataDownloader analysisBasicDataDownloader = getInstance();
             analysisBasicDataDownloader.getNewAnalysisReadyToDownladLD().observe( getViewLifecycleOwner(),  new Observer<Boolean>() {
                 @Override
@@ -134,17 +107,19 @@ public class AnalyzesListFragment extends Fragment {
     }
 
         private void showAskUserForAnalyzesDataDownload( View view ) {
-            AlertDialogFragmentViewModel2 alertDialogFragmentViewModel =
-                    new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel2.class);
+            AlertDialogFragmentViewModel alertDialogFragmentViewModel =
+                    new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel.class);
             alertDialogFragmentViewModel.setAlertDialog( getAskUserForAnalyzesDataDownloadDialog() );
-            Navigation.findNavController( view ).navigate( R.id.action_analyzesListFragment_to_alertDialogFragment2 );
+            Navigation.findNavController( view ).navigate( R.id.action_analyzesListFragment_to_alertDialogFragment);
         }
 
             @NonNull
             private AlertDialog getAskUserForAnalyzesDataDownloadDialog() {
-                AlertDialog alertDialog = new MaterialAlertDialogBuilder(
+                AlertDialog alertDialog =
+                        new MaterialAlertDialogBuilder(
                             getContext(),
-                            R.style.PC_AlertDialogStyle_Overlay )
+                            R.style.PC_AlertDialogStyle_Overlay
+                        )
                         .setTitle( getString( R.string.basic_data_ready_to_download))
                         .setMessage( getString( R.string.question_about_downloading_data) )
                         .setPositiveButton(
@@ -158,14 +133,12 @@ public class AnalyzesListFragment extends Fragment {
                                     }
                                 }
                         )
-                        // TODO XXX .setNegativeButton( alertDialogFragmentViewModel.getNegativeButtonLabel(), alertDialogFragmentViewModel.getNegativeButtonOnClickListener() )
                         .setNegativeButton(
                                 getString( R.string.caption_no),
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        // todo?
                                     }
                                 }
                         )
@@ -182,17 +155,11 @@ public class AnalyzesListFragment extends Fragment {
     }
 
     public void toolbarSetup() {
-        // TODO XXX .setVisibility( GONE );
         setToolbarText(getString(R.string.analyzes_toolbar_text));
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
         private void setToolbarText( String toolbarText ) {
-            int maxLength = toolbarText.length();
-            if (maxLength>24) { // TODO Hardcoded - sprawdź inne wystąpienia (może opakować toolbar?)
-                maxLength=24;
-            }
-            toolbarText = toolbarText.substring(0,maxLength);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(toolbarText);
         }
 
@@ -211,7 +178,6 @@ public class AnalyzesListFragment extends Fragment {
                     switch (item.getItemId()) {
                         case R.id.analyzes_list_screen_logout_menu_item:
                             new LogoutQuestionDialog( getContext(), getActivity() ).get();
-                            // TODO XXX getLogoutQuestionDialog( getContext() );
                             break;
                     }
                     return false;

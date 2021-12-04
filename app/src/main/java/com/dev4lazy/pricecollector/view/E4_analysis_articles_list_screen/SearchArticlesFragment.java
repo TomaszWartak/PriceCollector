@@ -42,7 +42,6 @@ public class SearchArticlesFragment extends Fragment {
         setOnBackPressedCallback();
         analysisArticleJoinsListViewModel =
                 new ViewModelProvider( getActivity() ).get( AnalysisArticleJoinsListViewModel.class );
-        // TODO XXX setToolbarText();
         setupTabLayout( view );
         return view;
     }
@@ -56,15 +55,6 @@ public class SearchArticlesFragment extends Fragment {
                 }
             };
             getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-        }
-
-        // TODO XXX
-        private void setToolbarText() {
-            if (analysisArticleJoinsListViewModel.getSearchArticlesCriteria().isFilterSet()) {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PriceCollector *");
-            } else {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PriceCollector");
-            }
         }
 
         private void setupTabLayout(View view) {
@@ -89,14 +79,12 @@ public class SearchArticlesFragment extends Fragment {
                                         filterSetSign = "* ";
                                     }
                                     tab.setText(filterSetSign + getResources().getString(R.string.articles_search_tab_data_name));
-                                    // TODO XXX tab.setCustomView( view.findViewById(R.id.search_articles_by_data_tab ) );
                                     break;
                                 case SearchArticlesPagerAdapter.SEARCH_BY_STRUCTURE:
                                     if (searchArticlesCriteria.isStructureFilterSet()) {
                                         filterSetSign = "* ";
                                     }
                                     tab.setText(filterSetSign + getResources().getString(R.string.articles_search_tab_structure_name));
-                                    // TODO XXX tab.setCustomView( view.findViewById(R.id.search_articles_by_structure_tab ) );
                                     break;
                             }
                         }
@@ -128,7 +116,6 @@ public class SearchArticlesFragment extends Fragment {
                             break;
                         case R.id.search_articles_logout_menu_item:
                             new LogoutQuestionDialog( getContext(), getActivity() ).get();
-                            // TODO XXX getLogoutQuestionDialog();
                             break;
                     }
                     return false;
@@ -136,33 +123,4 @@ public class SearchArticlesFragment extends Fragment {
             });
         }
 
-        /* TODO XXX
-            private void getLogoutQuestionDialog() {
-                new MaterialAlertDialogBuilder(getContext())
-                        .setTitle("")
-                        .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogoutDialogListener( getActivity() ) )
-                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                        .show();
-            }
-
-         */
-
-            /* TODO XXX
-                private class LogoutDialogListener implements DialogInterface.OnClickListener {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finishApp();
-                    }
-                }
-
-                    private void finishApp() {
-                        // TODO promotor?: czy to można bardziej elegancko zrobić?
-                        AppHandle.getHandle().shutdown();
-                        getActivity().finishAndRemoveTask();
-                        System.exit(0);
-                    }
-
-             */
 }

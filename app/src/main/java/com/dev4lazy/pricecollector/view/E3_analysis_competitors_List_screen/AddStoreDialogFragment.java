@@ -29,11 +29,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class AddStoreDialogFragment extends DialogFragment {
+public class AddStoreDialogFragment extends DialogFragment { // OK
 
     private String validationMessage = "";
 
@@ -48,10 +44,6 @@ public class AddStoreDialogFragment extends DialogFragment {
 
         EditText companyNameEditText = viewInflated.findViewById(R.id.add_store_company_name_edit_text);
         EditText storeNameEditText = viewInflated.findViewById(R.id.add_store_name_edit_text);
-        /*todo XXX storeNameEditText.setFocusableInTouchMode(true);
-        storeNameEditText.requestFocus();
-
-         /**/
         EditText streetEditText = viewInflated.findViewById(R.id.add_store_street_edit_text);
         EditText cityEditText = viewInflated.findViewById(R.id.add_store_city_edit_text);
         EditText zipcodeEditText = viewInflated.findViewById(R.id.add_store_zipcode_edit_text);

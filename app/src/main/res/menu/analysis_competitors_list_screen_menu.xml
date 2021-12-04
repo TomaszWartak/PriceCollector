@@ -7,7 +7,7 @@
             android:id="@+id/analysis_competitors_list_screen_gotoanalyzes_menu_item"
             android:title="@string/go_to_analyzes_list_menu_item" />
         <item
-            android:id="@+id/analysis_competitors_list_screen_uploaddata_menu_item"
+            android:id="@+id/analysis_competitors_list_screen_upload_data_menu_item"
             android:title="@string/send_data_to_remote_db" />
     </group>
     <item android:title="">

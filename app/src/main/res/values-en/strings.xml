@@ -93,7 +93,7 @@
     <string name="competitors_toolbar_text">Competitors</string>
     <string name="ean_duplication_message_part1">DATA NOT SAVED\nEAN code</string>
     <string name="ean_duplication_message_part2">\nis is assigned to a other article</string>
-    <string name="send_data_to_remote_db">Send data to remote database</string>
+    <string name="send_data_to_remote_db">Send analysis results</string>
     <string name="populate_10_first">TEST - populate 10 first</string>
     <string name="only_for_testing">Only available for testing purposes</string>
     <string name="articles">ARTICLES</string>
@@ -103,4 +103,5 @@
     <string name="user_not_found_in_the_remote_database">User information not found in the remote database</string>
     <string name="enter_user_ID">Enter your user ID</string>
     <string name="enter_password">Enter your password</string>
+    <string name="question_about_uploading_data">Would you like to submit your price survey results now?</string>
 </resources>

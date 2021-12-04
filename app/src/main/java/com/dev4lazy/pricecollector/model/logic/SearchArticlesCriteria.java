@@ -12,8 +12,6 @@ public class SearchArticlesCriteria {
     private String articleEAN;
     private String articleSKU;
     private String articleAnyText;
-    // TODO XXX private int articleSectorId;
-    // TODO XXX private int articleDepartmentId;
     private Sector selectedSector = null;
     private Department selectedDepartment = null;
 
@@ -26,21 +24,11 @@ public class SearchArticlesCriteria {
         articleEAN = "";
         articleSKU = "";
         articleAnyText = "";
-        // TODO XXX articleSectorId = 0;
-        // TODO XXX articleDepartmentId = 0;
         selectedSector = new Sector();
         selectedDepartment = new Department();
         filterSet = false;
         dataFilterSet = false;
         structureFilterSet = false;
-            /* TODO XXX
-            setArticleName("");
-            setArticleEAN("");
-            setArticleSKU("");
-            setArticleAnyText("");
-            setArticleSectorId( 0 );
-            setArticleDepartmentId( 0 );
-             */
     }
 
     public boolean isFilterSet() {
@@ -65,11 +53,6 @@ public class SearchArticlesCriteria {
 
     public void setDataFilterSet(boolean dataFilterSet) {
         this.dataFilterSet = dataFilterSet;
-        /* TODO XXX
-        if (isFilterNotSet()) {
-            setFilterSet(isDataFilterSet());
-        }
-         */
         setFilterSet( isDataFilterSet() || isStructureFilterSet() );
     }
 
@@ -83,11 +66,6 @@ public class SearchArticlesCriteria {
 
     public void setStructureFilterSet(boolean structureFilterSet) {
         this.structureFilterSet = structureFilterSet;
-        /* TODO XXX
-        if (isFilterNotSet()) {
-            setFilterSet( isStructureFilterSet() );
-        }
-        */
         setFilterSet( isDataFilterSet() || isStructureFilterSet() );
     }
 

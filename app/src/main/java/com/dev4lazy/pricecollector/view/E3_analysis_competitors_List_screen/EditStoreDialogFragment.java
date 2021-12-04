@@ -29,7 +29,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-public class EditStoreDialogFragment extends DialogFragment {
+public class EditStoreDialogFragment extends DialogFragment { //OK
 
     private String validationMessage = "";
 
@@ -176,4 +176,5 @@ public class EditStoreDialogFragment extends DialogFragment {
         }
         return true;
     }
+
 }

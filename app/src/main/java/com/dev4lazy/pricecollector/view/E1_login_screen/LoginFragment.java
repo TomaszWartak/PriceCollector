@@ -187,6 +187,7 @@ public class LoginFragment
                     // Przejście do AnalyzesListFragment
                     Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
                 } else {
+                    pleaseWaitProgressBar.setVisibility(View.GONE);
                     userPasswordEditText.setText("");
                     Toast.makeText(
                         getContext(),

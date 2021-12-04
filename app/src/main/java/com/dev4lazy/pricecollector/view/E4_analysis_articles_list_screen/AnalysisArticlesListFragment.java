@@ -56,7 +56,6 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
         View view = inflater.inflate(R.layout.analysis_articles_list_fragment, container, false);
         viewModelsSetup();
         setOnBackPressedCallback();
-        // TODO XXX setToolbarText();
         recyclerViewSetup( view );
         recyclerViewSubscribtion();
         return view;
@@ -119,14 +118,6 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
                 public void onChanged( PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                     if (!analysisArticlesJoins.isEmpty()) {
                         analysisArticleJoinsRecyclerView.submitArticlesList( analysisArticlesJoins );
-                        // TODO XXX przewinęcie RecyclerView do pozycji ustawionej w ViewPagerze powinno sie inaczej odbywać...
-                        //  Bo za każdym razem gdy wychodzę z ViewPagera, to item jest u samej góry, a ja się spodziwewam go
-                        //  w innym miejscu (tam gdzie go kliknąłem).
-                        //  Natomiast trzeba ustalić zachowanie RecyclerView, kiedy w ViewPager wyjdziesz poza stronę,
-                        //  z której otwierałeś Item.
-                        //  Proponuję:
-                        //  - jesli jestem na tej samej stronie - podświetlić po prostu Itewm, który był wyświetlony w ViewPagerze
-                        //  - jesli na innej stronie - podświetlić Item, który był wyświetlony w ViewPagerze i ustawić go na śrdku strony
                         // TODO wypełnij metodę AnalysisArticleJoinsRecyclerView.scrollToItem()
                         // TODO TEST
                         // ((LinearLayoutManager)layoutManager).scrollToPositionWithOffset(positionToScroll - 1,0);
@@ -355,36 +346,5 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
         }
         analysisArticleJoinsRecyclerView.getAdapter().notifyDataSetChanged();
     }
-
-    /* TODO XXX
-            private void getLogoutQuestionDialog() {
-                new MaterialAlertDialogBuilder(getContext()))
-                        .setTitle("")
-                        .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogoutDialogListener( getActivity() ) )
-                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                        .show();
-            }
-
-     */
-
-
-            /* TODO XXX
-                private class LogoutDialogListener implements DialogInterface.OnClickListener {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finishApp();
-                    }
-                }
-
-                    private void finishApp() {
-                        // TODO promotor: czy to można bardziej elegancko zrobić?
-                        AppHandle.getHandle().shutdown();
-                        getActivity().finishAndRemoveTask();
-                        System.exit(0);
-                    }
-
-             */
 
 }

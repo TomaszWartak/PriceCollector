@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -23,14 +25,16 @@ import com.dev4lazy.pricecollector.model.logic.AnalysisDataUploader;
 import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
 import com.dev4lazy.pricecollector.utils.AppUtils;
 import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
+import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.CompetitorsSlotsViewModel;
 import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
-public class AnalysisCompetitorsListFragment extends Fragment {
+public class AnalysisCompetitorsListFragment extends Fragment { //OK
 
     private CompetitorsSlotsListView competitorsSlotsListView;
     private CompetitorsSlotsViewModel competitorsSlotsViewModel;
@@ -73,7 +77,6 @@ public class AnalysisCompetitorsListFragment extends Fragment {
         }
 
         private void listViewSubscribtion() {
-            // todo askForSlots();
             competitorsSlotsViewModel = new ViewModelProvider( getActivity() ).get( CompetitorsSlotsViewModel.class);
             competitorsSlotsViewModel.getCompetitorsSlotsFullDataLiveData().observe(getViewLifecycleOwner(), new Observer<ArrayList<CompetitorSlotFullData>>() {
                 @Override
@@ -106,10 +109,14 @@ public class AnalysisCompetitorsListFragment extends Fragment {
                     switch (item.getItemId()) {
                         case R.id.analysis_competitors_list_screen_logout_menu_item:
                             new LogoutQuestionDialog( getContext(), getActivity() ).get();
-                            // TODO XXX getLogoutQuestionDialog();
                             break;
-                        case R.id.analysis_competitors_list_screen_uploaddata_menu_item:
-                            uploadAnalysisData();
+                        case R.id.analysis_competitors_list_screen_upload_data_menu_item:
+                            AlertDialogFragmentViewModel alertDialogFragmentViewModel =
+                                    new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel.class);
+                            alertDialogFragmentViewModel.setAlertDialog(
+                                    getAskUserForAnalyzesDataUploadDialog()
+                            );
+                            Navigation.findNavController( getView() ).navigate( R.id.action_analysisCompetitorsFragment_to_alertDialogFragment );
                             break;
                         case R.id.analysis_competitors_list_screen_gotoanalyzes_menu_item:
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisCompetitorsFragment_to_analyzesListFragment );
@@ -120,35 +127,37 @@ public class AnalysisCompetitorsListFragment extends Fragment {
             });
         }
 
-        /* TODO XXX
-            private void getLogoutQuestionDialog() {
-                new MaterialAlertDialogBuilder(getContext())
-                        .setTitle("")
-                        .setMessage(R.string.question_close_app)
-                        .setPositiveButton(getActivity().getString(R.string.caption_yes), new LogoutDialogListener( getActivity() ) )
-                        .setNegativeButton(getActivity().getString(R.string.caption_no),null)
-                        .show();
+            private AlertDialog getAskUserForAnalyzesDataUploadDialog() {
+                AlertDialog alertDialog =
+                        new MaterialAlertDialogBuilder(
+                                getContext(),
+                                R.style.PC_AlertDialogStyle_Overlay
+                        )
+                        // .setTitle( "")
+                        .setMessage( getString( R.string.question_about_uploading_data) )
+                        .setPositiveButton(
+                                getString( R.string.caption_yes) ,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        uploadAnalysisData();
+                                    }
+                                }
+                        )
+                        .setNegativeButton(
+                                getString( R.string.caption_no),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }
+                        )
+                        .setCancelable( false )
+                        .create();
+                return alertDialog;
             }
-
-         */
-
-            /* TODO XXX
-                private class LogoutDialogListener implements DialogInterface.OnClickListener {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finishApp();
-                    }
-                }
-
-                    private void finishApp() {
-                        // TODO promotor: czy to można bardziej elegancko zrobić?
-                        AppHandle.getHandle().shutdown();
-                        getActivity().finishAndRemoveTask();
-                        System.exit(0);
-                    }
-
-             */
 
             private void uploadAnalysisData() {
                 AnalyzesListViewModel analyzesListViewModel =

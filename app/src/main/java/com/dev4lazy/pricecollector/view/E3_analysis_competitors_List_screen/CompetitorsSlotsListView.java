@@ -35,7 +35,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-public class CompetitorsSlotsListView extends ListView {
+public class CompetitorsSlotsListView extends ListView { //OK
 
     private StoreViewModel storeViewModel;
     private CompetitorsSlotsViewModel competitorsSlotsViewModel;
@@ -52,7 +52,7 @@ public class CompetitorsSlotsListView extends ListView {
         this.storeViewModel = storeViewModel;
         this.competitorsSlotsViewModel = competitorsSlotsViewModel;
         ArrayList<CompetitorSlotFullData> emptyList = new ArrayList<>();
-        AnalysisCompetitorsAdapter adapter = new AnalysisCompetitorsAdapter( getContext(),/* todo this ,*/ emptyList );
+        AnalysisCompetitorsAdapter adapter = new AnalysisCompetitorsAdapter( getContext(), emptyList );
         setAdapter( adapter );
     }
 
@@ -76,13 +76,7 @@ public class CompetitorsSlotsListView extends ListView {
             setTextViewCompanyNameMaxWidth( textViewCompanyName );
             TextView textViewStoreName = slotView.findViewById( R.id.competitor_store_name );
             TextView textViewThreeDotsMenu = slotView.findViewById( R.id.competitor_slot_menu) ;
-            textViewThreeDotsMenu.setVisibility( GONE ); // TODO XXX INVISIBLE
-            /* TODO XXX
-            int textViewThreeDotsMenuWidth = textViewThreeDotsMenu.getWidth();
-            textViewThreeDotsMenu.setWidth( 0 );
-            textViewThreeDotsMenu.setVisibility( INVISIBLE ); // TODO XXX INVISIBLE
-
-             */
+            textViewThreeDotsMenu.setVisibility( GONE );
 
             int warningColor = ContextCompat.getColor( AppHandle.getHandle().getApplicationContext(), R.color.colorWarning );
 
@@ -93,7 +87,6 @@ public class CompetitorsSlotsListView extends ListView {
                 textViewStoreName.setTextColor( warningColor );
                 setSlotViewOnClickListener( slotView, new SlotViewWhenNoStoreChosenOnClickListener( competitorSlotFullData ));
             } else {
-                // TODO textViewCompanyName.setText( "  " + competitorSlotFullData.getSlot().getCompanyName() + "  " );
                 textViewCompanyName.setText( competitorSlotFullData.getSlot().getCompanyName() );
                 if (isCompetitorStoreNotChosen(competitorSlotFullData)) {
                     if (isNoCompetitorStores(competitorSlotFullData)) {
@@ -107,14 +100,9 @@ public class CompetitorsSlotsListView extends ListView {
                     }
                 } else {
                     AnalysisCompetitorSlot slot = competitorSlotFullData.getSlot();
-                    // TODO XXX competitorSlotFullData.setChosenStore( competitorSlotFullData.getStore( slot.getOtherStoreId() ) );
                     textViewStoreName.setText( slot.getStoreName() );
                     textViewStoreName.setTextColor( ContextCompat.getColor( AppHandle.getHandle().getApplicationContext(), R.color.colorSecondaryText) );
                     setOffSlotViewOnClickListener( slotView );
-                    // TODO XXXX textViewThreeDotsMenu.setVisibility( VISIBLE );
-                    /* TODO XXX
-                    textViewThreeDotsMenu.setWidth( textViewThreeDotsMenuWidth );
-                     */
                     textViewThreeDotsMenu.setVisibility( VISIBLE );
                     setOnThreeDotsOnClickMenuListener(textViewThreeDotsMenu, competitorSlotFullData);
                     setSlotViewOnClickListener(
@@ -122,32 +110,6 @@ public class CompetitorsSlotsListView extends ListView {
                         new SlotViewWhenStoreChosenOnClickListener( competitorSlotFullData )
                     );
                 }
-
-                /*
-                if (isNoCompetitorStores(competitorSlotFullData)) {
-                    textViewStoreName.setText( getContext().getString( R.string.add_competitor_store ));
-                    textViewStoreName.setTextColor( warningColor );
-                    setSlotViewOnClickListener( slotView, new SlotViewWhenNoStoresOnClickListener( competitorSlotFullData ));
-                } else {
-                    if (isCompetitorStoreNotChosen(competitorSlotFullData)) {
-                        textViewStoreName.setText( getContext().getString(R.string.choose_competitor_store ));
-                        textViewStoreName.setTextColor( warningColor);
-                        setSlotViewOnClickListener( slotView, new SlotViewWhenNoStoreChosenOnClickListener( competitorSlotFullData ));
-                    } else {
-                        AnalysisCompetitorSlot slot = competitorSlotFullData.getSlot();
-                        // TODO XXX competitorSlotFullData.setChosenStore( competitorSlotFullData.getStore( slot.getOtherStoreId() ) );
-                        textViewStoreName.setText( slot.getStoreName() );
-                        textViewStoreName.setTextColor( ContextCompat.getColor( AppHandle.getHandle().getApplicationContext(), R.color.colorSecondaryText) );
-                        setOffSlotViewOnClickListener( slotView );
-                        textViewThreeDotsMenu.setVisibility( VISIBLE );
-                        setOnThreeDotsOnClickMenuListener(textViewThreeDotsMenu, competitorSlotFullData);
-                        setSlotViewOnClickListener(
-                                slotView,
-                                new SlotViewWhenStoreChosenOnClickListener( competitorSlotFullData )
-                        );
-                    }
-                }
-                */
             }
             return slotView;
         }
@@ -187,13 +149,11 @@ public class CompetitorsSlotsListView extends ListView {
                             break;
                         case R.id.deleteCompetitorStoreMenuItem:
                             deleteCompetitorStore( view, competitorSlotFullData );
-                            // todo czy tutaj również jeśli slot od konkurent lokalny to coś tam
                             break;
                         case R.id.chooseCompetitorStoreMenuItem:
                             createStoresListMenu( view, competitorSlotFullData );
                             break;
                         case R.id.detachCompetitorStoreMenuItem:
-                            // todo tutaj jeśli slot od konkurent lokalny to coś tam
                             detachCompetitorStore( competitorSlotFullData );
                             break;
                     }
@@ -229,7 +189,7 @@ public class CompetitorsSlotsListView extends ListView {
                                         if (previousStore!=null) {
                                             /* Jeśli dodanie sklepu dokonało się dla jednego z lokalnych konkurentów,
                                             gdzie jakiś sklep był juz wybrany (previousStore!=null),
-                                            to dodanie sklepu spowodował odpięcie tego wcześniej wybranego.
+                                            to dodanie sklepu spowodowało odpięcie tego wcześniej wybranego.
                                             W takiej sytuacji u drugiego lokalnego konkurenta
                                             trzeba dodać ten odpięty sklep.
                                          */
@@ -309,27 +269,24 @@ public class CompetitorsSlotsListView extends ListView {
             storeViewModel.setOnChangedReactionNotAllowed();
             Store store = competitorSlotFullData.getChosenStore();
             storeViewModel.setStore( store );
-            // TODO XXX storeViewModel.setActionToDo(Action.DELETE);
             storeViewModel.getData().observe( AppUtils.getActivity(getContext()), new Observer<Store>() {
                 @Override
                 public void onChanged(Store modifiedStore) {
                     if (storeViewModel.isOnChangedReactionAllowed()) {
                         if (modifiedStore.getId() > -1) {
                             MutableLiveData<Integer> storeDeleteResult = new MutableLiveData<>();
-                            // TOD XXX Observer<Integer> updatingResultObserver =
                             storeDeleteResult.observe(AppUtils.getActivity(getContext()), new Observer<Integer>() {
                                 @Override
                                 public void onChanged(Integer deletedCount) {
                                     storeDeleteResult.removeObserver(this); // this = observer...
                                     if ((deletedCount != null) && (deletedCount > 0)) {
                                         storeViewModel.getData().removeObservers(AppUtils.getActivity(getContext()) /* hostFragment.getActivity() */);
-                                        // TODO XXXX tutaj muszisz wyczyścić slot do wyświetlenia i zapisania
                                         competitorSlotFullData.setChosenStore(null);
                                         competitorSlotFullData.removeStore(modifiedStore);
                                         competitorSlotFullData.getSlot().reset();
                                         /* Jeśli usunięcie sklepu dokonało się dla jednego z lokalnych konkurentów
                                         (sloty 4 i 5), to u drugiego lokalnego konkurenta nie trzeba,
-                                        bo aby usunąć sklep musi ybć najpierw przypięty.
+                                        bo aby usunąć sklep musi być najpierw przypięty.
                                         A jesli jest przypiety, to nie ma go na u drugiego.
                                         Dlatego nie robisz z tym nic... :-) */
                                         notifyDataSetChanged();
@@ -378,12 +335,6 @@ public class CompetitorsSlotsListView extends ListView {
                     slot.setStoreName( chosenStore.getName() );
                     LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
                     localDataRepository.updateAnalysisCompetitorSlot( slot,null );
-                    /* TODO
-                    Warto też usunąć wybrany sklep z listy sklepów dla danego slotu,
-                    żeby nie widniał w menu na liście sklepóe do wyboru. Z tym, że w sytuacji,
-                    jeśli był tylko jeden sklep na liście (czyli po usunięciu lista będzie pusta),
-                    to z menu trzeba wyrzucić "Wybierz sklep"
-                    */
                     if (chosenStore!=null) {
                         competitorSlotFullData.removeStore( chosenStore );
                     }
@@ -488,7 +439,6 @@ public class CompetitorsSlotsListView extends ListView {
             public void onClick(View view) {
                 storeViewModel.setStore(competitorSlotFullData.getChosenStore());
                 Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisArticlesListFragment);
-                //todo ? Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisArticlesPagerFragment );
             }
 
         }
@@ -539,4 +489,5 @@ public class CompetitorsSlotsListView extends ListView {
         }
 
     }
+
 }
