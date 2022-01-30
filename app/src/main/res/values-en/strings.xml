@@ -92,7 +92,7 @@
     <string name="analyzes_toolbar_text">Analyzes</string>
     <string name="competitors_toolbar_text">Competitors</string>
     <string name="ean_duplication_message_part1">DATA NOT SAVED\nEAN code</string>
-    <string name="ean_duplication_message_part2">\nis is assigned to a other article</string>
+    <string name="ean_duplication_message_part2">\n is assigned to a other article</string>
     <string name="send_data_to_remote_db">Send analysis results</string>
     <string name="populate_10_first">TEST - populate 10 first</string>
     <string name="only_for_testing">Only available for testing purposes</string>
@@ -104,4 +104,7 @@
     <string name="enter_user_ID">Enter your user ID</string>
     <string name="enter_password">Enter your password</string>
     <string name="question_about_uploading_data">Would you like to submit your price survey results now?</string>
+    <string name="network_not_available">Network not available</string>
+    <string name="clear_local_db">Clear local data</string>
+    <string name="question_about_clearing_local_data">Do you want to clear application data?</string>
 </resources>

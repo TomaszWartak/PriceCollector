@@ -55,6 +55,7 @@ public class AppSettings {
 
     // todo language
     private String language;
+
     private static AppSettings instance = new AppSettings();
 
     // todo private static final AppPreferences appPreferences = AppHandle.getHandle().getPrefs();

@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dev4lazy.pricecollector.model.entities.Store;
-import com.dev4lazy.pricecollector.utils.Action;
 
 public class StoreViewModel extends AndroidViewModel {
 

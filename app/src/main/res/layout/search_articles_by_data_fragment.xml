@@ -82,7 +82,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Any text  -->
+        <!-- TODO realizacja w wydaniu 1 Any text
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_articles_any_text_text_input"
             style="@style/PC_TextInputLayoutStyle"
@@ -102,7 +102,7 @@
                 android:inputType="text"
                 android:maxLines="1" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout-->
 
         <!-- Przyciski  -->
         <androidx.appcompat.widget.LinearLayoutCompat

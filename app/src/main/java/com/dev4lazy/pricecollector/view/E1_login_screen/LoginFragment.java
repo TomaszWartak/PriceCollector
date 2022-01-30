@@ -93,26 +93,38 @@ public class LoginFragment
         }
 
         void logIn( ) {
-            /* TODO TEST - na potrzeby testu zakomentuj
-            if (isLoginEmpty()) {
+            if (isNetworkAvailable()) {
+                /* TODO TEST - na potrzeby testu zakomentuj
+                if (isLoginEmpty()) {
+                    Toast.makeText(
+                            getContext(),
+                            AppHandle.getHandle().getString( R.string.enter_user_ID ),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (isPasswordEmpty()){
+                    Toast.makeText(
+                            getContext(),
+                            AppHandle.getHandle().getString( R.string.enter_password ),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                */
+                showPleaseWaitProgressBar();
+                setUserViewModelData();
+                runAuthSupport();
+            } else {
                 Toast.makeText(
                         getContext(),
-                        AppHandle.getHandle().getString( R.string.enter_user_ID ),
-                        Toast.LENGTH_SHORT).show();
-                return;
+                        AppHandle.getHandle().getString( R.string.network_not_available ),
+                        Toast.LENGTH_SHORT
+                    ).show();
             }
-            if (isPasswordEmpty()){
-                Toast.makeText(
-                        getContext(),
-                        AppHandle.getHandle().getString( R.string.enter_password ),
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-            */
-            showPleaseWaitProgressBar();
-            setUserViewModelData();
-            runAuthSupport();
         }
+
+    private boolean isNetworkAvailable() {
+        return AppHandle.getHandle().getNetworkAvailabilityMonitor().isNetworkAvailable();
+    }
 
     private boolean isLoginEmpty() {
         String login = userLoginEditText.getText().toString();
@@ -187,7 +199,7 @@ public class LoginFragment
                     // Przejście do AnalyzesListFragment
                     Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
                 } else {
-                    pleaseWaitProgressBar.setVisibility(View.GONE);
+                    pleaseWaitProgressBar.setVisibility(View.INVISIBLE);
                     userPasswordEditText.setText("");
                     Toast.makeText(
                         getContext(),
@@ -201,7 +213,10 @@ public class LoginFragment
             }
         };
         findRemoteUserResult.observeForever(findRemoteUserResultObserver);
-        AppHandle.getHandle().getRepository().getRemoteDataRepository().findRemoteUserByLogin( userViewModel.getUser().getLogin(), findRemoteUserResult );
+        AppHandle.getHandle().getRepository().getRemoteDataRepository().findRemoteUserByLogin(
+                userViewModel.getUser().getLogin(),
+                findRemoteUserResult
+        );
     }
 
         private void getSettingsInfo() {
@@ -237,7 +252,7 @@ public class LoginFragment
                 Observer<Boolean> resultObserver = new Observer<Boolean>() {
                     @Override
                     public void onChanged( Boolean isServerReplied ) {
-                        pleaseWaitProgressBar.setVisibility(View.GONE);
+                        pleaseWaitProgressBar.setVisibility(View.INVISIBLE);
                         /// Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
                     }
                     /* @Override
@@ -255,7 +270,7 @@ public class LoginFragment
 
     @Override
     public void callIfUnsuccessful( String failureReasonMessage) {
-        pleaseWaitProgressBar.setVisibility(View.GONE);
+        pleaseWaitProgressBar.setVisibility(View.INVISIBLE);
         userPasswordEditText.setText("");
         Toast.makeText(
             getContext(),

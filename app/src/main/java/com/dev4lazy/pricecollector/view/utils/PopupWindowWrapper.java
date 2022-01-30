@@ -5,8 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
 
-import com.dev4lazy.pricecollector.test_view.test_actions_2_screen.TestActionsFragment2;
-import com.dev4lazy.pricecollector.utils.AfterAllCallback;
+import com.dev4lazy.pricecollector.utils.DoItCallback;
 
 /**
  * Opakowuje PopupWindow.
@@ -25,7 +24,7 @@ import com.dev4lazy.pricecollector.utils.AfterAllCallback;
  * Ponieważ PopupWindowWrapper implementuje metodę doIt interfesju AfterAllCallback,
  * może ona zostać wywołana w celu zamknięcia okna.
  */
-public class PopupWindowWrapper implements AfterAllCallback {
+public class PopupWindowWrapper implements DoItCallback {
 
     private View parentView;
     private View popupView;
@@ -96,7 +95,7 @@ public class PopupWindowWrapper implements AfterAllCallback {
     }
 
     @Override
-    public void doIt() {
+    public void doIt( Object... noParameters ) {
         close();
     }
 

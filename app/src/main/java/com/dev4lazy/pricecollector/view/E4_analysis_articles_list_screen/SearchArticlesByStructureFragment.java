@@ -29,7 +29,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-public class SearchArticlesByStructureFragment extends Fragment {
+public class SearchArticlesByStructureFragment extends Fragment { //OK
 
     AutoCompleteTextView articleSectorDropdown = null;
     AutoCompleteTextView articleDepartmentDropdown = null;
@@ -222,13 +222,6 @@ public class SearchArticlesByStructureFragment extends Fragment {
 
         private void setToolbarText() {
             String toolbarText = storeViewModel.getStore().getName();
-            /* TODO XXX
-            int maxLength = toolbarText.length();
-            if (maxLength>24) { // TODO hardcoded
-                maxLength=24;
-            }
-            toolbarText = toolbarText.substring(0,maxLength);
-             */
             String filtered = "* ";
             if (searchArticlesCriteria.isFilterSet()) {
                 toolbarText = filtered + toolbarText;

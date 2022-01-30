@@ -163,4 +163,39 @@ public class AnalysisBasicDataDownloader {
         localDataRepository.insertAnalyzes( newAnalyzes, NO_PROGRESS_PRESENTER );
     }
 
- }
+    /* TODO XXX
+    private AlertDialog getAskUserForAnalyzesDataDownloadDialog() {
+        AlertDialog alertDialog =
+                new MaterialAlertDialogBuilder(
+                        getContext(),
+                        R.style.PC_AlertDialogStyle_Overlay
+                )
+                        .setTitle( getString( R.string.basic_data_ready_to_download))
+                        .setMessage( getString( R.string.question_about_downloading_data) )
+                        .setPositiveButton(
+                                getString( R.string.caption_yes) ,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        AnalysisBasicDataDownloader.getInstance().downloadAnalysisBasicData();
+                                        analyzesRecyclerView.refresh();
+                                    }
+                                }
+                        )
+                        .setNegativeButton(
+                                getString( R.string.caption_no),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }
+                        )
+                        .setCancelable( false )
+                        .create();
+        return alertDialog;
+    }
+    */
+
+}

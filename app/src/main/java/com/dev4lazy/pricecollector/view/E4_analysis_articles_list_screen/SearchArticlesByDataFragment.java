@@ -20,12 +20,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-public class SearchArticlesByDataFragment extends Fragment {
+public class SearchArticlesByDataFragment extends Fragment { //OK
 
     EditText articleNameEditText = null;
     EditText articleEANEditText = null;
     EditText articleSKUEditText = null;
-    EditText articleAnyTextEditText = null;
+    EditText articleAnyTextEditText = null; // TODO realizacja w wydaniu 1
+
 
     AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel = null;
     StoreViewModel storeViewModel = null;
@@ -72,6 +73,7 @@ public class SearchArticlesByDataFragment extends Fragment {
     }
 
     private void articleAnyTextEditTextSetup(View view) {
+        /* TODO realizacja w wydaniu 1
         articleAnyTextEditText = view.findViewById(R.id.search_articles_any_text_edit_text);
         articleAnyTextEditText.setOnFocusChangeListener( new View.OnFocusChangeListener() {
             @Override
@@ -83,6 +85,7 @@ public class SearchArticlesByDataFragment extends Fragment {
                 }
             }
         } );
+        */
     }
 
     private void articleSKUEditTextSetup(View view) {
@@ -131,14 +134,18 @@ public class SearchArticlesByDataFragment extends Fragment {
             articleNameEditText.setText( searchArticlesCriteria.getArticleName() );
             articleEANEditText.setText( searchArticlesCriteria.getArticleEAN() );
             articleSKUEditText.setText( searchArticlesCriteria.getArticleSKU() );
+            /* TODO realizacja w wydaniu 1
             articleAnyTextEditText.setText( searchArticlesCriteria.getArticleAnyText() );
+            */
         }
 
         private void clearEditTexts() {
             articleNameEditText.setText( "" );
             articleEANEditText.setText( "" );
             articleSKUEditText.setText( "" );
+            /* TODO realizacja w wydaniu 1
             articleAnyTextEditText.setText( "" );
+            */
 
         }
 
@@ -179,7 +186,9 @@ public class SearchArticlesByDataFragment extends Fragment {
                 searchArticlesCriteria.setArticleName( articleNameEditText.getText().toString() );
                 searchArticlesCriteria.setArticleEAN( articleEANEditText.getText().toString() );
                 searchArticlesCriteria.setArticleSKU( articleSKUEditText.getText().toString() );
+                /* TODO realizacja w wydaniu 1
                 searchArticlesCriteria.setArticleAnyText( articleAnyTextEditText.getText().toString() );
+                */
             }
 
         private void setTabDataName() {

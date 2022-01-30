@@ -9,9 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import static android.view.View.GONE;
-
-public class MainActivity extends AppCompatActivity /*implements NavigationView.OnNavigationItemSelectedListener*/{
+public class MainActivity extends AppCompatActivity { // OK
 
     public Toolbar toolbar;
     public DrawerLayout drawerLayout;
@@ -28,10 +26,7 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
 
     private void toolbarSetup() {
         toolbar = findViewById(R.id.toolbar);
-        // using toolbar as ActionBar
         setSupportActionBar(toolbar);
-        // TODO XXX toolbar.setVisibility( GONE );
-        // TODO XXX toolbar.setTitle(R.string.app_name);
     }
 
     private void drawerSetup() {
@@ -41,29 +36,15 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
                 drawerLayout,
                 toolbar,
                 R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close) {
-
-            // TODO XXX, czy te dwie metody sa potrzebne???
-            /*public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                // TODO XXX ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PriceCollector");
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                // TODO XXX ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
-            }
-             */
-        };
+                R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(drawerToggle);
         // Hamburger icon on
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
 
-        // TODO XXX drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_LOCKED_CLOSED );
-
-        // true - chyba jeśli klawisz back ma o jeden poziom robić
-        // false - chyba jeśli klawisz back ma wracać do home
+        // https://developer.android.com/reference/androidx/appcompat/app/ActionBar#setDisplayHomeAsUpEnabled(boolean)
+        // true - jeśli klawisz back ma spowodować powrót o jeden poziom?
+        // false - jeśli klawisz back ma spowodować powrót do home?
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
@@ -84,6 +65,35 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
             }
         }
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppHandle appHandle = AppHandle.getHandle();
+        appHandle.getBatteryStateMonitor().checkBatteryLevelPercentage( appHandle );
+        appHandle.getBatteryStateMonitor().startMonitoring( appHandle );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppHandle appHandle = AppHandle.getHandle();
+        appHandle.getNetworkAvailabilityMonitor().startMonitoring();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppHandle appHandle = AppHandle.getHandle();
+        appHandle.getNetworkAvailabilityMonitor().stopMonitoring();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        AppHandle appHandle = AppHandle.getHandle();
+        appHandle.getBatteryStateMonitor().stopMonitoring( appHandle );
     }
 
 }

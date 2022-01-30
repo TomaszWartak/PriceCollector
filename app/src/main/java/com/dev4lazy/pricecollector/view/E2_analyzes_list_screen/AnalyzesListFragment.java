@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -20,10 +21,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
 
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.logic.AnalysisBasicDataDownloader;
+import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel;
 import com.dev4lazy.pricecollector.viewmodel.AnalyzesListViewModel;
@@ -77,7 +80,7 @@ public class AnalyzesListFragment extends Fragment { //OK
             analyzesListViewModel = new ViewModelProvider( getActivity() ).get( AnalyzesListViewModel.class );
             analyzesListViewModel.getAnalyzesLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<Analysis>>() {
                 @Override
-                public void onChanged( PagedList<Analysis> analyzesList  ) {
+                public void onChanged( PagedList<Analysis> analyzesList ) {
                     if (!analyzesList.isEmpty()) {
                         analyzesRecyclerView.submitAnalyzesList( analyzesList);
                     }
@@ -128,9 +131,16 @@ public class AnalyzesListFragment extends Fragment { //OK
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        AnalysisBasicDataDownloader.getInstance().downloadAnalysisBasicData();
-                                        analyzesRecyclerView.refresh();
-                                    }
+                                        if (isNetworkAvailable()) {
+                                            AnalysisBasicDataDownloader.getInstance().downloadAnalysisBasicData();
+                                            analyzesRecyclerView.refresh();
+                                        } else {
+                                            Toast.makeText(
+                                                    getContext(),
+                                                    AppHandle.getHandle().getString( R.string.network_not_available ),
+                                                    Toast.LENGTH_SHORT
+                                            ).show();
+                                        }                                    }
                                 }
                         )
                         .setNegativeButton(
@@ -146,6 +156,10 @@ public class AnalyzesListFragment extends Fragment { //OK
                         .create();
                 return alertDialog;
             }
+
+                private boolean isNetworkAvailable() {
+                    return AppHandle.getHandle().getNetworkAvailabilityMonitor().isNetworkAvailable();
+                }
 
     @Override
     public void onStart() {
@@ -176,6 +190,9 @@ public class AnalyzesListFragment extends Fragment { //OK
                     DrawerLayout drawerLayout = getActivity().findViewById(R.id.main_activity_with_drawer_layout);
                     drawerLayout.closeDrawers();
                     switch (item.getItemId()) {
+                        case R.id.analyzes_list_screen_clear_local_db_menu_item:
+                            showAskUserForClearLocalDatabaseDialog();
+                            break;
                         case R.id.analyzes_list_screen_logout_menu_item:
                             new LogoutQuestionDialog( getContext(), getActivity() ).get();
                             break;
@@ -184,5 +201,47 @@ public class AnalyzesListFragment extends Fragment { //OK
                 }
             });
         }
+
+            private void showAskUserForClearLocalDatabaseDialog() {
+                AlertDialogFragmentViewModel alertDialogFragmentViewModel =
+                        new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel.class);
+                alertDialogFragmentViewModel.setAlertDialog(
+                        getAskUserForClearLocalDatabaseDialog()
+                );
+                Navigation.findNavController( getView() ).navigate( R.id.action_analyzesListFragment_to_alertDialogFragment2 );
+            }
+
+                private AlertDialog getAskUserForClearLocalDatabaseDialog() {
+                    AlertDialog alertDialog =
+                            new MaterialAlertDialogBuilder(
+                                    getContext(),
+                                    R.style.PC_AlertDialogStyle_Overlay
+                            )
+                            // TODO XXX .setTitle( getString( R.string.basic_data_ready_to_download))
+                            .setMessage( getString( R.string.question_about_clearing_local_data) )
+                            .setPositiveButton(
+                                    getString( R.string.caption_yes) ,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            LocalDataInitializer.getInstance().clearLocalDatabase();
+                                            analyzesRecyclerView.refreshAfterClearDatabase();
+                                        }
+                                    }
+                            )
+                            .setNegativeButton(
+                                    getString( R.string.caption_no),
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }
+                            )
+                            .setCancelable( false )
+                            .create();
+                    return alertDialog;
+                }
 
 }

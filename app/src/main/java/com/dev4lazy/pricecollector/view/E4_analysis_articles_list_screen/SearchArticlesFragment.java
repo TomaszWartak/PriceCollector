@@ -27,7 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
-public class SearchArticlesFragment extends Fragment {
+public class SearchArticlesFragment extends Fragment { //OK
 
     private AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel;
 

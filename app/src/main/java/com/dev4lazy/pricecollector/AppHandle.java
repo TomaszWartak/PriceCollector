@@ -8,6 +8,8 @@ import com.dev4lazy.pricecollector.model.logic.auth.AppAuthSupport;
 import com.dev4lazy.pricecollector.model.logic.auth.AuthSupport;
 import com.dev4lazy.pricecollector.remote_model.db.RemoteDatabase;
 import com.dev4lazy.pricecollector.utils.AppSettings;
+import com.dev4lazy.pricecollector.utils.BatteryStateMonitor;
+import com.dev4lazy.pricecollector.utils.NetworkAvailabilityMonitor;
 
 import androidx.lifecycle.LifecycleObserver;
 
@@ -43,6 +45,14 @@ public class AppHandle extends Application /* Na potrzeby testów: implements Li
 
     public AppSettings getSettings() {
         return AppSettings.getInstance();
+    }
+
+    public NetworkAvailabilityMonitor getNetworkAvailabilityMonitor() {
+        return NetworkAvailabilityMonitor.getInstance();
+    }
+
+    public BatteryStateMonitor getBatteryStateMonitor() {
+        return BatteryStateMonitor.getInstance();
     }
 
     public void shutdown() {

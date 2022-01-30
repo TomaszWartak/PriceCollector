@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.logic.AnalysisFullDataDownloader;
@@ -57,6 +59,14 @@ public class AnalyzesRecyclerView extends RecyclerView { //OK
 
     public void refresh() {
         getAdapter().notifyDataSetChanged();
+    }
+
+    public void refreshAfterClearDatabase() {
+        AnalyzesListViewModel analyzesListViewModel = new ViewModelProvider( AppUtils.getActivity( getContext() ) ).get( AnalyzesListViewModel.class );
+        analyzesListViewModel.refreshAnalyzesLifeData();
+        /* TODO XXX
+        int itemCount = getAdapter().getItemCount();
+        getAdapter().notifyItemRangeRemoved( 0, itemCount ); */
     }
 
     public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.AnalysisViewHolder> {
@@ -149,39 +159,47 @@ public class AnalyzesRecyclerView extends RecyclerView { //OK
                         textViewAnalysisDataReadyToDownload.setVisibility(VISIBLE);
                     }
                     itemView.setOnClickListener( (View v) -> {
-                        textViewAnalysisDataReadyToDownload.setVisibility(GONE);
-                        MutableLiveData<Boolean> finalResult = new MutableLiveData<>();
-                        Observer<Boolean> resultObserver = new Observer<Boolean>() {
-                            @Override
-                            public void onChanged(Boolean analysisDataDownloaded) {
-                                if (analysisDataDownloaded != null) {
-                                    finalResult.removeObserver(this); // this = observer...
-                                    PagedList<Analysis> analyzesList = getCurrentList();
-                                    Analysis analysisToInvalidate = analyzesList.get( positionInAdapter );
-                                    analysisToInvalidate.setDataDownloaded( true );
-                                    analyzesList.getDataSource().invalidate();
-                                    notifyItemChanged( positionInAdapter );
+                        if (isNetworkAvailable()) {
+                            textViewAnalysisDataReadyToDownload.setVisibility(GONE);
+                            MutableLiveData<Boolean> finalResult = new MutableLiveData<>();
+                            Observer<Boolean> resultObserver = new Observer<Boolean>() {
+                                @Override
+                                public void onChanged(Boolean analysisDataDownloaded) {
+                                    if (analysisDataDownloaded != null) {
+                                        finalResult.removeObserver(this); // this = observer...
+                                        PagedList<Analysis> analyzesList = getCurrentList();
+                                        Analysis analysisToInvalidate = analyzesList.get( positionInAdapter );
+                                        analysisToInvalidate.setDataDownloaded( true );
+                                        analyzesList.getDataSource().invalidate();
+                                        notifyItemChanged( positionInAdapter );
+                                    }
                                 }
-                            }
-                        };
-                        finalResult.observeForever(resultObserver);
-                        updateArticlesAllData(
-                                analysis,
-                                finalResult,
-                                new ProgressPresentingManager(
-                                    new ProgressPresenter(
-                                        new ProgressBarWrapper(
-                                            itemView.findViewById(R.id.analysis_item__progressBar)
-                                        ),
-                                        DATA_SIZE_UNKNOWN,
-                                        DONT_HIDE_WHEN_FINISHED
-                                    ),
-                                    new TextViewMessageWrapper(
-                                        itemView.findViewById(R.id.analysis_item__progress_message)
-                                    ),
-                                    null
-                                )
-                        );
+                            };
+                            finalResult.observeForever(resultObserver);
+                            updateArticlesAllData(
+                                    analysis,
+                                    finalResult,
+                                    new ProgressPresentingManager(
+                                            new ProgressPresenter(
+                                                    new ProgressBarWrapper(
+                                                            itemView.findViewById(R.id.analysis_item__progressBar)
+                                                    ),
+                                                    DATA_SIZE_UNKNOWN,
+                                                    DONT_HIDE_WHEN_FINISHED
+                                            ),
+                                            new TextViewMessageWrapper(
+                                                    itemView.findViewById(R.id.analysis_item__progress_message)
+                                            ),
+                                            null
+                                    )
+                            );
+                        } else {
+                            Toast.makeText(
+                                    getContext(),
+                                    AppHandle.getHandle().getString( R.string.network_not_available ),
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
                     });
                 } else {
                     if (dataReadyToDownloadVisibility != GONE) {
@@ -192,6 +210,10 @@ public class AnalyzesRecyclerView extends RecyclerView { //OK
                     });
                 }
             }
+
+                private boolean isNetworkAvailable() {
+                    return AppHandle.getHandle().getNetworkAvailabilityMonitor().isNetworkAvailable();
+                }
 
             private boolean dateIsCorrect( Date date ) {
                 return (date!=null)&&(dateConverter.date2Long(date)!=0L);

@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.utils;
+package com.dev4lazy.pricecollector.unused;
 
 public enum Action {
     NONE,

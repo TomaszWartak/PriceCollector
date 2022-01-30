@@ -1,6 +1,6 @@
 package com.dev4lazy.pricecollector.view.utils;
 
-import com.dev4lazy.pricecollector.utils.AfterAllCallback;
+import com.dev4lazy.pricecollector.utils.DoItCallback;
 
 /**
  * Klasa służąca do stereowania prezetacją postępu zadań iteracyjnych
@@ -14,13 +14,13 @@ public class ProgressPresentingManager {
 
     private ProgressPresenter progressPresenter;
     private MessageViewWrapper messageViewWrapper;
-    private AfterAllCallback afterAllCallback;
+    private DoItCallback afterAllCallback;
     private int resetCounter = 0;
 
     public ProgressPresentingManager(
             ProgressPresenter progressPresenter,
             MessageViewWrapper messageViewWrapper,
-            AfterAllCallback afterAllCallback ) {
+            DoItCallback afterAllCallback ) {
         this.progressPresenter = progressPresenter;
         this.progressPresenter.setProgressPresentingManager( this );
         this.messageViewWrapper = messageViewWrapper;
@@ -62,7 +62,7 @@ public class ProgressPresentingManager {
     public void progressPresenterHasBeenHidden() {
         hideMessagePresenter();
         if (afterAllCallback!=null) {
-            afterAllCallback.doIt();
+            afterAllCallback.doIt(null);
         }
     }
 

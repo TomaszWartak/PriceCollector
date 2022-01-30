@@ -32,29 +32,23 @@ public class SearchArticlesByDataDialogFragment extends DialogFragment {
         EditText articleNameEditText = viewInflated.findViewById(R.id.search_articles_article_name_edit_text);
         EditText articleEANEditText = viewInflated.findViewById(R.id.search_articles_ean_edit_text);
         EditText articleSKUEditText = viewInflated.findViewById(R.id.search_articles_sku_edit_text);
+        /* TODO realizacja w wydaniu 1
         EditText articleAnyTextEditText = viewInflated.findViewById(R.id.search_articles_any_text_edit_text);
+        */
 
         SearchArticlesCriteriaViewModel searchArticlesCriteriaViewModel = new ViewModelProvider(getActivity()).get(SearchArticlesCriteriaViewModel.class);
         articleNameEditText.setText( searchArticlesCriteriaViewModel.getArticleName() );
         articleEANEditText.setText( searchArticlesCriteriaViewModel.getArticleEAN() );
         articleSKUEditText.setText( searchArticlesCriteriaViewModel.getArticleSKU()) ;
+        /* TODO realizacja w wydaniu 1
         articleAnyTextEditText.setText( searchArticlesCriteriaViewModel.getArticleAnyText() );
+        */
 
-        return getSearchArticlesByDataDialog(
-                viewInflated,
-                searchArticlesCriteriaViewModel,
-                articleEANEditText,
-                articleSKUEditText,
-                articleAnyTextEditText );
+        return getSearchArticlesByDataDialog( viewInflated );
     }
 
     @NonNull
-    private AlertDialog getSearchArticlesByDataDialog(
-            View viewInflated,
-            SearchArticlesCriteriaViewModel searchArticlesCriteriaViewModel,
-            EditText articleEANEditText,
-            EditText articleSKUEditText,
-            EditText articleAnyTextEditText) {
+    private AlertDialog getSearchArticlesByDataDialog( View viewInflated ) {
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(getContext())
                 .setTitle("")
                 .setView(viewInflated) // jeśli dialog ma mieć niestandarodowy widok

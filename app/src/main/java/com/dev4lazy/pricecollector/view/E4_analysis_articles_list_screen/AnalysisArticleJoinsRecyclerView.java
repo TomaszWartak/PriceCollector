@@ -26,7 +26,7 @@ import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.joins.AnalysisArticleJoin;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinViewModel;
 
-public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
+public class AnalysisArticleJoinsRecyclerView extends RecyclerView { // OK
 
     public AnalysisArticleJoinsRecyclerView(@NonNull Context context) {
         super(context);
@@ -46,15 +46,8 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
         ((AnalysisArticleJoinAdapter)getAdapter()).submitList(analysisArticlesJoins);
     }
 
-    public void scrollToItem( int position ) {
-        // TODO setItemHighlited( position )
-        //  if (itemIsNotOnScreen( position ) {
-        //     scrollToCenterOfPage( int position )
-        //  }
-
-    }
-
-    private class AnalysisArticleJoinAdapter extends PagedListAdapter<AnalysisArticleJoin, AnalysisArticleJoinAdapter.AnalysisArticleJoinViewHolder> {
+    private class AnalysisArticleJoinAdapter
+            extends PagedListAdapter<AnalysisArticleJoin, AnalysisArticleJoinAdapter.AnalysisArticleJoinViewHolder> {
 
         private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
 
@@ -141,8 +134,7 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
                 // TODO END TEST
                 return
                         ( analysisArticleJoinViewModel!=null ) &&
-                        analysisArticleJoinViewModel.isAnyArticleDisplayed() && //TODO <- ta nazwa nie oddaje funkcjonalności
-                        // TODO XXX( getAdapterPosition()==analysisArticleJoinViewModel.getPositionOnList() );
+                        analysisArticleJoinViewModel.isAnyArticleDisplayed() &&
                         ( analysisArticleJoin.getAnalysisArticleId() == analysisArticleJoinViewModel.getAnalysisArticleJoin().getAnalysisArticleId() );
             }
 
@@ -168,5 +160,7 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView {
             }
 
         } //  class AnalysisArticleJoinViewHolder
-    } // class AnalysisArticleJoinAdapter22
+
+    } // class AnalysisArticleJoinAdapter
+
 }

@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.AnalysisDataUploader;
 import com.dev4lazy.pricecollector.model.logic.CompetitorSlotFullData;
@@ -111,12 +113,7 @@ public class AnalysisCompetitorsListFragment extends Fragment { //OK
                             new LogoutQuestionDialog( getContext(), getActivity() ).get();
                             break;
                         case R.id.analysis_competitors_list_screen_upload_data_menu_item:
-                            AlertDialogFragmentViewModel alertDialogFragmentViewModel =
-                                    new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel.class);
-                            alertDialogFragmentViewModel.setAlertDialog(
-                                    getAskUserForAnalyzesDataUploadDialog()
-                            );
-                            Navigation.findNavController( getView() ).navigate( R.id.action_analysisCompetitorsFragment_to_alertDialogFragment );
+                            showAskUserForAnalyzesDataUploadDialog();
                             break;
                         case R.id.analysis_competitors_list_screen_gotoanalyzes_menu_item:
                             Navigation.findNavController( getView() ).navigate( R.id.action_analysisCompetitorsFragment_to_analyzesListFragment );
@@ -126,6 +123,15 @@ public class AnalysisCompetitorsListFragment extends Fragment { //OK
                 }
             });
         }
+
+            private void showAskUserForAnalyzesDataUploadDialog() {
+                AlertDialogFragmentViewModel alertDialogFragmentViewModel =
+                        new ViewModelProvider(getActivity()).get(AlertDialogFragmentViewModel.class);
+                alertDialogFragmentViewModel.setAlertDialog(
+                        getAskUserForAnalyzesDataUploadDialog()
+                );
+                Navigation.findNavController( getView() ).navigate( R.id.action_analysisCompetitorsFragment_to_alertDialogFragment );
+            }
 
             private AlertDialog getAskUserForAnalyzesDataUploadDialog() {
                 AlertDialog alertDialog =
@@ -160,8 +166,20 @@ public class AnalysisCompetitorsListFragment extends Fragment { //OK
             }
 
             private void uploadAnalysisData() {
-                AnalyzesListViewModel analyzesListViewModel =
-                        new ViewModelProvider( AppUtils.getActivity( getContext() ) ).get( AnalyzesListViewModel.class );
-                new AnalysisDataUploader( analyzesListViewModel.getChosenAnalysis() ).uploadData();
+                if (isNetworkAvailable()) {
+                    AnalyzesListViewModel analyzesListViewModel =
+                            new ViewModelProvider( AppUtils.getActivity( getContext() ) ).get( AnalyzesListViewModel.class );
+                    new AnalysisDataUploader( analyzesListViewModel.getChosenAnalysis() ).uploadData();
+                } else {
+                    Toast.makeText(
+                            getContext(),
+                            AppHandle.getHandle().getString( R.string.network_not_available ),
+                            Toast.LENGTH_SHORT
+                    ).show();                }
             };
+
+                private boolean isNetworkAvailable() {
+                    return AppHandle.getHandle().getNetworkAvailabilityMonitor().isNetworkAvailable();
+                }
+
 }

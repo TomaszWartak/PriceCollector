@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_analyzesListFragment_to_alertDialogFragment"
             app:destination="@id/alertDialogFragment" />
+        <action
+            android:id="@+id/action_analyzesListFragment_to_alertDialogFragment2"
+            app:destination="@id/alertDialogFragment" />
     </fragment>
 
     <fragment

@@ -14,12 +14,15 @@ import com.dev4lazy.pricecollector.model.entities.Analysis;
 
 public class AnalyzesListViewModel extends AndroidViewModel {
 
-    private final LiveData<PagedList<Analysis>> analyzesLiveData;
+    private LiveData<PagedList<Analysis>> analyzesLiveData;
     private Analysis chosenAnalysis = null;
-    private int chosenAnalysisId = 0;
 
     public AnalyzesListViewModel(Application application) {
         super(application);
+        refreshAnalyzesLifeData();
+    }
+
+    public void refreshAnalyzesLifeData() {
         AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
         DataSource.Factory<Integer, Analysis>  factory = analysisDao.getAllPaged();
         LivePagedListBuilder<Integer, Analysis> pagedListBuilder = new LivePagedListBuilder<Integer, Analysis>(factory, 50);

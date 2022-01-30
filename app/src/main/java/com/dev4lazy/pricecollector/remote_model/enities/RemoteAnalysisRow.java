@@ -13,9 +13,6 @@ import androidx.room.PrimaryKey;
             )
         }
 )
-// todo
-//  sprawdź dla dużej ilości wierszy (1000?) jaki wpływ na czas wyświetlenie (będzie jakieś wyświetlanie?),
-//  będzie miał dodanie indeksu po kodzie briko
 public class RemoteAnalysisRow { //[dbo].[PRC_CompetitorPrice]
 
     /*

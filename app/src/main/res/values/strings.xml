@@ -8,6 +8,7 @@
     <string name="question_close_app">Czy chcesz zamknąć aplikację?</string>
     <string name="caption_yes">Tak</string>
     <string name="caption_no">Nie</string>
+
     <!-- ??? -->
     <string name="departments_structure_description">struktura działowa</string>
 
@@ -25,6 +26,7 @@
     <string name="enter_user_ID">Podaj identyfikator użytkownika</string>
     <string name="enter_password">Podaj hasło</string>
     <string name="login_data_incorrect">Dane logowania nieprawidłowe...</string>
+    <string name="login_server_unavailable">Brak komunikacji z serwerem logowania...</string>
     <string name="firebase_login_problem">Problem z logowaniem do Firebase...</string>
     <string name="user_not_found_in_the_remote_database">W zdalnej bazie danych nie znaleziono danych użytkownika</string>
 
@@ -113,10 +115,12 @@
     <string name="articles_data_ready_to_download">DANE ARTYKUŁÓW - GOTOWE DO POBRANIA...</string>
     <string name="question_about_downloading_data">Czy chcesz teraz pobrać dane?</string>
     <string name="short_permission_name_contacts">KONTAKTY</string>
-    <string name="login_server_unavailable">Brak komunikacji z serwerem logowania...</string>
 
     <!-- dialog dotyczący wysłania rezultatów analizy -->
     <string name="question_about_uploading_data">Czy chcesz teraz wysłać wyniki badania cen?</string>
+
+    <!-- dialog dotyczący wyczyszczenie lokalnej bazy danych -->
+    <string name="question_about_clearing_local_data">Czy chcesz wyczyścic dane aplikacji?</string>
 
     <!-- Dla ActionBarDrawerToggle, ale po co ???-->
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
@@ -126,6 +130,7 @@
     <string name="logout_menu_item">Zamknij aplikację</string>
     <string name="go_to_analyzes_list_menu_item">Przejdź do listy Badań cen</string>
     <string name="search_articles_list_menu_item">Wyszukaj artykuły</string>
+    <string name="clear_local_db">Wyczyść dane aplikacji</string>
 
     <!-- Dla wyszukiwania artykułów -->
     <string name="articles_search_tab_data_name">DANE</string>
@@ -160,5 +165,6 @@
     <string name="searching">Wyszukiwanie</string>
     <string name="searching_articles">WYSZUKIWANIE ARTYKUŁÓW</string>
     <string name="threedots_vertical">⋮</string>
+    <string name="network_not_available">Brak dostępu do sieci</string>
 
 </resources>
