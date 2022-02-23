@@ -79,16 +79,16 @@ public class SearchArticlesCriteria {
     public boolean areDataCriteriaSet() {
         boolean result =
                 isArticleNameSet() ||
-                        isArticleEANSet() ||
-                        isArticleSKUSet() ||
-                        isArticleAnyTextSet();
+                isArticleEANSet() ||
+                isArticleSKUSet() ||
+                isArticleAnyTextSet();
         return result;
     }
 
     public boolean areStructureCriteriaSet() {
         boolean result =
                 isArticleSectorIdSet() ||
-                        isArticleDepartamentIdSet();
+                isArticleDepartamentIdSet();
         return result;
     }
 

@@ -11,7 +11,7 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
 
     private DoItCallback afterReceivingJob;
 
-    public BatteryLevelReceiver( DoItCallback afterReceivingJob) {
+    public BatteryLevelReceiver( DoItCallback afterReceivingJob ) {
         this.afterReceivingJob = afterReceivingJob;
     }
 

@@ -11,6 +11,7 @@ public class TextViewMessageWrapper implements MessageViewWrapper {
         this.textView = textView;
     }
 
+    @Override
     public void setMessage( String message ){
         textView.setText( message );
     }

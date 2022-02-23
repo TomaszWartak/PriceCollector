@@ -41,7 +41,7 @@ public class LocalDataRepository {
     
 // Analysis
     private final AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
-    private final DataAccess<Analysis> analyzes  = new DataAccess<>( analysisDao );
+    private final DataOperator<Analysis> analyzes  = new DataOperator<>( analysisDao );
 
     public void askAnalyzesNumberOf( MutableLiveData<Integer> result ) {
         analyzes.getNumberOfData( result );
@@ -78,7 +78,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // AnalysisCompetitorSlot
     private final AnalysisCompetitorSlotDao analysisCompetitorSlotDao = AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao();
-    private final DataAccess<AnalysisCompetitorSlot> slots = new DataAccess<>(analysisCompetitorSlotDao);
+    private final DataOperator<AnalysisCompetitorSlot> slots = new DataOperator<>(analysisCompetitorSlotDao);
 
 
     public void insertAnalysisCompetitorSlot( AnalysisCompetitorSlot analysisCompetitorSlot, MutableLiveData<Long> result ) {
@@ -119,7 +119,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // AnalysisArticle
     private final AnalysisArticleDao analysisArticleDao = AppHandle.getHandle().getLocalDatabase().analysisArticleDao();
-    private final DataAccess<AnalysisArticle> analysisArticles = new DataAccess<>( analysisArticleDao );
+    private final DataOperator<AnalysisArticle> analysisArticles = new DataOperator<>( analysisArticleDao );
     private final AnalysisArticleJoinDao analysisArticleJoinDao = AppHandle.getHandle().getLocalDatabase().analysisArticleJoinDao();
     private final AnlysisArticleJoinDataAccess analysisArticlesJoins = new AnlysisArticleJoinDataAccess( analysisArticleJoinDao);
 
@@ -183,7 +183,7 @@ public class LocalDataRepository {
     //-----------------------------------------------------------------------
 // Article
     private final ArticleDao articleDao = AppHandle.getHandle().getLocalDatabase().articleDao();
-    private final DataAccess<Article> articles = new DataAccess<>(articleDao);
+    private final DataOperator<Article> articles = new DataOperator<>(articleDao);
 
     public void insertArticle( Article article, MutableLiveData<Long> result ) {
         articles.insertData( article, result);
@@ -211,7 +211,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Company
     private final CompanyDao companyDao = AppHandle.getHandle().getLocalDatabase().companyDao();
-    private final DataAccess<Company> companies = new DataAccess<>(companyDao);
+    private final DataOperator<Company> companies = new DataOperator<>(companyDao);
 
     public void insertCompany( Company company, MutableLiveData<Long> result ) {
         companies.insertData( company,result);
@@ -242,7 +242,7 @@ public class LocalDataRepository {
     //-----------------------------------------------------------------------
 // CompetitorPrice
     private final CompetitorPriceDao competitorPriceDao = AppHandle.getHandle().getLocalDatabase().competitorPriceDao();
-    private final DataAccess<CompetitorPrice> competitorPrices = new DataAccess<>( competitorPriceDao );
+    private final DataOperator<CompetitorPrice> competitorPrices = new DataOperator<>( competitorPriceDao );
 
     public void askCompetitorPricesNumberOf( MutableLiveData<Integer> result ) {
         competitorPrices.getNumberOfData( result );
@@ -281,7 +281,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Country
     private final CountryDao countryDao = AppHandle.getHandle().getLocalDatabase().countryDao();
-    private final DataAccess<Country> countries = new DataAccess<>(countryDao);
+    private final DataOperator<Country> countries = new DataOperator<>(countryDao);
 
     public void insertCountry(Country country, MutableLiveData<Long> result ) {
         countries.insertData(country,result);
@@ -312,7 +312,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Department
     private final DepartmentDao departmentDao = AppHandle.getHandle().getLocalDatabase().departmentDao();
-    private final DataAccess<Department> departments = new DataAccess<>(departmentDao);
+    private final DataOperator<Department> departments = new DataOperator<>(departmentDao);
 
     public void insertDepartment( Department department, MutableLiveData<Long> result ) {
         departments.insertData( department, result );
@@ -329,7 +329,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // DepartmentInSector
     private final DepartmentInSectorDao departmentInSectorDao = AppHandle.getHandle().getLocalDatabase().departmentInSectorDao();
-    private final DataAccess<DepartmentInSector> departmentInSectors = new DataAccess<>(departmentInSectorDao);
+    private final DataOperator<DepartmentInSector> departmentInSectors = new DataOperator<>(departmentInSectorDao);
 
     public void insertDepartmentInSector( DepartmentInSector departmentInSector, MutableLiveData<Long> result ) {
         departmentInSectors.insertData( departmentInSector, result );
@@ -342,7 +342,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // EanCode
     private final EanCodeDao eanCodeDao = AppHandle.getHandle().getLocalDatabase().eanCodeDao();
-    private final DataAccess<EanCode> eanCodes = new DataAccess<EanCode>(eanCodeDao);
+    private final DataOperator<EanCode> eanCodes = new DataOperator<EanCode>(eanCodeDao);
 
     public void askEanCodeNumberOf( MutableLiveData<Integer> result ) {
         eanCodes.getNumberOfData( result );
@@ -389,7 +389,7 @@ public class LocalDataRepository {
     //-----------------------------------------------------------------------
 // Family
     private final FamilyDao familyDao = AppHandle.getHandle().getLocalDatabase().familyDao();
-    private final DataAccess<Family> families = new DataAccess<>( familyDao );
+    private final DataOperator<Family> families = new DataOperator<>( familyDao );
 
     public void insertFamily(Family family, MutableLiveData<Long> result ) {
         families.insertData( family, result );
@@ -424,7 +424,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Market
     private final MarketDao marketDao = AppHandle.getHandle().getLocalDatabase().marketDao();
-    private final DataAccess<Market> markets = new DataAccess<>( marketDao );
+    private final DataOperator<Market> markets = new DataOperator<>( marketDao );
 
     public void askMarketsNumberOf( MutableLiveData<Integer> result ) {
         markets.getNumberOfData( result );
@@ -464,7 +464,7 @@ public class LocalDataRepository {
 // Module
 
     private final ModuleDao moduleDao = AppHandle.getHandle().getLocalDatabase().moduleDao();
-    private final DataAccess<Module> modules = new DataAccess<>( moduleDao );
+    private final DataOperator<Module> modules = new DataOperator<>( moduleDao );
 
     public void askModulesNumberOf( MutableLiveData<Integer> result ) {
         modules.getNumberOfData( result );
@@ -504,7 +504,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // OwnArticleInfo
     private final OwnArticleInfoDao ownArticleInfoDao = AppHandle.getHandle().getLocalDatabase().ownArticleInfoDao();
-    private final DataAccess<OwnArticleInfo> ownArticleInfos = new DataAccess<OwnArticleInfo>(ownArticleInfoDao);
+    private final DataOperator<OwnArticleInfo> ownArticleInfos = new DataOperator<OwnArticleInfo>(ownArticleInfoDao);
 
 
     public void insertOwnArticleInfos(
@@ -521,7 +521,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // OwnStore
     private final OwnStoreDao ownStoreDao = AppHandle.getHandle().getLocalDatabase().ownStoreDao();
-    private final DataAccess<OwnStore> ownStores = new DataAccess<>(ownStoreDao);
+    private final DataOperator<OwnStore> ownStores = new DataOperator<>(ownStoreDao);
 
     public void insertOwnStore(OwnStore ownStore, MutableLiveData<Long> result ) {
         ownStores.insertData(ownStore,result);
@@ -560,7 +560,7 @@ public class LocalDataRepository {
 //-----------------------------------------------------------------------
 // Sector
     private final SectorDao sectorDao = AppHandle.getHandle().getLocalDatabase().sectorDao();
-    private final DataAccess<Sector> sectors = new DataAccess<>(sectorDao);
+    private final DataOperator<Sector> sectors = new DataOperator<>(sectorDao);
 
 
     public void insertSector(Sector sector, MutableLiveData<Long> result ) {
@@ -579,7 +579,7 @@ public class LocalDataRepository {
 //------------~-----------------------------------------------------------
 // Store
     private final StoreDao storeDao = AppHandle.getHandle().getLocalDatabase().storeDao();
-    private final DataAccess<Store> stores = new DataAccess<>(storeDao);
+    private final DataOperator<Store> stores = new DataOperator<>(storeDao);
 
     public void findStoreById(int id, MutableLiveData<List<Store>> result) {
         stores.findDataById( id, result);
@@ -620,7 +620,7 @@ public class LocalDataRepository {
 // UOProject
 
     private final UOProjectDao uoProjectDao = AppHandle.getHandle().getLocalDatabase().uoProjectDao();
-    private final DataAccess<UOProject> uoProjects = new DataAccess<>( uoProjectDao );
+    private final DataOperator<UOProject> uoProjects = new DataOperator<>( uoProjectDao );
 
     public void askUOProjectsNumberOf( MutableLiveData<Integer> result ) {
         uoProjects.getNumberOfData( result );
@@ -658,10 +658,10 @@ public class LocalDataRepository {
 
 //-----------------------------------------------------------------------------------
 // clearDatabaseAsync
-    public void clearDatabase(AfterDatabaseClearedCallback callback) {
+    public void clearDatabase(AfterDatabaseClearedCallback afterDatabaseClearedCallback) {
         new ClearDatabaseAsyncTask(
                 AppHandle.getHandle().getLocalDatabase(),
-                callback
+                afterDatabaseClearedCallback
         ).execute();
     }
 

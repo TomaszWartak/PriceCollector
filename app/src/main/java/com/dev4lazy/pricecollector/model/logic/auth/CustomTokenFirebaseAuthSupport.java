@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -49,8 +50,8 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
                             //	    Log.d( TAG, ".."+var );
                             //  }
                             Log.d(TAG, "signInFirebase:success");
-                            FirebaseUser user = firebaseAuthServices.getCurrentUser();
                             // TODO TEST
+                            FirebaseUser user = firebaseAuthServices.getCurrentUser();
                             String name = user.getDisplayName();
                             String email = user.getEmail();
                             // TODO ENDTEST

@@ -26,6 +26,7 @@ import com.dev4lazy.pricecollector.BuildConfig;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.logic.AnalysisBasicDataDownloader;
+import com.dev4lazy.pricecollector.model.utils.InitializeAfterLocalDatabaseClearedCallback;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
 import com.dev4lazy.pricecollector.view.utils.LogoutQuestionDialog;
 import com.dev4lazy.pricecollector.viewmodel.AlertDialogFragmentViewModel;
@@ -81,7 +82,11 @@ public class AnalyzesListFragment extends Fragment { //OK
             analyzesListViewModel.getAnalyzesLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<Analysis>>() {
                 @Override
                 public void onChanged( PagedList<Analysis> analyzesList ) {
+                    /* TODO START TEST
                     if (!analyzesList.isEmpty()) {
+                    */
+                    // TODO END TEST
+                    if (analyzesList!=null) {
                         analyzesRecyclerView.submitAnalyzesList( analyzesList);
                     }
                 }
@@ -133,7 +138,7 @@ public class AnalyzesListFragment extends Fragment { //OK
                                         dialog.dismiss();
                                         if (isNetworkAvailable()) {
                                             AnalysisBasicDataDownloader.getInstance().downloadAnalysisBasicData();
-                                            analyzesRecyclerView.refresh();
+                                            // TODO TEST analyzesRecyclerView.refresh();
                                         } else {
                                             Toast.makeText(
                                                     getContext(),
@@ -191,6 +196,10 @@ public class AnalyzesListFragment extends Fragment { //OK
                     drawerLayout.closeDrawers();
                     switch (item.getItemId()) {
                         case R.id.analyzes_list_screen_clear_local_db_menu_item:
+                            /* TODO
+                               tutaj można by sprawdzić, czy jest dostęp do netu, bo po wyczyszczeniu
+                               bazy jest jej inicjalizacja, a część danych jest pobierana z bazy zdalnej
+                             */
                             showAskUserForClearLocalDatabaseDialog();
                             break;
                         case R.id.analyzes_list_screen_logout_menu_item:
@@ -225,7 +234,9 @@ public class AnalyzesListFragment extends Fragment { //OK
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
-                                            LocalDataInitializer.getInstance().clearLocalDatabase();
+                                            LocalDataInitializer.getInstance().clearLocalDatabase(
+                                                    new InitializeAfterLocalDatabaseClearedCallback()
+                                            );
                                             analyzesRecyclerView.refreshAfterClearDatabase();
                                         }
                                     }

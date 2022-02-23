@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.remote_view_viewmodel;
+package com.dev4lazy.pricecollector.unused;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;

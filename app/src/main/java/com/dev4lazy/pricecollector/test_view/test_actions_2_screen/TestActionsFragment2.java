@@ -80,7 +80,7 @@ public class TestActionsFragment2 extends Fragment {
         */
 
         parentView.findViewById(R.id.button_clear_local2).setOnClickListener((View v) -> {
-            LocalDataInitializer.getInstance().clearLocalDatabase();
+            LocalDataInitializer.getInstance().clearLocalDatabase( null );
         });
         parentView.findViewById(R.id.button_show_numbers_of_data2).setOnClickListener((View v) -> {
             Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment2_to_testNumbersOfDataFragment2);

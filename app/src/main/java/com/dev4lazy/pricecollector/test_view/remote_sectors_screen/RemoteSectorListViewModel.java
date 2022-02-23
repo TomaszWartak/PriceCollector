@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.remote_view_viewmodel;
+package com.dev4lazy.pricecollector.test_view.remote_sectors_screen;
 
 import android.app.Application;
 

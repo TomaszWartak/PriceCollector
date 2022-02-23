@@ -34,7 +34,7 @@ public class AnalysisArticleJoinPagerAdapter // OK
             PagedListAdapter<AnalysisArticleJoin,
             AnalysisArticleJoinPagerAdapter.AnalysisArticleJoinPagerViewHolder> {
 
-    private ViewPager2 parentViewPager;
+    // TODO XXX private ViewPager2 parentViewPager;
     private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
     private AnalysisArticleJoinPagerViewHolder holder;
     int statusbarHeight;
@@ -48,7 +48,7 @@ public class AnalysisArticleJoinPagerAdapter // OK
             int toolbarHeight
         ) {
         super(analysisArticleJoinDiffCallback);
-        this.parentViewPager = analysisArticlesViewPager;
+        // TODO XXX this.parentViewPager = analysisArticlesViewPager;
         this.analysisArticleJoinViewModel = analysisArticleJoinViewModel;
         this.statusbarHeight = statusbarHeight;
         this.toolbarHeight = toolbarHeight;

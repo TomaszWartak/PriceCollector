@@ -152,8 +152,10 @@ public class LoginFragment
         user.setLogin( userLoginEditText.getText().toString().toLowerCase() );
         user.setPassword( userPasswordEditText.getText().toString() );
         /* TODO TEST */
-        user.setLogin("nowak_j");
-        user.setPassword("nowak");
+        if (isLoginEmpty()) {
+            user.setLogin("nowak_j");
+            user.setPassword("nowak");
+        }
         /* TODO END TEST */
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         userViewModel.setUser( user );
@@ -255,7 +257,7 @@ public class LoginFragment
                         pleaseWaitProgressBar.setVisibility(View.INVISIBLE);
                         /// Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
                     }
-                    /* @Override
+                    /* TODO ??? @Override
                     public void notHappen() {
                         pleaseWaitSpinner.setVisibility(View.GONE);
                         Komunikat a la "Serwer nie odpowiedział"
@@ -272,10 +274,13 @@ public class LoginFragment
     public void callIfUnsuccessful( String failureReasonMessage) {
         pleaseWaitProgressBar.setVisibility(View.INVISIBLE);
         userPasswordEditText.setText("");
+        /* TODO XXX
         Toast.makeText(
             getContext(),
                 failureReasonMessage,
             Toast.LENGTH_SHORT).show();
+        */
+        AppHandle.getHandle().getMessageSupport().showMessage( failureReasonMessage );
     }
 
     @Override

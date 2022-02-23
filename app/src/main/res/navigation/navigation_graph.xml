@@ -212,12 +212,12 @@
         tools:layout="@layout/remote_analysis_row_fragment" />
     <fragment
         android:id="@+id/remoteSectorsListFragment"
-        android:name="com.dev4lazy.pricecollector.remote_view_viewmodel.RemoteSectorsListFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.remote_sectors_screen.RemoteSectorsListFragment"
         android:label="remote_sectors_list_fragment"
         tools:layout="@layout/remote_sectors_list_fragment" />
     <fragment
         android:id="@+id/remoteDepartmentsListFragment"
-        android:name="com.dev4lazy.pricecollector.remote_view_viewmodel.RemoteDepartmentsListFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.remote_departments_screen.RemoteDepartmentsListFragment"
         android:label="remote_departments_list_fragment"
         tools:layout="@layout/remote_departments_list_fragment" />
     <fragment

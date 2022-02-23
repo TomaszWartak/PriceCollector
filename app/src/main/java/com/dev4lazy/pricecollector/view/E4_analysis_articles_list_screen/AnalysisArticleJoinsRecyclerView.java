@@ -135,7 +135,9 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView { // OK
                 return
                         ( analysisArticleJoinViewModel!=null ) &&
                         analysisArticleJoinViewModel.isAnyArticleDisplayed() &&
-                        ( analysisArticleJoin.getAnalysisArticleId() == analysisArticleJoinViewModel.getAnalysisArticleJoin().getAnalysisArticleId() );
+                        ( analysisArticleJoin.getAnalysisArticleId() ==
+                                analysisArticleJoinViewModel.getAnalysisArticleJoin().getAnalysisArticleId()
+                        );
             }
 
             private void setINameItemTypefaceBold() {

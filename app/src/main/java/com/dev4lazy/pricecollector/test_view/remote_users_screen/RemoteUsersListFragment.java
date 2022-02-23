@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
-import com.dev4lazy.pricecollector.remote_view_viewmodel.RemoteUserListViewModel;
 
 public class RemoteUsersListFragment extends Fragment {
 

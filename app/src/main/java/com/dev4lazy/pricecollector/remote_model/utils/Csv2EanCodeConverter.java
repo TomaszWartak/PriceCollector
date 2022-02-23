@@ -16,38 +16,48 @@ import java.util.List;
 //  - co jeśli będą śmieci w pliku
 public class Csv2EanCodeConverter {
 
-    private final String eanCodesFileName = "casto-ean.csv";
+    private final String EAN_CODES_FILE_NAME = "casto-ean.csv";
 
     private CsvReader eanCodeCsvReader = new CsvReader();
-
-    private CsvDecoder csvDecoder = new CsvDecoder();
-
+    private CsvDecoder csvDecoder;
     private RemoteDataRepository remoteDataRepository;
-
     private ArrayList<String> fieldNamesList; //todo z tego coś nie bardzo korzystasz...
-
     private ArrayList<RemoteEanCode> remoteEanCodeList;
 
     public Csv2EanCodeConverter() {
-        eanCodeCsvReader.openReaderFromAssets( eanCodesFileName );
-        remoteDataRepository = RemoteDataRepository.getInstance();
-
-        // todo to niepotrzebne raczej...
-        MutableLiveData<Integer> result = new MutableLiveData<>();
-        Observer<Integer> observer = new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer ownCountryId) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
-                result.removeObserver(this); // this = observer...
-            }
-        };
-        result.observeForever(observer);
-        remoteDataRepository.askRemoteEanCodesNumberOf(result);
-
-        //todo może jakiś warunek, że jak błędy to nie działamy dalej...
-        // ? globalne zmienne do błędów
+        csvDecoder = new CsvDecoder();
+        openCsvReader();
         remoteEanCodeList = new ArrayList<>();
+        remoteDataRepository = RemoteDataRepository.getInstance();
+    }
+
+    public void reset() {
+        clearRemoteEanCodeList();
+        if (eanCodeCsvReader!=null) {
+            closeReader();
+        }
+        openCsvReader();
+    }
+
+
+    public void clearRemoteEanCodeList() {
+        if (remoteEanCodeList==null) {
+            remoteEanCodeList = new ArrayList<>();
+        } else {
+            remoteEanCodeList.clear();
+        }
+    }
+
+    public void closeReader() {
+        eanCodeCsvReader.closeReader();
+        eanCodeCsvReader=null;
+    }
+
+    private void openCsvReader() {
+        if (eanCodeCsvReader==null) {
+            eanCodeCsvReader = new CsvReader();
+        }
+        eanCodeCsvReader.openReaderFromAssets(EAN_CODES_FILE_NAME);
     }
 
     public void closeFiles() {

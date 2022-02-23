@@ -15,29 +15,47 @@ import androidx.lifecycle.MutableLiveData;
 //  - co jeśli będą śmieci w pliku
 public class Csv2AnalysisRowConverter {
 
-    private final String analysisRowsFileName = "dane-test1000v2.csv";
+    private final String ANALYSIS_ROWS_FILE_NAME = "dane-test1000v2.csv";
 
-    private CsvReader analysisRowCsvReader = new CsvReader();
-
-    private CsvDecoder csvDecoder = new CsvDecoder();
-
+    private CsvReader analysisRowCsvReader;
+    private CsvDecoder csvDecoder;
     private RemoteDataRepository remoteDataRepository;
-
     private ArrayList<String> fieldNamesList; //todo z tego coś nie bardzo korzystasz...
-
     private ArrayList<RemoteAnalysisRow> remoteAnalysisRowList;
 
     public Csv2AnalysisRowConverter() {
-        analysisRowCsvReader.openReaderFromAssets( analysisRowsFileName );
-        remoteDataRepository = RemoteDataRepository.getInstance();
-        remoteDataRepository.askRemoteAnalysisRowsCount();
-        //todo może jakiś warunek, że jak błędy to nie działamy dalej...
-        // ? globalne zmienne do błędów
+        csvDecoder = new CsvDecoder();
+        openCsvReader();
         remoteAnalysisRowList = new ArrayList<>();
+        remoteDataRepository = RemoteDataRepository.getInstance();
     }
 
-    public void closeFiles() {
+    public void reset() {
+        clearRemoteAnalysisRowList();
+        if (analysisRowCsvReader!=null) {
+            closeReader();
+        }
+        openCsvReader();
+    }
+
+    public void clearRemoteAnalysisRowList() {
+        if (remoteAnalysisRowList==null) {
+            remoteAnalysisRowList = new ArrayList<>();
+        } else {
+            remoteAnalysisRowList.clear();
+        }
+    }
+
+    public void closeReader() {
         analysisRowCsvReader.closeReader();
+        analysisRowCsvReader=null;
+    }
+
+    private void openCsvReader() {
+        if (analysisRowCsvReader==null) {
+            analysisRowCsvReader = new CsvReader();
+        }
+        analysisRowCsvReader.openReaderFromAssets(ANALYSIS_ROWS_FILE_NAME);
     }
 
     private void createFieldList() {
@@ -68,7 +86,7 @@ public class Csv2AnalysisRowConverter {
             remoteAnalysisRow.setAnalysisId(analysisId);
             remoteAnalysisRowList.add(remoteAnalysisRow);
             rowCounter++;
-            // Na potrzeby testu, dla pierwszej analizy pobierane jest tylko 1000 wierszy
+            // TODO Na potrzeby testu, dla pierwszej analizy pobierane jest tylko 1000 wierszy
             if ((rowCounter==1000) && (analysisNr==0)) {
                 break;
             }

@@ -128,7 +128,7 @@
 
     <!-- opcje menu -->
     <string name="logout_menu_item">Zamknij aplikację</string>
-    <string name="go_to_analyzes_list_menu_item">Przejdź do listy Badań cen</string>
+    <string name="go_to_analyzes_list_menu_item">Przejdź do listy badań cen</string>
     <string name="search_articles_list_menu_item">Wyszukaj artykuły</string>
     <string name="clear_local_db">Wyczyść dane aplikacji</string>
 
@@ -158,13 +158,15 @@
     <string name="competitors_toolbar_text">Konkurenci</string>
     <string name="ean_duplication_message_part1">DANE NIE ZOSTAŁY ZAPISANE\nKod EAN</string>
     <string name="ean_duplication_message_part2">\njest już przypisany do innego artykułu</string>
-    <string name="send_data_to_remote_db">Wyślij wyniki Badania cen</string>
+    <string name="send_data_to_remote_db">Wyślij wyniki badania cen</string>
     <string name="populate_10_first">TEST - wypełnij danymi 10 pierwszych</string>
     <string name="only_for_testing">Dostępne wyłącznie na potrzeby testów</string>
     <string name="articles">ARTYKUŁY</string>
     <string name="searching">Wyszukiwanie</string>
     <string name="searching_articles">WYSZUKIWANIE ARTYKUŁÓW</string>
     <string name="threedots_vertical">⋮</string>
+
     <string name="network_not_available">Brak dostępu do sieci</string>
+    <string name="battery_state_low">Naładuj baterię! Poziom naładowania baterii jest niski...</string>
 
 </resources>

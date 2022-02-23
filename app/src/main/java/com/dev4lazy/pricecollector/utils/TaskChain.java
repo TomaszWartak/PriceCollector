@@ -7,7 +7,7 @@ public class TaskChain {
     private ArrayList<TaskLink> chain;
     private TaskLink afterAllToDoTask = null;
     private TaskLink suspendAfterTask = null;
-    private boolean supended = false;
+    private boolean suspended = false;
 
 
     public TaskChain() {
@@ -33,21 +33,21 @@ public class TaskChain {
     }
 
     public void suspend( ) {
-        supended = true;
+        suspended = true;
     }
 
     public void resume( Object... data ) {
-        supended = false;
+        suspended = false;
         suspendAfterTask.getNextTaskLink().doIt( data );
         suspendAfterTask = null;
     }
 
     public boolean isSupended() {
-        return supended;
+        return suspended;
     }
 
     public boolean isNotSuspended() {
-        return !supended;
+        return !suspended;
     }
 
     public TaskChain addTaskLink(TaskLink taskLink) {

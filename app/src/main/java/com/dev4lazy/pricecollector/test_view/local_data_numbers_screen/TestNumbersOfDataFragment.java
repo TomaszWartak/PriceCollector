@@ -14,11 +14,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.viewmodel.NumbersOfDataModel;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class TestNumbersOfDataFragment extends Fragment {
 
     private NumbersOfDataModel viewModel;
@@ -285,7 +281,7 @@ public class TestNumbersOfDataFragment extends Fragment {
         });
     }
 
-    /*
+    /* TODO ???
     numberOfAnalysis
     numberOfAnalysisArticle
     numberOfAnalysisArticleShortData

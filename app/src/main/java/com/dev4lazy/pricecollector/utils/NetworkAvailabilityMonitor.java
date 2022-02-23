@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.R;
 
 import androidx.annotation.NonNull;
 
@@ -31,7 +32,7 @@ public class NetworkAvailabilityMonitor {
         return instance;
     }
 
-    public boolean isNetworkAvailable() {
+    public synchronized boolean isNetworkAvailable() {
         return networkAvailable;
     }
 
@@ -43,18 +44,25 @@ public class NetworkAvailabilityMonitor {
         connectivityManager.unregisterNetworkCallback( networkAvailabilityCallback );
     }
 
+    private synchronized void setNetworkAvailable( boolean available ) {
+        networkAvailable = available;
+        if (!networkAvailable) {
+            AppHandle.getHandle().getMessageSupport().showMessage( R.string.network_not_available );
+        }
+    }
+
     private class NetworkAvailabilityCallback extends ConnectivityManager.NetworkCallback {
 
         @Override
         public void onAvailable(@NonNull Network network) {
             super.onAvailable(network);
-            networkAvailable = true;
+            setNetworkAvailable( true );
         }
 
         @Override
         public void onLost(@NonNull Network network) {
             super.onLost(network);
-            networkAvailable = false;
+            setNetworkAvailable( false );
         }
 
     }

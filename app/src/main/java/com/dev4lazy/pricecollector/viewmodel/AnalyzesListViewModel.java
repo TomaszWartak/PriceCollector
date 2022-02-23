@@ -23,6 +23,9 @@ public class AnalyzesListViewModel extends AndroidViewModel {
     }
 
     public void refreshAnalyzesLifeData() {
+        if (analyzesLiveData!=null) {
+            analyzesLiveData.getValue().getDataSource().invalidate();
+        }
         AnalysisDao analysisDao = AppHandle.getHandle().getLocalDatabase().analysisDao();
         DataSource.Factory<Integer, Analysis>  factory = analysisDao.getAllPaged();
         LivePagedListBuilder<Integer, Analysis> pagedListBuilder = new LivePagedListBuilder<Integer, Analysis>(factory, 50);

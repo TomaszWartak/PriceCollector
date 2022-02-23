@@ -104,7 +104,8 @@
     <string name="enter_user_ID">Enter your user ID</string>
     <string name="enter_password">Enter your password</string>
     <string name="question_about_uploading_data">Would you like to submit your price survey results now?</string>
-    <string name="network_not_available">Network not available</string>
     <string name="clear_local_db">Clear local data</string>
     <string name="question_about_clearing_local_data">Do you want to clear application data?</string>
-</resources>
+    <string name="network_not_available">Network not available</string>
+    <string name="battery_state_low">Battery state low!</string>
+    </resources>

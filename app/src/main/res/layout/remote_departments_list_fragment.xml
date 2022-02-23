@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".remote_view_viewmodel.RemoteDepartmentsListFragment">
+    tools:context=".test_view.remote_departments_screen.RemoteDepartmentsListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/departments_recycler"

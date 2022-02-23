@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -59,10 +61,46 @@ public class StartScreenFragment extends Fragment { // OK
     @Override
     public void onStart() {
         super.onStart();
+        setupToolbar();
+        /* TODO TEST 1 */
+        if (allPermissionsAreGranted())  {
+            Navigation.findNavController(getView()).navigate(R.id.action_startScreenFragment_to_setUpPreferencesFragment);
+        } else {
+            askUserForPermissions();
+        }
+        /* TODO END TEST 1*/
+        /* TODO jeśli ww. test się nie powiedzie, to odkomentutj
         if (checkAndRequestPermissions()) {
             Navigation.findNavController(getView()).navigate(R.id.action_startScreenFragment_to_setUpPreferencesFragment);
         }
+        */
     }
+
+        private void setupToolbar() {
+            ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            toolbar.hide();
+        }
+
+        /* TODO TEST 1*/
+        private boolean allPermissionsAreGranted() {
+            PermissionsUtils permissionsUtils = new PermissionsUtils( this );
+            ArrayList<String> listPermissionsDenied = permissionsUtils.getDeniedPermissions();
+            return listPermissionsDenied.isEmpty();
+        }
+
+        private boolean notAllPermissionsAreGranted() {
+            return !allPermissionsAreGranted();
+        }
+        /* TODO END TEST 1*/
+
+        private void askUserForPermissions() {
+            PermissionsUtils permissionsUtils = new PermissionsUtils( this );
+            ArrayList<String> listPermissionsDenied = permissionsUtils.getDeniedPermissions();
+            permissionsUtils.askUserForPermissions(
+                listPermissionsDenied.toArray( new String[ listPermissionsDenied.size() ]),
+                ALL_PERMISSIONS_REQUEST
+            );
+        }
 
         private boolean checkAndRequestPermissions() {
             // Check which permissions are not granted
@@ -70,7 +108,7 @@ public class StartScreenFragment extends Fragment { // OK
             ArrayList<String> listPermissionsDenied = permissionsUtils.getDeniedPermissions();
             // ask for non granted permissions
             if ( !listPermissionsDenied.isEmpty()) {
-                permissionsUtils.callUserForPermissions(
+                permissionsUtils.askUserForPermissions(
                         listPermissionsDenied.toArray( new String[ listPermissionsDenied.size() ]),
                         ALL_PERMISSIONS_REQUEST
                 );
@@ -115,7 +153,7 @@ public class StartScreenFragment extends Fragment { // OK
                             AppSettings appSettings = AppHandle.getHandle().getSettings();
                             if (appSettings.isFirstTimeAskingPermission( permissionName )) {
                                 appSettings.saveFirstTimeAskingPermission( permissionName, false );
-                                permissionsUtils.callUserForPermission( permissionName, ALL_PERMISSIONS_REQUEST );
+                                permissionsUtils.askUserForPermission( permissionName, ALL_PERMISSIONS_REQUEST );
                                 break;
                             } else {
                                 // Ask user to go to Settings and manually allow permission
@@ -152,7 +190,12 @@ public class StartScreenFragment extends Fragment { // OK
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
+                                    /* TODO TEST 1 */
+                                    askUserForPermissions();
+                                    /* TODO END TEST 1 */
+                                    /* TODO jeśli ww. test się nie powiedzie, to odkomentutj
                                     checkAndRequestPermissions();
+                                    */
                                 }
                             }
                     )

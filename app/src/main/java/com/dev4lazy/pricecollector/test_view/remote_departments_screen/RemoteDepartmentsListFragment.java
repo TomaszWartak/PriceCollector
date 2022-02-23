@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.remote_view_viewmodel;
+package com.dev4lazy.pricecollector.test_view.remote_departments_screen;
 
 
 import android.os.Bundle;
@@ -18,9 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteDepartment;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class RemoteDepartmentsListFragment extends Fragment {
 
     private RemoteDepartmentListViewModel viewModel;

@@ -10,17 +10,21 @@ import com.dev4lazy.pricecollector.remote_model.db.RemoteDatabase;
 import com.dev4lazy.pricecollector.utils.AppSettings;
 import com.dev4lazy.pricecollector.utils.BatteryStateMonitor;
 import com.dev4lazy.pricecollector.utils.NetworkAvailabilityMonitor;
+import com.dev4lazy.pricecollector.view.utils.MessageSupport;
+import com.dev4lazy.pricecollector.view.utils.ToastMessageWrapper;
 
 import androidx.lifecycle.LifecycleObserver;
 
-public class AppHandle extends Application /* Na potrzeby testów: implements LifecycleObserver */ {
+public class AppHandle extends Application {
 
     private static AppHandle appHandle = null;
+    private MessageSupport messageSupport = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
         appHandle = this;
+        messageSupport = new MessageSupport( new ToastMessageWrapper() );
     }
 
     public static AppHandle getHandle() {
@@ -55,9 +59,11 @@ public class AppHandle extends Application /* Na potrzeby testów: implements Li
         return BatteryStateMonitor.getInstance();
     }
 
+    public MessageSupport getMessageSupport() {
+        return messageSupport;
+    }
+
     public void shutdown() {
-        // todo A może jest jakaś metoda onDestroy() ? w której może być shutdown() wołany
-        //  Jest metoda onTerminate(), ale ona działa tylko na emulatorze (?)
         getSettings().commit();
         getAuthSupport().signOut();
     }

@@ -46,34 +46,34 @@ public class RemoteDataRepository {
     private RemoteDatabase remoteDatabase;
 
     private final RemoteAnalysisDao remoteAnalysisDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisDao();
-    private final DataAccess<RemoteAnalysis> analyzes = new DataAccess<>(remoteAnalysisDao);
+    private final DataOperator<RemoteAnalysis> analyzes = new DataOperator<>(remoteAnalysisDao);
 
     private final RemoteAnalysisRowDao remoteAnalysisRowDao = AppHandle.getHandle().getRemoteDatabase().remoteAnalysisRowDao();
-    private final DataAccess<RemoteAnalysisRow> analysisRows = new DataAccess<>(remoteAnalysisRowDao);
+    private final DataOperator<RemoteAnalysisRow> analysisRows = new DataOperator<>(remoteAnalysisRowDao);
 
     private final RemoteEanCodeDao remoteEanCodeDao = AppHandle.getHandle().getRemoteDatabase().remoteEanCodeDao();
-    private final DataAccess<RemoteEanCode> eanCodes = new DataAccess<>(remoteEanCodeDao);
+    private final DataOperator<RemoteEanCode> eanCodes = new DataOperator<>(remoteEanCodeDao);
     
     private final RemoteDepartmentDao departmentDao = AppHandle.getHandle().getRemoteDatabase().remoteDepartmentDao();
-    private final DataAccess<RemoteDepartment> departments = new DataAccess<>(departmentDao);
+    private final DataOperator<RemoteDepartment> departments = new DataOperator<>(departmentDao);
 
     private final RemoteFamilyDao remoteFamilyDao = AppHandle.getHandle().getRemoteDatabase().remoteFamilyDao();
-    private final DataAccess<RemoteFamily> remoteFamilies = new DataAccess<>( remoteFamilyDao );
+    private final DataOperator<RemoteFamily> remoteFamilies = new DataOperator<>( remoteFamilyDao );
 
     private final RemoteMarketDao remoteMarketDao = AppHandle.getHandle().getRemoteDatabase().remoteMarketDao();
-    private final DataAccess<RemoteMarket> remoteMarkets = new DataAccess<>( remoteMarketDao );
+    private final DataOperator<RemoteMarket> remoteMarkets = new DataOperator<>( remoteMarketDao );
 
     private final RemoteModuleDao remoteModuleDao = AppHandle.getHandle().getRemoteDatabase().remoteModuleDao();
-    private final DataAccess<RemoteModule> remoteModules = new DataAccess<>( remoteModuleDao );
+    private final DataOperator<RemoteModule> remoteModules = new DataOperator<>( remoteModuleDao );
 
     private final RemoteSectorDao sectorDao = AppHandle.getHandle().getRemoteDatabase().remoteSectorDao();
-    private final DataAccess<RemoteSector> sectors = new DataAccess<>(sectorDao);
+    private final DataOperator<RemoteSector> sectors = new DataOperator<>(sectorDao);
 
     private final RemoteUOProjectDao remoteUOProjectDao = AppHandle.getHandle().getRemoteDatabase().remoteUOProjectDao();
-    private final DataAccess<RemoteUOProject> remoteUOProjects = new DataAccess<>( remoteUOProjectDao );
+    private final DataOperator<RemoteUOProject> remoteUOProjects = new DataOperator<>( remoteUOProjectDao );
 
     private final RemoteUserDao userDao = AppHandle.getHandle().getRemoteDatabase().remoteUserDao();
-    private final DataAccess<RemoteUser> users = new DataAccess<>(userDao);
+    private final DataOperator<RemoteUser> users = new DataOperator<>(userDao);
 
     private final MediatorLiveData<List<RemoteAnalysisRow>> mObservableAnalysisRows;
 

@@ -28,7 +28,7 @@ public class PermissionsUtils {
     public static final int ALL_PERMISSIONS_REQUEST = 1;
 
     private String[] applicationPermissions = {
-            //Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            // Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.INTERNET,
             Manifest.permission.CAMERA /*,
@@ -36,7 +36,6 @@ public class PermissionsUtils {
             Manifest.permission.READ_CONTACTS*/
     };
 
-    // todo ???
     private Fragment hostFragment;
 
     //private Context context;
@@ -145,13 +144,13 @@ public class PermissionsUtils {
         return protectionLevelDescription;
     }
 
-    public void callUserForPermission( String permission, int permisionRequest ){
+    public void askUserForPermission(String permission, int permisionRequest ){
         if ( hostFragment!=null) {
             hostFragment.requestPermissions( new String[]{permission}, permisionRequest ) ;
         }
     }
 
-    public void callUserForPermissions( String[] permissions, int permissionRequest ) {
+    public void askUserForPermissions(String[] permissions, int permissionRequest ) {
         if ( hostFragment!=null ) {
             hostFragment.requestPermissions( permissions, permissionRequest );
         }

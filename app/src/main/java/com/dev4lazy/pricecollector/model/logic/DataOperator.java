@@ -11,17 +11,51 @@ import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataAccess<D> {
+public class DataOperator<D> {
 
-    // TODO DataAccess zrób, jako klasę/interfejs? abstrakcyjną, z której wywodzi się np. RoomData
-    // TODO albo bardziej może _Dao (RoomDao, ...)
+    /** TO SIĘ NADAJE DO REFAKTORINGU **/
+
+    /* TODO ok DataOperator zrób, jako klasę/interfejs? abstrakcyjną, z której wywodzi się np. RoomDataOperator
+        Chyba nie...
+     TODO ok albo bardziej może _Dao (RoomDao, ...) <-- TAK!!!
+        tylko że w _dao są annotacje Room
+        To chyba musiałoby byc tak, że jest jakiś interfejs który dziedziczy po _dao (bez annotacji)
+        W sumie tak jest że poszczególne dao dziedziczą po dao, tylko że te annotacje sa w _dao...,
+        a nie powinny, żeby to było abstrakcyjne...
+        Chyba że jest tak _dao (bez adnotacji) -> RoomDao (z adnotacjami) -> pozostałe Dao
+     TODO xxx w metodach jest dużo komentarzy...
+    */
+
+    /*
+    TODO ok powinno byc: interfejs _Dao określa abstrakcyjne metody operacji na danych
+    TODO ok powinno być: interfejs AsyncAccess określa asynchroniczny sposób działania
+     !!! niestety tak nie jest - dla każdej moetody dostepu z dao jest oddzielny AsynkTask
+     TODO ok:
+      - Zrobić abstrakcyjny DataOperator
+      - z DataOperator wywieść AssynTaskDataOperator (później ew. ExecutorDataOperator)
+      - Zrobić jeden AsyncTaskDataAccess, którym obsługuje się wszystkie metody AssynTaskDataOperatora - LOL
+      - AssynTaskDataOperator jest inicjowany dwoma obiekatmi implementującymi odpowiednio:
+        - _Dao - który określi metody dostepu do danych (czyli np. RoomDao implments _dao)
+        - AsyncAccess - który okresli sposób dostępu asynchornicznego (AsyncTaskDataAccess impl...AsyncAccess)
+      - Każdy metoda AssynTaskDataOperatora będzie wołać AsyncAccess, który w doInBackground wywoła odpowiednią metodę _Dao
+        UWAGA: skąd ma wiedzieć, którą metodę _Dao ma wywołać? <- trzeba zrobic interfejs DaoMethod
+        z metodą doIt() np. GetNumberOfDataDaoMethod.doIt(), w której wołana jest realizacja
+        _dao.getNumberOfData(). I wtedy AssynTaskDataOperator w swojej metodzie getNumberOfData()
+        woła AsyncAccess.doIt(), które de facto jest wywołaniem GetNumberOfDataDaoMethod.doIt().
+        LOL ale wtedy masz naście róznych implmentacji AsyncAccesów... Skąd AssyncTaskDataOperator
+        ma wiedzieć, który zawołać? Jak podać właściwy obiekt?
+    */
+
     private _Dao dao;
 
-    DataAccess() {
+    /* TODO XXX
+    DataOperator() {
 
     }
 
-    DataAccess(_Dao dao) {
+     */
+
+    DataOperator(_Dao dao) {
         setDao(dao);
     }
 
@@ -35,13 +69,10 @@ public class DataAccess<D> {
 
     public void getNumberOfData(MutableLiveData<Integer> result ) {
         new GetNumberOfAsyncTask(dao, result).execute();
-        // new GetNumberOfAsyncTask(dao, result).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR );
     }
 
     public void getNumberOfData(SimpleSQLiteQuery query, MutableLiveData<Integer> result ) {
-        // new GetNumberOfAsyncTask(dao, result).execute();
         new GetNumberOfViaQueryAsyncTask(dao, result).execute(query);
-        // new GetNumberOfAsyncTask(dao, result).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR );
     }
 
     public void insertData(D data ) {
@@ -50,22 +81,17 @@ public class DataAccess<D> {
 
     public void insertData(D data, MutableLiveData<Long> result ) {
         new InsertAsyncTask(dao, result).execute(data);
-        // new InsertAsyncTask(dao, result).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, data );
     }
 
     public void insertDataList(ArrayList<D> dataList, ProgressPresenter progressPresenter) {
-        // TODO tutaj raczej PagedList...
-        insertDataList( dataList, null, progressPresenter);
+         insertDataList( dataList, null, progressPresenter);
     }
 
     public void insertDataList( List<D> dataList, MutableLiveData<Long> resultLD, ProgressPresenter progressPresenter) {
-        // TODO tutaj raczej PagedList...
         new InsertListAsyncTask(dao, resultLD, progressPresenter).execute(dataList);
-        // new InsertListAsyncTask(dao, progressPresenter, resultLD ).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, dataList );
     }
     public void updateData(D data, MutableLiveData<Integer> resultLD) {
         new UpdateAsyncTask(dao, resultLD).execute(data);
-        // new UpdateAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, data );
     }
 
     /**
@@ -73,32 +99,26 @@ public class DataAccess<D> {
      */
     public void deleteData(D data, MutableLiveData<Integer> resultLD) {
         new DeleteAsyncTask(dao, resultLD).execute(data);
-        // new DeleteAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, data );
     }
 
     public void getAllData( MutableLiveData<List<D>> resultLD ) {
         new getAllDataAsyncTask(dao, resultLD).execute();
-        // new getAllDataAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR );
     }
 
     public void deleteAllData( MutableLiveData<Integer> resultLD ) {
         new deleteAllDataAsyncTask( dao, resultLD).execute();
-        // new deleteAllDataAsyncTask( dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR );
     }
 
     public void getViaQuery(String stringQuery, MutableLiveData<List<D>> resultLD) {
         new getViaStringQueryAsyncTask(dao, resultLD).execute(stringQuery);
-        // new getViaStringQueryAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, stringQuery );
     }
 
     public void getViaQuery(SimpleSQLiteQuery query, MutableLiveData<List<D>> resultLD) {
         new getViaQueryAsyncTask(dao, resultLD).execute( query );
-        // new getViaQueryAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, query );
     }
 
     public void findDataById(Integer id, MutableLiveData<List<D>> resultLD) {
         new findDataByIdAsyncTask(dao, resultLD).execute(id);
-        // new findDataByIdAsyncTask(dao, resultLD).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, id );
     }
 
     private class GetNumberOfAsyncTask extends AsyncTask<Void,Void,Integer> {

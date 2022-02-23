@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.model.db;
+package com.dev4lazy.pricecollector.unused;
 
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;

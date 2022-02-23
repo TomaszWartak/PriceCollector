@@ -49,7 +49,7 @@ public class TestActionsFragment extends Fragment {
             Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment_to_remoteAnalysisRowJoinFragment);
         });
         parentView.findViewById(R.id.button_clear_local).setOnClickListener((View v) -> {
-            LocalDataInitializer.getInstance().clearLocalDatabase();
+            LocalDataInitializer.getInstance().clearLocalDatabase( null );
         });
         parentView.findViewById(R.id.button_create_local).setOnClickListener((View v) -> {
             LocalDataInitializer.getInstance().initializeLocalDatabase();

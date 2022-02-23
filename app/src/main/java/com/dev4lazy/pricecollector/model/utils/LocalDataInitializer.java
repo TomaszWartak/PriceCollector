@@ -117,9 +117,10 @@ public class LocalDataInitializer {
 //--------------------------------------------------------------------------
 // Local Database
 
-    public void clearLocalDatabase() {
+    public void clearLocalDatabase( LocalDataRepository.AfterDatabaseClearedCallback afterDatabaseClearedCallback ) {
+        setFirstCallFlagsToTrue();
         // Wyczyszczenie wszystkich tabel
-        AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(null);
+        AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase( afterDatabaseClearedCallback );
         // todo to niżej przeniósłbym do AppSettings - czyli warstwę wyżej
         //  inicjalizacja bazy lokalnej -> setLocalDatabaseNotInitialized()
         AppHandle.getHandle().getSettings().saveLocalDatabaseInitialized(false);
@@ -127,6 +128,21 @@ public class LocalDataInitializer {
         AppSettings.getInstance().setLastAnalysisCreationDate( new Date( 0 ) );
     }
 
+    private void setFirstCallFlagsToTrue() {
+        firstCallCountries = true;
+        firstCallCompanies = true;
+        firstCallOwnStores = true;
+        firstCallObiStores = true;
+        firstCallLMStores = true;
+        firstCallCastoramaStores = true;
+        firstCallLocalCompetitorStores = true;
+        firstCallCompetitorsSlotsNr1 = true;
+        firstCallCompetitorsSlotsNr2 = true;
+        firstCallCompetitorsSlotsNr3 = true;
+        firstCallCompetitorsSlotsNr4 = true;
+        firstCallCompetitorsSlotsNr5 = true;
+    }
+    
     public void initializeLocalDatabase() {
         // todo !!!! to jest wołane także przy powrocie z przeglądania artykułow
         // todo usuń czyszczenie bazy

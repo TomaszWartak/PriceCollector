@@ -333,9 +333,13 @@ public class RemoteDataInitializer {
     private void prepareConverters() {
         if (csv2AnalysisRowConverter==null) {
             csv2AnalysisRowConverter = new Csv2AnalysisRowConverter();
+        } else {
+            csv2AnalysisRowConverter.reset();
         }
         if (csv2EanCodeConverter==null) {
             csv2EanCodeConverter = new Csv2EanCodeConverter();
+        } else {
+            csv2EanCodeConverter.clearRemoteEanCodeList();
         }
     }
 

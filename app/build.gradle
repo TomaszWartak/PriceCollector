@@ -26,20 +26,13 @@ android {
 
 }
 
-/*
-repositories {
-    flatDir {
-        dirs '~/Desktop/Praca_dyplomowa/libs'
-    }
-}
-*/
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    // Dodałem do nie upgradzie do ArcticFox przy buiildzie nie mógł znaleźć
+    // Po upgradzie do ArcticFox przy buiildzie nie mógł znaleźć
     // implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.31'
     // 2021-08-01 https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
+
 
     // Android X
     implementation 'androidx.activity:activity:1.3.1'
@@ -80,6 +73,7 @@ dependencies {
     // 2021-09-12 https://mvnrepository.com/artifact/androidx.navigation/navigation-runtime
     // https://dl.google.com/dl/android/maven2/index.html
 
+
     // Testy
     testImplementation 'junit:junit:4.13.2' // prev 4.13-beta-3
     // 2021-04-22 https://mvnrepository.com/artifact/junit/junit
@@ -89,11 +83,13 @@ dependencies {
     // 2021-09-12 https://mvnrepository.com/artifact/androidx.test.espresso/espresso-core
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:19.0.1' // prev 18.0.3
+    // 2022-02-02 https://firebase.google.com/support/release-notes/android#firebase_core_version_1607
+    // The Firebase Android library firebase-core is no longer needed. This SDK included the Firebase SDK for Google Analytics.
+    // implementation 'com.google.firebase:firebase-core:19.0.1' // prev 18.0.3
     // 2021-09-12 https://mvnrepository.com/artifact/com.google.firebase/firebase-core
     implementation 'com.google.firebase:firebase-auth:21.0.1' // prev 20.0.4
     // 2021-09-12 https://mvnrepository.com/artifact/com.google.firebase/firebase-auth
-    //implementation 'com.google.firebase:firebase-admin:6.9.0' // todo na potrzeby testowago generowania tokenów
+    //implementation 'com.google.firebase:firebase-admin:6.9.0' // na potrzeby testowago generowania tokenów
 
     // Room 2021-04-22 https://developer.android.com/jetpack/androidx/releases/room
     def room_version = '2.3.0' // prev 2.2.0

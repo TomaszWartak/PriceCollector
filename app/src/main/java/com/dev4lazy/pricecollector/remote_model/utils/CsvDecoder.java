@@ -17,7 +17,7 @@ public class CsvDecoder {
              (jako efekt uboczny) z csvLineStringBuilder, to csvLineStringBuilder
              przyjmie wartość "" i pętla odczytu wartości z csvLineStringBuilder
              zostanie zakończona.
-             Dlatego zamiast tego ostaniego pustego napisu dodaję spację (np. "; ").
+             Dlatego, zamiast tego ostaniego pustego napisu dodaję spację (np. "; ").
              Spacja w cutCsvValueFromCsvLine() zosytanie zamieniona na pusty napis,
              który dzięki temu zostanie dodany do values.
             */
@@ -43,7 +43,7 @@ public class CsvDecoder {
         }
     }
 
-    /*
+    /**
         Działanie: wycina wartość z początku linii csv
         Argumenty: csvLine - linia csv
         Rezultat: wartość wyciętą z początku linii csv

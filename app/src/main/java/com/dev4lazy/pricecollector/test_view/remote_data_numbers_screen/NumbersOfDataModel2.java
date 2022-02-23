@@ -1,4 +1,4 @@
-package com.dev4lazy.pricecollector.viewmodel;
+package com.dev4lazy.pricecollector.test_view.remote_data_numbers_screen;
 
 import android.app.Application;
 
