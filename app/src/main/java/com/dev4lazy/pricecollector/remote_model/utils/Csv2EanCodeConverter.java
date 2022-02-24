@@ -10,10 +10,6 @@ import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-// todo test:
-// - uruchom testy
-//  - co jeśli będzie pusty plik
-//  - co jeśli będą śmieci w pliku
 public class Csv2EanCodeConverter {
 
     private final String EAN_CODES_FILE_NAME = "casto-ean.csv";
@@ -21,7 +17,6 @@ public class Csv2EanCodeConverter {
     private CsvReader eanCodeCsvReader = new CsvReader();
     private CsvDecoder csvDecoder;
     private RemoteDataRepository remoteDataRepository;
-    private ArrayList<String> fieldNamesList; //todo z tego coś nie bardzo korzystasz...
     private ArrayList<RemoteEanCode> remoteEanCodeList;
 
     public Csv2EanCodeConverter() {
@@ -78,10 +73,6 @@ public class Csv2EanCodeConverter {
     }
 
     public RemoteEanCode makeEanCode(ArrayList<String> values ) {
-        // todo musibyć sprawdzanie typu po konwersji, bo mogą przyjść śmieci w pliku i appka się wysypie...
-        // todo co jeśli będzie mniej danych
-        // todo może zamiast warości 0..11 użyj stałych...
-        // todo zastanów się co, jeśli zmieni się format dancyh na serwerze analizy konkurencji
         RemoteEanCode remoteEanCode = new RemoteEanCode.EanCodeBuilder()
                 .articleId( csvDecoder.getIntegerOrNullFromString( values.get(0)) )
                 .value( values.get(1) )

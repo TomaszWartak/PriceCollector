@@ -137,24 +137,9 @@ public class AnalysisArticleJoinDataUpdater {
 
         EanCode prepareEanCodeData( AnalysisArticleJoin analysisArticleJoin ) {
             EanCode eanCode = new EanCode();
-            // todo
-            //  id pobrać z refernceArticle? - nie... bo tam nie ma id EAN
-            //  Trzeba ew. pobrać cały obiekt na podstawie article_id z ref Article.
-            //  Jesli jest zmieniany, to znaczy, że to jest inny Ean do tego samego artykułu...?
-            //  Czy założyć, że jeden artykuł, to jeden EAN <-- NIE...
-            //  OK. Zakładamy, że jest wiele Eanów do jednego artykułu.
-            //  - zmiana wartrości ean -> dodanie noiwego kodu ean
-            //  - jesli jest wiele eanów -> który wyświetlić przy art ref i analysis article?
-            //      - pierwszy
-            //  - jak się zachowa query do joina przy wielu eanach do jednego artykułu?
-            //  - generalnie nie obsługuję nigdzie wielu eanach do jednego artykułu
-            //  Może dodac pole idEan do Joina, to będzie łatwiej może
             eanCode.setId( analysisArticleJoin.getReferenceArticleEanCodeIdInt() );
-            // todo remote_id ustawić na -1
             eanCode.setRemote_id(-1);
-            // todo skopiowac z Join
             eanCode.setValue( analysisArticleJoin.getReferenceArticleEanCodeValue() );
-            // todo skopiowac z ref Article
             eanCode.setArticleId( analysisArticleJoin.getReferenceArticleId() );
             return eanCode;
         }

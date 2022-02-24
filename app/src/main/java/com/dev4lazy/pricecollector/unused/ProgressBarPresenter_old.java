@@ -63,7 +63,7 @@ public class ProgressBarPresenter_old implements ProgressPresenter_old {
 
     @Override
     public void init( int maxValue, boolean toHideWhenFinished) {
-        if (maxValue >=100) { // TODO XXX !=
+        if (maxValue >=100) {
             progressBar.setMax( 100 );
             stepValue = maxValue / 100;
             init( maxValue, stepValue, toHideWhenFinished );

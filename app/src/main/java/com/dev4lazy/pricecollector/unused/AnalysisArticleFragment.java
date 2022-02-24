@@ -26,43 +26,4 @@ public class AnalysisArticleFragment extends Fragment {
         // Required empty public constructor
     }
 
-/*
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        analysisArticleJoinViewModel = new ViewModelProvider( getActivity() ).get( AnalysisArticleJoinViewModel.class );
-        Jeśli tu chcesz użyc layout analysis_article, to w analysis_article musisz dopisać
-        (chyba w ScrollView albo w androidx.constraintlayout.widget.ConstraintLayout) na końcu
-        tools:context=".view.E5_article_screen.AnalysisArticleFragment"
-        View view = inflater.inflate(R.layout.analysis_article, container, false);
-        setView( view );
-        return view;
-    }
-*/
-    /*
-    private void setView( View view ) {
-        // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
-        TextView textViewArticleName  = view.findViewById( R.id.analysisArticleFragment_articleName );
-        // todo start test
-        AnalysisArticleJoin arj = analysisArticleJoinViewModel.getAnalysisArticleJoin();
-        // todo stop test
-        textViewArticleName.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getArticleName() );
-        TextView textViewOwnCode = view.findViewById( R.id.analysisArticleFragment_ownCode );
-        textViewOwnCode.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getOwnCode() );
-        TextView textViewEanCode  = view.findViewById( R.id.analysisArticleFragment_eanCode );
-        textViewEanCode.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getEanCode() );
-        TextView textViewArticleComment  = view.findViewById( R.id.analysisArticleFragment_articleComment );
-        textViewArticleComment.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().getComments() );
-        TextView textViewCompetitorPrice  = view.findViewById( R.id.analysisArticleFragment_competitorPrice );
-        Double competitorStorePrice = analysisArticleJoinViewModel.getAnalysisArticleJoin().getCompetitorStorePrice();
-        if (competitorStorePrice==null) {
-            textViewCompetitorPrice.setText( "?" );
-        } else {
-            textViewCompetitorPrice.setText( competitorStorePrice.toString() );
-        }
-        // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
-        // todo TextView textView = view.findViewById( R.id.analysisArticleFragment_refArticleComment );
-        // todo textView.setText( analysisArticleJoinViewModel.getAnalysisArticleJoin().get
-    }
-/**/
 }

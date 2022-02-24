@@ -7,8 +7,6 @@ import androidx.lifecycle.AndroidViewModel;
 
 public class AlertDialogFragmentViewModel_not_used extends AndroidViewModel {
 
-    // TODO !! zamiast używać każdego pola oddzielnie, przez ViewModel przekazuj AlertDialog.Builder
-
     private String title;
     private String message;
     private String positiveButtonLabel;

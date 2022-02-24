@@ -15,9 +15,6 @@ public interface _Dao_back<D> {
 
     Integer getNumberOf();
 
-    // TODO ??? wyciąłem stąd i przeniosłem do CountryDao: @Insert(onConflict = OnConflictStrategy.IGNORE)
-    // jeśli to działa, to przenieś również @Update i @Delete do wszystkich Dao,
-    // albo zrób interface Room_Dao, który będzie używany zamiast _Dao
     Long insert(D data);
 
     @Update

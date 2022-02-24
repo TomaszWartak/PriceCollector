@@ -118,10 +118,6 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
                 public void onChanged( PagedList<AnalysisArticleJoin> analysisArticlesJoins) {
                     if (!analysisArticlesJoins.isEmpty()) {
                         analysisArticleJoinsRecyclerView.submitArticlesList( analysisArticlesJoins );
-                        // TODO wypełnij metodę AnalysisArticleJoinsRecyclerView.scrollToItem()
-                        // TODO TEST
-                        // ((LinearLayoutManager)layoutManager).scrollToPositionWithOffset(positionToScroll - 1,0);
-                        // TODO END TEST
                         int positionToScroll = analysisArticleJoinViewModel.getPositionOnList();
                         int firstVisibleItemPosition = analysisArticleJoinViewModel.getFirstVisibleItemPosition();
                         int lastVisibleItemPosition = analysisArticleJoinViewModel.getLastVisibleItemPosition();
@@ -202,7 +198,6 @@ public class AnalysisArticlesListFragment extends Fragment { // OK
                             }
                         case R.id.analysis_articles_list_screen_logout_menu_item:
                             new LogoutQuestionDialog( getContext(), getActivity() ).get();
-                            // TODO XXX getLogoutQuestionDialog();
                             break;
                     }
                     return false;

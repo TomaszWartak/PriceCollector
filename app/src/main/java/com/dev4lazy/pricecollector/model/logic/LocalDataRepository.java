@@ -105,11 +105,6 @@ public class LocalDataRepository {
         slots.getViaQuery(
                 "SELECT * from competitor_slots ORDER BY slot_nr ASC",
                 result );
-        /* todo
-        AppHandle.getHandle().getLocalDatabase().analysisCompetitorSlotDao().getViaQueryLiveData(
-                new SimpleSQLiteQuery("SELECT * from competitor_slots ORDER BY slot_nr ASC")
-        );
-        */
     }
 
     public LiveData<List<AnalysisCompetitorSlot>> getAllSlotsLD() {
@@ -542,16 +537,6 @@ public class LocalDataRepository {
     public void findOwnStoreByName(String ownStoreName, MutableLiveData<List<OwnStore>> result ) {
         ownStores.findDataByName(ownStoreName, result);
     }
-
-    /* todo czy to jest potrzebne?
-    public LiveData<List<OwnStore>> getOwnStoreByIdLD(int ownStoreId) {
-        return ownStoreDao.findByIdLD(ownStoreId);
-    }
-
-    public LiveData<List<OwnStore>> getOwnStoreByNameLD(String ownStoreName) {
-        return ownStoreDao.findByNameLD(ownStoreName);
-    }
-    */
 
     public LiveData<List<OwnStore>> getAllOwnStoresLD() {
         return ownStoreDao.getAllLiveData();

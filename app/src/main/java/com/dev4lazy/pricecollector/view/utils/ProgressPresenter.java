@@ -147,7 +147,6 @@ public class ProgressPresenter {
     public void update() {
         if (isNotStopped()) {
             if (progressPresenterIsNotNull()) {
-                // TODO masz wyciagnąć stąd ProgressBAr, więc ta metoda nie powinna dotykac progress bara
                 progressViewWrapper.setProgress(progressValue);
             }
         }

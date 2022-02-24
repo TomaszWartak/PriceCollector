@@ -10,7 +10,7 @@ import static android.content.Context.BATTERY_SERVICE;
 import static android.content.Intent.ACTION_BATTERY_LOW;
 import static android.content.Intent.ACTION_BATTERY_OKAY;
 
-public class BatteryStateMonitor /* TODO TEST */ implements DoItCallback /**/ {
+public class BatteryStateMonitor implements DoItCallback  {
 
     private static BatteryStateMonitor instance = new BatteryStateMonitor();
     private BroadcastReceiverWrapper broadcastReceiverWrapper;
@@ -44,7 +44,6 @@ public class BatteryStateMonitor /* TODO TEST */ implements DoItCallback /**/ {
     }
 
     public synchronized boolean isBatteryStateLow() {
-        // TODO XXX batteryStateLow = ((BatteryLevelReceiver)broadcastReceiverWrapper.getBroadcastReceiver()).isBatteryStateLow();
         return batteryStateLow;
     }
 
@@ -66,7 +65,6 @@ public class BatteryStateMonitor /* TODO TEST */ implements DoItCallback /**/ {
         this.batteryStateLow = batteryStateLow;
     }
 
-    /* TODO TEST */
     @Override
     public synchronized void doIt( Object... parameters ) {
         batteryStateLow = (Boolean)parameters[0];

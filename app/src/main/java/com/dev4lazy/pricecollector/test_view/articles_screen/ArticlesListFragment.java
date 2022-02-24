@@ -29,10 +29,8 @@ public class ArticlesListFragment extends Fragment {
 
 
     private ArticleViewModel viewModel;
-    //private ArticleJoinViewModel viewModel;
     private RecyclerView recyclerView;
     private ArticleAdapter analysisArticleAdapter;
-    //private ArticleJoinAdapter analysisArticleJoinAdapter;
 
     public ArticlesListFragment() {
         // Required empty public constructor
@@ -57,32 +55,21 @@ public class ArticlesListFragment extends Fragment {
 
     private void recyclerSetup() {
         analysisArticleAdapter = new ArticleAdapter(new ArticleDiffCallback());
-        //analysisArticleJoinAdapter = new ArticleJoinAdapter(new ArticleJoinDiffCalback());
         recyclerView = getView().findViewById(R.id.articles_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
         recyclerView.setAdapter(analysisArticleAdapter);
-        //recyclerView.setAdapter(analysisArticleJoinAdapter);
     }
 
     private void recyclerSubscribtion() {
         viewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
-        //viewModel = ViewModelProviders.of(this).get(ArticleJoinViewModel.class);
         viewModel.getArticlesLiveDataPaged().observe(getViewLifecycleOwner(), new Observer<PagedList<Article>>() {
-        //viewModel.getArticleJoinLiveData().observe(this, new Observer<PagedList<ArticleJoin>>() {
             @Override
             public void onChanged(PagedList<Article> articles) {
                 if (!articles.isEmpty()) {
                     analysisArticleAdapter.submitList(articles);
                 }
             }
-            /*@Override
-            public void onChanged(PagedList<ArticleJoin> articlesJoins) {
-                if (!articlesJoins.isEmpty()) {
-                    analysisArticleJoinAdapter.submitList(articlesJoins);
-                }
-            }
-             */
         });
     }
 

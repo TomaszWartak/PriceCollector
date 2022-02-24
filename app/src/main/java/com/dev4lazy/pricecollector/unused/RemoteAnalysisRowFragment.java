@@ -46,7 +46,7 @@ public class RemoteAnalysisRowFragment extends Fragment {
     private void recyclerSetup() {
         remoteAnalysisRowAdapter = new RemoteAnalysisRowAdapter(new RemoteAnalysisRowDiffCallback());
         recyclerView = getView().findViewById(R.id.remote_analysis_rows_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
         recyclerView.setAdapter(remoteAnalysisRowAdapter);
     }

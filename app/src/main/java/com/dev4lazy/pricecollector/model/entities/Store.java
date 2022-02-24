@@ -26,7 +26,6 @@ import androidx.room.PrimaryKey;
 public class Store {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    // todo ?? czy w bazie zdalnej jest taka tabela - zob entity OwnStore
     public int remoteId; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
     @ColumnInfo(name = "company_id")
     public int companyId;

@@ -10,18 +10,11 @@
     android:background="?mainViewsColorSurface"
     >
 
-    <!-- TODO XXX
-    android:fillViewport="true"
-    -->
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/analysis_article_fragment_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
-            <!-- TODO XXX
-            android:background="@color/myVeryLightGrey"
-            -->
 
             <!-- Zdjęcie artykułu strategicznego -->
             <com.google.android.material.card.MaterialCardView
@@ -37,28 +30,7 @@
                     android:src="@drawable/common_google_signin_btn_icon_dark"
                      />
 
-                <!-- TODO XXX
-                app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_width="@dimen/image_rectangle_side_size"
-                    android:layout_height="@dimen/image_rectangle_side_size"
-                 -->
-
             </com.google.android.material.card.MaterialCardView>
-
-
-            <!-- TODO XXX
-                <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/analysisArticleFragment_imageArticle"
-                android:layout_width="@dimen/image_rectangle_side_size"
-                android:layout_height="@dimen/image_rectangle_side_size"
-                android:layout_marginStart="@dimen/margin"
-                android:layout_marginTop="@dimen/margin"
-                android:src="@drawable/common_google_signin_btn_icon_dark"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-            -->
-
 
             <!-- Kod SKU artykułu  -->
             <com.google.android.material.textfield.TextInputLayout
@@ -209,13 +181,6 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/common_google_signin_btn_icon_dark"
                     />
-
-                <!-- TODO XXX
-                app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_width="@dimen/image_rectangle_side_size"
-                    android:layout_height="@dimen/image_rectangle_side_size"
-                 -->
 
             </com.google.android.material.card.MaterialCardView>
 

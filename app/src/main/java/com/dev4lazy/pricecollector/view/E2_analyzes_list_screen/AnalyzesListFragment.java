@@ -82,10 +82,6 @@ public class AnalyzesListFragment extends Fragment { //OK
             analyzesListViewModel.getAnalyzesLiveData().observe( getViewLifecycleOwner(),  new Observer<PagedList<Analysis>>() {
                 @Override
                 public void onChanged( PagedList<Analysis> analyzesList ) {
-                    /* TODO START TEST
-                    if (!analyzesList.isEmpty()) {
-                    */
-                    // TODO END TEST
                     if (analyzesList!=null) {
                         analyzesRecyclerView.submitAnalyzesList( analyzesList);
                     }
@@ -138,7 +134,6 @@ public class AnalyzesListFragment extends Fragment { //OK
                                         dialog.dismiss();
                                         if (isNetworkAvailable()) {
                                             AnalysisBasicDataDownloader.getInstance().downloadAnalysisBasicData();
-                                            // TODO TEST analyzesRecyclerView.refresh();
                                         } else {
                                             Toast.makeText(
                                                     getContext(),
@@ -196,7 +191,7 @@ public class AnalyzesListFragment extends Fragment { //OK
                     drawerLayout.closeDrawers();
                     switch (item.getItemId()) {
                         case R.id.analyzes_list_screen_clear_local_db_menu_item:
-                            /* TODO
+                            /* TODO ok
                                tutaj można by sprawdzić, czy jest dostęp do netu, bo po wyczyszczeniu
                                bazy jest jej inicjalizacja, a część danych jest pobierana z bazy zdalnej
                              */
@@ -226,7 +221,6 @@ public class AnalyzesListFragment extends Fragment { //OK
                                     getContext(),
                                     R.style.PC_AlertDialogStyle_Overlay
                             )
-                            // TODO XXX .setTitle( getString( R.string.basic_data_ready_to_download))
                             .setMessage( getString( R.string.question_about_clearing_local_data) )
                             .setPositiveButton(
                                     getString( R.string.caption_yes) ,

@@ -35,11 +35,11 @@ public class OwnArticleInfo {
     private String ownCode; // kod briko
     private int sapCode;
     private int magentoCode;
-    private double refPrice; // todo: to chyba nie jest potrzebne, bo jest w CompetitorPrice.
+    private double refPrice; // todo ok: to chyba nie jest potrzebne, bo jest w CompetitorPrice.
     //   Nie... Gdyż CompetitorPrice jest tworzone dopiero, gdy zapisujesz dane w trakcoe badania cen
-    private double storePrice; // todo: to chyba nie jest potrzebne, bo jest w CompetitorPrice
+    private double storePrice; // todo ok: to chyba nie jest potrzebne, bo jest w CompetitorPrice
     //   Nie... Gdyż CompetitorPrice jest tworzone dopiero, gdy zapisujesz dane w trakcoe badania cen
-    private double storeMarginPercent; // todo: to chyba nie jest potrzebne, bo jest w CompetitorPrice
+    private double storeMarginPercent; // todo ok: to chyba nie jest potrzebne, bo jest w CompetitorPrice
     //   Nie... Gdyż CompetitorPrice jest tworzone dopiero, gdy zapisujesz dane w trakcoe badania cen
     @ColumnInfo(name = "sector_id")
     private int sectorId;

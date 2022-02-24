@@ -1,6 +1,5 @@
 package com.dev4lazy.pricecollector.unused;
 
-// todo ??????
 public class AnalysisIntermediaryData { //[dbo].[PRC_CompetitorPrice]
 
     /*

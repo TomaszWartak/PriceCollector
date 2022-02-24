@@ -46,17 +46,8 @@ public class CsvReader {
     public void openReaderFromExternalStorage(String csvFileName) {
         try {
             File directory = getDocumentDirectory();
-            // todo start test
-            String path = directory + File.separator + csvFileName;
-            /* todo
-            coś mi się wydaje, że albo:
-            - spróbować jednak w publicznym katalogu to zapisać
-            - lub skopiować w aplikacji z publicznego
-             */
-            // todo end test
             FileReader fileReader = new FileReader(directory + File.separator + csvFileName);
             reader = new BufferedReader(fileReader);
-            // todo !!!! ta obsługa wyjątków to żenada... musisz coś lepszego wymyślić
         } catch (FileNotFoundException ex0) {
             ex0.printStackTrace();
             try {

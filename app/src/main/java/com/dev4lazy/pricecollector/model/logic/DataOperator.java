@@ -23,7 +23,8 @@ public class DataOperator<D> {
         W sumie tak jest że poszczególne dao dziedziczą po dao, tylko że te annotacje sa w _dao...,
         a nie powinny, żeby to było abstrakcyjne...
         Chyba że jest tak _dao (bez adnotacji) -> RoomDao (z adnotacjami) -> pozostałe Dao
-     TODO xxx w metodach jest dużo komentarzy...
+        Zob. też OneNote
+        Studia/ .. / Kodowanie/!! Współpraca z biblioteką Room/Stworzenie DAO/!! Przykład  uniwersalnego abstrakcyjnego DAO
     */
 
     /*
@@ -47,13 +48,6 @@ public class DataOperator<D> {
     */
 
     private _Dao dao;
-
-    /* TODO XXX
-    DataOperator() {
-
-    }
-
-     */
 
     DataOperator(_Dao dao) {
         setDao(dao);

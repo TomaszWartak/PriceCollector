@@ -17,14 +17,12 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
     private int firstVisibleItemPosition = 0;
     private int lastVisibleItemPosition = 0;
     private boolean anyArticleDisplayed = false;
-    private boolean savingDataInProgress; // todo - czy to jest wykorzystywane
 
     public AnalysisArticleJoinViewModel(Application application) {
         super(application);
         valuesStateHolder = new AnalysisArticleJoinValuesStateHolder( );
         analysisArticleJoinForRestore = new AnalysisArticleJoin();
         toRestoreAfterEanValueDupliaction = false;
-        savingDataInProgress = false;
     }
 
     public void setAnalysisArticleJoin( AnalysisArticleJoin analysisArticleJoin ) {
@@ -44,7 +42,6 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
         return valuesStateHolder;
     }
 
-    /**/
     public AnalysisArticleJoinValuesStateHolder getCopyOfValuesStateHolder() {
         AnalysisArticleJoinValuesStateHolder copyOfAnalysisArticleJoinValuesStateHolder =
                 new AnalysisArticleJoinValuesStateHolder( );
@@ -65,7 +62,6 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
         );
         return copyOfAnalysisArticleJoinValuesStateHolder;
     }
-    /**/
 
     public void setAnalysisArticleJoinForRestore(AnalysisArticleJoin analysisArticleJoin) {
         /* Ze względu na wydajność zostawiłem kopiowanie tylko niezbędnych danych.
@@ -339,14 +335,6 @@ public class AnalysisArticleJoinViewModel extends AndroidViewModel {
 
     public void setToRestoreAfterEanValueDupliaction(boolean toRestoreAfterEanValueDupliaction) {
         this.toRestoreAfterEanValueDupliaction = toRestoreAfterEanValueDupliaction;
-    }
-
-    public boolean isSavingDataInProgress() {
-        return savingDataInProgress;
-    }
-
-    public void setSavingDataInProgress(boolean savingDataInProgress) {
-        this.savingDataInProgress = savingDataInProgress;
     }
 
     public void setPositionOnList(int positionOnList) {

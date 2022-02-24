@@ -40,7 +40,7 @@ public class Article {
     private int remote_id; // klucz głowny w bazie zdalnej; tutaj: kod briko (6 cyfr) ...
     private String name;
     private String description;
-    // todo ??? picture;
+    // todo ok ??? picture;
 
 
     public int getId() {

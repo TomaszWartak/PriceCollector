@@ -1,6 +1,7 @@
 package com.dev4lazy.pricecollector.model.logic;
 
 import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.entities.Analysis;
 import com.dev4lazy.pricecollector.model.entities.AnalysisArticle;
 import com.dev4lazy.pricecollector.model.entities.Article;
@@ -166,7 +167,6 @@ public class AnalysisFullDataDownloader {
                         allArticlesList
                                 .stream()
                                 .collect( Collectors.toMap( Article::getRemote_id, article->article ) ) );
-                //  TODO !!!! Przy drugiej analizie Wiersz wyżej Duplicate key com.dev4lazy.pricecollector.model.entities.Article
                 newArticlesList = newArticlesList
                         .stream()
                         .filter( article -> !allArticlesMap.containsKey( article.getRemote_id() ) )
@@ -192,7 +192,7 @@ public class AnalysisFullDataDownloader {
                     }
                 };
                 progressPresentingManager.resetProgressPresenter( newArticlesList.size(), DONT_HIDE_WHEN_FINISHED );
-                progressPresentingManager.showMessagePresenter( "Lista artykułów" ); // TODO hardcoded
+                progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.articles_list) ); 
                 insertResult.observeForever(insertingResultObserver);
                 LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
                 localDataRepository.insertArticles( newArticlesList, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
@@ -317,7 +317,7 @@ public class AnalysisFullDataDownloader {
                     }
                 };
                 progressPresentingManager.resetProgressPresenter( newEanCodesList.size(), DONT_HIDE_WHEN_FINISHED );
-                progressPresentingManager.showMessagePresenter( "Lista kodów EAN" ); // TODO hardcoded
+                progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.ean_codes_list) );
                 insertResult.observeForever(insertingResultObserver);
                 LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
                 localDataRepository.insertEanCodes( newEanCodesList, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
@@ -499,14 +499,13 @@ public class AnalysisFullDataDownloader {
     private class AllOwnArticleInfosGetter extends TaskLink {
         @Override
         protected void doIt(Object... data) {
-            // TODO XXX ArrayList<OwnArticleInfo> newOwnArticleInfosList = (ArrayList<OwnArticleInfo>)data[0];
             MutableLiveData<List<OwnArticleInfo>> result = new MutableLiveData<>();
             Observer<List<OwnArticleInfo>> resultObserver = new Observer<List<OwnArticleInfo>>() {
                 @Override
                 public void onChanged(List<OwnArticleInfo> actualOwnArticleInfosList) {
                     if ((actualOwnArticleInfosList != null)) {
                         result.removeObserver(this); // this = observer...
-                        runNextTaskLink( /* TODO XXX newOwnArticleInfosList,*/ actualOwnArticleInfosList);
+                        runNextTaskLink( actualOwnArticleInfosList);
                     }
                 }
             };
@@ -518,8 +517,6 @@ public class AnalysisFullDataDownloader {
     private class NewOwnArticleInfosListMaker extends TaskLink {
         @Override
         protected void doIt(Object... data) {
-            // TODO to chyba powinno być tak, że tworzone jest tylko dla nowych artykułow
-            //  a dla "starych" robiony jest update (cena sklepowa i ref)
             List<OwnArticleInfo> actualOwnArticleInfosList = (List<OwnArticleInfo>)data[0];
             Remote2LocalConverter converter = new Remote2LocalConverter();
             OwnArticleInfo ownArticleInfo;
@@ -576,7 +573,7 @@ public class AnalysisFullDataDownloader {
                     }
                 };
                 progressPresentingManager.resetProgressPresenter( newOwnArticleInfoList.size(), DONT_HIDE_WHEN_FINISHED );
-                progressPresentingManager.showMessagePresenter( "Informacje dodatkowe" ); // TODO hardcoded
+                progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.additional_info) );
                 insertResult.observeForever(insertingResultObserver);
                 LocalDataRepository localDataRepository = AppHandle.getHandle().getRepository().getLocalDataRepository();
                 localDataRepository.insertOwnArticleInfos( newOwnArticleInfoList, progressPresentingManager.getProgressPresenterWrapper(), insertResult );
@@ -637,7 +634,7 @@ public class AnalysisFullDataDownloader {
                 }
             };
             progressPresentingManager.resetProgressPresenter(  analysisArticlesList.size(), HIDE_WHEN_FINISHED );
-            progressPresentingManager.showMessagePresenter( "Lista artykułów strategicznych" ); // TODO hardcoded
+            progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.strategic_articles_list) );
             insertResult.observeForever( insertingResultObserver );
             localDataRepository.insertAnalysisArticles( analysisArticlesList, progressPresentingManager.getProgressPresenterWrapper(), insertResult );
         }

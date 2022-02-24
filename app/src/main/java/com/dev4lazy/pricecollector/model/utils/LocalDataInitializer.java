@@ -119,10 +119,7 @@ public class LocalDataInitializer {
 
     public void clearLocalDatabase( LocalDataRepository.AfterDatabaseClearedCallback afterDatabaseClearedCallback ) {
         setFirstCallFlagsToTrue();
-        // Wyczyszczenie wszystkich tabel
         AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase( afterDatabaseClearedCallback );
-        // todo to niżej przeniósłbym do AppSettings - czyli warstwę wyżej
-        //  inicjalizacja bazy lokalnej -> setLocalDatabaseNotInitialized()
         AppHandle.getHandle().getSettings().saveLocalDatabaseInitialized(false);
         AppHandle.getHandle().getSettings().saveInitialisationStage(LOCAL_DATA_NOT_INITIALIZED);
         AppSettings.getInstance().setLastAnalysisCreationDate( new Date( 0 ) );
@@ -144,10 +141,6 @@ public class LocalDataInitializer {
     }
     
     public void initializeLocalDatabase() {
-        // todo !!!! to jest wołane także przy powrocie z przeglądania artykułow
-        // todo usuń czyszczenie bazy
-        // AppHandle.getHandle().getRepository().getLocalDataRepository().clearDatabase(new StartCallback());
-        // todo normalnie ma być jn.
         checkAndSetIfLocaDatabaselNotInitialized();
     }
 
@@ -237,7 +230,6 @@ public class LocalDataInitializer {
         prepareLeroyMerlinStores();
         prepareCastoramaStores();
         prepareLocalCompetitorStores();
-        prepareCompetitorSlots();
         startPreparingOtherLocalDataChain();
     }
 
@@ -273,54 +265,8 @@ public class LocalDataInitializer {
         localCompetitorStores = appDataFeeder.getLocalCompetitorStoresInitialList();
     }
 
-    private void prepareCompetitorSlots() {
-        /* todo?
-        AnalysisCompetitorSlot slot = new AnalysisCompetitorSlot();
-        slot.setSlotNr(1);
-        slot.setCompanyId(1);
-        slot.setOtherStoreId(1);
-        AnalysisCompetitorSlotFullInfo slotFullInfo = new AnalysisCompetitorSlotFullInfo(slot);
-        slotFullInfo.setCompetitorCompanyName("OBI");
-        slotFullInfo.setCompetitorStoreName("OBI Rybnik");
-        analysisCompetitorSlotFullInfos.add(slotFullInfo);
-        slot = new AnalysisCompetitorSlot();
-        slot.setSlotNr(2);
-        slot.setCompanyId(2);
-        slot.setOtherStoreId(-1);
-        slotFullInfo = new AnalysisCompetitorSlotFullInfo(slot);
-        slotFullInfo.setCompetitorCompanyName("LM");
-        slotFullInfo.setCompetitorStoreName("");
-        analysisCompetitorSlotFullInfos.add(slotFullInfo);
-        slot = new AnalysisCompetitorSlot();
-        slot.setSlotNr(3);
-        slot.setCompanyId(3);
-        slot.setOtherStoreId(-1);
-        slotFullInfo = new AnalysisCompetitorSlotFullInfo(slot);
-        slotFullInfo.setCompetitorCompanyName("BRICOMAN");
-        slotFullInfo.setCompetitorStoreName("");
-        analysisCompetitorSlotFullInfos.add(slotFullInfo);
-        slot = new AnalysisCompetitorSlot();
-        slot.setSlotNr(4);
-        slot.setCompanyId(4);
-        slot.setOtherStoreId(4);
-        slotFullInfo = new AnalysisCompetitorSlotFullInfo(slot);
-        slotFullInfo.setCompetitorCompanyName("Konkurent lokalny 1");
-        slotFullInfo.setCompetitorStoreName("DyWyTa, Rybnik");
-        analysisCompetitorSlotFullInfos.add(slotFullInfo);
-        slot = new AnalysisCompetitorSlot();
-        slot.setSlotNr(5);
-        slot.setCompanyId(-1);
-        slot.setOtherStoreId(-1);
-        slotFullInfo = new AnalysisCompetitorSlotFullInfo(slot);
-        slotFullInfo.setCompetitorCompanyName("");
-        slotFullInfo.setCompetitorStoreName("");
-        analysisCompetitorSlotFullInfos.add(slotFullInfo);
-
-         */
-    }
-
     private void startPreparingOtherLocalDataChain() {
-        prepareSectors(); // todo 2??
+        prepareSectors();
     }
 
     private void getSectorsFromRemoteDatabase( ) {
@@ -345,8 +291,6 @@ public class LocalDataInitializer {
         Observer<List<RemoteDepartment>> insertingResultObserver = new Observer<List<RemoteDepartment>>() {
             @Override
             public void onChanged( List<RemoteDepartment> remoteDepartments ) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
                 getAllRemoteDepartmentsResult.removeObserver(this); // this = observer...
                 if (!remoteDepartments.isEmpty()) {
                     Remote2LocalConverter remote2LocalConverter = new Remote2LocalConverter();
@@ -480,8 +424,6 @@ public class LocalDataInitializer {
         Observer<List<Sector>> getAllSectorsResultObserver = new Observer<List<Sector>>() {
             @Override
             public void onChanged( List<Sector> sectorList ) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
                 getAllSectorsResult.removeObserver(this); // this = observer...
                 if (!sectorList.isEmpty()) {
                     Stream< Sector > sectorStream = sectorList.stream();
@@ -500,8 +442,6 @@ public class LocalDataInitializer {
         Observer<List<Department>> getAllDepartmentsResultObserver = new Observer<List<Department>>() {
             @Override
             public void onChanged( List<Department> departmentList ) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
                 getAllDepartmentsResult.removeObserver(this); // this = observer...
                 if (!departmentList.isEmpty()) {
                     Stream<Department> departmentStream = departmentList.stream();
@@ -602,8 +542,6 @@ public class LocalDataInitializer {
         Observer<List<DepartmentInSector>> getAllDepartmentsInSectorsResultObserver = new Observer<List<DepartmentInSector>>() {
             @Override
             public void onChanged( List<DepartmentInSector> departmensInSectorsList ) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
                 getAllDepartmentsInSectorsResult.removeObserver(this); // this = observer...
                 if (!departmensInSectorsList.isEmpty()) {
                 }
@@ -617,22 +555,11 @@ public class LocalDataInitializer {
     }
 
     private void populateCountries() {
-        // todo odczyt kraju z preferencji
-        // todo tu zamotka jest... Z preferencji, czy z DataInitializera?
-        /*
-        Country ownCountry = new Country();
-        ownCountry.setName(AppHandle.getHandle().getSettings().getCountryName());
-        ownCountry.setEnglishName(AppHandle.getHandle().getSettings().getEnglishCountryName());
-         */
         Country ownCountry = countries.get(0);
-
-        // Ustanowienie obserwatora dla rezulatu dopisania kraju własnego
         MutableLiveData<Long> ownCountryInsertResult = new MutableLiveData<>();
         Observer<Long> insertingResultObserver = new Observer<Long>() {
             @Override
             public void onChanged(Long ownCountryId) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
                 if (firstCallCountries) {
                     firstCallCountries = false;
                     ownCountryInsertResult.removeObserver(this); // this = observer...
@@ -679,8 +606,6 @@ public class LocalDataInitializer {
         Observer<List<Company>> resultObserver = new Observer<List<Company>>() {
             @Override
             public void onChanged(List<Company> companiesList) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
                 if (firstCallOwnStores) {
                     firstCallOwnStores = false;
                     result.removeObserver(this); // this = observer...

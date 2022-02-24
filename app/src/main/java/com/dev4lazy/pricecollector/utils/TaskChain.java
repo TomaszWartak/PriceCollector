@@ -61,7 +61,6 @@ public class TaskChain {
 
     public void startIt(Object... data) {
         if (!chain.isEmpty()) {
-            // TODO XXX chain.get(0).takeData(data);
             chain.get(0).doIt(data);
         }
     }

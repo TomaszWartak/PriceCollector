@@ -168,5 +168,22 @@
 
     <string name="network_not_available">Brak dostępu do sieci</string>
     <string name="battery_state_low">Naładuj baterię! Poziom naładowania baterii jest niski...</string>
+    <string name="articles_list">Lista artykułów</string>
+    <string name="ean_codes_list">Lista kodów EAN</string>
+    <string name="additional_info">Informacje dodatkowe</string>
+    <string name="strategic_articles_list">Lista artykułów strategicznych</string>
+    <string name="sectoral_structure">struktura wg rynków</string>
+    <string name="structure_by_markets">struktura wg rynków</string>
+    <string name="department_structure">struktura działowa</string>
+    <string name="users_list">Lista użytkowników</string>
+    <string name="departments_list">Lista działów</string>
+    <string name="sectors_list">Lista sektorów</string>
+    <string name="uo_projects_list">Lista projektów UO</string>
+    <string name="families_list">Lista rodzin</string>
+    <string name="markets_list">Lista rynków</string>
+    <string name="modules_list">Lista modułów</string>
+    <string name="locale_country_name_poland" translatable="false">Polska</string>
+    <string name="locale_language_name_poland">polski</string>
+    <string name="english_country_name_poland">Poland</string>
 
 </resources>

@@ -45,11 +45,9 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
                         @Override
                         public void onSuccess(AuthResult authResult) {
                             // Sign in success, update UI with the signed-in user's information
-                            // TODO !!! wszystkie użycia LOg zrób
-                            //  if (BuildConfig.DEBUG) {
-                            //	    Log.d( TAG, ".."+var );
-                            //  }
-                            Log.d(TAG, "signInFirebase:success");
+                            if (BuildConfig.DEBUG) {
+                                Log.d(TAG, "signInFirebase:success");
+                            }
                             // TODO TEST
                             FirebaseUser user = firebaseAuthServices.getCurrentUser();
                             String name = user.getDisplayName();
@@ -62,10 +60,6 @@ public class CustomTokenFirebaseAuthSupport implements FirebaseAuthSupport, Auth
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            // TODO !!! wszystkie użycia LOg zrób
-                            //  if (BuildConfig.DEBUG) {
-                            //	    Log.d( TAG, ".."+var );
-                            //  }
                             if (BuildConfig.DEBUG) {
                                 Log.w( TAG, "signInFirebase:failure", exception);
                             }

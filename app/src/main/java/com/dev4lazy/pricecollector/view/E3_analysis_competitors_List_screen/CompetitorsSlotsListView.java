@@ -136,11 +136,6 @@ public class CompetitorsSlotsListView extends ListView { //OK
                             storeViewModel.setStore(competitorSlotFullData.getChosenStore());
                             Navigation.findNavController( view ).navigate( R.id.action_analysisCompetitorsFragment_to_analysisArticlesListFragment);
                             break;
-                        /* TODO
-                        case R.id.driveToCompetitorStoreMenuItem:
-                            DriveToCompetitorStore();
-                            break;
-                         */
                         case R.id.addCompetitorStoreMenuItem:
                             addCompetitorStore( view, competitorSlotFullData );
                             break;
@@ -229,7 +224,6 @@ public class CompetitorsSlotsListView extends ListView { //OK
             storeViewModel.setOnChangedReactionNotAllowed();
             Store store = competitorSlotFullData.getChosenStore();
             storeViewModel.setStore( store );
-            // TODO XXX storeViewModel.setActionToDo(Action.MODIFY);
             storeViewModel.getData().observe( AppUtils.getActivity(getContext()), new Observer<Store>() {
                 @Override
                 public void onChanged(Store modifiedStore) {

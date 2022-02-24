@@ -68,7 +68,6 @@ public class AnalysisDataUploader {
                 public void onChanged(List<AnalysisArticleJoinForPricesUpload> analysisArticleJoinForPricesUploadList) {
                     result.removeObserver(this); // this = Observer :-)
                     if (!analysisArticleJoinForPricesUploadList.isEmpty()) {
-                        // TODO XXX remoteAnalysisId = analysisArticleJoinForPricesUploadList.get(0).getRemote_analysis_id();
                         runNextTaskLink( analysisArticleJoinForPricesUploadList );
                     }
                 }
@@ -103,13 +102,6 @@ public class AnalysisDataUploader {
             return analysisArticlesJoinWithPricesQuery.toString();
         }
 
-        /* TODO XXX
-        @Override
-        protected void takeData(Object... data) {
-        }
-
-         */
-
     }
 
     class PricesMapMaker extends TaskLink {
@@ -124,7 +116,6 @@ public class AnalysisDataUploader {
 
         private void makePricesMap() {
             HashMap<String, ArticlePricesNode> pricesMap = new HashMap<>();
-            // TODO XXX pricesMap = analysisArticleJoinList.stream().collect(Collectors.toMap(v -> (String) v.getArticle_ownCode("rollno"), e -> e));
             for (AnalysisArticleJoinForPricesUpload analysisArticleJoinForPricesUpload : analysisArticleJoinForPricesUploadList) {
                 if (isPriceNotEmpty(analysisArticleJoinForPricesUpload)) {
                     String ownCode = analysisArticleJoinForPricesUpload.getArticle_ownCode();
@@ -146,14 +137,6 @@ public class AnalysisDataUploader {
                 (competitorStorePrice!=0.0)
             );
         }
-
-      /* TODO XXX
-        @Override
-        protected void takeData(Object... data) {
-            analysisArticleJoinForPricesUploadList = (ArrayList<AnalysisArticleJoinForPricesUpload>)data[0];
-        }
-
-         */
     }
 
     class ArticlePricesNode {
@@ -213,14 +196,6 @@ public class AnalysisDataUploader {
             remoteAnalysisRowGetterTaskChain.startIt( remoteAnalysisRowsMap );
         }
 
-        /* TODO XXX
-        @Override
-        protected void takeData(Object... data) {
-            pricesMap = (HashMap<String, ArticlePricesNode>) data[0];
-        }
-
-         */
-
         class RemoteAnalysisRowGetter extends TaskLink {
 
             private String articleCode;
@@ -264,16 +239,7 @@ public class AnalysisDataUploader {
                 return analysisArticlesJoinWithPricesQuery.toString();
             }
 
-        /* TODO XXX
-        @Override
-        protected void takeData(Object... data) {
-            remoteAnalysisRowsMap = (HashMap<String, RemoteAnalysisRow>) data[0];
         }
-
-         */
-
-        }
-
 
     }
 

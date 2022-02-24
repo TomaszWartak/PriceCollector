@@ -72,21 +72,6 @@ public class TestNumbersOfDataFragment extends Fragment {
                 }
             }
         });
-        /* todo ??
-        viewModel.getNumberOfAnalysisArticleShortData().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged( Integer value ) {
-                if (value!=null) {
-                    TextView textView = getView().findViewById( R.id.number_of_AnalysisArticleShortData );
-                    if (value>0) {
-                        textView.setTextColor( Color.BLUE );
-                    };
-                    textView.setText( textView.getText()+value.toString() );
-                }
-            }
-        });
-        
-         */
         viewModel.getNumberOfAnalysisCompetitorSlot().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged( Integer value ) {
@@ -281,27 +266,6 @@ public class TestNumbersOfDataFragment extends Fragment {
         });
     }
 
-    /* TODO ???
-    numberOfAnalysis
-    numberOfAnalysisArticle
-    numberOfAnalysisArticleShortData
-    numberOfAnalysisCompetitorSlot
-    numberOfArticle
-    numberOfCompany
-    numberOfCompetitorPrice
-    numberOfCountry
-    numberOfDepartment
-    numberOfDepartmentInSector
-    numberOfEanCode
-    numberOfFamily
-    numberOfMarket
-    numberOfModule
-    numberOfOwnArticleInfo
-    numberOfOwnStore
-    numberOfSector
-    numberOfStore
-    numberOfUOProject
-     */
 }
 
 

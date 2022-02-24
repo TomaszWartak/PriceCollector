@@ -9,7 +9,6 @@ public class DataRepository {
     private RemoteDataRepository remoteDataRepository = null;
 
     private DataRepository() {
-        // todo incializajca repozytoriów
         localDataRepository = LocalDataRepository.getInstance();
         remoteDataRepository = RemoteDataRepository.getInstance();
     }

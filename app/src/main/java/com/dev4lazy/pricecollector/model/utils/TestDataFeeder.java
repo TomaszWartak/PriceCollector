@@ -10,14 +10,6 @@ import java.util.List;
 
 public class TestDataFeeder implements DataFeeder {
 
-    /* TODO XXX
-    public final String[] COMPANIES_NAMES = {"BRIKO", "Leroy Merlin", "OBI", "Castorama", "Konkurent lokalny"};
-    public final int BRIKO_INDEX = 0;
-    public final int LEROY_MERLIN_INDEX = 1;
-    public final int OBI_INDEX = 2;
-    public final int CASTORAMA_INDEX = 3;
-    public final int LOCAL_COMPETITOR_INDEX = 4;
-         */
     private static TestDataFeeder instance = null;
 
     public static TestDataFeeder getInstance() {

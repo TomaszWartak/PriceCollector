@@ -155,7 +155,6 @@ public class AnalysisArticleJoinValuesStateHolder {
 
     public AnalysisArticleJoinValuesStateHolder setReferenceArticleEanCodeValue(String ean ) {
         analysisArticleJoin.setReferenceArticleEanCodeValue( ean );
-        // TODO XXX setFlagReferenceArticleChanged(true);
         setFlagReferenceArticleEanChanged(true);
         if (isNeedToSaveFlagNotSet()) {
             setFlagNeedToSave(true);

@@ -26,7 +26,6 @@ public interface OwnArticleInfoDao extends _Dao<OwnArticleInfo>{
     @Query("DELETE FROM own_articles_infos")
     int deleteAll();
 
-    // TODO !! trzeba dodać indeks po OwnCode, bo będzie słabo działać...
     @Override
     @Query("SELECT * FROM own_articles_infos ORDER BY ownCode ASC")
     List<OwnArticleInfo> getAll();

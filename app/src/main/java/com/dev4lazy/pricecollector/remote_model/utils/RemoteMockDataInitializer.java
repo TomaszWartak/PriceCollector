@@ -1,13 +1,11 @@
 package com.dev4lazy.pricecollector.remote_model.utils;
 
 import android.content.res.Resources;
-import android.view.View;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.dev4lazy.pricecollector.R;
-import com.dev4lazy.pricecollector.model.logic.AnalysisArticleJoinSaver;
 import com.dev4lazy.pricecollector.model.logic.RemoteDataRepository;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteAnalysis;
@@ -23,27 +21,20 @@ import com.dev4lazy.pricecollector.remote_model.enities.RemoteUser;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.utils.TaskChain;
 import com.dev4lazy.pricecollector.utils.TaskLink;
-import com.dev4lazy.pricecollector.view.utils.PopupWindowWrapper;
-import com.dev4lazy.pricecollector.view.utils.ProgressBarWrapper;
-import com.dev4lazy.pricecollector.view.utils.ProgressPresenter;
 import com.dev4lazy.pricecollector.view.utils.ProgressPresentingManager;
-import com.dev4lazy.pricecollector.view.utils.TextViewMessageWrapper;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DATA_SIZE_UNKNOWN;
 import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DONT_HIDE_WHEN_FINISHED;
 import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.HIDE_WHEN_FINISHED;
 
-// Klasa używana do inicjalizacji danych lokalnych aplikacji, po pierwszym logowaniu
-// TODO inicjalizacja tylko danych testowych, czy wszystkich?
-public class RemoteDataInitializer {
+// Klasa używana do inicjalizacji emulatora zdalnej bazy danych aplikacji, po pierwszym logowaniu
+public class RemoteMockDataInitializer {
 
-    private static RemoteDataInitializer instance = new RemoteDataInitializer();
+    private static RemoteMockDataInitializer instance = new RemoteMockDataInitializer();
 
-    // Użytkownicy w mocku zdalnej bazy danych
     private List<RemoteUser> remoteUsers = null;
 
     private List<RemoteDepartment> remoteDepartments = null;
@@ -69,13 +60,13 @@ public class RemoteDataInitializer {
 // Przygotowanie danych
 
 
-    private RemoteDataInitializer() {    }
+    private RemoteMockDataInitializer() {    }
 
-    public static RemoteDataInitializer getInstance() {
+    public static RemoteMockDataInitializer getInstance() {
         if (instance == null) {
-            synchronized (RemoteDataInitializer.class) {
+            synchronized (RemoteMockDataInitializer.class) {
                 if (instance == null) {
-                    instance = new RemoteDataInitializer();
+                    instance = new RemoteMockDataInitializer();
                 }
             }
         }
@@ -94,7 +85,6 @@ public class RemoteDataInitializer {
 //  proceduta inicjalizacji danych zdalnych
     public void initializeRemoteData( ProgressPresentingManager progressPresentingManager ) {
         prepareRemoteData();
-        // TODO XXX startRemoteDataInitialisationChain();
         startRemoteDataInitialisationChain_2( progressPresentingManager );
     }
 
@@ -108,7 +98,6 @@ public class RemoteDataInitializer {
         prepareRemoteModules();
         prepareRemoteUOProjects();
         prepareConverters();
-        // todo w Convererze RemoteEanCodes oddziel od RemoteAnalysisiRow po przeniesieniu permmisions do StartScreenFragment
     }
 
     public void initializeRemoteUsersOnly() {
@@ -343,64 +332,11 @@ public class RemoteDataInitializer {
         }
     }
 
-
-    /* TODO XXX
-    public void initializeAnaylysisRowsAndEanCodesOnly() {
-        clearRemoteDatabase();
-        prepareConverters();
-        // todo tą metodę trzeba usunąć
-        populateRemoteAnalysisRows(-1);
-    }
-     */
-
 // ---------------------------------------------------------------------------
-// Metoda sprawdzająca, czy baza danych jest zainicjowana. Jeśli nie jest - inicjalizuje bazę.
-/* zrezygnowałem z kontroli etapu inicjalizacji mocka zdalnej bazy, żeby nie generować nadmiaru kodu
-    private void checkAndSetIfLocaDatabaselNotInitialized() {
-        int localDatabaseInitalisationStage = AppHandle.getHandle().getPrefs().getLocalDatabaseInitialisationStage();
-        switch (localDatabaseInitalisationStage) {
-            case LOCAL_DATA_NOT_INITIALIZED:
-                initializeLocalData();
-                break;
-            case COUNTRIES_INITIALIZED:
-                prepareLocalData();
-                populateCompanies();
-                break;
-            case COMPANIES_INITIALIZED:
-                prepareLocalData();
-                populateOwnStores();
-                break;
-            case OWN_STORES_INITIALIZED:
-                prepareLocalData();
-                populateObiStores();
-                break;
-            case OBI_STORES_INITIALIZED:
-                prepareLocalData();
-                populateLMStores();
-                break;
-            case LM_STORES_INITIALIZED:
-                prepareLocalData();
-                populateBricomanStores();
-                break;
-            case BRICOMAN_STORES_INITIALIZED:
-                prepareLocalData();
-                populateLocalCompetitorStores();
-                break;
-            case LOCAL_COMPETITORS_STORES_INITIALIZED:
-                prepareLocalData();
-                populateCompetitorSlotNr1();
-                break;
-            case COMPETITORS_SLOTS_INITIALIZED:
-                // inicjalizacja była kompletna
-                break;
-        }
-    }
-*/
 
 // ---------------------------------------------------------------------------
 // Zapis danych
 
-    // TODO lift up
     private ProgressPresentingManager progressPresentingManager;
 
     private void startRemoteDataInitialisationChain_2( ProgressPresentingManager progressPresentingManager ) {
@@ -419,7 +355,6 @@ public class RemoteDataInitializer {
                 .startIt( );
     }
 
-    // TODO XXX
     public void populateRemoteUsers() {
         for (RemoteUser remoteUser : remoteUsers ) {
             AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteUser( remoteUser, null );
@@ -441,7 +376,7 @@ public class RemoteDataInitializer {
                     }
                 };
                 progressPresentingManager.resetProgressPresenter( remoteUsers.size(), DONT_HIDE_WHEN_FINISHED );
-                progressPresentingManager.showMessagePresenter( "Lista użytkowników" ); // TODO hardcoded
+                progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.users_list) ); 
                 insertResult.observeForever(insertingResultObserver);
                 RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
                 remoteDataRepository.insertRemoteUsers( remoteUsers, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
@@ -450,14 +385,6 @@ public class RemoteDataInitializer {
             }
         }
     }
-
-    // TODO XXX
-    public void populateRemoteDepartments() {
-        for (RemoteDepartment remoteDepartment : remoteDepartments) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertDepartment( remoteDepartment, null );
-        }
-    }
-
 
     private class RemoteDepartmentsSaver extends TaskLink {
         @Override
@@ -474,7 +401,7 @@ public class RemoteDataInitializer {
                     }
                 };
                 progressPresentingManager.resetProgressPresenter( remoteDepartments.size(), DONT_HIDE_WHEN_FINISHED );
-                progressPresentingManager.showMessagePresenter( "Lista działów" ); // TODO hardcoded
+                progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.departments_list) ); 
                 insertResult.observeForever(insertingResultObserver);
                 RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
                 remoteDataRepository.insertRemoteDepartments( remoteDepartments, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
@@ -483,14 +410,6 @@ public class RemoteDataInitializer {
             }
         }
     }
-
-    // TODO XXX
-    public void populateRemoteSectors() {
-        for (RemoteSector remoteSector : remoteSectors) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteSector( remoteSector, null );
-        }
-    }
-
 
     private class RemoteSectorsSaver extends TaskLink {
         @Override
@@ -507,7 +426,7 @@ public class RemoteDataInitializer {
                     }
                 };
                 progressPresentingManager.resetProgressPresenter( remoteSectors.size(), DONT_HIDE_WHEN_FINISHED );
-                progressPresentingManager.showMessagePresenter( "Lista sektorów" ); // TODO hardcoded
+                progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.sectors_list) ); 
                 insertResult.observeForever(insertingResultObserver);
                 RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
                 remoteDataRepository.insertRemoteSectors( remoteSectors, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
@@ -516,14 +435,6 @@ public class RemoteDataInitializer {
             }
         }
     }
-
-    // TODO XXX
-    public void populateRemoteUOProjects() {
-        for (RemoteUOProject remoteUOProject : remoteUOProjects) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteUOProject( remoteUOProject, null );
-        }
-    }
-
 
     private class RemoteUOProjectsSaver extends TaskLink {
         @Override
@@ -540,20 +451,13 @@ public class RemoteDataInitializer {
                     }
                 };
                 progressPresentingManager.resetProgressPresenter( remoteUOProjects.size(), DONT_HIDE_WHEN_FINISHED );
-                progressPresentingManager.showMessagePresenter( "Lista projektów UO" ); // TODO hardcoded
+                progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.uo_projects_list) );
                 insertResult.observeForever(insertingResultObserver);
                 RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
                 remoteDataRepository.insertRemoteUOProjects( remoteUOProjects, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
             } else {
                 runNextTaskLink();
             }
-        }
-    }
-
-    // TODO XXX
-    public void populateRemoteFamilies() {
-        for (RemoteFamily remoteFamily : remoteFamilies) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteFamily( remoteFamily, null );
         }
     }
 
@@ -572,20 +476,13 @@ public class RemoteDataInitializer {
                     }
                 };
                 progressPresentingManager.resetProgressPresenter( remoteFamilies.size(), DONT_HIDE_WHEN_FINISHED );
-                progressPresentingManager.showMessagePresenter( "Lista rodzin" ); // TODO hardcoded
+                progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.families_list) ); 
                 insertResult.observeForever(insertingResultObserver);
                 RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
                 remoteDataRepository.insertRemoteFamilies( remoteFamilies, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
             } else {
                 runNextTaskLink();
             }
-        }
-    }
-
-    // TODO XXX
-    public void populateRemoteMarkets() {
-        for (RemoteMarket remoteMarket : remoteMarkets) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteMarket( remoteMarket, null );
         }
     }
 
@@ -604,20 +501,13 @@ public class RemoteDataInitializer {
                     }
                 };
                 progressPresentingManager.resetProgressPresenter( remoteMarkets.size(), DONT_HIDE_WHEN_FINISHED );
-                progressPresentingManager.showMessagePresenter( "Lista rynków" ); // TODO hardcoded
+                progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.markets_list) );
                 insertResult.observeForever(insertingResultObserver);
                 RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
                 remoteDataRepository.insertRemoteMarkets( remoteMarkets, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
             } else {
                 runNextTaskLink();
             }
-        }
-    }
-
-    // TODO XXX
-    public void populateRemoteModules() {
-        for (RemoteModule remoteModule : remoteModules) {
-            AppHandle.getHandle().getRepository().getRemoteDataRepository().insertRemoteModule( remoteModule, null );
         }
     }
 
@@ -636,7 +526,7 @@ public class RemoteDataInitializer {
                     }
                 };
                 progressPresentingManager.resetProgressPresenter( remoteModules.size(), DONT_HIDE_WHEN_FINISHED );
-                progressPresentingManager.showMessagePresenter( "Lista modułów" ); // TODO hardcoded
+                progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString(R.string.modules_list) );
                 insertResult.observeForever(insertingResultObserver);
                 RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
                 remoteDataRepository.insertRemoteModules( remoteModules, insertResult, progressPresentingManager.getProgressPresenterWrapper() );
@@ -651,13 +541,9 @@ public class RemoteDataInitializer {
         Observer<Long> insertingResultObserver = new Observer<Long>() {
             @Override
             public void onChanged(Long analysisId) {
-                // todo zobacz post o dwukrotnym uruchamianiu onChanged() (przy utworzeniu i zmianie obserwowwanej wartości)
-                // todo oraz https://stackoverflow.com/questions/57540207/room-db-insert-callback
                 analysisInsertResult.removeObserver(this); // this = observer...
                 if (analysisId!=-1) {
                     prepareConverters();
-                    // todo: jesli populateRemoteAnalysis() jest wołane z startRemoteDataInitialisationChain,
-                    //  to prepareCOnverters było już wcześniej wołane. Czyli konwertery są dwa razy tworozne
                     populateRemoteAnalysisRows( analysisNr, analysisId.intValue() );
                     populateRemoteEanCodes( );
                 }
@@ -688,8 +574,6 @@ public class RemoteDataInitializer {
                         insertResult.removeObserver(this); // this = observer...
                         if (analysisId!=-1) {
                             prepareConverters();
-                            // todo: jesli populateRemoteAnalysis() jest wołane z startRemoteDataInitialisationChain,
-                            //  to prepareCOnverters było już wcześniej wołane. Czyli konwertery są dwa razy tworozne
                             if (analysisId != null) {
                                 runNextTaskLink( analysisNr, analysisId );
                             }
@@ -700,7 +584,7 @@ public class RemoteDataInitializer {
                 RemoteDataRepository remoteDataRepository = AppHandle.getHandle().getRepository().getRemoteDataRepository();
                 remoteDataRepository.insertRemoteAnalysis( remoteAnalyzes.get( analysisNr ), insertResult );
             } else {
-                // TODO Może Rollback transakcji?
+                // TODO ok: Może Rollback transakcji?
                 // runNextTaskLink( null ); // <-- CRASH!
             }
         }
@@ -731,7 +615,7 @@ public class RemoteDataInitializer {
                     analysisId.intValue()
             );
             progressPresentingManager.resetProgressPresenter( remoteAnalysisRowsList.size(), DONT_HIDE_WHEN_FINISHED );
-            progressPresentingManager.showMessagePresenter( "Lista artykułów strategicznych" ); // TODO hardcoded
+            progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString( R.string.strategic_articles_list) );
             insertResult.observeForever( insertingResultObserver );
             csv2AnalysisRowConverter.insertAllAnalysisRows( insertResult, progressPresentingManager.getProgressPresenterWrapper() );
         }
@@ -757,7 +641,7 @@ public class RemoteDataInitializer {
             };
             List<RemoteEanCode> remoteEanCodeList = csv2EanCodeConverter.makeEanCodeList();
             progressPresentingManager.resetProgressPresenter( remoteEanCodeList.size(), HIDE_WHEN_FINISHED );
-            progressPresentingManager.showMessagePresenter( "Lista kodów kreskowych" ); // TODO hardcoded
+            progressPresentingManager.showMessagePresenter( AppHandle.getHandle().getString( R.string.ean_codes_list ) );
             insertResult.observeForever( insertingResultObserver );
             csv2EanCodeConverter.insertAllEanCodes( insertResult, progressPresentingManager.getProgressPresenterWrapper() );
         }

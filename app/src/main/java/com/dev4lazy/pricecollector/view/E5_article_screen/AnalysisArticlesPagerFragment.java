@@ -240,13 +240,6 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
 
             private void showMessage( String validationMessage ) {
                 AppHandle.getHandle().getMessageSupport().showMessage( validationMessage );
-                /* TODO XXX
-                Toast.makeText(
-                        getContext(),
-                        validationMessage,
-                        Toast.LENGTH_SHORT).show();
-
-                 */
             };
 
             private void backToPage( int positionToBack ) {
@@ -303,7 +296,6 @@ public class AnalysisArticlesPagerFragment extends Fragment { // OK
                         break;
                     case R.id.article_screen_logout_menu_item:
                         new LogoutQuestionDialog( getContext(), getActivity() ).get();
-                        // TODO XXX getLogoutQuestionDialog();
                         break;
                 }
                 return false;

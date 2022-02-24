@@ -40,13 +40,6 @@ public class AnalysisArticleJoin {
     @ColumnInfo(name = "description")
     private String referenceArticleDescription; // from Article by CompetitorPrice.referenceArticleId
 
-    /* TODO XXX
-    public AnalysisArticleJoin() {
-        competitorStoreId = -1;
-        competitorStorePriceId=-1;
-        referenceArticleId=-1;
-    }*/
-
     public int getAnalysisArticleId() {
         return analysisArticleId;
     }
@@ -147,13 +140,6 @@ public class AnalysisArticleJoin {
     public void setCompetitorStorePrice(Double competitorStorePrice) {
         this.competitorStorePrice = competitorStorePrice;
     }
-    /*  TODO XXX
-    public AnalysisArticleJoin setCompetitorStorePrice(Double competitorStorePrice) {
-        this.competitorStorePrice = competitorStorePrice;
-        return this;
-    }
-
-     */
 
     public boolean isCompetitorStorePriceSet() {
         Double price = getCompetitorStorePrice();

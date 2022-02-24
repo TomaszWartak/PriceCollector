@@ -24,13 +24,12 @@ import static com.healthmarketscience.sqlbuilder.SetOperationQuery.Type.UNION;
 
 public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
 
-    private /* TODO XXX final */ LiveData<PagedList<AnalysisArticleJoin>> analysisRowsLiveData;
+    private LiveData<PagedList<AnalysisArticleJoin>> analysisRowsLiveData;
     private SearchArticlesCriteria searchArticlesCriteria;
 
     public AnalysisArticleJoinsListViewModel(Application application) {
         super(application);
         searchArticlesCriteria = new SearchArticlesCriteria();
-        // TODO XXX buildAnalysisiArticleJoinsPagedList();
     }
 
     public void buildAnalysisiArticleJoinsPagedList( int analysisId, int storeId ) {
@@ -46,15 +45,9 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
                             new CustomSql( "aa1.article_store_price" ),
                             new CustomSql( "aa1.article_ref_price" ),
                             new CustomSql( "aa1.article_new_price" ),
-                            // TODO XXX new CustomSql( "IFNULL (aa1.competitor_store_id, '-1'), " ),
-                            // TODO XXX new CustomSql( "IFNULL (cp.competitor_store_id, '-1')" ),
                             new CustomSql( "cp.competitor_store_id" ),
-                            // TODO XXX new CustomSql( "IFNULL (aa1.competitor_store_price_id, '-1'), " ),
-                            // TODO XXX new CustomSql( "IFNULL (cp.id, '-1')" ),
                             new CustomSql( "cp.id competitor_store_price_id" ),
                             new CustomSql( "cp.competitor_store_price" ),
-                            // TODO XXX new CustomSql( "IFNULL (aa1.reference_article_id, '-1'), " ),
-                            // TODO XXX new CustomSql( "IFNULL (cp.reference_article_id, '-1') " ),
                             new CustomSql( "cp.reference_article_id" ),
                             new CustomSql( "aa1.comments" ),
                             new CustomSql( "a1.name name" ),
@@ -74,15 +67,12 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
                     .addCustomJoin(" INNER JOIN competitors_prices cp ON (cp.analysis_article_id = aa1.id)" )
                     .addCustomJoin(" LEFT OUTER JOIN articles a2 ON (a2.id = cp.reference_article_id)" )
                     .addCustomJoin(" LEFT OUTER JOIN ean_codes ec2 ON (ec2.id = cp.reference_article_ean_id)" )
-                    // TODO XXX "WHERE (aa1.analysis_id= :analysisId) AND ((cp.competitor_store_id=:storeId ) OR (cp.competitor_store_id IS NULL))
-                    // TODO XXX .addCondition( BinaryCondition.equalTo( new CustomSql( "aa1.analysis_id" ), analysisId ) )
                     .addCondition( ComboCondition.and(
                             BinaryCondition.equalTo( new CustomSql( "aa1.analysis_id" ), analysisId ),
                             BinaryCondition.equalTo( new CustomSql( "cp.competitor_store_id" ), storeId ) )
                     );
             analysisArticlesJoinWithPricesQuery = addSearchCriteriaToQuery( analysisArticlesJoinWithPricesQuery );
             analysisArticlesJoinWithPricesQuery = analysisArticlesJoinWithPricesQuery.validate();
-            // TODO XXX String queryStringTest = analysisArticlesJoinWithPricesQuery.toString();
 
             SelectQuery analysisArticlesJoinRestQuery = new SelectQuery()
                     .addCustomColumns(
@@ -93,12 +83,9 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
                             new CustomSql( "aa1.article_store_price" ),
                             new CustomSql( "aa1.article_ref_price" ),
                             new CustomSql( "aa1.article_new_price" ),
-                            // TODO XXX new CustomSql( "-1" ),
                             new CustomSql( "NULL " ),
-                            // TODO XXX new CustomSql( "-1" ),
                             new CustomSql( "NULL " ),
                             new CustomSql( "NULL" ),
-                            // TODO XXX new CustomSql( "-1" ),
                             new CustomSql( "NULL " ),
                             new CustomSql( "aa1.comments" ),
                             new CustomSql( "a1.name" ),
@@ -131,7 +118,6 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
                     .addCustomJoin(" INNER JOIN competitors_prices cp ON (cp.analysis_article_id = aa1.id)" )
                     .addCondition( BinaryCondition.equalTo( new CustomSql( "cp.competitor_store_id" ), storeId ) );
             analysisArticlesWithoutPricesInnerQuery = analysisArticlesWithoutPricesInnerQuery.validate();
-            // TODO XXX queryStringTest = AnalysisArticlesWithoutPricesInnerQuery.toString();
 
             analysisArticlesJoinRestQuery.addCondition(
                     new InCondition(
@@ -141,10 +127,7 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
             );
             analysisArticlesJoinRestQuery = analysisArticlesJoinRestQuery.validate();
 
-            // TODO XXX queryStringTest = analysisArticlesJoinRestQuery.toString();
-
             UnionQuery unionQuery = new UnionQuery(UNION, analysisArticlesJoinWithPricesQuery, analysisArticlesJoinRestQuery );
-            // TODO XXX unionQuery = addSearchCriteriaToQuery( unionQuery );
             unionQuery = unionQuery.validate();
             String unionQueryString = unionQuery.toString();
 
@@ -174,7 +157,7 @@ public class AnalysisArticleJoinsListViewModel extends AndroidViewModel {
                 );
             }
             if (searchArticlesCriteria.isArticleAnyTextSet() ) {
-                // TODO ??? query.addCondition(BinaryCondition.like(new CustomSql( "ec1.value" ), "%"+searchArticlesCriteria.getArticleAnyText()+"%"));
+                // TODO ok: query.addCondition(BinaryCondition.like(new CustomSql( "ec1.value" ), "%"+searchArticlesCriteria.getArticleAnyText()+"%"));
             }
             if (searchArticlesCriteria.isArticleSectorIdSet() ) {
                 query.addCondition(BinaryCondition.equalTo(

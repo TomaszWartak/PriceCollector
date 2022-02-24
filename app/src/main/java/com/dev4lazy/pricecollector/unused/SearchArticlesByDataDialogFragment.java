@@ -17,7 +17,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-// TODO XXX to chyba nie potrzebne
 public class SearchArticlesByDataDialogFragment extends DialogFragment {
 
     public static SearchArticlesByDataDialogFragment newInstance() {
@@ -32,7 +31,7 @@ public class SearchArticlesByDataDialogFragment extends DialogFragment {
         EditText articleNameEditText = viewInflated.findViewById(R.id.search_articles_article_name_edit_text);
         EditText articleEANEditText = viewInflated.findViewById(R.id.search_articles_ean_edit_text);
         EditText articleSKUEditText = viewInflated.findViewById(R.id.search_articles_sku_edit_text);
-        /* TODO realizacja w wydaniu 1
+        /* TODO ok: realizacja w wydaniu 1
         EditText articleAnyTextEditText = viewInflated.findViewById(R.id.search_articles_any_text_edit_text);
         */
 
@@ -40,7 +39,7 @@ public class SearchArticlesByDataDialogFragment extends DialogFragment {
         articleNameEditText.setText( searchArticlesCriteriaViewModel.getArticleName() );
         articleEANEditText.setText( searchArticlesCriteriaViewModel.getArticleEAN() );
         articleSKUEditText.setText( searchArticlesCriteriaViewModel.getArticleSKU()) ;
-        /* TODO realizacja w wydaniu 1
+        /* TODO ok: realizacja w wydaniu 1
         articleAnyTextEditText.setText( searchArticlesCriteriaViewModel.getArticleAnyText() );
         */
 

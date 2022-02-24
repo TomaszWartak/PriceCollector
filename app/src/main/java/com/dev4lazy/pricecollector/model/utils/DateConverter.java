@@ -25,12 +25,6 @@ public class DateConverter {
         return result;
     }
 
-    /* TODO aby poprawnie konwertowac datę na potrzeby lokalizacji trzeba użyć:
-        getDateInstance(),
-        getDateTimeInstance(),
-        getTimeInstance()`,
-        new SimpleDateFormat( String template, Locale locale) with for example `Locale.US` for ASCII dates.
-     */
     @TypeConverter
     public String date2String( Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //"yyyy-MM-dd HH:mm:ss"

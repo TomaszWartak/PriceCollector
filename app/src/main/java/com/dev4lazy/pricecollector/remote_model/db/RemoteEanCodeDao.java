@@ -59,13 +59,4 @@ public interface RemoteEanCodeDao extends _Dao<RemoteEanCode> {
     @Query("SELECT * from ean_codes WHERE id= :name")
     List<RemoteEanCode> findByName(String name);
 
-    /* todo
-    @Query("SELECT * from ean_codes WHERE value= :value")
-    List<RemoteEanCode> findByValue(String value);
-
-    @Query("SELECT * from ean_codes WHERE article_id= :articleId")
-    List<RemoteEanCode> findByArticleId(Integer articleId);
-
-     */
-
 }

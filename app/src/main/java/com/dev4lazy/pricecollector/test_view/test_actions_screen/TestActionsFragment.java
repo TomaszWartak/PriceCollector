@@ -14,7 +14,7 @@ import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
-import com.dev4lazy.pricecollector.remote_model.utils.RemoteDataInitializer;
+import com.dev4lazy.pricecollector.remote_model.utils.RemoteMockDataInitializer;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.view.utils.PopupWindowWrapper;
 import com.dev4lazy.pricecollector.view.utils.ProgressBarWrapper;
@@ -38,10 +38,10 @@ public class TestActionsFragment extends Fragment {
 
     private void setTestButtons(View parentView) {
         parentView.findViewById(R.id.button_clear_remote).setOnClickListener((View v) -> {
-            RemoteDataInitializer.getInstance().clearRemoteDatabase();
+            RemoteMockDataInitializer.getInstance().clearRemoteDatabase();
         });
         parentView.findViewById(R.id.button_create_remote).setOnClickListener((View v) -> {
-            RemoteDataInitializer.getInstance().initializeRemoteData(
+            RemoteMockDataInitializer.getInstance().initializeRemoteData(
                     getPopulatingDataProgressPresentingManager( parentView )
             );
         });
@@ -69,11 +69,6 @@ public class TestActionsFragment extends Fragment {
         parentView.findViewById(R.id.button_show_articles).setOnClickListener((View v) -> {
             Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment_to_articlesListFragment);
         });
-        /* todo?
-        view.findViewById(R.id.button_show_depts_in_secs).setOnClickListener((View v) -> {
-            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment_to_departmentInSectorsListFragment);
-        });
-          */
         parentView.findViewById(R.id.button_show_numbers_of_data).setOnClickListener((View v) -> {
             Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment_to_testNumbersOfDataFragment);
         });
@@ -116,13 +111,6 @@ public class TestActionsFragment extends Fragment {
                 PackageManager.PERMISSION_GRANTED)) {
             // Dostęp nadany
             switch (requestCode) {
-                /*
-                // todo to usunąć, bo służy tylko do wygenerowania mocka bazy remote
-                case RemoteDatabaseInitializer.MY_PERMISSIONS_REQUEST_STORAGE: {
-                    new RemoteDatabaseInitializer(this).doConversion();
-                    break;
-                }
-                 */
             }
         } else {
             // Dostęp nie udany. Wyświetlamy Toasta

@@ -7,7 +7,7 @@ public class AppAuthSupport {
     private AuthSupport authSupport = null;
 
     private AppAuthSupport() {
-        // todo! tutaj możesz zmianić sposób logowania
+        // todo ok! tutaj możesz zmianić sposób logowania
         this.authSupport = new MockCustomTokenOwnAuthSupport();
     }
 

@@ -46,8 +46,7 @@ public class CountriesListFragment extends Fragment {
     private void recyclerSetup() {
         countryAdapter = new CountryAdapter(new CountryDiffCallback());
         recyclerView = getView().findViewById(R.id.countries_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
-        // todo recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(countryAdapter);
     }
 

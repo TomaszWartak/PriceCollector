@@ -5,8 +5,6 @@ import android.app.Application;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
 
-// TODO XXX jest AlertDialogFragmentViewModel_not_used i AlertDialogFragmentViewModel
-//  oba są potrzebne?
 public class AlertDialogFragmentViewModel extends AndroidViewModel {
 
     private AlertDialog alertDialog;

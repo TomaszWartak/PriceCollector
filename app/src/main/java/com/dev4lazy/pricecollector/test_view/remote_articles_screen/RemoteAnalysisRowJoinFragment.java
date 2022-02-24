@@ -44,10 +44,9 @@ public class RemoteAnalysisRowJoinFragment extends Fragment {
     }
 
     private void recyclerSetup() {
-        // todo remoteAnalysisRowAdapter = new RemoteAnalysisRowAdapter(new RemoteAnalysisRowDiffCalback());
         remoteAnalysisRowJoinAdapter = new RemoteAnalysisRowJoinAdapter(new RemoteAnalysisRowJoinDiffCallback());
         recyclerView = getView().findViewById(R.id.remote_analysis_rows_join_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
         recyclerView.setAdapter(remoteAnalysisRowJoinAdapter);
     }

@@ -44,8 +44,7 @@ public class RemoteDepartmentsListFragment extends Fragment {
     private void recyclerSetup() {
         remoteDepartmentAdapter = new RemoteDepartmentAdapter( new RemoteDepartmentDiffCallback() );
         recyclerView = getView().findViewById( R.id.departments_recycler );
-        recyclerView.setLayoutManager( new LinearLayoutManager( getActivity() ) ); // todo ????
-        // todo recyclerView.addItemDecoration( new DividerItemDecoration( getActivity(), VERTICAL ));
+        recyclerView.setLayoutManager( new LinearLayoutManager( getActivity() ) );
         recyclerView.setAdapter( remoteDepartmentAdapter );
     }
 

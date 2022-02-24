@@ -1,16 +1,13 @@
 package com.dev4lazy.pricecollector.model.utils;
 
+import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.R;
 
 public enum StoreStructureType {
 
-    // nie zmieniaj kolejności
-    // nowe dodaj na koniec
-    // todo czy description może być zasobem np .getString(R.string.departments_structure_description)
-
-    BY_SECTORS("struktura sektorowa", true),
-    BY_MARKETS ("struktura wg rynków", false),
-    BY_DEPARTMENTS ("struktura działowa", true);
+    BY_SECTORS( AppHandle.getHandle().getString(R.string.sectoral_structure), true),
+    BY_MARKETS ( AppHandle.getHandle().getString(R.string.structure_by_markets), false),
+    BY_DEPARTMENTS ( AppHandle.getHandle().getString(R.string.department_structure), true);
 
     private String description;
     private Boolean active;

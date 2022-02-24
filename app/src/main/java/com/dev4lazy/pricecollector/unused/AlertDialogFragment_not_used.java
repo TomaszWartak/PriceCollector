@@ -39,34 +39,6 @@ public class AlertDialogFragment_not_used extends DialogFragment {
                         alertDialogFragmentViewModel.getNegativeButtonLabel(),
                         alertDialogFragmentViewModel.getNegativeButtonOnClickListener() )
                 .create();
-        //AlertDialog alertDialog = alertDialogBuilder.create();
-        /* Jeśli chcesz przechwycić flow po wybraniu OK, aby zapobiec zamknięciu, jeśli coś jest nie tak,
-            to trzeba być jak niżej zrobić.
-            Z tym, że wtedy przestanie działać positiveButtonOnClickListener z ViewModel...
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                positiveButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // TODO tutaj np. przygotowanie danych do walidacji
-                        // TODO poniżej validacja
-                        if (isValid(store)) {
-                            dialog.dismiss();
-                            storeViewModel.getData().setValue(store);
-                        } else {
-                            Toast.makeText(
-                                    getContext(),
-                                    validationMessage,
-                                    Toast.LENGTH_LONG).show();
-                        }
-
-                    }
-                });
-            }
-        });
-           */
         return alertDialog;
     }
 }

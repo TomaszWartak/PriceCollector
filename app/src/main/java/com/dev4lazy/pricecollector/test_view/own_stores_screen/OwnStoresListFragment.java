@@ -46,8 +46,7 @@ public class OwnStoresListFragment extends Fragment {
     private void recyclerSetup() {
         ownStoreAdapter = new OwnStoreAdapter(new OwnStoreDiffCallback());
         recyclerView = getView().findViewById(R.id.own_stores_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
-        // todo recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(ownStoreAdapter);
     }
 

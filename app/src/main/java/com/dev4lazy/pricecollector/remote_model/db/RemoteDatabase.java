@@ -111,9 +111,6 @@ public abstract class RemoteDatabase extends RoomDatabase {
     static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            /* todo?
-            database.execSQL("CREATE TABLE IF NOT EXISTS articles??? (" +
-            */
             database.execSQL("CREATE UNIQUE INDEX index_analysis_rows_articleCode " +
                     "ON analysis_rows (articleCode)" );
             database.execSQL("CREATE TABLE IF NOT EXISTS ean_codes (" +
@@ -174,7 +171,6 @@ public abstract class RemoteDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("DROP INDEX index_ean_codes_value" );
             database.execSQL("DROP INDEX index_ean_codes_article_id" );
-            // TODO XXX database.execSQL("CREATE INDEX index_ean_codes_value ON ean_codes (value)" );
             database.execSQL("PRAGMA foreign_keys = OFF");
             database.execSQL("BEGIN TRANSACTION" );
             database.execSQL("CREATE TABLE IF NOT EXISTS ean_codes_new (" +

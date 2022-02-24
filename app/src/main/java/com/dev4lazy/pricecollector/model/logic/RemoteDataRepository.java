@@ -79,10 +79,6 @@ public class RemoteDataRepository {
 
     private RemoteDataRepository() {
         mObservableAnalysisRows = new MediatorLiveData<>();
-        // todo start test
-        // List<RemoteAnalysisRow> testAnalysisRows = RemoteAnalysisRowDao.getAllAnalysisRows().getValue();
-        //testAnalysisRows = RemoteAnalysisRowDao.getAllAnalysisRowsList();
-        // todo end test
         mObservableAnalysisRows.addSource(
             remoteAnalysisRowDao.getAllLiveData(),
             new Observer<List<RemoteAnalysisRow>>() {
@@ -193,15 +189,6 @@ public class RemoteDataRepository {
         analyzes.deleteAllData(result);
     }
 
-    /*
-    public void findAnalyzesNewerThen( Date lastCheckDate, MutableLiveData<List<RemoteAnalysis>> result) {
-        // analyzes.getViaQuery( "SELECT * from analyzes WHERE creation_date >= "+lastCheckDate+, result);
-        analyzes.getViaQuery( "SELECT * from analyzes WHERE creation_date >= "+lastCheckDate, result);
-
-        // todo?  analyzes.getViaQuery( "SELECT * from analyzes WHERE" , result);
-    }
-
-     */
 //-----------------------------------------------------------------------------------
 
     public void countRemoteAnalyzesNewerThen(Date lastCheckDate, MutableLiveData<Integer> result ) {

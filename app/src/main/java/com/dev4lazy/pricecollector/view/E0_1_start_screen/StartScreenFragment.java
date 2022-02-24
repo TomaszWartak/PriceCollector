@@ -62,18 +62,11 @@ public class StartScreenFragment extends Fragment { // OK
     public void onStart() {
         super.onStart();
         setupToolbar();
-        /* TODO TEST 1 */
         if (allPermissionsAreGranted())  {
             Navigation.findNavController(getView()).navigate(R.id.action_startScreenFragment_to_setUpPreferencesFragment);
         } else {
             askUserForPermissions();
         }
-        /* TODO END TEST 1*/
-        /* TODO jeśli ww. test się nie powiedzie, to odkomentutj
-        if (checkAndRequestPermissions()) {
-            Navigation.findNavController(getView()).navigate(R.id.action_startScreenFragment_to_setUpPreferencesFragment);
-        }
-        */
     }
 
         private void setupToolbar() {
@@ -81,7 +74,6 @@ public class StartScreenFragment extends Fragment { // OK
             toolbar.hide();
         }
 
-        /* TODO TEST 1*/
         private boolean allPermissionsAreGranted() {
             PermissionsUtils permissionsUtils = new PermissionsUtils( this );
             ArrayList<String> listPermissionsDenied = permissionsUtils.getDeniedPermissions();
@@ -91,7 +83,6 @@ public class StartScreenFragment extends Fragment { // OK
         private boolean notAllPermissionsAreGranted() {
             return !allPermissionsAreGranted();
         }
-        /* TODO END TEST 1*/
 
         private void askUserForPermissions() {
             PermissionsUtils permissionsUtils = new PermissionsUtils( this );
@@ -190,12 +181,7 @@ public class StartScreenFragment extends Fragment { // OK
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    /* TODO TEST 1 */
                                     askUserForPermissions();
-                                    /* TODO END TEST 1 */
-                                    /* TODO jeśli ww. test się nie powiedzie, to odkomentutj
-                                    checkAndRequestPermissions();
-                                    */
                                 }
                             }
                     )

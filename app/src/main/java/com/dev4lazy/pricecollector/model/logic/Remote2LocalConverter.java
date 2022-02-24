@@ -171,15 +171,6 @@ public class Remote2LocalConverter {
                 eanCodesList.add(createEanCode(remoteEanCode, article));
             }
         }
-        /**/
-        /* TODO XXX*/
-        /*
-        ArrayList<EanCode> eanCodesList = new ArrayList( remoteEanCodesHashMap
-            .values()
-            .stream()
-            .collect( Collectors.toList() )
-        );
-         */
         return eanCodesList;
     }
 
@@ -196,7 +187,6 @@ public class Remote2LocalConverter {
     public AnalysisArticle createAnalysisArticle(
             RemoteAnalysisRow remoteAnalysisRow,
             Analysis analysis,
-            // todo? Article article,
             OwnArticleInfo ownArticleInfo
     ) {
         AnalysisArticle analysisArticle = new AnalysisArticle();
@@ -208,17 +198,4 @@ public class Remote2LocalConverter {
         return analysisArticle;
     }
 
-    public AnalysisArticle createAnalysisArticlesList(
-            Analysis analysis,
-            Article article,
-            Store competitorStore
-    ) {
-        /* todo Store na razie olewam, żeby nie generować 1000 artykułów dla każdego sklepu
-        na razie idę w wizję, że lista AnalysisArticle jest jedna, a dla kazdego sklepu
-        jeśli cena jest sprawdzona, to powstaje CompteitorPrice, a lista AnalysisArticle
-        jest modyfikowana tylko do wyświetlania
-         */
-
-        return null;
-    }
 }

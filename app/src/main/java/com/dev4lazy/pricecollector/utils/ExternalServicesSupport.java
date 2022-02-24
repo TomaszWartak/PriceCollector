@@ -46,7 +46,6 @@ public class ExternalServicesSupport {
             public void onServiceConnected(
                     ComponentName className,
                     IBinder service) {
-                // TODO W opisieIBinder jest, żeby nie użwać bezpośrednio, tylko użyć Binder...
                 messenger = new Messenger(service);
                 setBoundToService(true);
                 registerServiceBroadcastReceiver( );
@@ -73,7 +72,7 @@ public class ExternalServicesSupport {
     public void bindToService( String packageName, String className ) {
         Intent intent = new Intent();
         intent.setClassName( packageName, className );
-        // TODO co z obsługą niepowodzenia?
+        // TODO ok: co z obsługą niepowodzenia?
         boolean result = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 

@@ -16,7 +16,6 @@ import com.dev4lazy.pricecollector.model.logic.SearchArticlesCriteria;
 import com.dev4lazy.pricecollector.viewmodel.AnalysisArticleJoinsListViewModel;
 import com.dev4lazy.pricecollector.viewmodel.StoreViewModel;
 import com.google.android.material.tabs.TabLayout;
-// TODO XXX import com.dev4lazy.pricecollector.viewmodel.SearchArticlesCriteriaViewModel;
 
 import java.util.List;
 

@@ -43,8 +43,7 @@ public class DepartmentInSectorsListFragment extends Fragment {
     private void recyclerSetup() {
         departmentInSectorAdapter = new DepartmentInSectorAdapter( new DepartmentInSectorDiffCallback() );
         recyclerView = getView().findViewById( R.id.depts_in_secs_recycler );
-        recyclerView.setLayoutManager( new LinearLayoutManager( getActivity() ) ); // todo ????
-        // todo recyclerView.addItemDecoration( new DividerItemDecoration( getActivity(), VERTICAL ));
+        recyclerView.setLayoutManager( new LinearLayoutManager( getActivity() ) );
         recyclerView.setAdapter( departmentInSectorAdapter );
     }
 

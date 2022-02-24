@@ -15,7 +15,6 @@ import com.dev4lazy.pricecollector.model.utils.StoreStructureTypeConverter;
     inheritSuperIndices = true
 )
 public class OwnStore extends Store {
-    // todo ??? czy w bazie zdalnej jest taka tabela
     public String ownNumber;
     public String sapOwnNumber;
     public StoreStructureType structureType;

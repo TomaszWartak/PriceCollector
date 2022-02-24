@@ -46,8 +46,7 @@ public class CompaniesListFragment extends Fragment {
     private void recyclerSetup() {
         companyAdapter = new CompanyAdapter(new CompanyDiffCallback());
         recyclerView = getView().findViewById(R.id.companies_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
-        // todo recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(companyAdapter);
     }
 

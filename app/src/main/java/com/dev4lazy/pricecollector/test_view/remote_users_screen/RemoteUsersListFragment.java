@@ -45,8 +45,7 @@ public class RemoteUsersListFragment extends Fragment {
     private void recyclerSetup() {
         remoteUserAdapter = new RemoteUserAdapter(new RemoteUserDiffCallback());
         recyclerView = getView().findViewById(R.id.remote_users_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // todo ????
-        // todo recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(remoteUserAdapter);
     }
 

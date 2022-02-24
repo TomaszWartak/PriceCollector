@@ -25,7 +25,7 @@ public class SearchArticlesByDataFragment extends Fragment { //OK
     EditText articleNameEditText = null;
     EditText articleEANEditText = null;
     EditText articleSKUEditText = null;
-    EditText articleAnyTextEditText = null; // TODO realizacja w wydaniu 1
+    EditText articleAnyTextEditText = null; // TODO ok: realizacja w wydaniu 1
 
 
     AnalysisArticleJoinsListViewModel analysisArticleJoinsListViewModel = null;
@@ -73,7 +73,7 @@ public class SearchArticlesByDataFragment extends Fragment { //OK
     }
 
     private void articleAnyTextEditTextSetup(View view) {
-        /* TODO realizacja w wydaniu 1
+        /* TODO ok: realizacja w wydaniu 1
         articleAnyTextEditText = view.findViewById(R.id.search_articles_any_text_edit_text);
         articleAnyTextEditText.setOnFocusChangeListener( new View.OnFocusChangeListener() {
             @Override
@@ -134,7 +134,7 @@ public class SearchArticlesByDataFragment extends Fragment { //OK
             articleNameEditText.setText( searchArticlesCriteria.getArticleName() );
             articleEANEditText.setText( searchArticlesCriteria.getArticleEAN() );
             articleSKUEditText.setText( searchArticlesCriteria.getArticleSKU() );
-            /* TODO realizacja w wydaniu 1
+            /* TODO ok: realizacja w wydaniu 1
             articleAnyTextEditText.setText( searchArticlesCriteria.getArticleAnyText() );
             */
         }
@@ -143,7 +143,7 @@ public class SearchArticlesByDataFragment extends Fragment { //OK
             articleNameEditText.setText( "" );
             articleEANEditText.setText( "" );
             articleSKUEditText.setText( "" );
-            /* TODO realizacja w wydaniu 1
+            /* TODO ok: realizacja w wydaniu 1
             articleAnyTextEditText.setText( "" );
             */
 

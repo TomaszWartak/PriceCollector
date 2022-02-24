@@ -128,10 +128,6 @@ public class AnalysisArticleJoinsRecyclerView extends RecyclerView { // OK
             }
 
             private boolean isArticleLastVisited( AnalysisArticleJoin analysisArticleJoin ) {
-                // TODO TEST
-                int positionOnList = analysisArticleJoinViewModel.getPositionOnList();
-                int adapterPosition = getAdapterPosition();
-                // TODO END TEST
                 return
                         ( analysisArticleJoinViewModel!=null ) &&
                         analysisArticleJoinViewModel.isAnyArticleDisplayed() &&

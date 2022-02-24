@@ -34,7 +34,6 @@ public class AnalysisArticleJoinPagerAdapter // OK
             PagedListAdapter<AnalysisArticleJoin,
             AnalysisArticleJoinPagerAdapter.AnalysisArticleJoinPagerViewHolder> {
 
-    // TODO XXX private ViewPager2 parentViewPager;
     private AnalysisArticleJoinViewModel analysisArticleJoinViewModel;
     private AnalysisArticleJoinPagerViewHolder holder;
     int statusbarHeight;
@@ -48,7 +47,6 @@ public class AnalysisArticleJoinPagerAdapter // OK
             int toolbarHeight
         ) {
         super(analysisArticleJoinDiffCallback);
-        // TODO XXX this.parentViewPager = analysisArticlesViewPager;
         this.analysisArticleJoinViewModel = analysisArticleJoinViewModel;
         this.statusbarHeight = statusbarHeight;
         this.toolbarHeight = toolbarHeight;
@@ -86,7 +84,7 @@ public class AnalysisArticleJoinPagerAdapter // OK
         private EditText competitorPriceEditText;
         private EditText articleCommentEditText;
         // Ref Article
-        // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
+        // todo ok: private ImageView refArticleImageView;
         private EditText referenceArticleNameEditText;
         private EditText referenceArticleEANEditText;
         private EditText referenceArticleDescriptionEditText;
@@ -115,7 +113,7 @@ public class AnalysisArticleJoinPagerAdapter // OK
             articleCommentEditText.addTextChangedListener( new ArticleCommentEditTextWatcher() );
 
             // Ref Article
-            // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
+            // todo ok: view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
             referenceArticleNameEditText = view.findViewById( R.id.analysis_article_refArticleName_editText );
             referenceArticleNameEditText.addTextChangedListener( new ReferenceArticleNameEditTextWatcher() );
 
@@ -221,7 +219,6 @@ public class AnalysisArticleJoinPagerAdapter // OK
 
                 private boolean arePricesNotEqual( Double price1, Double price2 ) {
                     if (price1==null) {
-                        // TODO czy nie miałobyc tak że jak jest pusty stringi null to sa równe?
                         return !(price2==null);
                     }
                     if (price2==null) {
@@ -337,7 +334,6 @@ public class AnalysisArticleJoinPagerAdapter // OK
 
         protected void bind(AnalysisArticleJoin analysisArticleJoin ) {
             // Own Article
-            // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
             int ownArticleImageResId = getOwnArticleImageResId( analysisArticleJoin);
             if (ownArticleImageResId!=0) {
                 ownArticleImageView.setImageResource( ownArticleImageResId );
@@ -359,7 +355,7 @@ public class AnalysisArticleJoinPagerAdapter // OK
             }
             articleCommentEditText.setText( analysisArticleJoin.getComments() );
             // Ref Article
-            // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
+            // todo ok: view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
             referenceArticleNameEditText.setText( analysisArticleJoin.getReferenceArticleName() );
             referenceArticleEANEditText.setText( analysisArticleJoin.getReferenceArticleEanCodeValue() );
             referenceArticleDescriptionEditText.setText( analysisArticleJoin.getReferenceArticleDescription() );
@@ -391,7 +387,6 @@ public class AnalysisArticleJoinPagerAdapter // OK
 
                 @Override
                 public void onClick(View articleImageView) {
-                    // TODO XXX int screeWidthInPixels = Resources.getSystem().getDisplayMetrics().widthPixels;
                     Context context = articleImageView.getContext();
                     int screenOrientation = context.getResources().getConfiguration().orientation;
                     int width;
@@ -447,7 +442,7 @@ public class AnalysisArticleJoinPagerAdapter // OK
             competitorPriceEditText.setText( null );
             articleCommentEditText.setText( null );
             // Ref Article
-            // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
+            // todo ok: view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
             referenceArticleNameEditText.setText( null );
             referenceArticleEANEditText.setText( null );
             referenceArticleDescriptionEditText.setText( null );
@@ -455,11 +450,11 @@ public class AnalysisArticleJoinPagerAdapter // OK
 
         protected void clearCompetitorArticleDataOnScreen() {
             // Own Article
-            // todo view.findViewById( R.id.analysisArticleFragment_imageArticle );
+            // todo ok: view.findViewById( R.id.analysisArticleFragment_imageArticle );
             competitorPriceEditText.setText( "" );
             articleCommentEditText.setText( "" );
             // Ref Article
-            // todo view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
+            // todo ok: view.findViewById( R.id.analysisArticleFragment_imageRefArticle );
             referenceArticleNameEditText.setText( "" );
             referenceArticleEANEditText.setText( "" );
             referenceArticleDescriptionEditText.setText( "" );

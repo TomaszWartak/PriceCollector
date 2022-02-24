@@ -14,7 +14,7 @@ import androidx.navigation.Navigation;
 
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.utils.LocalDataInitializer;
-import com.dev4lazy.pricecollector.remote_model.utils.RemoteDataInitializer;
+import com.dev4lazy.pricecollector.remote_model.utils.RemoteMockDataInitializer;
 import com.dev4lazy.pricecollector.AppHandle;
 import com.dev4lazy.pricecollector.view.utils.PopupWindowWrapper;
 import com.dev4lazy.pricecollector.view.utils.ProgressBarWrapper;
@@ -39,20 +39,20 @@ public class TestActionsFragment2 extends Fragment {
 
     private void setTestButtons(View parentView) {
         parentView.findViewById(R.id.button_clear_remote_users).setOnClickListener((View v) -> {
-            RemoteDataInitializer.getInstance().clearRemoteUsers();
+            RemoteMockDataInitializer.getInstance().clearRemoteUsers();
         });
         parentView.findViewById(R.id.button_create_remote_users).setOnClickListener((View v) -> {
-            RemoteDataInitializer.getInstance().initializeRemoteUsersOnly();
+            RemoteMockDataInitializer.getInstance().initializeRemoteUsersOnly();
         });
         parentView.findViewById(R.id.button_show_remote_users).setOnClickListener((View v) -> {
             Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment2_to_remoteUsersListFragment);
         });
 
         parentView.findViewById(R.id.button_clear_remote2).setOnClickListener((View v) -> {
-            RemoteDataInitializer.getInstance().clearRemoteDatabase();
+            RemoteMockDataInitializer.getInstance().clearRemoteDatabase();
         });
         parentView.findViewById(R.id.button_create_remote2).setOnClickListener((View v) -> {
-            RemoteDataInitializer.getInstance().initializeRemoteData(
+            RemoteMockDataInitializer.getInstance().initializeRemoteData(
                     getPopulatingDataProgressPresentingManager( parentView )
             );
         });
@@ -60,24 +60,6 @@ public class TestActionsFragment2 extends Fragment {
             Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment2_to_remoteAnalysisRowJoinFragment);
         });
 
-        /* todo ?
-        view.findViewById(R.id.button_clear_remote_sects_depts).setOnClickListener((View v) -> {
-            RemoteDataInitializer.getInstance().clearRemoteSectors();
-            RemoteDataInitializer.getInstance().clearRemoteDepartments();
-        });
-        view.findViewById(R.id.button_create_remote_sects_depts).setOnClickListener((View v) -> {
-            RemoteDataInitializer.getInstance().prepareRemoteSectors();
-            RemoteDataInitializer.getInstance().populateRemoteSectors();
-            RemoteDataInitializer.getInstance().prepareRemoteDepartments();
-            RemoteDataInitializer.getInstance().populateRemoteDepartments();
-        });
-        view.findViewById(R.id.button_show_remote_sectors).setOnClickListener((View v) -> {
-            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteSectorsListFragment);
-        });
-        view.findViewById(R.id.button_show_remote_departments).setOnClickListener((View v) -> {
-            Navigation.findNavController(view).navigate(R.id.action_testActionsFragment2_to_remoteDepartmentsListFragment);
-        });
-        */
 
         parentView.findViewById(R.id.button_clear_local2).setOnClickListener((View v) -> {
             LocalDataInitializer.getInstance().clearLocalDatabase( null );
@@ -86,14 +68,14 @@ public class TestActionsFragment2 extends Fragment {
             Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment2_to_testNumbersOfDataFragment2);
         });
         parentView.findViewById(R.id.button_add_second_remote_analysis).setOnClickListener((View v) -> {
-            RemoteDataInitializer remoteDataInitializer = RemoteDataInitializer.getInstance();
-            remoteDataInitializer.prepareRemoteAnalyzes();
-            remoteDataInitializer.populateRemoteAnalysis( 1 );
+            RemoteMockDataInitializer remoteMockDataInitializer = RemoteMockDataInitializer.getInstance();
+            remoteMockDataInitializer.prepareRemoteAnalyzes();
+            remoteMockDataInitializer.populateRemoteAnalysis( 1 );
         });
         parentView.findViewById(R.id.button_add_third_remote_analysis).setOnClickListener((View v) -> {
-            RemoteDataInitializer remoteDataInitializer = RemoteDataInitializer.getInstance();
-            remoteDataInitializer.prepareRemoteAnalyzes();
-            remoteDataInitializer.populateRemoteAnalysis( 2 );
+            RemoteMockDataInitializer remoteMockDataInitializer = RemoteMockDataInitializer.getInstance();
+            remoteMockDataInitializer.prepareRemoteAnalyzes();
+            remoteMockDataInitializer.populateRemoteAnalysis( 2 );
         });
     }
 
@@ -134,13 +116,6 @@ public class TestActionsFragment2 extends Fragment {
                 PackageManager.PERMISSION_GRANTED)) {
             // Dostęp nadany
             switch (requestCode) {
-                /*
-                // todo to usunąć, bo służy tylko do wygenerowania mocka bazy remote
-                case RemoteDatabaseInitializer.MY_PERMISSIONS_REQUEST_STORAGE: {
-                    new RemoteDatabaseInitializer(this).doConversion();
-                    break;
-                }
-                 */
             }
         } else {
             // Dostęp nie udany. Wyświetlamy Toasta

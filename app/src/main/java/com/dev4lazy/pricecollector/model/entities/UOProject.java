@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey;
 public class UOProject {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    // todo ?? czy w bazie zdlanej jest taka tabela
     private int remote_id; // klucz głowny w bazie zdalnej - w tym przypadku w bazie zdalnej nie ma takiej tabeli
     private String name;
 

@@ -108,4 +108,19 @@
     <string name="question_about_clearing_local_data">Do you want to clear application data?</string>
     <string name="network_not_available">Network not available</string>
     <string name="battery_state_low">Battery state low!</string>
-    </resources>
+    <string name="articles_list">Articles list</string>
+    <string name="ean_codes_list">EAN codes list</string>
+    <string name="additional_info">Additional data</string>
+    <string name="strategic_articles_list">Strategic articles list</string>
+    <string name="sectoral_structure">Sectoral structure</string>
+    <string name="structure_by_markets">Structure by markets</string>
+    <string name="department_structure">Departmental structure</string>
+    <string name="users_list">Users list</string>
+    <string name="departments_list">Departments list</string>
+    <string name="sectors_list">Sectors list</string>
+    <string name="uo_projects_list">UO projects list</string>
+    <string name="families_list">Families list</string>
+    <string name="markets_list">Markets list</string>
+    <string name="modules_list">Modules list</string>
+    <string name="english_country_name_poland">Poland</string>
+</resources>

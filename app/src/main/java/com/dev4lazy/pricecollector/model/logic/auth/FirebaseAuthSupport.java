@@ -9,7 +9,8 @@ public interface FirebaseAuthSupport extends AuthSupport, AuthSupport.LoginCallb
     FirebaseAuth firebaseAuthServices = FirebaseAuth.getInstance();
 
     default FirebaseUser getCurrentFirebaseUser() {
-        //todo - to powinno być wołane przy inicjalizacji aktywności - When initializing your Activity, check to see if the user is currently signed in.
+        // todo ok - to powinno być wołane przy inicjalizacji aktywności -
+        //  When initializing your Activity, check to see if the user is currently signed in.
         return firebaseAuthServices.getCurrentUser();
     }
 

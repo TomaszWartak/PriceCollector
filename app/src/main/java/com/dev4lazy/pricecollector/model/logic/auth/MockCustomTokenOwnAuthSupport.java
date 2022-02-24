@@ -53,7 +53,7 @@ public class MockCustomTokenOwnAuthSupport
         externalServicesSupport.bindToService(
                 "com.dev4lazy.pricecollectormockauth",
                 "com.dev4lazy.pricecollectormockauth.MockAuthService");
-        // todo tutaj można podmienić rodzaj autentykacji Firebase
+        // todo ok: tutaj można podmienić rodzaj autentykacji Firebase
         firebaseAuthSupport = CustomTokenFirebaseAuthSupport.getInstance();
         firebaseAuthSupport.setLoginCallback(this);
     }
@@ -63,7 +63,7 @@ public class MockCustomTokenOwnAuthSupport
 // wysyła dane logowania do własnego serwera logowania
     @Override
     public void signIn() {
-        // TODO: mockCustomTokenOwnAuthServices.isBoundToMockAuthService() trzeba zamienić na
+        // TODO ok mockCustomTokenOwnAuthServices.isBoundToMockAuthService() trzeba zamienić na
         //  coś w rodzaju "isAuthServerAvailable()
         //  Następnie całą sekwencję
         //   Bundle bundle = new Bundle();
@@ -76,8 +76,6 @@ public class MockCustomTokenOwnAuthSupport
         //   A metoda nazywałaby się po prostu signIn???
         //   UWAGA - stworzyłem interfejs TokenAuthServerServices, ale nie użyłem, go żeby czegoś nie popsuć...
 
-        // TODO
-        // if (!externalServicesSupport.isBoundToMockAuthService()) {
         if (externalServicesSupport.isNotBoundToService()) {
             callIfUnsuccessful( AppHandle.getHandle().getString(R.string.login_server_unavailable) );
             return;
@@ -98,8 +96,7 @@ public class MockCustomTokenOwnAuthSupport
     @Override
     public void signOut() {
         firebaseAuthSupport.signOut();
-        // TODO: jeśli zrobisz to, co opisałeś w komentarzach do signIn(), to tutaj też musisz
-        // TODO
+        // TODO ok: jeśli zrobisz to, co opisałeś w komentarzach do signIn(), to tutaj też musisz
         externalServicesSupport.unbindFromService();
     }
 
@@ -152,18 +149,11 @@ public class MockCustomTokenOwnAuthSupport
     private class MockAuthServiceBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            /* TODO XXX tutaj poniżej nie trzeba sprawdzać, czy przyszła właścia akcja,
-                gdyż sprawdzanie jest ustawiane przy inicjacji odbiornika
-            if (intent.getAction().equals("DATA_FROM_MOCKAUTH_READY")) {
-             */
-                if (intent.getBooleanExtra("AUTHENTICATED", false )) {
-                    callIfDataReceived(true, intent.getStringExtra("TOKEN") );
-                } else {
-                    callIfDataReceived(false,"" );
-                }
-            /* TODO dotyczy TODO powyżej
+            if (intent.getBooleanExtra("AUTHENTICATED", false )) {
+                callIfDataReceived(true, intent.getStringExtra("TOKEN") );
+            } else {
+                callIfDataReceived(false,"" );
             }
-             */
         }
     }
 }

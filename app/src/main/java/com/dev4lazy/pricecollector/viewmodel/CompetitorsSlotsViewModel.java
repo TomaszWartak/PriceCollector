@@ -61,12 +61,6 @@ public class CompetitorsSlotsViewModel extends AndroidViewModel {
                     competitorSlotFullData.setCompetitorStoresMap( storesMap );
                     Store chosenStore = competitorSlotFullData.getStore( slot.getOtherStoreId() );
                     competitorSlotFullData.setChosenStore( chosenStore );
-                    /* TODO
-                    Warto też usunąć wybrany sklep z listy sklepów dla danego slotu,
-                    żeby nie widniał w menu na liście sklepóe do wyboru. Z tym, że w sytuacji,
-                    jeśli był tylko jeden sklep na liście (czyli po usunięciu lista będzie pusta),
-                    to z menu trzeba wyrzucić "Wybierz sklep"
-                    */
                     if (chosenStore!=null) {
                         competitorSlotFullData.removeStore( chosenStore );
                     }

@@ -164,12 +164,6 @@ public class LoginFragment
     private void runAuthSupport() {
         authSupport.addCredential("USER_ID", userViewModel.getUser().getLogin() );
         authSupport.addCredential("USER_PASSWORD", userViewModel.getUser().getPassword() );
-        /* TODO TEST /
-        userViewModel.getUser().setLogin( "nowak_j");
-        userViewModel.getUser().setPassword( "nowak" );
-        authSupport.addCredential("USER_ID", "nowak_j" );
-        authSupport.addCredential("USER_PASSWORD", "nowak");
-        / TODO END TEST */
         authSupport.setLoginCallback( this ); // zob. metody callIfSuccessful() i callIfUnsuccessful()
         authSupport.signIn();
     }
@@ -190,7 +184,6 @@ public class LoginFragment
                     RemoteUser remoteUser = remoteUsers.get(0);
                     AppHandle.getHandle().getSettings().setUser( new User( remoteUser ) );
                     userViewModel.clear();
-                    // todo jesli pierwsze uruchomienie, to incjalizacja danych w bazie lokalnej
                     if (AppHandle.getHandle().getSettings().isLocalDatabaseNotInitialized()) {
                         LocalDataInitializer.getInstance().initializeLocalDatabase();
                     }
@@ -198,7 +191,6 @@ public class LoginFragment
                     getSettingsInfo();
                     // sprawdzenie czy na serwerze zdalnym jest nowa analiza - pobranie
                     startRisingChain();
-                    // Przejście do AnalyzesListFragment
                     Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
                 } else {
                     pleaseWaitProgressBar.setVisibility(View.INVISIBLE);
@@ -222,22 +214,22 @@ public class LoginFragment
     }
 
         private void getSettingsInfo() {
-            // TODO
+            // TODO ok:
             //  język
             //  użytkownik -> sklep macierzysty, dział ew sektor
         }
 
         private void startRisingChain() {
-            // TODO !!! tutaj i wszędzie gdzie jest oczkiwanie na dane trzeba zrobić ograniczenie czasowe na odpowiedź...
+            // TODO ok: tutaj i wszędzie gdzie jest oczkiwanie na dane trzeba zrobić ograniczenie czasowe na odpowiedź...
             getNewAnalysisInfo();
         }
 
-            // TODO XXX Jeśli serwer nir odpowie, to nie ma przejścia do listy Badań
+            // TODO ok: Jeśli serwer nir odpowie, to nie ma przejścia do listy Badań
             //  i nie znika pleaseWaitSpinner.
             //  A moze przejście do listy badań zrobić bezwarunkowo, a w OnChanged tylko zniknięcie spinnera?
             //  Zrobiłem - działa. Przejście do Listy Badań zamyka (ukrywa?) spinner.
             //  UWAGA: spinner nie zniknie, jeśli nie będzie odpowiedzi z serwera...
-            // TODO XXX jak zrobić, że w razie braku odpowiedzi jest komunikat?
+            // TODO ok: jak zrobić, że w razie braku odpowiedzi jest komunikat?
             //  Może jakiś obiekt, który wysyła zapytanie i uruchamia odliczanie w wątku(?).
             //  Jeśli jest odpowiedź zanim odliczy - zwraca ją  do wywołującego, a wywołujący
             //  usuwa observera.
@@ -257,7 +249,7 @@ public class LoginFragment
                         pleaseWaitProgressBar.setVisibility(View.INVISIBLE);
                         /// Navigation.findNavController(getView()).navigate(R.id.action_logingFragment_to_analyzesListFragment);
                     }
-                    /* TODO ??? @Override
+                    /* TODO ok: @Override
                     public void notHappen() {
                         pleaseWaitSpinner.setVisibility(View.GONE);
                         Komunikat a la "Serwer nie odpowiedział"
@@ -274,12 +266,6 @@ public class LoginFragment
     public void callIfUnsuccessful( String failureReasonMessage) {
         pleaseWaitProgressBar.setVisibility(View.INVISIBLE);
         userPasswordEditText.setText("");
-        /* TODO XXX
-        Toast.makeText(
-            getContext(),
-                failureReasonMessage,
-            Toast.LENGTH_SHORT).show();
-        */
         AppHandle.getHandle().getMessageSupport().showMessage( failureReasonMessage );
     }
 

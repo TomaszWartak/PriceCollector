@@ -22,9 +22,6 @@ public class SetUpPreferencesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // todo !!!! na potrzeby testu zresteowanie preferencji
-        // AppHandle.getHandle().getPrefs().clear();
-        //todo sprawdzenie w preferencjach jaki język i ustawienie, jeśli inny niż w telefonie
         AppHandle.getHandle().getSettings().setUp();
     }
 

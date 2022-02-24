@@ -64,9 +64,6 @@ public class AnalyzesRecyclerView extends RecyclerView { //OK
     public void refreshAfterClearDatabase() {
         AnalyzesListViewModel analyzesListViewModel = new ViewModelProvider( AppUtils.getActivity( getContext() ) ).get( AnalyzesListViewModel.class );
         analyzesListViewModel.refreshAnalyzesLifeData();
-        /* TODO XXX
-        int itemCount = getAdapter().getItemCount();
-        getAdapter().notifyItemRangeRemoved( 0, itemCount ); */
     }
 
     public class AnalysisAdapter extends PagedListAdapter<Analysis, AnalysisAdapter.AnalysisViewHolder> {

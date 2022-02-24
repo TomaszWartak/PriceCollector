@@ -3,7 +3,6 @@ package com.dev4lazy.pricecollector.viewmodel;
 import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 
-// TODO XXX to chyba do nczego nie jest potrzebne
 public class SearchArticlesCriteriaViewModel extends AndroidViewModel {
 
     private boolean onChangedReactionAllowed;

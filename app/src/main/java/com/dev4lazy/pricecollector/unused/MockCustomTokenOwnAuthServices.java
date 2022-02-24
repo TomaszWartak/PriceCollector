@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Obsługuje komunikację z serwisem udajacym serwer logowania
  */
-public class MockCustomTokenOwnAuthServices /* todo implements MockCustomTokenOwnAuthServices.OnReceiveCallback */{
+public class MockCustomTokenOwnAuthServices {
 
 // ----------------------------------------------------------
 // callback do obsługi onReceive() odbiornika
@@ -80,18 +80,6 @@ public class MockCustomTokenOwnAuthServices /* todo implements MockCustomTokenOw
 
     public void unbindFromMockAuthService() {
         AppHandle.getHandle().unbindService(myConnection);
-    }
-
-    // todo to raczej do wywalenia
-    public boolean isServiceRunning(String serviceClassName){
-        final ActivityManager activityManager = (ActivityManager) AppHandle.getHandle().getSystemService(Context.ACTIVITY_SERVICE);
-        final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
-        for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
-            if (runningServiceInfo.service.getClassName().equals(serviceClassName)){
-                return true;
-            }
-        }
-        return false;
     }
 
     public void sendDataToService(Bundle bundle) {

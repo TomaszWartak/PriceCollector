@@ -62,7 +62,6 @@ public interface RemoteAnalysisRowDao extends _Dao<RemoteAnalysisRow> {
     @Query("SELECT * from analysis_rows WHERE id= :name")
     List<RemoteAnalysisRow> findByName(String name);
 
-    // TODO raczej bym w _Dao zrobił metodę getViaQueryPaged a w reopzytorium bym włożył zapyatnie, które jest nizej
     @Query(
             "SELECT " +
                     "analysis_rows.id, " +

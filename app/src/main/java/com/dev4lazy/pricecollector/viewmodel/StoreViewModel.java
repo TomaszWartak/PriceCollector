@@ -12,12 +12,10 @@ public class StoreViewModel extends AndroidViewModel {
     private boolean onChangedReactionAllowed;
     private Store temporary;
     private MutableLiveData<Store> selected = new MutableLiveData<>();
-    // TODO XXX private Action actionToDo;
 
     public StoreViewModel(Application application) {
         super(application);
         setOnChangedReactionNotAllowed();
-        // TODO XXX resetData();
     }
 
     public boolean isOnChangedReactionAllowed() {
@@ -28,24 +26,8 @@ public class StoreViewModel extends AndroidViewModel {
         this.onChangedReactionAllowed = true;
     }
 
-    // TODO XXX
     public void setOnChangedReactionNotAllowed() {
         this.onChangedReactionAllowed = false;
-    }
-
-    // TODO XXX
-    public void setTemporaryData(Store temporary) {
-        this.temporary = temporary;
-    }
-
-    // TODO XXX
-    public Store getTemporaryData() {
-        return temporary;
-    }
-
-    // TODO XXX
-    public void clearTemporaryData() {
-        setTemporaryData(null);
     }
 
     public void setStore(Store store) {
@@ -60,18 +42,4 @@ public class StoreViewModel extends AndroidViewModel {
         return selected;
     }
 
-    // TODO XXX
-    public void resetData() {
-        selected = new MutableLiveData<>();
-    }
-
-    /* TODO XXX
-    public Action getActionToDo() {
-        return actionToDo;
-    }
-
-    public void setActionToDo(Action actionToDo) {
-        this.actionToDo = actionToDo;
-    }
-     */
 }

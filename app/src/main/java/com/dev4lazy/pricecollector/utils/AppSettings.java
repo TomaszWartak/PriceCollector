@@ -2,6 +2,8 @@ package com.dev4lazy.pricecollector.utils;
 
 import android.content.SharedPreferences;
 
+import com.dev4lazy.pricecollector.AppHandle;
+import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.model.logic.User;
 import com.dev4lazy.pricecollector.model.utils.DateConverter;
 
@@ -20,7 +22,7 @@ public class AppSettings {
 
     // Uprawnienia aplikacji -----------------------------------------------------------------------
     private final String ANALYSIS_COMPETITORS_NUMBER_KEY = "ANALYSIS_COMPETITORS_NUMBER";
-    public int MAX_ANALYSIS_COMPETITORS_NUMBER = 5; //-1 oznacza dowolną ilość
+    public final int MAX_ANALYSIS_COMPETITORS_NUMBER = 5; //-1 oznacza dowolną ilość
     private final String LAST_ANALYSIS_DOWNLOAD_DATE_KEY = "LAST_ANALYSIS_DOWNLOAD_DATE";
 
     // Lokalna baza danych-------------------------------------------------------------------------
@@ -53,12 +55,9 @@ public class AppSettings {
     private SharedPreferences prefs = null;
     private SharedPreferences.Editor prefsEditor = null;
 
-    // todo language
     private String language;
 
     private static AppSettings instance = new AppSettings();
-
-    // todo private static final AppPreferences appPreferences = AppHandle.getHandle().getPrefs();
 
     private User user;
 
@@ -85,24 +84,21 @@ public class AppSettings {
 // ----------------------------------------------------------------------------------------------
     public void setUp() {
         if (isFirstRun()) {
-            // Inicjalizacja przy pierwszym uruchomieniu
             setLocale();
             setLocalDatabaseNotInitialized();
-            setAnalysisCompetitorsScreen();
             setLastAnalysisCreationDate( new Date( 0 ) );
         }
-        setSetSet(); // todo lol
     }
 
     private boolean isFirstRun() {
         return getCountryName().isEmpty();
     }
 
-    private void setLocale( /* todo idLocale */ ) {
-        // todo sprawdzenie usatwień lokalizacyjnych i interakcja z użytkownikiem
-        saveCountryName("Polska");
-        saveEnglishCountryName("Poland");
-        setLanguage("polski");
+    private void setLocale( /* todo ok: idLocale */ ) {
+        // todo ok: interakcja z użytkownikiem?
+        saveLocaleCountryName( AppHandle.getHandle().getString( R.string.locale_country_name_poland));
+        saveEnglishCountryName(AppHandle.getHandle().getString( R.string.english_country_name_poland));
+        setLanguage(AppHandle.getHandle().getString(R.string.locale_language_name_poland));
     }
 
     public void setLocalDatabaseInitialized() {
@@ -115,13 +111,6 @@ public class AppSettings {
         saveInitialisationStage(LOCAL_DATA_NOT_INITIALIZED);
     }
 
-    private void setAnalysisCompetitorsScreen() {
-        saveMaxAnalysisCompetitorsNumber(MAX_ANALYSIS_COMPETITORS_NUMBER);
-    }
-
-    private void setSetSet() {
-
-    }
 
     // Daty ostatniego pobrania danych z serwera ---------------------------------------------------
     public void setLastAnalysisCreationDate(Date date ) {
@@ -154,7 +143,6 @@ public class AppSettings {
 
     // Ustawienia językowe -------------------------------------------------------------------------
     public String getLanguage() {
-        // todo prefsEditor.get...
         return language;
     }
 
@@ -166,7 +154,7 @@ public class AppSettings {
         return prefs.getString( COUNTRY_NAME_KEY, "");  // defValue może być null
     }
 
-    public void saveCountryName(String value) {
+    public void saveLocaleCountryName(String value) {
         prefsEditor.putString( COUNTRY_NAME_KEY, value);
         prefsEditor.apply();
     }
@@ -214,37 +202,4 @@ public class AppSettings {
         long longDate = prefs.getLong( LAST_ANALYSIS_DOWNLOAD_DATE_KEY, 0L);
         return new DateConverter().long2Date( longDate );
     }
-
-// Czy od ostaniego pobrania danych zostały zmienione dane lokalne -----------------------------
-
-// Konfiguracja okna ze sklepami konukernycjnymi wybranymi do analizy --------------------------
-
-    public void saveMaxAnalysisCompetitorsNumber( int value ) {
-        MAX_ANALYSIS_COMPETITORS_NUMBER = value; // <-- todo to jest wartość "stałej", więc raczej do AppSettings
-    }
-
-    // TODO ostatni raz, kiedy tu zaglądałem to poniższe metody (do tagu XXX) nie były używane
-    public int getMaxAalysisCompetitorsNumber() {
-        return MAX_ANALYSIS_COMPETITORS_NUMBER;
-    }
-
-    public boolean isCompetitorsSlotsInitialized() {
-        return prefs.getBoolean(ANALYSIS_COMPETITORS_SLOTS_INITIALIZED_KEY, false);
-    }
-
-    public void saveCompetitorsSlotsInitialized(boolean value) {
-        prefsEditor.putBoolean(ANALYSIS_COMPETITORS_SLOTS_INITIALIZED_KEY, value);
-        prefsEditor.apply();
-    }
-
-    public int getAnalysisCompetitorsNumber() {
-        return prefs.getInt(ANALYSIS_COMPETITORS_NUMBER_KEY, 5);
-    }
-
-    public void saveAnalysisCompetitorsNumber(int value) {
-        prefsEditor.putInt(ANALYSIS_COMPETITORS_NUMBER_KEY, value);
-        prefsEditor.commit();
-    }
-
-
 }

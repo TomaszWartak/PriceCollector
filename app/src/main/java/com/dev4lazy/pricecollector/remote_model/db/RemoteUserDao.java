@@ -58,10 +58,4 @@ public interface RemoteUserDao extends _Dao<RemoteUser> {
     @Query("SELECT * from users WHERE name= :name")
     List<RemoteUser> findByName(String name);
 
-    /* todo
-    @Query("SELECT * from users WHERE login= :login")
-    List<RemoteUser> findByLogin(String login);
-
-     */
-
 }

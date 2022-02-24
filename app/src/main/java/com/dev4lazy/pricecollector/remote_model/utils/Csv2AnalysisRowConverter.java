@@ -9,10 +9,6 @@ import java.util.List;
 
 import androidx.lifecycle.MutableLiveData;
 
-// todo test:
-// - uruchom testy
-//  - co jeśli będzie pusty plik
-//  - co jeśli będą śmieci w pliku
 public class Csv2AnalysisRowConverter {
 
     private final String ANALYSIS_ROWS_FILE_NAME = "dane-test1000v2.csv";
@@ -20,7 +16,7 @@ public class Csv2AnalysisRowConverter {
     private CsvReader analysisRowCsvReader;
     private CsvDecoder csvDecoder;
     private RemoteDataRepository remoteDataRepository;
-    private ArrayList<String> fieldNamesList; //todo z tego coś nie bardzo korzystasz...
+    private ArrayList<String> fieldNamesList; //todo ok: z tego coś nie bardzo korzystasz...
     private ArrayList<RemoteAnalysisRow> remoteAnalysisRowList;
 
     public Csv2AnalysisRowConverter() {
@@ -86,7 +82,7 @@ public class Csv2AnalysisRowConverter {
             remoteAnalysisRow.setAnalysisId(analysisId);
             remoteAnalysisRowList.add(remoteAnalysisRow);
             rowCounter++;
-            // TODO Na potrzeby testu, dla pierwszej analizy pobierane jest tylko 1000 wierszy
+            // TODO ok: Na potrzeby testu, dla pierwszej analizy pobierane jest tylko 1000 wierszy
             if ((rowCounter==1000) && (analysisNr==0)) {
                 break;
             }
@@ -95,10 +91,6 @@ public class Csv2AnalysisRowConverter {
     }
 
     public RemoteAnalysisRow makeAnalysisRow(ArrayList<String> values ) {
-        // todo musibyć sprawdzanie typu po konwersji, bo mogą przyjść śmieci w pliku i appka się wysypie...
-        // todo co jeśli będzie mniej danych
-        // todo może zamiast warości 0..11 użyj stałych...
-        // todo zastanów się co, jeśli zmieni się format dancyh na serwerze analizy konkurencji
         RemoteAnalysisRow remoteAnalysisRow = new RemoteAnalysisRow.AnalysisRowBuilder()
                 .store( csvDecoder.getIntegerOrNullFromString( values.get(0)) )
                 .analysisId( 0 ) // 0 - bo zostanie wpisany później

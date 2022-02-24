@@ -37,26 +37,9 @@ public class PermissionsUtils {
     };
 
     private Fragment hostFragment;
-
-    //private Context context;
-
-    /* todo usuń Konstruktor dla użycia onRequestPermissionsResult w aktywności
-    // public PermissionsUtils(Activity activity) {
-        hostActivity = activity;
-    }
-     */
-
-    // Konstruktor dla użycia onRequestPermissionsResult we fragmencie
     public PermissionsUtils( Fragment fragment ) {
         hostFragment = fragment;
     }
-
-    /*
-    public PermissionsUtils( Context context) {
-        this.context = context;
-    }
-
-     */
 
     public String getProtectionLevelForPermission( String permission ) {
         Context context = hostFragment.getContext();
@@ -104,7 +87,7 @@ public class PermissionsUtils {
                              * and android.content.pm.PermissionInfo.PROTECTION_FLAG_APP_PREDICTOR
                              */
                         } else {
-                            // todo ???
+                            // todo ok: ???
                         }
 
                         String dummyString = permissionInfo.loadDescription( packageManager ).toString();
@@ -230,15 +213,10 @@ public class PermissionsUtils {
             case Manifest.permission.GET_ACCOUNTS:
                 localePermissionName = resources.getString( R.string.short_permission_name_user_account );
                 break;
-            // todo zrób następne...
         }
         return localePermissionName;
     }
 
-
-    // TODO funkcja tłumacząca stałe permissions na zrozumiały język
-
-    // Oddaje listę uprawnień, które aplikacja powinna mieć nadane, a nie ma
     public ArrayList<String> getDeniedPermissions() {
         ArrayList<String> neededPermissions = new ArrayList<>();
         for ( String permission : applicationPermissions) {
@@ -258,10 +236,6 @@ public class PermissionsUtils {
         }
         return deniedPermissions;
     }
-
-    // TODO funkcja sprawdzająca czy do Manifestu są wpisane uprawnienia, których potrzebuje aplikacja (this.applicationPermissions)
-    // Przeglada applicationPermissions i sprawdza, czy jest na liscie pozyskanej z getManifestPermissions()
-
 
     public ArrayList<String> getManifestPermissions() {
         ArrayList<String> manifestPermissions = new ArrayList<>();

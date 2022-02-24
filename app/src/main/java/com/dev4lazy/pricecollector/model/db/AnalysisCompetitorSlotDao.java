@@ -55,7 +55,7 @@ public interface AnalysisCompetitorSlotDao extends _Dao<AnalysisCompetitorSlot> 
     LiveData<List<AnalysisCompetitorSlot>> findByIdLiveData( int id );
 
     @Override
-    @Query("SELECT * from competitor_slots WHERE id= :name") // todo no nie wiem...
+    @Query("SELECT * from competitor_slots WHERE id= :name")
     List<AnalysisCompetitorSlot> findByName(String name);
 
 }
