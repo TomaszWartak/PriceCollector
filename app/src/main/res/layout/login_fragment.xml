@@ -46,12 +46,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
 
-                    <!--todo app:hintTextColor="@color/black"
-                    app:boxBackgroundColor="@color/white"
-                    app:boxStrokeColor="@color/black"
-                    app:boxStrokeWidth="2dp"
-                    app:boxStrokeWidthFocused="2dp"-->
-
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/userlogin_edit_text"
                         android:layout_width="match_parent"

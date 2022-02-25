@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity { // OK
         setContentView(R.layout.main_activity_with_drawer);
         toolbarSetup();
         drawerSetup();
-        // Inicalizacja obiektu preferencji
         AppHandle.getHandle().getSettings().setPrefs( getPreferences(Context.MODE_PRIVATE) );
     }
 

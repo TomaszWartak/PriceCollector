@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!--TODO XXX group android:checkableBehavior="single">
+    <!--TODO ok: Jest używane w main_activity_with_drawer.xml, ale czy to jest potrzebne?
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_1_1"
             android:title="menu 1_1" />

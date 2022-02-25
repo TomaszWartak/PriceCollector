@@ -82,7 +82,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- TODO realizacja w wydaniu 1 Any text
+        <!-- TODO ok: realizacja w wydaniu 1 Any text
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_articles_any_text_text_input"
             style="@style/PC_TextInputLayoutStyle"

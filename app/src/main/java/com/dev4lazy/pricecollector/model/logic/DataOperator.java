@@ -13,16 +13,16 @@ import java.util.List;
 
 public class DataOperator<D> {
 
-    /** TO SIĘ NADAJE DO REFAKTORINGU **/
+    /* TODO ok: TO SIĘ NADAJE DO REFAKTORINGU */
 
     /* TODO ok DataOperator zrób, jako klasę/interfejs? abstrakcyjną, z której wywodzi się np. RoomDataOperator
         Chyba nie...
-     TODO ok albo bardziej może _Dao (RoomDao, ...) <-- TAK!!!
+     TODO ok albo bardziej może _Dao (RoomDao, ...) <-- TAK
         tylko że w _dao są annotacje Room
         To chyba musiałoby byc tak, że jest jakiś interfejs który dziedziczy po _dao (bez annotacji)
-        W sumie tak jest że poszczególne dao dziedziczą po dao, tylko że te annotacje sa w _dao...,
+        W sumie tak jest, że poszczególne dao dziedziczą po _dao, tylko że te annotacje sa w _dao...,
         a nie powinny, żeby to było abstrakcyjne...
-        Chyba że jest tak _dao (bez adnotacji) -> RoomDao (z adnotacjami) -> pozostałe Dao
+        Chyba, że jest tak: _dao (bez adnotacji) -> RoomDao (z adnotacjami) -> pozostałe Dao
         Zob. też OneNote
         Studia/ .. / Kodowanie/!! Współpraca z biblioteką Room/Stworzenie DAO/!! Przykład  uniwersalnego abstrakcyjnego DAO
     */
@@ -34,7 +34,7 @@ public class DataOperator<D> {
      TODO ok:
       - Zrobić abstrakcyjny DataOperator
       - z DataOperator wywieść AssynTaskDataOperator (później ew. ExecutorDataOperator)
-      - Zrobić jeden AsyncTaskDataAccess, którym obsługuje się wszystkie metody AssynTaskDataOperatora - LOL
+      - Zrobić jeden AsyncTaskDataAccess, którym obsługuje się wszystkie metody AssynTaskDataOperatora
       - AssynTaskDataOperator jest inicjowany dwoma obiekatmi implementującymi odpowiednio:
         - _Dao - który określi metody dostepu do danych (czyli np. RoomDao implments _dao)
         - AsyncAccess - który okresli sposób dostępu asynchornicznego (AsyncTaskDataAccess impl...AsyncAccess)
@@ -45,6 +45,13 @@ public class DataOperator<D> {
         woła AsyncAccess.doIt(), które de facto jest wywołaniem GetNumberOfDataDaoMethod.doIt().
         LOL ale wtedy masz naście róznych implmentacji AsyncAccesów... Skąd AssyncTaskDataOperator
         ma wiedzieć, który zawołać? Jak podać właściwy obiekt?
+        Wyobrażam sobie to tak:
+        - w AssynTaskDataOperator są metody, np. getNumberOfData(), czy insertData()
+        - i np. getNumberOfData() wyglada tak:
+            new AsyncTaskDataAccess( GetNumberOfDataDaoMethod::doIt )
+        - a insertData() tak:
+            new AsyncTaskDataAccess( InsertDataDaoMethod::doIt )
+        - pozostaje kwestia przekazywania paramterów i zwracania wyników, które sa rózne, dla różnych metod :-)
     */
 
     private _Dao dao;

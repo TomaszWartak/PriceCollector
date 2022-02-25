@@ -5,10 +5,7 @@
     android:layout_height="match_parent"
     android:background="?mainViewsColorSurface"
     tools:context=".view.E3_analysis_competitors_List_screen.AnalysisCompetitorsListFragment">
-    <!-- TODO XXX
-    android:background="?mainViewsColorSurface"
-    android:paddingBottom="@dimen/quadruple_padding"
-    -->
+
     <com.dev4lazy.pricecollector.view.E3_analysis_competitors_List_screen.CompetitorsSlotsListView
         android:id="@+id/analysis_competitors_listview"
         android:layout_width="match_parent"
@@ -17,9 +14,5 @@
         android:paddingBottom="@dimen/double_padding"
         android:divider="@null"
         />
-    <!-- TODO XXX
-    usuń kolor
-        android:background="@color/colorPrimaryLight"
-    -->
 
 </FrameLayout>

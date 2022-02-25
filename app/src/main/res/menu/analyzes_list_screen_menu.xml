@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO XXX group android:checkableBehavior="single">
-        <item
-            android:id="@+id/analyzes_list_screen_logout_menu_item"
-            android:title="@string/logout_menu_item" />
-    </group-->
-
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/analyzes_list_screen_clear_local_db_menu_item"

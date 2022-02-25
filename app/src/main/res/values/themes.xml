@@ -15,8 +15,5 @@
          <item name="colorAccent">@color/colorAccent</item>
          <item name="mainViewsColorSurface">@color/colorBackground</item>
          <item name="colorWarning">@color/colorWarning</item>
-        <!--item name="colorSurface">@color/myVeryLightGrey</item-->
-
-         <!-- todo item name="colorSurface">@color/myVeryLightGrey</item-->
     </style>
 </resources>

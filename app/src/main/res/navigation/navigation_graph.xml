@@ -28,7 +28,7 @@
             app:destination="@id/analyzesListFragment" />
         <action
             android:id="@+id/action_logingFragment_to_testActionsFragment2"
-            app:destination="@id/testActionsFragment2" />
+            app:destination="@id/testActionsBeforeLoginFragment" />
     </fragment>
 
     <fragment
@@ -179,21 +179,21 @@
             app:destination="@id/analysisCompetitorsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/testActionsFragment2"
-        android:name="com.dev4lazy.pricecollector.test_view.test_actions_2_screen.TestActionsFragment2"
-        android:label="test_actions_fragment2"
+        android:id="@+id/testActionsBeforeLoginFragment"
+        android:name="com.dev4lazy.pricecollector.test_view.test_actions_2_screen.TestActionsBeforeLoginFragment"
+        android:label="test_actions_before_login_fragment"
         tools:layout="@layout/test_actions_fragment2" >
         <!-- + -->
         <action
-            android:id="@+id/action_testActionsFragment2_to_remoteUsersListFragment"
+            android:id="@+id/action_testActionsBeforeLoginFragment_to_remoteUsersListFragment"
             app:destination="@id/remoteUsersListFragment" />
         <action
-            android:id="@+id/action_testActionsFragment2_to_remoteAnalysisRowJoinFragment"
+            android:id="@+id/action_testActionsBeforeLoginFragment_to_remoteAnalysisRowJoinFragment"
             app:destination="@id/remoteAnalysisRowJoinFragment" />
-        <!--action
+        <!--action todo ok: nieużywany, niepotrzebny
             android:id="@+id/action_testActionsFragment2_to_remoteSectorsListFragment"
             app:destination="@id/remoteSectorsListFragment" /-->
-        <!--action
+        <!--action todo ok: nieużywany, niezakończony, niepotrzebny
             android:id="@+id/action_testActionsFragment2_to_remoteDepartmentsListFragment"
             app:destination="@id/remoteDepartmentsListFragment" /-->
         <action

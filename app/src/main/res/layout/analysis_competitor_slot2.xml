@@ -17,9 +17,6 @@
         card_view:cardCornerRadius="@dimen/card_view_corner_radius"
         card_view:cardElevation="@dimen/card_view_elevation" >
 
-        <!-- TODO
-        android:minHeight="@dimen/analysis_competitor_slot_height"
-        -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/analysisCompetitorSlot_layout"
             android:layout_width="match_parent"
@@ -54,17 +51,6 @@
                 card_view:layout_constraintTop_toTopOf="parent"
                 card_view:layout_constraintBottom_toBottomOf="parent" />
 
-            <!-- TODO XXX powyżej masz tekst hardcoded -->
-            <!-- TODO XXX
-            android:text="Konkurent lokalny"
-            android:textSize="@dimen/medium_large_font_size"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginEnd="@dimen/margin"
-            android:textColor="?colorOnPrimary"
-            android:layout_height="@dimen/analysis_competitor_slot_height"
-            android:textSize="@dimen/medium_large_font_size"
-            -->
-
             <LinearLayout
                 android:id="@+id/dummy_layout_competitor_store_name"
                 android:layout_width="0dp"
@@ -87,22 +73,6 @@
                     android:paddingStart="@dimen/padding"
                     android:paddingEnd="@dimen/padding"
                     android:textSize="@dimen/medium_large_font_size" />
-
-                <!-- TODO XXX powyżej masz tekst hardcoded -->
-
-                <!-- TODO XXX
-                android:text="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-                android:gravity="left"
-                android:ellipsize="none"
-                android:scrollHorizontally="true"
-                app:autoSizeTextType="uniform"
-                app:autoSizeMinTextSize="16sp"
-                app:autoSizeMaxTextSize="16sp"
-                app:autoSizeStepGranularity="2sp"
-                android:layout_height="match_parent"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                -->
 
             </LinearLayout>
 

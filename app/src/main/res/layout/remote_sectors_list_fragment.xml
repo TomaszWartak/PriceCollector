@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".test_view.remote_sectors_screen.RemoteSectorsListFragment">
 
+    <!-- TODO ok: dummy, do niezakończonego, niepotrzebnego fragmentu testowego -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/remote_sectors_recycler"
         android:layout_width="match_parent"

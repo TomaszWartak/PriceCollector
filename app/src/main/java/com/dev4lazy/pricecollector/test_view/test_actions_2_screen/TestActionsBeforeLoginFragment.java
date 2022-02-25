@@ -25,7 +25,7 @@ import com.dev4lazy.pricecollector.view.utils.TextViewMessageWrapper;
 import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DATA_SIZE_UNKNOWN;
 import static com.dev4lazy.pricecollector.view.utils.ProgressPresenter.DONT_HIDE_WHEN_FINISHED;
 
-public class TestActionsFragment2 extends Fragment {
+public class TestActionsBeforeLoginFragment extends Fragment {
 
 
     @Override
@@ -45,7 +45,7 @@ public class TestActionsFragment2 extends Fragment {
             RemoteMockDataInitializer.getInstance().initializeRemoteUsersOnly();
         });
         parentView.findViewById(R.id.button_show_remote_users).setOnClickListener((View v) -> {
-            Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment2_to_remoteUsersListFragment);
+            Navigation.findNavController(parentView).navigate(R.id.action_testActionsBeforeLoginFragment_to_remoteUsersListFragment);
         });
 
         parentView.findViewById(R.id.button_clear_remote2).setOnClickListener((View v) -> {
@@ -57,7 +57,7 @@ public class TestActionsFragment2 extends Fragment {
             );
         });
         parentView.findViewById(R.id.button_show_remote2).setOnClickListener((View v) -> {
-            Navigation.findNavController(parentView).navigate(R.id.action_testActionsFragment2_to_remoteAnalysisRowJoinFragment);
+            Navigation.findNavController(parentView).navigate(R.id.action_testActionsBeforeLoginFragment_to_remoteAnalysisRowJoinFragment);
         });
 
 

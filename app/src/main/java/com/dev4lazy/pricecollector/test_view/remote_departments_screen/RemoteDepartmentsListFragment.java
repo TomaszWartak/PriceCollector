@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dev4lazy.pricecollector.R;
 import com.dev4lazy.pricecollector.remote_model.enities.RemoteDepartment;
 
+// TODO ok: nieuzywany i niepotrzebny w zasadzie fragment testowy
 public class RemoteDepartmentsListFragment extends Fragment {
 
     private RemoteDepartmentListViewModel viewModel;

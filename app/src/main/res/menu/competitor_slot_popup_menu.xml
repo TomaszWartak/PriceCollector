@@ -6,7 +6,7 @@
         <item
             android:id="@+id/makeAnalysisMenuItem"
             android:title="@string/price_analysis" />
-        <!-- todo item
+        <!-- todo ok: item
             android:id="@+id/driveToCompetitorStoreMenuItem"
             android:title="@string/drive_to_competitor_store"/-->
     </group>
